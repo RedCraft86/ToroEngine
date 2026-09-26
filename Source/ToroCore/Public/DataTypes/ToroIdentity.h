@@ -42,25 +42,21 @@ struct TOROCORE_API FToroIdentity
 		: Group(InGroup), Guid(InGuid)
 	{}
 
-	/** Returns whether both the group tag and GUID are valid. */
 	[[nodiscard]] FORCEINLINE explicit operator bool() const
 	{
 		return IsValid();
 	}
 
-	/** Returns whether the group tags match exactly and the GUIDs are equal. */
 	[[nodiscard]] FORCEINLINE bool operator==(const FToroIdentity& Other) const
 	{
 		return Group == Other.Group && Guid == Other.Guid;
 	}
 
-	/** Returns whether either the group tags or the GUIDs differ. */
 	[[nodiscard]] FORCEINLINE bool operator!=(const FToroIdentity& Other) const
 	{
 		return Group != Other.Group || Guid != Other.Guid;
 	}
 
-	/** Returns a hash combining the group tag and GUID. */
 	[[nodiscard]] FORCEINLINE friend uint32 GetTypeHash(const FToroIdentity& Identity)
 	{
 		return HashCombine(GetTypeHash(Identity.Group), GetTypeHash(Identity.Guid));
