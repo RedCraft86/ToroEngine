@@ -64,7 +64,7 @@ struct TOROCORE_API FToroBaseMeshPreset
 	bool operator==(const FToroBaseMeshPreset& Other) const { return Equals(Other, false); }
 	bool operator!=(const FToroBaseMeshPreset& Other) const { return !Equals(Other, false); }
 
-	FORCEINLINE friend uint32 GetTypeHash(const FToroBaseMeshPreset& Preset)
+	[[nodiscard]] FORCEINLINE friend uint32 GetTypeHash(const FToroBaseMeshPreset& Preset)
 	{
 		uint32 Hash = GetTypeHash(Preset.StaticMesh);
 		Hash = HashCombine(Hash, GetTypeHash(Preset.Materials));
@@ -74,7 +74,7 @@ struct TOROCORE_API FToroBaseMeshPreset
 	}
 
 	/** Synchronously loads the mesh and checks its validity; other preset fields are not validated. */
-	FORCEINLINE bool IsValid() const
+	[[nodiscard]] FORCEINLINE bool IsValid() const
 	{
 		return ::IsValid(StaticMesh.LoadSynchronous());
 	}
@@ -92,7 +92,7 @@ struct TOROCORE_API FToroBaseMeshPreset
 	 * @param bCheckTransform Also compare bUseTransform and the stored transform using
 	 * FTransform::Equals, even when transform application is disabled.
 	 */
-	virtual bool Equals(const FToroBaseMeshPreset& Other, const bool bCheckTransform) const;
+	[[nodiscard]] virtual bool Equals(const FToroBaseMeshPreset& Other, const bool bCheckTransform) const;
 
 	/**
 	 * Captures mesh, effective slot materials, overlay, and shadows from a valid component.
@@ -137,7 +137,7 @@ struct TOROCORE_API FToroSplineMeshPreset : public FToroBaseMeshPreset
 	bool operator==(const FToroSplineMeshPreset& Other) const { return Equals(Other, false); }
 	bool operator!=(const FToroSplineMeshPreset& Other) const { return !Equals(Other, false); }
 
-	FORCEINLINE friend uint32 GetTypeHash(const FToroSplineMeshPreset& Preset)
+	[[nodiscard]] FORCEINLINE friend uint32 GetTypeHash(const FToroSplineMeshPreset& Preset)
 	{
 		return HashCombine(
 			GetTypeHash(static_cast<const FToroBaseMeshPreset&>(Preset)), 
@@ -150,7 +150,7 @@ struct TOROCORE_API FToroSplineMeshPreset : public FToroBaseMeshPreset
 	 * @param bCheckTransform Also compare the use-transform flag and stored transform
 	 * through the base comparison, even when transform application is disabled.
 	 */
-	virtual bool Equals(const FToroSplineMeshPreset& Other, const bool bCheckTransform) const;
+	[[nodiscard]] virtual bool Equals(const FToroSplineMeshPreset& Other, const bool bCheckTransform) const;
 
 	/**
 	 * Captures base settings and the forward axis from a valid spline mesh component.
