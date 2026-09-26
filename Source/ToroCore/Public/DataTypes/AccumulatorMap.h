@@ -29,10 +29,8 @@ class TAccumulatorMap final : public TSharedFromThis<TAccumulatorMap<K, V>>
 
 	/** Constructs an empty map and takes ownership of the supplied key validator. */
 	TAccumulatorMap(TFunction<bool(const K&)> Validator)
-		: InnerMap()
-		, Validate(MoveTemp(Validator))
-	{
-	}
+		: InnerMap(), Validate(MoveTemp(Validator))
+	{}
 
 public:
 
@@ -46,10 +44,8 @@ public:
 
 	/** Constructs an empty map without validation or automatic post-GC cleanup. */
 	TAccumulatorMap()
-		: InnerMap()
-		, Validate(nullptr)
-	{
-	}
+		: InnerMap(), Validate(nullptr)
+	{}
 
 	TAccumulatorMap(const TAccumulatorMap&) = delete;
 	TAccumulatorMap& operator=(const TAccumulatorMap&) = delete;

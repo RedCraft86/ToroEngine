@@ -25,20 +25,16 @@ struct TOROCORE_API FSimpleCooldown final
 
 	/** Starts ready with a default interval of 0.1 seconds. */
 	FSimpleCooldown()
-		: Interval(0.1f)
-		, Cooldown(0.0f)
-	{
-	}
+		: Interval(0.1f), Cooldown(0.0f)
+	{}
 
 	/**
 	 * Starts ready with the supplied interval.
 	 * @param Time Duration in seconds.
 	 */
 	FSimpleCooldown(const float Time)
-		: Interval(FMath::Abs(Time))
-		, Cooldown(0.0f)
-	{
-	}
+		: Interval(FMath::Abs(Time)), Cooldown(0.0f)
+	{}
 
 	/** Normalizes the interval, then restores it as the remaining time in seconds. */
 	FORCEINLINE void Reset()

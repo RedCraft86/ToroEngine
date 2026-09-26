@@ -28,10 +28,8 @@ class TAccumulatorSet final : public TSharedFromThis<TAccumulatorSet<T>>
 
 	/** Constructs an empty set and takes ownership of the supplied validator. */
 	TAccumulatorSet(TFunction<bool(const T&)> Validator)
-		: InnerSet()
-		, Validate(MoveTemp(Validator))
-	{
-	}
+		: InnerSet(), Validate(MoveTemp(Validator))
+	{}
 
 public:
 
@@ -44,10 +42,8 @@ public:
 
 	/** Constructs an empty set without validation or automatic post-GC cleanup. */
 	TAccumulatorSet()
-		: InnerSet()
-		, Validate(nullptr)
-	{
-	}
+		: InnerSet(), Validate(nullptr)
+	{}
 
 	TAccumulatorSet(const TAccumulatorSet&) = delete;
 	TAccumulatorSet& operator=(const TAccumulatorSet&) = delete;

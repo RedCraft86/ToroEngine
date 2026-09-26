@@ -29,24 +29,18 @@ struct TOROCORE_API FToroIdentity
 
 	/** Constructs an empty, invalid identity. */
 	FToroIdentity()
-		: Group(FGameplayTag::EmptyTag)
-		, Guid(FGuid())
-	{
-	}
+		: Group(FGameplayTag::EmptyTag), Guid(FGuid())
+	{}
 
 	/** Constructs an identity with the supplied group and a newly generated GUID. */
 	explicit FToroIdentity(const FGameplayTag& InGroup)
-		: Group(InGroup)
-		, Guid(FGuid::NewGuid())
-	{
-	}
+		: Group(InGroup), Guid(FGuid::NewGuid())
+	{}
 
 	/** Constructs an identity using the supplied group and GUID without validating them. */
 	FToroIdentity(const FGameplayTag& InGroup, const FGuid& InGuid)
-		: Group(InGroup)
-		, Guid(InGuid)
-	{
-	}
+		: Group(InGroup), Guid(InGuid)
+	{}
 
 	/** Returns whether both the group tag and GUID are valid. */
 	[[nodiscard]] FORCEINLINE explicit operator bool() const
