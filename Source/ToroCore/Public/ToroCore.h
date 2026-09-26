@@ -10,4 +10,10 @@ class FToroCoreModule final : public IModuleInterface
 {
     virtual void StartupModule() override;
     virtual void ShutdownModule() override;
+
+	FDelegateHandle PreLoadMapHandle;
+	static void PreLoadMap(const FString& Map);
+
+	FDelegateHandle PostLoadMapHandle;
+	static void PostLoadMap(UWorld* World);
 };
