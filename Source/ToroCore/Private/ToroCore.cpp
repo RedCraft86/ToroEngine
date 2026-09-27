@@ -1,7 +1,7 @@
 ﻿// Copyright (C) RedCraft86. Licensed under LGPL-3.0, see LICENSE file for details.
 
 #include "ToroCore.h"
-#include "Helpers/WorldGetter.h"
+#include "Utilities/WorldGetter.h"
 
 DEFINE_LOG_CATEGORY(LogToroCore);
 
