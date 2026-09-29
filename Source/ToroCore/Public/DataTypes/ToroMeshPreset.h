@@ -73,10 +73,13 @@ struct TOROCORE_API FToroBaseMeshPreset
 		return Hash;
 	}
 
-	/** Synchronously loads the mesh and checks its validity; other preset fields are not validated. */
+	/**
+	 * Returns whether a mesh reference is assigned, including an unloaded reference.
+	 * Does not load the asset or verify that it exists or can be loaded.
+	 */
 	[[nodiscard]] FORCEINLINE bool IsValid() const
 	{
-		return ::IsValid(StaticMesh.LoadSynchronous());
+		return !StaticMesh.IsNull();
 	}
 
 	/**
