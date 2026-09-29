@@ -8,6 +8,7 @@
 
 /**
  * A manually ticked cooldown that starts ready and resets automatically on expiration.
+ * Callers must keep Interval finite and nonnegative, and Cooldown finite.
  * Reports at most one expiration per tick and discards overshoot rather than preserving a periodic schedule.
  */
 USTRUCT(BlueprintType)
@@ -15,11 +16,11 @@ struct TOROCORE_API FSimpleCooldown final
 {
 	GENERATED_BODY()
 
-	/** Duration in seconds restored on reset. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Cooldown)
+	/** Duration in seconds restored on reset; must be finite. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Cooldown, meta = (ClampMin = 0.0f, UIMin = 0.0f))
 	float Interval;
 
-	/** Remaining seconds for the cooldown. */
+	/** Remaining seconds in the cooldown. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Cooldown)
 	float Cooldown;
 
@@ -30,13 +31,15 @@ struct TOROCORE_API FSimpleCooldown final
 
 	/**
 	 * Starts ready with the supplied interval.
-	 * @param Time Duration in seconds.
+	 * @param Time Finite duration in seconds; its absolute value is used as the interval.
 	 */
 	FSimpleCooldown(const float Time)
 		: Interval(FMath::Abs(Time)), Cooldown(0.0f)
-	{}
+	{
+		ensureAlwaysMsgf(FMath::IsFinite(Time), TEXT("Cooldown time %f is not finite."), Time);
+	}
 
-	/** Normalizes the interval, then restores it as the remaining time in seconds. */
+	/** Restores the interval as the remaining time in seconds. */
 	FORCEINLINE void Reset()
 	{
 		Cooldown = Interval;
@@ -69,7 +72,7 @@ class TOROCORE_API USimpleCooldownLibrary final : public UBlueprintFunctionLibra
 
 public:
 
-	/** Normalizes the cooldown's interval, then restores it as the remaining time. */
+	/** Restores the cooldown's interval as the remaining time. */
 	UFUNCTION(BlueprintCallable, Category = SimpleCooldown)
 	static void ResetCooldown(UPARAM(ref) FSimpleCooldown& Cooldown);
 
@@ -78,7 +81,7 @@ public:
 	static void ReadyCooldown(UPARAM(ref) FSimpleCooldown& Cooldown);
 
 	/**
-	 * Advances the cooldown, normalizing invalid state and resetting on expiration.
+	 * Advances the cooldown, resetting to the full interval on expiration.
 	 * Reports at most one expiration per call and discards overshoot, allowing timing drift.
 	 * Once ready, a zero interval expires on every accepted tick, including zero delta.
 	 * @param Cooldown Cooldown to update in place.

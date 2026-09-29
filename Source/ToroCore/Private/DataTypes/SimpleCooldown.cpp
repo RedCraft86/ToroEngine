@@ -4,11 +4,6 @@
 
 bool FSimpleCooldown::Tick(const float DeltaTime)
 {
-	if (!FMath::IsFinite(DeltaTime) || DeltaTime < 0.0f)
-	{
-		return false;
-	}
-
 	if ((Cooldown -= DeltaTime) <= 0.0f)
 	{
 		Reset();
