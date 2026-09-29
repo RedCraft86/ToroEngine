@@ -23,7 +23,8 @@ protected:
 
 #if WITH_EDITORONLY_DATA
 	/**
-	 * Maximum instances of this class and its derived classes allowed on one owner actor.
+	 * Maximum instances of this component's actual class and its derived classes allowed on one owner actor.
+	 * With A -> B -> C inheritance, an A instance counts A/B/C, B counts B/C, and C counts C.
 	 * Zero disables the limit. Editor validation allows the first N in owner component order.
 	 * Editable only on templates.
 	 */
