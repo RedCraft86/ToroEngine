@@ -44,13 +44,11 @@ void UToroSceneComponent::OnChildDetached(USceneComponent* ChildComponent)
 void UToroSceneComponent::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
-
-	if (!IsTemplate())
+	if (IsValid(this) && !IsTemplate() && !HasAnyFlags(RF_BeginDestroyed | RF_FinishDestroyed))
 	{
 		OnConstruction();
+		CheckForSpriteVisualization();
 	}
-
-	CheckForSpriteVisualization();
 }
 
 void UToroSceneComponent::CheckForSpriteVisualization() const

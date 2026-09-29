@@ -40,7 +40,7 @@ bool UToroActorComponent::CanEditChange(const FProperty* InProperty) const
 void UToroActorComponent::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
-	if (!IsTemplate())
+	if (IsValid(this) && !IsTemplate() && !HasAnyFlags(RF_BeginDestroyed | RF_FinishDestroyed))
 	{
 		OnConstruction();
 	}
