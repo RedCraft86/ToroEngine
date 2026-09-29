@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
+#include "UObject/Object.h"
 #include "Templates/Function.h"
 #include "Templates/UnrealTemplate.h"
 #include "Templates/UnrealTypeTraits.h"
@@ -52,7 +53,7 @@ public:
 	T* operator->()
 	{
 		T* Ptr = Get();
-		checkf(IsValid(Ptr), TEXT("Called TCachedGetter -> operator with a null object."));
+		checkf(::IsValid(Ptr), TEXT("Called TCachedGetter -> operator with an invalid object."));
 		return Ptr;
 	}
 
