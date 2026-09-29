@@ -50,6 +50,15 @@ protected:
 	void ApplyActiveState(const bool bInState);
 	virtual void ApplyActiveState_Implementation(const bool bInState);
 
+#if WITH_EDITOR
+	/**
+	 * Runs this actor's IsDataValid implementation and displays its issues and result in the Map Check log.
+	 * Additional validators registered with the editor validator subsystem are not invoked.
+	 */
+	UFUNCTION(CallInEditor, Category = Actor, DisplayName = "Validate")
+	virtual void ValidateData() const;
+#endif
+
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 

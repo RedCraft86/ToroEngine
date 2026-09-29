@@ -3,6 +3,9 @@
 #include "Actors/ToroCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#if WITH_EDITOR
+#include "Utilities/ToroValidation.h"
+#endif
 
 AToroCharacter::AToroCharacter(): bActivated(true)
 {
@@ -78,6 +81,13 @@ void AToroCharacter::ApplyActiveState_Implementation(const bool bInState)
 		GetCharacterMovement()->StopMovementImmediately();
 	}
 }
+
+#if WITH_EDITOR
+void AToroCharacter::ValidateData() const
+{
+	ToroEngine::Validation::ValidateActor(this);
+}
+#endif
 
 void AToroCharacter::BeginPlay()
 {

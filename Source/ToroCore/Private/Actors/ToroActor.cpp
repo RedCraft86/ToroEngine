@@ -2,6 +2,9 @@
 
 #include "Actors/ToroActor.h"
 #include "Components/ToroSceneComponent.h"
+#if WITH_EDITOR
+#include "Utilities/ToroValidation.h"
+#endif
 
 AToroActor::AToroActor(): bActivated(true)
 {
@@ -39,6 +42,13 @@ void AToroActor::ApplyActiveState_Implementation(const bool bInState)
 	SetActorEnableCollision(bInState);
 	SetActorTickEnabled(PrimaryActorTick.bStartWithTickEnabled && bInState);
 }
+
+#if WITH_EDITOR
+void AToroActor::ValidateData() const
+{
+	ToroEngine::Validation::ValidateActor(this);
+}
+#endif
 
 void AToroActor::BeginPlay()
 {

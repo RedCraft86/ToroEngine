@@ -1,6 +1,9 @@
 // Copyright (C) RedCraft86. Licensed under LGPL-3.0, see LICENSE file for details.
 
 #include "Actors/ToroVolume.h"
+#if WITH_EDITOR
+#include "Utilities/ToroValidation.h"
+#endif
 
 AToroVolume::AToroVolume(): bActivated(true)
 {
@@ -35,6 +38,13 @@ void AToroVolume::ApplyActiveState_Implementation(const bool bInState)
 	SetActorEnableCollision(bInState);
 	SetActorTickEnabled(PrimaryActorTick.bStartWithTickEnabled && bInState);
 }
+
+#if WITH_EDITOR
+void AToroVolume::ValidateData() const
+{
+	ToroEngine::Validation::ValidateActor(this);
+}
+#endif
 
 void AToroVolume::BeginPlay()
 {
