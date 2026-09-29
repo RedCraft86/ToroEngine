@@ -22,7 +22,7 @@ struct TOROCORE_API FToroBaseMeshPreset
 {
 	GENERATED_BODY()
 
-	/** Mesh asset to load synchronously when validating, filling materials, or applying the preset. */
+	/** Mesh asset to load synchronously when filling materials or applying the preset. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MeshPreset)
 	TSoftObjectPtr<UStaticMesh> StaticMesh;
 
@@ -107,7 +107,7 @@ struct TOROCORE_API FToroBaseMeshPreset
 	 * Synchronously loads and applies assets, shadow settings, and the optional world transform.
 	 * Replaces material overrides; omitted or invalid slot materials use mesh defaults.
 	 * Extra material entries are ignored. An empty or unloadable mesh clears the target mesh.
-	 * Invalid targets are left unchanged.
+	 * Invalid targets are left unchanged. Rejected mesh changes log a warning and leave all other settings unchanged.
 	 */
 	virtual void ToMeshComponent(UStaticMeshComponent* Target) const;
 };
@@ -163,6 +163,7 @@ struct TOROCORE_API FToroSplineMeshPreset : public FToroBaseMeshPreset
 	/**
 	 * Applies base settings and the forward axis to a valid spline mesh component.
 	 * Uses the base asset-loading, material-fallback, and optional world-transform behavior.
+	 * Rejected mesh changes leave all other settings, including the forward axis, unchanged.
 	 * Invalid or non-spline targets log a warning and are left unchanged.
 	 */
 	virtual void ToMeshComponent(UStaticMeshComponent* Target) const override;
@@ -178,7 +179,7 @@ private:
 
 /**
  * Blueprint helpers for comparing, capturing, and applying mesh presets.
- * Asset validation, material filling, and application may synchronously load assets.
+ * Validity queries only check reference assignment; material filling and application may synchronously load assets.
  */
 UCLASS(NotBlueprintable, NotBlueprintType)
 class TOROCORE_API UToroMeshPresetLibrary final : public UBlueprintFunctionLibrary
@@ -188,8 +189,8 @@ class TOROCORE_API UToroMeshPresetLibrary final : public UBlueprintFunctionLibra
 public:
 
 	/**
-	 * Synchronously loads the referenced static mesh and returns whether it is valid.
-	 * Does not validate materials, transform state, or spline-axis settings.
+	 * Returns whether a mesh reference is assigned, including an unloaded reference.
+	 * Does not load the asset, verify that it exists or can be loaded, or validate other preset fields.
 	 */
 	UFUNCTION(BlueprintPure, Category = "StaticMesh|MeshPreset", DisplayName = "Is Valid (Mesh Preset)")
 	static bool IsMeshPresetValid(const FToroBaseMeshPreset& Target);
@@ -226,7 +227,7 @@ public:
 	 * Clears existing material overrides; omitted, null, or unloadable slot materials use mesh defaults.
 	 * Material entries beyond the applied mesh slot count are ignored.
 	 * Applies the stored world transform only when enabled. An empty or unloadable mesh clears the mesh.
-	 * An invalid component is left unchanged.
+	 * An invalid component is left unchanged. Rejected mesh changes leave all other settings unchanged.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "StaticMesh|MeshPreset", DisplayName = "Apply To Component (Mesh Preset)")
 	static void ApplyMeshPresetToComponent(const FToroBaseMeshPreset& Target, UStaticMeshComponent* Component);
@@ -236,8 +237,8 @@ public:
 	static FToroBaseMeshPreset SplineMeshPresetToBase(const FToroSplineMeshPreset& Target);
 
 	/**
-	 * Synchronously loads the referenced static mesh and returns whether it is valid.
-	 * Does not validate materials, transform state, or spline-axis settings.
+	 * Returns whether a mesh reference is assigned, including an unloaded reference.
+	 * Does not load the asset, verify that it exists or can be loaded, or validate other preset fields.
 	 */
 	UFUNCTION(BlueprintPure, Category = "StaticMesh|MeshPreset", DisplayName = "Is Valid (Spline Mesh Preset)")
 	static bool IsSplineMeshPresetValid(const FToroSplineMeshPreset& Target);
@@ -277,7 +278,7 @@ public:
 	 * Material entries beyond the applied mesh slot count are ignored.
 	 * Applies the stored world transform only when enabled. An empty or unloadable mesh clears the mesh.
 	 * Also applies the forward axis. Invalid or non-spline targets log a warning
-	 * and are left unchanged.
+	 * and are left unchanged. Rejected mesh changes leave all other settings, including the forward axis, unchanged.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "StaticMesh|MeshPreset", DisplayName = "Apply To Component (Spline Mesh Preset)")
 	static void ApplySplineMeshPresetToComponent(const FToroSplineMeshPreset& Target, USplineMeshComponent* Component);
