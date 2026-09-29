@@ -56,12 +56,12 @@ EDataValidationResult UToroActorComponent::IsDataValid(FDataValidationContext& C
 		const int32 InstanceIdx = Components.IndexOfByKey(this);
 		if (InstanceIdx >= MaxInstancesPerActor)
 		{
-			Context.AddMessage(FMessageLog("MapCheck").Error()
+			Context.AddMessage(EMessageSeverity::Error)
 				->AddToken(FUObjectToken::Create(OwnerActor))
 				->AddToken(FTextToken::Create(FText::Format(
 					NSLOCTEXT("ToroEngine", "Validate_Message_ComponentOverLimit", "{0}::{1} component class exceeds limit ({2}/{3})"),
 					FText::FromString(OwnerActor->GetClass()->GetName()), FText::FromString(GetName()), InstanceIdx + 1, MaxInstancesPerActor
-				))));
+				)));
 			return EDataValidationResult::Invalid;
 		}
 	}
