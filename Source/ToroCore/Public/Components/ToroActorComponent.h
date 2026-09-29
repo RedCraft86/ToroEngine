@@ -38,7 +38,7 @@ protected:
 
 	/** Blueprint construction callback invoked on registration and after instance property edits. */
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Construction Script", meta = (ForceAsFunction = true))
-	void EventConstruction();
+	void ReceiveConstruction();
 
 	/** Invoked on registration and after instance property edits; also calls blueprint event. */
 	virtual void OnConstruction();

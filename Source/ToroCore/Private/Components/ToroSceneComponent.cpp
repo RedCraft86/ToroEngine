@@ -16,7 +16,7 @@ UToroSceneComponent::UToroSceneComponent()
 
 void UToroSceneComponent::OnConstruction()
 {
-	EventConstruction();
+	ReceiveConstruction();
 }
 
 void UToroSceneComponent::OnRegister()

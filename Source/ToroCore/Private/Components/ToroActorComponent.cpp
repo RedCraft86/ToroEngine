@@ -14,7 +14,7 @@ UToroActorComponent::UToroActorComponent()
 
 void UToroActorComponent::OnConstruction()
 {
-	EventConstruction();
+	ReceiveConstruction();
 }
 
 void UToroActorComponent::OnRegister()
