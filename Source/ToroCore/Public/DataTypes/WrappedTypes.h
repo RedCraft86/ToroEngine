@@ -66,7 +66,8 @@ struct TOROCORE_API FWrappedFloat final
 
 	[[nodiscard]] FORCEINLINE friend uint32 GetTypeHash(const FWrappedFloat& Wrapper)
 	{
-		return GetTypeHash(Wrapper.Value);
+		// Signed zeros compare equal, so they must also hash equally.
+		return GetTypeHash(Wrapper.Value == 0.0 ? 0.0 : Wrapper.Value);
 	}
 };
 
