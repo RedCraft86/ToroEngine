@@ -77,6 +77,7 @@ struct TOROCORE_API FWrappedFloat final
 
 	FORCEINLINE operator double&() { return Value; }
 	FORCEINLINE operator double() const { return Value; }
+	FORCEINLINE operator bool() const { return FMath::IsNearlyZero(Value); }
 
 	FORCEINLINE void operator=(const float InValue) { Value = InValue; }
 
@@ -126,6 +127,7 @@ struct TOROCORE_API FWrappedByte final
 
 	FORCEINLINE operator uint8&() { return Value; }
 	FORCEINLINE operator uint8() const { return Value; }
+	FORCEINLINE operator bool() const { return Value != 0; }
 
 	FORCEINLINE void operator=(const uint8 InValue) { Value = InValue; }
 
@@ -174,6 +176,7 @@ struct TOROCORE_API FWrappedInt32 final
 
 	FORCEINLINE operator int32&() { return Value; }
 	FORCEINLINE operator int32() const { return Value; }
+	FORCEINLINE operator bool() const { return Value != 0; }
 
 	FORCEINLINE void operator=(const int32 InValue) { Value = InValue; }
 
@@ -222,6 +225,7 @@ struct TOROCORE_API FWrappedInt64 final
 
 	FORCEINLINE operator int64&() { return Value; }
 	FORCEINLINE operator int64() const { return Value; }
+	FORCEINLINE operator bool() const { return Value != 0; }
 
 	FORCEINLINE void operator=(const int64 InValue) { Value = InValue; }
 
@@ -270,6 +274,7 @@ struct TOROCORE_API FWrappedName final
 
 	FORCEINLINE operator FName&() { return Value; }
 	FORCEINLINE operator const FName&() const { return Value; }
+	FORCEINLINE operator bool() const { return !Value.IsNone(); }
 
 	FORCEINLINE void operator=(const FName& InValue) { Value = InValue; }
 	FORCEINLINE void operator=(const FString& InValue) { Value = *InValue; }
@@ -319,6 +324,7 @@ struct TOROCORE_API FWrappedString final
 
 	FORCEINLINE operator FString&() { return Value; }
 	FORCEINLINE operator const FString&() const { return Value; }
+	FORCEINLINE operator bool() const { return !Value.TrimStartAndEnd().IsEmpty(); }
 
 	FORCEINLINE void operator=(const FString& InValue) { Value = InValue; }
 	FORCEINLINE void operator=(const FName& InValue) { Value = InValue.ToString(); }
@@ -363,6 +369,7 @@ struct TOROCORE_API FWrappedGameplayTag final
 
 	FORCEINLINE operator FGameplayTag&() { return Value; }
 	FORCEINLINE operator const FGameplayTag&() const { return Value; }
+	FORCEINLINE operator bool() const { return Value.IsValid(); }
 
 	FORCEINLINE void operator=(const FGameplayTag& InValue) { Value = InValue; }
 	FORCEINLINE void operator=(const FNativeGameplayTag& InValue) { Value = InValue.GetTag(); }
