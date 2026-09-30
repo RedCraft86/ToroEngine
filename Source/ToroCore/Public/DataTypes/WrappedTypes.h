@@ -250,33 +250,51 @@ struct TOROCORE_API FWrappedInt64 final
 };
 
 /**
- * String wrapped in a struct to allow usage with FInstancedStruct.
+ * Name wrapped in a struct to allow usage with FInstancedStruct.
  */
 USTRUCT(BlueprintType)
-struct TOROCORE_API FWrappedString final
+struct TOROCORE_API FWrappedName final
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wrapped)
-	FString Value;
+	FName Value;
 
-	FWrappedString()
-		: Value(FString())
+	FWrappedName()
+		: Value(NAME_None)
 	{}
 
-	FWrappedString(const FString& InValue)
+	FWrappedName(const FName& InValue)
 		: Value(InValue)
 	{}
 
-	FORCEINLINE operator FString&() { return Value; }
-	FORCEINLINE operator const FString&() const { return Value; }
+	FORCEINLINE operator FName&() { return Value; }
+	FORCEINLINE operator const FName&() const { return Value; }
 
-	FORCEINLINE bool operator==(const FWrappedString& Other) const { return Value == Other.Value; }
-	FORCEINLINE bool operator!=(const FWrappedString& Other) const { return Value != Other.Value; }
+	FORCEINLINE void operator=(const FName& InValue) { Value = InValue; }
+	FORCEINLINE void operator=(const FString& InValue) { Value = *InValue; }
 
-	[[nodiscard]] FORCEINLINE friend uint32 GetTypeHash(const FWrappedString& Wrapper)
+	[[nodiscard]] FORCEINLINE bool operator==(const FWrappedName& Other) const { return Value == Other.Value; }
+	[[nodiscard]] FORCEINLINE bool operator!=(const FWrappedName& Other) const { return Value != Other.Value; }
+
+	[[nodiscard]] FORCEINLINE friend uint32 GetTypeHash(const FWrappedName& Wrapper)
 	{
 		return GetTypeHash(Wrapper.Value);
+	}
+
+	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, FWrappedName& Wrapper)
+	{
+		return Ar << Wrapper.Value;
+	}
+
+	FORCEINLINE friend void operator<<(FStructuredArchive::FSlot Slot, FWrappedName& Wrapper)
+	{
+		Slot << Wrapper.Value;
+	}
+
+	[[nodiscard]] FORCEINLINE FString ToString() const
+	{
+		return Value.ToString();
 	}
 };
 
