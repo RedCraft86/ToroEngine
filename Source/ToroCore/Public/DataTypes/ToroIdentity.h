@@ -62,13 +62,11 @@ struct TOROCORE_API FToroIdentity
 		return HashCombine(GetTypeHash(Identity.Group), GetTypeHash(Identity.Guid));
 	}
 
-	/** Serializes the group tag followed by the GUID, returning the archive. */
 	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, FToroIdentity& Identity)
 	{
 		return Ar << Identity.Group << Identity.Guid;
 	}
 
-	/** Serializes the identity as a record with named Group and Guid fields. */
 	FORCEINLINE friend void operator<<(FStructuredArchive::FSlot Slot, FToroIdentity& Identity)
 	{
 		FStructuredArchive::FRecord Record = Slot.EnterRecord();
