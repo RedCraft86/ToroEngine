@@ -342,3 +342,51 @@ struct TOROCORE_API FWrappedString final
 	}
 };
 
+/**
+ * Gameplay Tag wrapped in a struct to allow usage with FInstancedStruct.
+ */
+USTRUCT(BlueprintType)
+struct TOROCORE_API FWrappedGameplayTag final
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wrapped)
+	FGameplayTag Value;
+
+	FWrappedGameplayTag()
+		: Value(FGameplayTag::EmptyTag)
+	{}
+
+	FWrappedGameplayTag(const FGameplayTag& InValue)
+		: Value(InValue)
+	{}
+
+	FORCEINLINE operator FGameplayTag&() { return Value; }
+	FORCEINLINE operator const FGameplayTag&() const { return Value; }
+
+	FORCEINLINE void operator=(const FGameplayTag& InValue) { Value = InValue; }
+	FORCEINLINE void operator=(const FNativeGameplayTag& InValue) { Value = InValue.GetTag(); }
+
+	[[nodiscard]] FORCEINLINE bool operator==(const FWrappedGameplayTag& Other) const { return Value == Other.Value; }
+	[[nodiscard]] FORCEINLINE bool operator!=(const FWrappedGameplayTag& Other) const { return Value != Other.Value; }
+
+	[[nodiscard]] FORCEINLINE friend uint32 GetTypeHash(const FWrappedGameplayTag& Wrapper)
+	{
+		return GetTypeHash(Wrapper.Value);
+	}
+
+	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, FWrappedGameplayTag& Wrapper)
+	{
+		return Ar << Wrapper.Value;
+	}
+
+	FORCEINLINE friend void operator<<(FStructuredArchive::FSlot Slot, FWrappedGameplayTag& Wrapper)
+	{
+		Slot << Wrapper.Value;
+	}
+
+	[[nodiscard]] FORCEINLINE FString ToString() const
+	{
+		return Value.ToString();
+	}
+};
