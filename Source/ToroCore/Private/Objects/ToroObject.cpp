@@ -24,7 +24,7 @@ bool UToroObject::IsTickEnabled() const
 
 UWorld* UToroObject::GetWorld() const
 {
-	return IsTemplate() ? nullptr : FWorldGetter::Get(GetOuter());
+	return FWorldGetter::Get(GetOuter());
 }
 
 void UToroObject::OnConstruction()

@@ -4,6 +4,9 @@
 
 #include "Engine/World.h"
 #include "Engine/Engine.h"
+#if WITH_EDITOR
+#include "Misc/App.h"
+#endif
 
 /**
  * Provides best-effort world lookup backed by a shared weak cache when context is unavailable.
@@ -27,6 +30,27 @@ public:
 	[[nodiscard]] static UWorld* Get(const UObject* Context = nullptr)
 	{
 		checkf(IsInGameThread(), TEXT("FWorldGetter::Get(...) should only be called from the GameThread."));
+
+#if WITH_EDITOR
+		if (!FApp::IsGame())
+		{
+			UWorld* MaybeWorld = nullptr;
+			if (GEngine)
+			{
+				if (IsValid(Context))
+				{
+					MaybeWorld = GEngine->GetWorldFromContextObject(Context, EGetWorldErrorMode::ReturnNull);
+				}
+
+				if (!IsValid(MaybeWorld))
+				{
+					MaybeWorld = GEngine->GetCurrentPlayWorld();
+				}
+			}
+
+			return IsValid(MaybeWorld) ? MaybeWorld : GWorld.GetReference();
+		}
+#endif
 
 		if (IsValid(Context) && GEngine)
 		{
@@ -59,7 +83,11 @@ public:
 	static void SetWorld(UWorld* InWorld)
 	{
 		checkf(IsInGameThread(), TEXT("FWorldGetter::SetWorld(...) should only be called from the GameThread."));
+#if WITH_EDITOR
+		if (FApp::IsGame() && IsValid(InWorld))
+#else
 		if (IsValid(InWorld))
+#endif
 		{
 			CachedWorld = InWorld;
 		}
