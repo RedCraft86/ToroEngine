@@ -35,7 +35,7 @@ protected:
 #if WITH_EDITORONLY_DATA
 	/** Enables actor ticking in editor viewports and Blueprint script execution during editor ticks. */
 	UPROPERTY(EditDefaultsOnly, Category = Tick)
-	bool bTickInEditor = true;
+	bool bTickInEditor = false;
 #endif
 
 	/**

@@ -71,7 +71,7 @@ protected:
 #if WITH_EDITORONLY_DATA
 	/** Enables viewport ticking and Blueprint script execution while the editor world is active. */
 	UPROPERTY(EditDefaultsOnly, Category = Tick)
-	bool bTickInEditor = true;
+	bool bTickInEditor = false;
 #endif
 
 	/**
