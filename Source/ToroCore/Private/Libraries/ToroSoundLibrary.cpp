@@ -4,7 +4,7 @@
 #include "Components/AudioComponent.h"
 #include "Sound/AmbientSound.h"
 
-void UToroSoundLibrary::PlayAmbientSound(const AAmbientSound* Target, const float StartTime)
+void UToroSoundLibrary::PlayAmbientSound(const AAmbientSound* Target, float StartTime)
 {
 	if (UAudioComponent* Audio = IsValid(Target) ? Target->GetAudioComponent() : nullptr)
 	{
@@ -12,7 +12,7 @@ void UToroSoundLibrary::PlayAmbientSound(const AAmbientSound* Target, const floa
 	}
 }
 
-void UToroSoundLibrary::StopAmbientSound(const AAmbientSound* Target, const float Delay)
+void UToroSoundLibrary::StopAmbientSound(const AAmbientSound* Target, float Delay)
 {
 	if (UAudioComponent* Audio = IsValid(Target) ? Target->GetAudioComponent() : nullptr)
 	{
@@ -29,7 +29,7 @@ void UToroSoundLibrary::StopAmbientSound(const AAmbientSound* Target, const floa
 }
 
 FVoidCoroutine UToroSoundLibrary::FadeInAmbientSound(FLatentActionInfo LatentInfo, const AAmbientSound* Target,
-	const float Duration, const float TargetLevel, const float StartTime, const EAudioFaderCurve FadeCurve)
+	float Duration, float TargetLevel, float StartTime, EAudioFaderCurve FadeCurve)
 {
 	if (!FMath::IsFinite(Duration))
 	{
@@ -50,7 +50,7 @@ FVoidCoroutine UToroSoundLibrary::FadeInAmbientSound(FLatentActionInfo LatentInf
 }
 
 FVoidCoroutine UToroSoundLibrary::FadeOutAmbientSound(FLatentActionInfo LatentInfo, const AAmbientSound* Target,
-	const float Duration, const float TargetLevel, const EAudioFaderCurve FadeCurve)
+	float Duration, float TargetLevel, EAudioFaderCurve FadeCurve)
 {
 	if (!FMath::IsFinite(Duration))
 	{

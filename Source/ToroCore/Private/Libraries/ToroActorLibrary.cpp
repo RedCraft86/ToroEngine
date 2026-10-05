@@ -4,7 +4,7 @@
 #include "GameFramework/Actor.h"
 
 void UToroActorLibrary::GetBoundingBoxVertices(TSet<FVector>& OutVerts, FVector& Origin, FVector& Extent,
-	const AActor* Target, const FVector Scale, const bool bOnlyColliding, const bool bChildActors)
+	const AActor* Target, FVector Scale, bool bOnlyColliding, bool bChildActors)
 {
 	OutVerts.Empty();
 	Origin = FVector::ZeroVector;
@@ -60,7 +60,7 @@ void UToroActorLibrary::GetBoundingBoxVertices(TSet<FVector>& OutVerts, FVector&
 	}
 }
 
-void UToroActorLibrary::AddActorTag(AActor* Target, const FName InTag)
+void UToroActorLibrary::AddActorTag(AActor* Target, FName InTag)
 {
 	if (IsValid(Target))
 	{
@@ -68,7 +68,7 @@ void UToroActorLibrary::AddActorTag(AActor* Target, const FName InTag)
 	}
 }
 
-void UToroActorLibrary::RemoveActorTag(AActor* Target, const FName InTag)
+void UToroActorLibrary::RemoveActorTag(AActor* Target, FName InTag)
 {
 	if (IsValid(Target))
 	{

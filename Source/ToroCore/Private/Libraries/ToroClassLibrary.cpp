@@ -3,12 +3,12 @@
 #include "Libraries/ToroClassLibrary.h"
 #include "UObject/UObjectHash.h"
 
-const UObject* UToroClassLibrary::GetClassDefaultObject(const TSubclassOf<UObject> InClass)
+const UObject* UToroClassLibrary::GetClassDefaultObject(TSubclassOf<UObject> InClass)
 {
 	return IsValid(InClass) ? InClass->GetDefaultObject() : nullptr;
 }
 
-void UToroClassLibrary::GetDerivedClasses(TArray<UClass*>& Results, const TSubclassOf<UObject> InClass, const bool bRecursive)
+void UToroClassLibrary::GetDerivedClasses(TArray<UClass*>& Results, TSubclassOf<UObject> InClass, bool bRecursive)
 {
 	Results.Reset();
 	::GetDerivedClasses(InClass, Results, bRecursive);

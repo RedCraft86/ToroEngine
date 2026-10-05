@@ -23,7 +23,7 @@ namespace
 	}
 }
 
-void UToroSequenceLibrary::StopLevelSequence(const ALevelSequenceActor* Target, const EToroSequenceStopType StopType)
+void UToroSequenceLibrary::StopLevelSequence(const ALevelSequenceActor* Target, EToroSequenceStopType StopType)
 {
 	if (ULevelSequencePlayer* SequencePlayer = IsValid(Target) ? Target->GetSequencePlayer() : nullptr)
 	{
@@ -53,7 +53,7 @@ void UToroSequenceLibrary::StopLevelSequence(const ALevelSequenceActor* Target, 
 }
 
 FVoidCoroutine UToroSequenceLibrary::PlayLevelSequence(FLatentActionInfo LatentInfo, bool& bSuccess,
-	const ALevelSequenceActor* Target, const float PlayRate, const bool bWaitForFinished)
+	const ALevelSequenceActor* Target, float PlayRate, bool bWaitForFinished)
 {
 	bSuccess = false;
 	if (!FMath::IsFinite(PlayRate))
@@ -86,7 +86,7 @@ FVoidCoroutine UToroSequenceLibrary::PlayLevelSequence(FLatentActionInfo LatentI
 }
 
 FVoidCoroutine UToroSequenceLibrary::ReverseLevelSequence(FLatentActionInfo LatentInfo, bool& bSuccess,
-	const ALevelSequenceActor* Target, const float PlayRate, const bool bWaitForFinished)
+	const ALevelSequenceActor* Target, float PlayRate, bool bWaitForFinished)
 {
 	bSuccess = false;
 	if (!FMath::IsFinite(PlayRate))

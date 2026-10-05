@@ -74,7 +74,7 @@ bool AToroCharacter::TeleportTo(const FVector& DestLocation, const FRotator& Des
 	return false;
 }
 
-void AToroCharacter::ApplyActiveState_Implementation(const bool bInState)
+void AToroCharacter::ApplyActiveState_Implementation(bool bInState)
 {
 	if (!bInState)
 	{

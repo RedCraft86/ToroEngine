@@ -47,14 +47,14 @@ public:
 	 * @param Options Additional travel options passed to OpenLevel.
 	 */
 	UFUNCTION(BlueprintCallable, Category = World, meta = (WorldContext = ContextObject, AdvancedDisplay = "bAbsolute, Options"))
-	static void ReloadLevel(const UObject* ContextObject, const bool bAbsolute = true, const FString& Options = FString());
+	static void ReloadLevel(const UObject* ContextObject, bool bAbsolute = true, const FString& Options = FString());
 
 	/**
 	 * Invokes the named remote event through the world's level script actor.
 	 * @param EventName Remote event name; NAME_None or an unavailable level script actor is ignored.
 	 */
 	UFUNCTION(BlueprintCallable, Category = World, meta = (WorldContext = ContextObject))
-	static void CallRemoteEvent(const UObject* ContextObject, const FName EventName);
+	static void CallRemoteEvent(const UObject* ContextObject, FName EventName);
 
 	/**
 	 * Returns requested streaming flags, not the actual resident or visible state during transitions.
@@ -72,5 +72,5 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = World, meta = (Latent, LatentInfo = LatentInfo, WorldContext = ContextObject))
 	static FVoidCoroutine SetLevelStreamState(FLatentActionInfo LatentInfo, const UObject* ContextObject,
-		ULevelStreaming*& StreamedLevel, const TSoftObjectPtr<UWorld> Level, const EToroLevelStreamState State);
+		ULevelStreaming*& StreamedLevel, TSoftObjectPtr<UWorld> Level, EToroLevelStreamState State);
 };

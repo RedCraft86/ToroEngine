@@ -33,7 +33,7 @@ struct TOROCORE_API FSimpleCooldown final
 	 * Starts ready with the supplied interval.
 	 * @param Time Finite duration in seconds; its absolute value is used as the interval.
 	 */
-	FSimpleCooldown(const float Time)
+	FSimpleCooldown(float Time)
 		: Interval(FMath::Abs(Time)), Cooldown(0.0f)
 	{
 		ensureAlwaysMsgf(FMath::IsFinite(Time), TEXT("Cooldown time %f is not finite."), Time);
@@ -58,7 +58,7 @@ struct TOROCORE_API FSimpleCooldown final
 	 * @param DeltaTime Elapsed seconds. Negative or non-finite values leave state unchanged.
 	 * @return True on expiration; false while counting down or when DeltaTime is rejected.
 	 */
-	[[nodiscard]] bool Tick(const float DeltaTime);
+	[[nodiscard]] bool Tick(float DeltaTime);
 };
 
 /**
@@ -89,5 +89,5 @@ public:
 	 * @return True on expiration; false while counting down or when DeltaTime is rejected.
 	 */
 	UFUNCTION(BlueprintCallable, Category = SimpleCooldown)
-	static bool TickCooldown(UPARAM(ref) FSimpleCooldown& Cooldown, const float DeltaTime);
+	static bool TickCooldown(UPARAM(ref) FSimpleCooldown& Cooldown, float DeltaTime);
 };

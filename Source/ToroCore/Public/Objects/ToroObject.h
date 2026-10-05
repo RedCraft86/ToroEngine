@@ -22,7 +22,7 @@ public:
 
 	/** Sets the requested tick state for this object. */
 	UFUNCTION(BlueprintCallable, Category = Object)
-	void SetTickEnabled(const bool bEnabled);
+	void SetTickEnabled(bool bEnabled);
 
 	/** Reports the requested tick state of this context. */
 	UFUNCTION(BlueprintPure, Category = Object)
@@ -56,7 +56,7 @@ protected:
 
 	/** Receives an eligible tick with DeltaTime measured in seconds. */
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Tick")
-	void ReceiveTick(const float DeltaTime);
+	void ReceiveTick(float DeltaTime);
 
 	/** Calls ReceiveConstruction; overrides should call Super to retain Blueprint dispatch. */
 	virtual void OnConstruction();

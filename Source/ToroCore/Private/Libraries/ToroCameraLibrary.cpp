@@ -65,7 +65,7 @@ bool UToroCameraLibrary::IsActorInSceneCapture2DFrustum(USceneCaptureComponent2D
 	return IsActorInCameraView(ViewInfo, *TestActor);
 }
 
-bool UToroCameraLibrary::IsActorInViewFrustum(const AActor* TestActor, const int32 PlayerIdx)
+bool UToroCameraLibrary::IsActorInViewFrustum(const AActor* TestActor, int32 PlayerIdx)
 {
 	if (!IsValid(TestActor))
 	{
@@ -94,7 +94,7 @@ bool UToroCameraLibrary::IsActorInViewFrustum(const AActor* TestActor, const int
 	return Frustum.IntersectBox(Origin, Extent);
 }
 
-FTransform UToroCameraLibrary::GetViewTransform(const UObject* ContextObject, const int32 PlayerIdx)
+FTransform UToroCameraLibrary::GetViewTransform(const UObject* ContextObject, int32 PlayerIdx)
 {
 	static TMap<int32, TFrameValue<FTransform>> IndexToTransform;
 
@@ -141,7 +141,7 @@ FTransform UToroCameraLibrary::GetViewTransform(const UObject* ContextObject, co
 	return OutTransform.GetValue();
 }
 
-bool UToroCameraLibrary::StopCameraFade(const UObject* ContextObject, const int32 PlayerIdx)
+bool UToroCameraLibrary::StopCameraFade(const UObject* ContextObject, int32 PlayerIdx)
 {
 	APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(FWorldGetter::Get(ContextObject), PlayerIdx);
 	if (IsValid(PCM))
@@ -153,8 +153,8 @@ bool UToroCameraLibrary::StopCameraFade(const UObject* ContextObject, const int3
 	return false;
 }
 
-bool UToroCameraLibrary::SetCameraFade(const UObject* ContextObject, const FLinearColor Color,
-	const float Alpha, const bool bFadeAudio, const int32 PlayerIdx)
+bool UToroCameraLibrary::SetCameraFade(const UObject* ContextObject, FLinearColor Color,
+	float Alpha, bool bFadeAudio, int32 PlayerIdx)
 {
 	APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(FWorldGetter::Get(ContextObject), PlayerIdx);
 	if (IsValid(PCM))
@@ -167,8 +167,8 @@ bool UToroCameraLibrary::SetCameraFade(const UObject* ContextObject, const FLine
 }
 
 FVoidCoroutine UToroCameraLibrary::StartCameraFade(FLatentActionInfo LatentInfo, const UObject* ContextObject,
-	bool& bSuccess, const FLinearColor Color, const float Duration, const float FromAlpha,
-	const float ToAlpha, const bool bFadeAudio, const bool bHoldAtEnd, const int32 PlayerIdx)
+	bool& bSuccess, FLinearColor Color, float Duration, float FromAlpha,
+	float ToAlpha, bool bFadeAudio, bool bHoldAtEnd, int32 PlayerIdx)
 {
 	bSuccess = false;
 	if (!FMath::IsFinite(Duration))
@@ -192,13 +192,13 @@ FVoidCoroutine UToroCameraLibrary::StartCameraFade(FLatentActionInfo LatentInfo,
 	co_return;
 }
 
-AActor* UToroCameraLibrary::GetPlayerViewTarget(const UObject* ContextObject, const int32 PlayerIdx)
+AActor* UToroCameraLibrary::GetPlayerViewTarget(const UObject* ContextObject, int32 PlayerIdx)
 {
 	const APlayerController* PC = UGameplayStatics::GetPlayerController(FWorldGetter::Get(ContextObject), PlayerIdx);
 	return IsValid(PC) ? PC->GetViewTarget() : nullptr;
 }
 
-bool UToroCameraLibrary::SetPlayerViewTarget(const UObject* ContextObject, AActor* NewTarget, const int32 PlayerIdx)
+bool UToroCameraLibrary::SetPlayerViewTarget(const UObject* ContextObject, AActor* NewTarget, int32 PlayerIdx)
 {
 	APlayerController* PC = UGameplayStatics::GetPlayerController(FWorldGetter::Get(ContextObject), PlayerIdx);
 	if (IsValid(PC))
@@ -211,8 +211,8 @@ bool UToroCameraLibrary::SetPlayerViewTarget(const UObject* ContextObject, AActo
 }
 
 FVoidCoroutine UToroCameraLibrary::BlendPlayerViewTarget(FLatentActionInfo LatentInfo, const UObject* ContextObject,
-	bool& bSuccess, AActor* NewTarget, const float Duration, const EViewTargetBlendFunction BlendFunc,
-	const float BlendExp, const bool bLockOutgoing, const int32 PlayerIdx)
+	bool& bSuccess, AActor* NewTarget, float Duration, EViewTargetBlendFunction BlendFunc,
+	float BlendExp, bool bLockOutgoing, int32 PlayerIdx)
 {
 	bSuccess = false;
 	if (!FMath::IsFinite(Duration))

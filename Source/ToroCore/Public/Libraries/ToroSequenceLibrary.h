@@ -43,7 +43,7 @@ public:
 	 * @param StopType Select default completion, restored state, current-time state, or end-time state.
 	 */
 	UFUNCTION(BlueprintCallable, Category = LevelSequence, DisplayName = "Stop Sequence", meta = (DefaultToSelf = Target))
-	static void StopLevelSequence(const ALevelSequenceActor* Target, const EToroSequenceStopType StopType = EToroSequenceStopType::Default);
+	static void StopLevelSequence(const ALevelSequenceActor* Target, EToroSequenceStopType StopType = EToroSequenceStopType::Default);
 
 	/**
 	 * Starts forward playback and optionally waits for natural completion or an explicit stop.
@@ -56,7 +56,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = LevelSequence, DisplayName = "Play Sequence",
 		meta = (Latent, LatentInfo = LatentInfo, DefaultToSelf = Target))
 	static FVoidCoroutine PlayLevelSequence(FLatentActionInfo LatentInfo, bool& bSuccess,
-		const ALevelSequenceActor* Target, const float PlayRate = 1.0f, const bool bWaitForFinished = true);
+		const ALevelSequenceActor* Target, float PlayRate = 1.0f, bool bWaitForFinished = true);
 
 	/**
 	 * Starts reverse playback and optionally waits for natural completion or an explicit stop.
@@ -69,5 +69,5 @@ public:
 	UFUNCTION(BlueprintCallable, Category = LevelSequence, DisplayName = "Reverse Sequence",
 		meta = (Latent, LatentInfo = LatentInfo, DefaultToSelf = Target))
 	static FVoidCoroutine ReverseLevelSequence(FLatentActionInfo LatentInfo, bool& bSuccess,
-		const ALevelSequenceActor* Target, const float PlayRate = 1.0f, const bool bWaitForFinished = true);
+		const ALevelSequenceActor* Target, float PlayRate = 1.0f, bool bWaitForFinished = true);
 };

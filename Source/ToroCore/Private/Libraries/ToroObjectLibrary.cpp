@@ -5,7 +5,7 @@
 #include "UObject/UObjectHash.h"
 #include "ToroCore.h"
 
-void UToroObjectLibrary::CallObjectEvent(UObject* Target, const FName EventName)
+void UToroObjectLibrary::CallObjectEvent(UObject* Target, FName EventName)
 {
 	if (IsValid(Target) && !EventName.IsNone())
 	{
@@ -14,7 +14,7 @@ void UToroObjectLibrary::CallObjectEvent(UObject* Target, const FName EventName)
 	}
 }
 
-void UToroObjectLibrary::GetAllObjectsOfClass(TArray<UObject*>& Result, const TSubclassOf<UObject> InClass)
+void UToroObjectLibrary::GetAllObjectsOfClass(TArray<UObject*>& Result, TSubclassOf<UObject> InClass)
 {
 	QUICK_SCOPE_CYCLE_COUNTER(UToroObjectLibrary_GetAllObjectsOfClass);
 	Result.Reset();
@@ -34,7 +34,7 @@ void UToroObjectLibrary::GetAllObjectsOfClass(TArray<UObject*>& Result, const TS
 	}
 }
 
-UObject* UToroObjectLibrary::GetObjectOfClass(const TSubclassOf<UObject> InClass)
+UObject* UToroObjectLibrary::GetObjectOfClass(TSubclassOf<UObject> InClass)
 {
 	QUICK_SCOPE_CYCLE_COUNTER(UToroObjectLibrary_GetObjectOfClass);
 

@@ -15,7 +15,7 @@ bool IActivatableObject::GetActiveState(const UObject* Target)
 	return IsValidActivatableTarget(Target) && Execute_GetActiveState(Target);
 }
 
-void IActivatableObject::SetActiveState(UObject* Target, const bool bNewState)
+void IActivatableObject::SetActiveState(UObject* Target, bool bNewState)
 {
 	if (IsValidActivatableTarget(Target))
 	{

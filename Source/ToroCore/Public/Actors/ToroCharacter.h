@@ -79,8 +79,8 @@ protected:
 	 * An override replaces the native behavior unless it calls the parent implementation.
 	 */
 	UFUNCTION(BlueprintNativeEvent, DisplayName = "Apply Active State")
-	void ApplyActiveState(const bool bInState);
-	virtual void ApplyActiveState_Implementation(const bool bInState);
+	void ApplyActiveState(bool bInState);
+	virtual void ApplyActiveState_Implementation(bool bInState);
 
 #if WITH_EDITOR
 	/**

@@ -12,7 +12,7 @@ UToroObject::UToroObject()
 {
 }
 
-void UToroObject::SetTickEnabled(const bool bEnabled)
+void UToroObject::SetTickEnabled(bool bEnabled)
 {
 	bCanTick = bEnabled;
 }

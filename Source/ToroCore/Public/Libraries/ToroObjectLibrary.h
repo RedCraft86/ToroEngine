@@ -21,7 +21,7 @@ public:
 	 * @param EventName Function name or command text. NAME_None is ignored; omitted arguments use parser defaults.
 	 */
 	UFUNCTION(BlueprintCallable, Category = Object, meta = (DefaultToSelf = Target))
-	static void CallObjectEvent(UObject* Target, const FName EventName);
+	static void CallObjectEvent(UObject* Target, FName EventName);
 
 	/**
 	 * Queries loaded objects of a class and its subclasses; this is not restricted to a world.
@@ -29,7 +29,7 @@ public:
 	 * @param InClass Class to query. Invalid classes and UObject itself yield an empty result; assets are not loaded.
 	 */
 	UFUNCTION(BlueprintCallable, Category = Object, meta = (DeterminesOutputType = InClass, DynamicOutputParam = Result))
-	static void GetAllObjectsOfClass(TArray<UObject*>& Result, const TSubclassOf<UObject> InClass);
+	static void GetAllObjectsOfClass(TArray<UObject*>& Result, TSubclassOf<UObject> InClass);
 
 	/**
 	 * Returns the first valid loaded instance of a class or subclass in unspecified order.
@@ -38,5 +38,5 @@ public:
 	 * @return Matching instance, or nullptr if none is found; default objects are excluded.
 	 */
 	UFUNCTION(BlueprintCallable, Category = Object, meta = (DeterminesOutputType = InClass))
-	[[nodiscard]] static UObject* GetObjectOfClass(const TSubclassOf<UObject> InClass);
+	[[nodiscard]] static UObject* GetObjectOfClass(TSubclassOf<UObject> InClass);
 };

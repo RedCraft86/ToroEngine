@@ -9,7 +9,7 @@ FString FToroIdentity::ToString() const
 	return FString::Printf(TEXT("%s[%s]"), *Group.ToString(), *Guid.ToString());
 }
 
-void FToroIdentity::RegenerateGuid(const bool bOnlyIfInvalid)
+void FToroIdentity::RegenerateGuid(bool bOnlyIfInvalid)
 {
 	if (!bOnlyIfInvalid || !Guid.IsValid())
 	{

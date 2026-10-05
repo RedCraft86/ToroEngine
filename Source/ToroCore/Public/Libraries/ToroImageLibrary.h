@@ -35,7 +35,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = ImageUtils)
 	static void DrawWidgetToRenderTarget(UTextureRenderTarget2D* Target, UUserWidget* UserWidget,
-		const bool bGammaCorrection = true, const bool bInClearTarget = false);
+		bool bGammaCorrection = true, bool bInClearTarget = false);
 
 	/**
 	 * Copies the first mip of a texture with BGRA8 platform data into image pixels.
@@ -55,7 +55,7 @@ public:
 	 * @return True for a successful, dimension-matched readback; false otherwise.
 	 */
 	UFUNCTION(BlueprintCallable, Category = ImageUtils)
-	[[nodiscard]] static bool GetDataFromRenderTarget(FToroImageData& OutData, UTextureRenderTarget2D* Target, const bool bInvertAlpha = false);
+	[[nodiscard]] static bool GetDataFromRenderTarget(FToroImageData& OutData, UTextureRenderTarget2D* Target, bool bInvertAlpha = false);
 
 	/**
 	 * Creates a transient, sRGB BGRA8 texture from valid image data.
@@ -74,7 +74,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (Latent, LatentInfo = LatentInfo))
 	static FVoidCoroutine SaveTextureToFile(FLatentActionInfo LatentInfo, bool& bSuccess,
-		const UTexture2D* Target, const FString& FilePath, const bool bAsync = true);
+		const UTexture2D* Target, const FString& FilePath, bool bAsync = true);
 
 	/**
 	 * Reads a render target and saves its pixels as PNG regardless of the filename extension.
@@ -86,7 +86,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (Latent, LatentInfo = LatentInfo))
 	static FVoidCoroutine SaveRenderTargetToFile(FLatentActionInfo LatentInfo, bool& bSuccess,
-		UTextureRenderTarget2D* Target, const FString& FilePath, const bool bInvertAlpha, const bool bAsync = true);
+		UTextureRenderTarget2D* Target, const FString& FilePath, bool bInvertAlpha, bool bAsync = true);
 
 	/**
 	 * Encodes image data as PNG and writes it to the supplied path regardless of extension.
@@ -97,7 +97,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (Latent, LatentInfo = LatentInfo))
 	static FVoidCoroutine SaveImageDataToFile(FLatentActionInfo LatentInfo, bool& bSuccess,
-		const FToroImageData& InData, const FString& FilePath, const bool bAsync = true);
+		const FToroImageData& InData, const FString& FilePath, bool bAsync = true);
 
 	/**
 	 * Requests an LDR game-viewport screenshot and waits for capture or request processing.
@@ -110,5 +110,5 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (Latent, LatentInfo = LatentInfo))
 	static FVoidCoroutine RequestScreenshot(FLatentActionInfo LatentInfo, FToroImageData& Image,
-		const float ResolutionScale = 1.0f, const bool bIncludeUI = false);
+		float ResolutionScale = 1.0f, bool bIncludeUI = false);
 };

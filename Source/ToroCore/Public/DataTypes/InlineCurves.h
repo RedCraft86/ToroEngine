@@ -30,15 +30,15 @@ struct TOROCORE_API FInlineFloatCurve final
 	[[nodiscard]] FRichCurve* GetRichCurve();
 
 	[[nodiscard]] bool HasAnyData() const;
-	[[nodiscard]] float GetValue(const float Time, const float Default = 0.0f) const;
+	[[nodiscard]] float GetValue(float Time, float Default = 0.0f) const;
 
 	void GetTimeRange(float& Min, float& Max) const;
 	void GetValueRange(float& Min, float& Max) const;
 
 	void ResetCurve();
-	void RemovePoint(const float Time);
-	void AddOrUpdatePoint(const float Time, const float Value,
-		const ERichCurveTangentMode Tangent = RCTM_Auto);
+	void RemovePoint(float Time);
+	void AddOrUpdatePoint(float Time, float Value,
+		ERichCurveTangentMode Tangent = RCTM_Auto);
 };
 
 /**
@@ -59,19 +59,19 @@ struct TOROCORE_API FInlineVectorCurve final
 
 	[[nodiscard]] UCurveVector* GetCurveAsset() const;
 
-	[[nodiscard]] const FRichCurve* GetRichCurve(const uint8 Idx) const;
-	[[nodiscard]] FRichCurve* GetRichCurve(const uint8 Idx);
+	[[nodiscard]] const FRichCurve* GetRichCurve(uint8 Idx) const;
+	[[nodiscard]] FRichCurve* GetRichCurve(uint8 Idx);
 
 	[[nodiscard]] bool HasAnyData() const;
-	[[nodiscard]] FVector GetValue(const float Time, const FVector& Default = FVector::ZeroVector) const;
+	[[nodiscard]] FVector GetValue(float Time, const FVector& Default = FVector::ZeroVector) const;
 
 	void GetTimeRange(float& Min, float& Max) const;
 	void GetValueRange(FVector& Min, FVector& Max) const;
 
 	void ResetCurve();
-	void RemovePoint(const float Time);
-	void AddOrUpdatePoint(const float Time, const FVector& Value,
-		const ERichCurveTangentMode Tangent = RCTM_Auto);
+	void RemovePoint(float Time);
+	void AddOrUpdatePoint(float Time, const FVector& Value,
+		ERichCurveTangentMode Tangent = RCTM_Auto);
 };
 
 /**
@@ -93,19 +93,19 @@ struct TOROCORE_API FInlineColorCurve final
 
 	[[nodiscard]] UCurveLinearColor* GetCurveAsset() const;
 
-	[[nodiscard]] const FRichCurve* GetRichCurve(const uint8 Idx) const;
-	[[nodiscard]] FRichCurve* GetRichCurve(const uint8 Idx);
+	[[nodiscard]] const FRichCurve* GetRichCurve(uint8 Idx) const;
+	[[nodiscard]] FRichCurve* GetRichCurve(uint8 Idx);
 
 	[[nodiscard]] bool HasAnyData() const;
-	[[nodiscard]] FLinearColor GetValue(const float Time, const FLinearColor& Default = FLinearColor::Black) const;
+	[[nodiscard]] FLinearColor GetValue(float Time, const FLinearColor& Default = FLinearColor::Black) const;
 
 	void GetTimeRange(float& Min, float& Max) const;
 	void GetValueRange(FLinearColor& Min, FLinearColor& Max) const;
 
 	void ResetCurve();
-	void RemovePoint(const float Time);
-	void AddOrUpdatePoint(const float Time, const FLinearColor& Value,
-		const ERichCurveTangentMode Tangent = RCTM_Auto);
+	void RemovePoint(float Time);
+	void AddOrUpdatePoint(float Time, const FLinearColor& Value,
+		ERichCurveTangentMode Tangent = RCTM_Auto);
 };
 
 /**
@@ -134,7 +134,7 @@ public:
 	 * Configured curve defaults take precedence over this fallback.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|Curves|Inline", DisplayName = "Get Value (Float)")
-	static float GetInlineCurveValue_Float(const FInlineFloatCurve& Target, const float Time, const float Default = 0.0f);
+	static float GetInlineCurveValue_Float(const FInlineFloatCurve& Target, float Time, float Default = 0.0f);
 
 	/**
 	 * Returns the earliest and latest key times across the active curve channels.
@@ -167,7 +167,7 @@ public:
 	 * @param Time Key time matched using Unreal default key-time tolerance.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Math|Curves|Inline", DisplayName = "Remove Point (Float)")
-	static void RemoveInlineCurvePoint_Float(UPARAM(ref) FInlineFloatCurve& Target, const float Time);
+	static void RemoveInlineCurvePoint_Float(UPARAM(ref) FInlineFloatCurve& Target, float Time);
 
 	/**
 	 * Adds or updates inline keys in all channels using Unreal default key-time tolerance.
@@ -180,7 +180,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Math|Curves|Inline", DisplayName = "Add Or Update Point (Float)")
 	static void AddOrUpdateInlineCurvePoint_Float(UPARAM(ref) FInlineFloatCurve& Target,
-		const float Time, const float Value, const TEnumAsByte<ERichCurveTangentMode> Tangent);
+		float Time, float Value, TEnumAsByte<ERichCurveTangentMode> Tangent);
 
 	/** Returns the assigned external curve asset, or nullptr when using inline data. */
 	UFUNCTION(BlueprintPure, Category = "Math|Curves|Inline", DisplayName = "Get Curve Asset (Vector)")
@@ -197,7 +197,7 @@ public:
 	 * Configured curve defaults take precedence over this fallback.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|Curves|Inline", DisplayName = "Get Value (Vector)")
-	static FVector GetInlineCurveValue_Vector(const FInlineVectorCurve& Target, const float Time, const FVector& Default);
+	static FVector GetInlineCurveValue_Vector(const FInlineVectorCurve& Target, float Time, const FVector& Default);
 
 	/**
 	 * Returns the earliest and latest key times across the active curve channels.
@@ -230,7 +230,7 @@ public:
 	 * @param Time Key time matched using Unreal default key-time tolerance.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Math|Curves|Inline", DisplayName = "Remove Point (Vector)")
-	static void RemoveInlineCurvePoint_Vector(UPARAM(ref) FInlineVectorCurve& Target, const float Time);
+	static void RemoveInlineCurvePoint_Vector(UPARAM(ref) FInlineVectorCurve& Target, float Time);
 
 	/**
 	 * Adds or updates inline keys in all channels using Unreal default key-time tolerance.
@@ -243,7 +243,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Math|Curves|Inline", DisplayName = "Add Or Update Point (Vector)")
 	static void AddOrUpdateInlineCurvePoint_Vector(UPARAM(ref) FInlineVectorCurve& Target,
-		const float Time, const FVector& Value, const TEnumAsByte<ERichCurveTangentMode> Tangent);
+		float Time, const FVector& Value, TEnumAsByte<ERichCurveTangentMode> Tangent);
 
 	/** Returns the assigned external curve asset, or nullptr when using inline data. */
 	UFUNCTION(BlueprintPure, Category = "Math|Curves|Inline", DisplayName = "Get Curve Asset (Color)")
@@ -261,7 +261,7 @@ public:
 	 * Returns raw RGBA values without applying asset color-adjustment settings.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|Curves|Inline", DisplayName = "Get Value (Color)")
-	static FLinearColor GetInlineCurveValue_Color(const FInlineColorCurve& Target, const float Time, const FLinearColor& Default);
+	static FLinearColor GetInlineCurveValue_Color(const FInlineColorCurve& Target, float Time, const FLinearColor& Default);
 
 	/**
 	 * Returns the earliest and latest key times across the active curve channels.
@@ -294,7 +294,7 @@ public:
 	 * @param Time Key time matched using Unreal default key-time tolerance.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Math|Curves|Inline", DisplayName = "Remove Point (Color)")
-	static void RemoveInlineCurvePoint_Color(UPARAM(ref) FInlineColorCurve& Target, const float Time);
+	static void RemoveInlineCurvePoint_Color(UPARAM(ref) FInlineColorCurve& Target, float Time);
 
 	/**
 	 * Adds or updates inline keys in all channels using Unreal default key-time tolerance.
@@ -307,5 +307,5 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Math|Curves|Inline", DisplayName = "Add Or Update Point (Color)")
 	static void AddOrUpdateInlineCurvePoint_Color(UPARAM(ref) FInlineColorCurve& Target,
-		const float Time, const FLinearColor& Value, const TEnumAsByte<ERichCurveTangentMode> Tangent);
+		float Time, const FLinearColor& Value, TEnumAsByte<ERichCurveTangentMode> Tangent);
 };

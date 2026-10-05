@@ -39,7 +39,7 @@ namespace
 	}
 }
 
-void FToroBaseMeshPreset::FillMaterials(const bool bOverwrite)
+void FToroBaseMeshPreset::FillMaterials(bool bOverwrite)
 {
 	if (bOverwrite)
 	{
@@ -66,7 +66,7 @@ void FToroBaseMeshPreset::FillMaterials(const bool bOverwrite)
 	}
 }
 
-bool FToroBaseMeshPreset::Equals(const FToroBaseMeshPreset& Other, const bool bCheckTransform) const
+bool FToroBaseMeshPreset::Equals(const FToroBaseMeshPreset& Other, bool bCheckTransform) const
 {
 	if (StaticMesh != Other.StaticMesh
 		|| bCastShadows != Other.bCastShadows
@@ -92,7 +92,7 @@ bool FToroBaseMeshPreset::Equals(const FToroBaseMeshPreset& Other, const bool bC
 	return true;
 }
 
-void FToroBaseMeshPreset::FromMeshComponent(const UStaticMeshComponent* Target, const bool bIncludeTransform)
+void FToroBaseMeshPreset::FromMeshComponent(const UStaticMeshComponent* Target, bool bIncludeTransform)
 {
 	if (::IsValid(Target))
 	{
@@ -120,13 +120,13 @@ void FToroBaseMeshPreset::ToMeshComponent(UStaticMeshComponent* Target) const
 	}
 }
 
-bool FToroSplineMeshPreset::Equals(const FToroSplineMeshPreset& Other, const bool bCheckTransform) const
+bool FToroSplineMeshPreset::Equals(const FToroSplineMeshPreset& Other, bool bCheckTransform) const
 {
 	return Equals(static_cast<const FToroBaseMeshPreset&>(Other), bCheckTransform)
 		&& ForwardAxis == Other.ForwardAxis;
 }
 
-void FToroSplineMeshPreset::FromMeshComponent(const UStaticMeshComponent* Target, const bool bIncludeTransform)
+void FToroSplineMeshPreset::FromMeshComponent(const UStaticMeshComponent* Target, bool bIncludeTransform)
 {
 	const USplineMeshComponent* SplineMesh = ::IsValid(Target) ? Cast<USplineMeshComponent>(Target) : nullptr;
 	if (!SplineMesh)
@@ -160,18 +160,18 @@ bool UToroMeshPresetLibrary::IsMeshPresetValid(const FToroBaseMeshPreset& Target
 }
 
 bool UToroMeshPresetLibrary::IsEqualsMeshPreset(const FToroBaseMeshPreset& A,
-	const FToroBaseMeshPreset& B, const bool bCheckTransform)
+	const FToroBaseMeshPreset& B, bool bCheckTransform)
 {
 	return A.Equals(B, bCheckTransform);
 }
 
-void UToroMeshPresetLibrary::FillMeshPresetMaterials(FToroBaseMeshPreset& Target, const bool bOverwrite)
+void UToroMeshPresetLibrary::FillMeshPresetMaterials(FToroBaseMeshPreset& Target, bool bOverwrite)
 {
 	Target.FillMaterials(bOverwrite);
 }
 
 void UToroMeshPresetLibrary::SetMeshPresetFromComponent(FToroBaseMeshPreset& Target,
-	const UStaticMeshComponent* Component, const bool bIncludeTransform)
+	const UStaticMeshComponent* Component, bool bIncludeTransform)
 {
 	Target.FromMeshComponent(Component, bIncludeTransform);
 }
@@ -192,18 +192,18 @@ bool UToroMeshPresetLibrary::IsSplineMeshPresetValid(const FToroSplineMeshPreset
 }
 
 bool UToroMeshPresetLibrary::IsEqualsSplineMeshPreset(const FToroSplineMeshPreset& A,
-	const FToroSplineMeshPreset& B, const bool bCheckTransform)
+	const FToroSplineMeshPreset& B, bool bCheckTransform)
 {
 	return A.Equals(B, bCheckTransform);
 }
 
-void UToroMeshPresetLibrary::FillSplineMeshPresetMaterials(FToroSplineMeshPreset& Target, const bool bOverwrite)
+void UToroMeshPresetLibrary::FillSplineMeshPresetMaterials(FToroSplineMeshPreset& Target, bool bOverwrite)
 {
 	Target.FillMaterials(bOverwrite);
 }
 
 void UToroMeshPresetLibrary::SetSplineMeshPresetFromComponent(FToroSplineMeshPreset& Target,
-	const USplineMeshComponent* Component, const bool bIncludeTransform)
+	const USplineMeshComponent* Component, bool bIncludeTransform)
 {
 	Target.FromMeshComponent(Component, bIncludeTransform);
 }

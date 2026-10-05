@@ -30,7 +30,7 @@ public:
 	 * @return True if the variable exists and a write was submitted; false if absent. The final value is not verified.
 	 */
 	UFUNCTION(BlueprintCallable, Category = ConsoleVariables, DisplayName = "Set Console Variable (Bool)")
-	static bool SetCVarBool(const FString& InName, const bool InValue);
+	static bool SetCVarBool(const FString& InName, bool InValue);
 
 	/**
 	 * Sets a console variable through its current priority, clamped to MinPriority..MaxPriority.
@@ -39,7 +39,7 @@ public:
 	 * @return True if the variable exists and a write was submitted; false if absent. The final value is not verified.
 	 */
 	UFUNCTION(BlueprintCallable, Category = ConsoleVariables, DisplayName = "Set Console Variable (Int)")
-	static bool SetCVarInt(const FString& InName, const int32 InValue);
+	static bool SetCVarInt(const FString& InName, int32 InValue);
 
 	/**
 	 * Sets a console variable through its current priority, clamped to MinPriority..MaxPriority.
@@ -48,7 +48,7 @@ public:
 	 * @return True if the variable exists and a write was submitted; false if absent. The final value is not verified.
 	 */
 	UFUNCTION(BlueprintCallable, Category = ConsoleVariables, DisplayName = "Set Console Variable (float)")
-	static bool SetCVarFloat(const FString& InName, const float InValue);
+	static bool SetCVarFloat(const FString& InName, float InValue);
 
 	/**
 	 * Sets a console variable through its current priority, clamped to MinPriority..MaxPriority.
@@ -65,7 +65,7 @@ public:
 	 * @param bInDefault Value returned when the variable is absent.
 	 */
 	UFUNCTION(BlueprintPure, Category = ConsoleVariables, DisplayName = "Get Console Variable (Bool)")
-	[[nodiscard]] static bool GetCVarBool(const FString& InName, const bool bInDefault = false);
+	[[nodiscard]] static bool GetCVarBool(const FString& InName, bool bInDefault = false);
 
 	/**
 	 * Reads a console variable through its integer accessor.
@@ -73,7 +73,7 @@ public:
 	 * @param InDefault Value returned when the variable is absent.
 	 */
 	UFUNCTION(BlueprintPure, Category = ConsoleVariables, DisplayName = "Get Console Variable (Int)")
-	[[nodiscard]] static int32 GetCVarInt(const FString& InName, const int32 InDefault = 0);
+	[[nodiscard]] static int32 GetCVarInt(const FString& InName, int32 InDefault = 0);
 
 	/**
 	 * Reads a console variable through its float accessor.
@@ -81,7 +81,7 @@ public:
 	 * @param InDefault Value returned when the variable is absent.
 	 */
 	UFUNCTION(BlueprintPure, Category = ConsoleVariables, DisplayName = "Get Console Variable (float)")
-	[[nodiscard]] static float GetCVarFloat(const FString& InName, const float InDefault = 0.0f);
+	[[nodiscard]] static float GetCVarFloat(const FString& InName, float InDefault = 0.0f);
 
 	/**
 	 * Reads a console variable through its string accessor.

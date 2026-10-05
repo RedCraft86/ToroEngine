@@ -28,7 +28,7 @@ protected:
 
 	/** Sets the implementing object's active state to the requested value. */
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = Activation)
-	void SetActiveState(const bool bNewState);
+	void SetActiveState(bool bNewState);
 
 public:
 
@@ -46,5 +46,5 @@ public:
 	 * @param Target Object whose state will be set.
 	 * @param bNewState New active state to request.
 	 */
-	static void SetActiveState(UObject* Target, const bool bNewState);
+	static void SetActiveState(UObject* Target, bool bNewState);
 };

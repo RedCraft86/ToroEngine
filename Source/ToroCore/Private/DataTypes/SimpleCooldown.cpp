@@ -2,7 +2,7 @@
 
 #include "DataTypes/SimpleCooldown.h"
 
-bool FSimpleCooldown::Tick(const float DeltaTime)
+bool FSimpleCooldown::Tick(float DeltaTime)
 {
 	if ((Cooldown -= DeltaTime) <= 0.0f)
 	{
@@ -23,7 +23,7 @@ void USimpleCooldownLibrary::ReadyCooldown(FSimpleCooldown& Cooldown)
 	Cooldown.Ready();
 }
 
-bool USimpleCooldownLibrary::TickCooldown(FSimpleCooldown& Cooldown, const float DeltaTime)
+bool USimpleCooldownLibrary::TickCooldown(FSimpleCooldown& Cooldown, float DeltaTime)
 {
 	return Cooldown.Tick(DeltaTime);
 }

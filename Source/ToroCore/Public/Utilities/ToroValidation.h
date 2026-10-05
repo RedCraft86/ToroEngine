@@ -28,6 +28,6 @@ namespace ToroEngine::Validation
 	 * @param Target Object to validate; null or invalid objects are ignored.
 	 * @param LogName Destination message log; NAME_None selects AssetCheck.
 	 */
-	TOROCORE_API void ValidateObject(const UObject* Target, const FName LogName = NAME_None);
+	TOROCORE_API void ValidateObject(const UObject* Target, FName LogName = NAME_None);
 #endif
 }

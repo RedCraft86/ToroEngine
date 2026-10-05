@@ -22,14 +22,14 @@ struct TOROCORE_API FWrappedBool final
 		: Value(false)
 	{}
 
-	FWrappedBool(const bool InValue)
+	FWrappedBool(bool InValue)
 		: Value(InValue)
 	{}
 
 	FORCEINLINE operator bool&() { return Value; }
 	FORCEINLINE operator bool() const { return Value; }
 
-	FORCEINLINE void operator=(const bool InValue) { Value = InValue; }
+	FORCEINLINE void operator=(bool InValue) { Value = InValue; }
 
 	[[nodiscard]] FORCEINLINE bool operator==(const FWrappedBool& Other) const { return Value == Other.Value; }
 	[[nodiscard]] FORCEINLINE bool operator!=(const FWrappedBool& Other) const { return Value != Other.Value; }
@@ -71,7 +71,7 @@ struct TOROCORE_API FWrappedFloat final
 		: Value(0.0)
 	{}
 
-	FWrappedFloat(const double InValue)
+	FWrappedFloat(double InValue)
 		: Value(InValue)
 	{}
 
@@ -79,7 +79,7 @@ struct TOROCORE_API FWrappedFloat final
 	FORCEINLINE operator double() const { return Value; }
 	FORCEINLINE operator bool() const { return FMath::IsNearlyZero(Value); }
 
-	FORCEINLINE void operator=(const float InValue) { Value = InValue; }
+	FORCEINLINE void operator=(float InValue) { Value = InValue; }
 
 	[[nodiscard]] FORCEINLINE bool operator==(const FWrappedFloat& Other) const { return Value == Other.Value; }
 	[[nodiscard]] FORCEINLINE bool operator!=(const FWrappedFloat& Other) const { return Value != Other.Value; }
@@ -121,7 +121,7 @@ struct TOROCORE_API FWrappedByte final
 		: Value(0)
 	{}
 
-	FWrappedByte(const uint8 InValue)
+	FWrappedByte(uint8 InValue)
 		: Value(InValue)
 	{}
 
@@ -129,7 +129,7 @@ struct TOROCORE_API FWrappedByte final
 	FORCEINLINE operator uint8() const { return Value; }
 	FORCEINLINE operator bool() const { return Value != 0; }
 
-	FORCEINLINE void operator=(const uint8 InValue) { Value = InValue; }
+	FORCEINLINE void operator=(uint8 InValue) { Value = InValue; }
 
 	[[nodiscard]] FORCEINLINE bool operator==(const FWrappedByte& Other) const { return Value == Other.Value; }
 	[[nodiscard]] FORCEINLINE bool operator!=(const FWrappedByte& Other) const { return Value != Other.Value; }
@@ -170,7 +170,7 @@ struct TOROCORE_API FWrappedInt32 final
 		: Value(0)
 	{}
 
-	FWrappedInt32(const int32 InValue)
+	FWrappedInt32(int32 InValue)
 		: Value(InValue)
 	{}
 
@@ -178,7 +178,7 @@ struct TOROCORE_API FWrappedInt32 final
 	FORCEINLINE operator int32() const { return Value; }
 	FORCEINLINE operator bool() const { return Value != 0; }
 
-	FORCEINLINE void operator=(const int32 InValue) { Value = InValue; }
+	FORCEINLINE void operator=(int32 InValue) { Value = InValue; }
 
 	[[nodiscard]] FORCEINLINE bool operator==(const FWrappedInt32& Other) const { return Value == Other.Value; }
 	[[nodiscard]] FORCEINLINE bool operator!=(const FWrappedInt32& Other) const { return Value != Other.Value; }
@@ -219,7 +219,7 @@ struct TOROCORE_API FWrappedInt64 final
 		: Value(0)
 	{}
 
-	FWrappedInt64(const int64 InValue)
+	FWrappedInt64(int64 InValue)
 		: Value(InValue)
 	{}
 
@@ -227,7 +227,7 @@ struct TOROCORE_API FWrappedInt64 final
 	FORCEINLINE operator int64() const { return Value; }
 	FORCEINLINE operator bool() const { return Value != 0; }
 
-	FORCEINLINE void operator=(const int64 InValue) { Value = InValue; }
+	FORCEINLINE void operator=(int64 InValue) { Value = InValue; }
 
 	[[nodiscard]] FORCEINLINE bool operator==(const FWrappedInt64& Other) const { return Value == Other.Value; }
 	[[nodiscard]] FORCEINLINE bool operator!=(const FWrappedInt64& Other) const { return Value != Other.Value; }

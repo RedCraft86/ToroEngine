@@ -69,7 +69,7 @@ void ToroEngine::Validation::ValidateAsset(const UObject* Target)
 	}
 }
 
-void ToroEngine::Validation::ValidateObject(const UObject* Target, const FName LogName)
+void ToroEngine::Validation::ValidateObject(const UObject* Target, FName LogName)
 {
 	if (IsValid(Target))
 	{

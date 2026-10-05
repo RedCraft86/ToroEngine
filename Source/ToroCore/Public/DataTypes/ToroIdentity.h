@@ -87,7 +87,7 @@ struct TOROCORE_API FToroIdentity
 	 * @param bOnlyIfInvalid If true, replaces the GUID only when the GUID itself is invalid,
 	 * regardless of group validity.
 	 */
-	void RegenerateGuid(const bool bOnlyIfInvalid = false);
+	void RegenerateGuid(bool bOnlyIfInvalid = false);
 
 	/** Clears the group tag and invalidates the GUID, restoring the empty identity state. */
 	void Invalidate();

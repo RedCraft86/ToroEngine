@@ -39,14 +39,14 @@ public:
 	 * @param B Second position.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|Vector")
-	[[nodiscard]] static double GetHorizontalDistance(const FVector A, const FVector B);
+	[[nodiscard]] static double GetHorizontalDistance(FVector A, FVector B);
 
 	/**
 	 * Converts a color temperature in kelvin to linear RGB with opaque alpha.
 	 * @param Temperature Finite temperature; the engine clamps its supported range.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|LinearColor")
-	[[nodiscard]] static FLinearColor TemperatureToLinearColor(const float Temperature);
+	[[nodiscard]] static FLinearColor TemperatureToLinearColor(float Temperature);
 
 	/**
 	 * Generates a linear color using pseudorandom channels or the engine's stepped hue sequence.
@@ -54,14 +54,14 @@ public:
 	 * @param bRandomAlpha Sample alpha in 0..1 using the engine RNG rather than use opaque alpha.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|LinearColor")
-	[[nodiscard]] static FLinearColor RandomLinearColor(const bool bTrueRandom, const bool bRandomAlpha = false);
+	[[nodiscard]] static FLinearColor RandomLinearColor(bool bTrueRandom, bool bRandomAlpha = false);
 
 	/**
 	 * Converts a color temperature in kelvin to an opaque sRGB byte color.
 	 * @param Temperature Finite temperature; the engine clamps its supported range.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|Color")
-	[[nodiscard]] static FColor TemperatureToColor(const float Temperature);
+	[[nodiscard]] static FColor TemperatureToColor(float Temperature);
 
 	/**
 	 * Generates a byte color using pseudorandom channels or the engine's stepped hue sequence.
@@ -69,7 +69,7 @@ public:
 	 * @param bRandomAlpha Sample alpha in 0..255 using the engine RNG rather than use opaque alpha (255).
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|Color")
-	[[nodiscard]] static FColor RandomColor(const bool bTrueRandom, const bool bRandomAlpha = false);
+	[[nodiscard]] static FColor RandomColor(bool bTrueRandom, bool bRandomAlpha = false);
 
 	/**
 	 * Samples deterministic continuous one-dimensional Perlin noise.
@@ -77,7 +77,7 @@ public:
 	 * @return Noise value in the engine's nominal -1..1 range.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|Random")
-	[[nodiscard]] static float PerlinNoise1D(const float Position);
+	[[nodiscard]] static float PerlinNoise1D(float Position);
 
 	/**
 	 * Samples deterministic continuous two-dimensional Perlin noise.
@@ -85,7 +85,7 @@ public:
 	 * @return Noise value in the engine's nominal -1..1 range.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|Random")
-	[[nodiscard]] static float PerlinNoise2D(const FVector2D Position);
+	[[nodiscard]] static float PerlinNoise2D(FVector2D Position);
 
 	/**
 	 * Samples deterministic continuous three-dimensional Perlin noise.
@@ -93,7 +93,7 @@ public:
 	 * @return Noise value in the engine's nominal -1..1 range.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|Random")
-	[[nodiscard]] static float PerlinNoise3D(const FVector Position);
+	[[nodiscard]] static float PerlinNoise3D(FVector Position);
 
 	/**
 	 * Folds elements in array order, passing the accumulator first to Func.

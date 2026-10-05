@@ -28,7 +28,7 @@ bool FInlineFloatCurve::HasAnyData() const
 	return GetRichCurve()->HasAnyData();
 }
 
-float FInlineFloatCurve::GetValue(const float Time, const float Default) const
+float FInlineFloatCurve::GetValue(float Time, float Default) const
 {
 	return GetRichCurve()->Eval(Time, Default);
 }
@@ -51,7 +51,7 @@ void FInlineFloatCurve::ResetCurve()
 	}
 }
 
-void FInlineFloatCurve::RemovePoint(const float Time)
+void FInlineFloatCurve::RemovePoint(float Time)
 {
 	if (!GetCurveAsset())
 	{
@@ -63,8 +63,8 @@ void FInlineFloatCurve::RemovePoint(const float Time)
 	}
 }
 
-void FInlineFloatCurve::AddOrUpdatePoint(const float Time,
-	const float Value, const ERichCurveTangentMode Tangent)
+void FInlineFloatCurve::AddOrUpdatePoint(float Time,
+	float Value, ERichCurveTangentMode Tangent)
 {
 	if (!GetCurveAsset())
 	{
@@ -81,7 +81,7 @@ UCurveVector* FInlineVectorCurve::GetCurveAsset() const
 	return Curve.ExternalCurve;
 }
 
-const FRichCurve* FInlineVectorCurve::GetRichCurve(const uint8 Idx) const
+const FRichCurve* FInlineVectorCurve::GetRichCurve(uint8 Idx) const
 {
 	checkf(Idx < NumVector,
 		TEXT("FInlineVectorCurve::GetRichCurve only accepts indices [0,3). Provided value %d is invalid."), Idx
@@ -90,7 +90,7 @@ const FRichCurve* FInlineVectorCurve::GetRichCurve(const uint8 Idx) const
 	return Curve.GetRichCurveConst(Idx);
 }
 
-FRichCurve* FInlineVectorCurve::GetRichCurve(const uint8 Idx)
+FRichCurve* FInlineVectorCurve::GetRichCurve(uint8 Idx)
 {
 	checkf(Idx < NumVector,
 		TEXT("FInlineVectorCurve::GetRichCurve only accepts indices [0,3). Provided value %d is invalid."), Idx
@@ -112,7 +112,7 @@ bool FInlineVectorCurve::HasAnyData() const
 	return false;
 }
 
-FVector FInlineVectorCurve::GetValue(const float Time, const FVector& Default) const
+FVector FInlineVectorCurve::GetValue(float Time, const FVector& Default) const
 {
 	FVector Result = Default;
 	for (uint8 i = 0; i < NumVector; i++)
@@ -173,7 +173,7 @@ void FInlineVectorCurve::ResetCurve()
 	}
 }
 
-void FInlineVectorCurve::RemovePoint(const float Time)
+void FInlineVectorCurve::RemovePoint(float Time)
 {
 	if (!GetCurveAsset())
 	{
@@ -188,8 +188,8 @@ void FInlineVectorCurve::RemovePoint(const float Time)
 	}
 }
 
-void FInlineVectorCurve::AddOrUpdatePoint(const float Time,
-	const FVector& Value, const ERichCurveTangentMode Tangent)
+void FInlineVectorCurve::AddOrUpdatePoint(float Time,
+	const FVector& Value, ERichCurveTangentMode Tangent)
 {
 	if (!GetCurveAsset())
 	{
@@ -209,7 +209,7 @@ UCurveLinearColor* FInlineColorCurve::GetCurveAsset() const
 	return Curve.ExternalCurve;
 }
 
-const FRichCurve* FInlineColorCurve::GetRichCurve(const uint8 Idx) const
+const FRichCurve* FInlineColorCurve::GetRichCurve(uint8 Idx) const
 {
 	checkf(Idx < NumColor,
 		TEXT("FInlineColorCurve::GetRichCurve only accepts indices [0,4). Provided value %d is invalid."), Idx
@@ -218,7 +218,7 @@ const FRichCurve* FInlineColorCurve::GetRichCurve(const uint8 Idx) const
 	return Curve.ExternalCurve ? &Curve.ExternalCurve->FloatCurves[Idx] : &Curve.ColorCurves[Idx];
 }
 
-FRichCurve* FInlineColorCurve::GetRichCurve(const uint8 Idx)
+FRichCurve* FInlineColorCurve::GetRichCurve(uint8 Idx)
 {
 	checkf(Idx < NumColor,
 		TEXT("FInlineColorCurve::GetRichCurve only accepts indices [0,4). Provided value %d is invalid."), Idx
@@ -240,7 +240,7 @@ bool FInlineColorCurve::HasAnyData() const
 	return false;
 }
 
-FLinearColor FInlineColorCurve::GetValue(const float Time, const FLinearColor& Default) const
+FLinearColor FInlineColorCurve::GetValue(float Time, const FLinearColor& Default) const
 {
 	FLinearColor Result = Default;
 	for (uint8 i = 0; i < NumColor; i++)
@@ -301,7 +301,7 @@ void FInlineColorCurve::ResetCurve()
 	}
 }
 
-void FInlineColorCurve::RemovePoint(const float Time)
+void FInlineColorCurve::RemovePoint(float Time)
 {
 	if (!GetCurveAsset())
 	{
@@ -316,8 +316,8 @@ void FInlineColorCurve::RemovePoint(const float Time)
 	}
 }
 
-void FInlineColorCurve::AddOrUpdatePoint(const float Time,
-	const FLinearColor& Value, const ERichCurveTangentMode Tangent)
+void FInlineColorCurve::AddOrUpdatePoint(float Time,
+	const FLinearColor& Value, ERichCurveTangentMode Tangent)
 {
 	if (!GetCurveAsset())
 	{
@@ -342,7 +342,7 @@ bool UInlineCurvesLibrary::HasInlineCurveData_Float(const FInlineFloatCurve& Tar
 	return Target.HasAnyData();
 }
 
-float UInlineCurvesLibrary::GetInlineCurveValue_Float(const FInlineFloatCurve& Target, const float Time, const float Default)
+float UInlineCurvesLibrary::GetInlineCurveValue_Float(const FInlineFloatCurve& Target, float Time, float Default)
 {
 	return Target.GetValue(Time, Default);
 }
@@ -362,13 +362,13 @@ void UInlineCurvesLibrary::ResetInlineCurve_Float(FInlineFloatCurve& Target)
 	Target.ResetCurve();
 }
 
-void UInlineCurvesLibrary::RemoveInlineCurvePoint_Float(FInlineFloatCurve& Target, const float Time)
+void UInlineCurvesLibrary::RemoveInlineCurvePoint_Float(FInlineFloatCurve& Target, float Time)
 {
 	Target.RemovePoint(Time);
 }
 
 void UInlineCurvesLibrary::AddOrUpdateInlineCurvePoint_Float(FInlineFloatCurve& Target,
-	const float Time, const float Value, const TEnumAsByte<ERichCurveTangentMode> Tangent)
+	float Time, float Value, TEnumAsByte<ERichCurveTangentMode> Tangent)
 {
 	Target.AddOrUpdatePoint(Time, Value, Tangent);
 }
@@ -383,7 +383,7 @@ bool UInlineCurvesLibrary::HasInlineCurveData_Vector(const FInlineVectorCurve& T
 	return Target.HasAnyData();
 }
 
-FVector UInlineCurvesLibrary::GetInlineCurveValue_Vector(const FInlineVectorCurve& Target, const float Time, const FVector& Default)
+FVector UInlineCurvesLibrary::GetInlineCurveValue_Vector(const FInlineVectorCurve& Target, float Time, const FVector& Default)
 {
 	return Target.GetValue(Time, Default);
 }
@@ -403,13 +403,13 @@ void UInlineCurvesLibrary::ResetInlineCurve_Vector(FInlineVectorCurve& Target)
 	return Target.ResetCurve();
 }
 
-void UInlineCurvesLibrary::RemoveInlineCurvePoint_Vector(FInlineVectorCurve& Target, const float Time)
+void UInlineCurvesLibrary::RemoveInlineCurvePoint_Vector(FInlineVectorCurve& Target, float Time)
 {
 	Target.RemovePoint(Time);
 }
 
 void UInlineCurvesLibrary::AddOrUpdateInlineCurvePoint_Vector(FInlineVectorCurve& Target,
-	const float Time, const FVector& Value, const TEnumAsByte<ERichCurveTangentMode> Tangent)
+	float Time, const FVector& Value, TEnumAsByte<ERichCurveTangentMode> Tangent)
 {
 	Target.AddOrUpdatePoint(Time, Value, Tangent);
 }
@@ -424,7 +424,7 @@ bool UInlineCurvesLibrary::HasInlineCurveData_Color(const FInlineColorCurve& Tar
 	return Target.HasAnyData();
 }
 
-FLinearColor UInlineCurvesLibrary::GetInlineCurveValue_Color(const FInlineColorCurve& Target, const float Time, const FLinearColor& Default)
+FLinearColor UInlineCurvesLibrary::GetInlineCurveValue_Color(const FInlineColorCurve& Target, float Time, const FLinearColor& Default)
 {
 	return Target.GetValue(Time, Default);
 }
@@ -444,13 +444,13 @@ void UInlineCurvesLibrary::ResetInlineCurve_Color(FInlineColorCurve& Target)
 	Target.ResetCurve();
 }
 
-void UInlineCurvesLibrary::RemoveInlineCurvePoint_Color(FInlineColorCurve& Target, const float Time)
+void UInlineCurvesLibrary::RemoveInlineCurvePoint_Color(FInlineColorCurve& Target, float Time)
 {
 	Target.RemovePoint(Time);
 }
 
 void UInlineCurvesLibrary::AddOrUpdateInlineCurvePoint_Color(FInlineColorCurve& Target,
-	const float Time, const FLinearColor& Value, const TEnumAsByte<ERichCurveTangentMode> Tangent)
+	float Time, const FLinearColor& Value, TEnumAsByte<ERichCurveTangentMode> Tangent)
 {
 	Target.AddOrUpdatePoint(Time, Value, Tangent);
 }

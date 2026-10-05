@@ -45,7 +45,7 @@ struct TOROCORE_API FToroImageData
 	 * @param SizeY Image height in pixels.
 	 * @param InPixels Row-major color pixels to copy.
 	 */
-	FToroImageData(const int32 SizeX, const int32 SizeY, const TArray<FColor>& InPixels)
+	FToroImageData(int32 SizeX, int32 SizeY, const TArray<FColor>& InPixels)
 		: Size(SizeX, SizeY), Pixels(InPixels)
 	{}
 

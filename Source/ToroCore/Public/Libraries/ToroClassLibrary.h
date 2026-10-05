@@ -20,7 +20,7 @@ public:
 	 * @param InClass Class whose defaults are queried.
 	 */
 	UFUNCTION(BlueprintPure, Category = Class, meta = (DeterminesOutputType = InClass))
-	[[nodiscard]] static const UObject* GetClassDefaultObject(const TSubclassOf<UObject> InClass);
+	[[nodiscard]] static const UObject* GetClassDefaultObject(TSubclassOf<UObject> InClass);
 
 	/**
 	 * Gets currently loaded derived classes; does not load assets.
@@ -29,5 +29,5 @@ public:
 	 * @param bRecursive Include all descendants rather than only direct children.
 	 */
 	UFUNCTION(BlueprintPure, Category = Class, meta = (DeterminesOutputType = InClass, DynamicOutputParam = Results))
-	static void GetDerivedClasses(TArray<UClass*>& Results, const TSubclassOf<UObject> InClass, const bool bRecursive = true);
+	static void GetDerivedClasses(TArray<UClass*>& Results, TSubclassOf<UObject> InClass, bool bRecursive = true);
 };

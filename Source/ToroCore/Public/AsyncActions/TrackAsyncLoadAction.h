@@ -6,8 +6,8 @@
 #include "ToroAsyncActionBase.h"
 #include "TrackAsyncLoadAction.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FTrackAsyncLoadDelegate, const FIntPoint, Packages, const bool, bIsLoading);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FTrackAsyncLoadDelegateNative, const FIntPoint, const bool);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FTrackAsyncLoadDelegate, FIntPoint, Packages, bool, bIsLoading);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FTrackAsyncLoadDelegateNative, FIntPoint, bool);
 
 /**
  * Observes global async-package loading and completes after a continuous observed idle window.
@@ -60,7 +60,7 @@ public:
 	 *        Idle timing begins at the first idle sample and resets whenever activity is observed.
 	 */
 	UFUNCTION(BlueprintCallable, Category = AsyncLoading, DisplayName = "Track Async Loading", meta = (BlueprintInternalUseOnly = true, WorldContext = ContextObject))
-	[[nodiscard]] static TOROCORE_API UTrackAsyncLoadAction* TrackAsyncLoading(const UObject* ContextObject, const float TestInterval = 0.1f, const float IdleDuration = 0.2f);
+	[[nodiscard]] static TOROCORE_API UTrackAsyncLoadAction* TrackAsyncLoading(const UObject* ContextObject, float TestInterval = 0.1f, float IdleDuration = 0.2f);
 
 	/**
 	 * Stops observation silently and releases game-instance registration, including before

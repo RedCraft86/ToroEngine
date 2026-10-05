@@ -44,8 +44,8 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = Compression)
 	[[nodiscard]] static bool OodleCompress(const TArray<uint8>& InData, TArray<uint8>& OutData,
-		const EOodleCompressor Compressor = EOodleCompressor::Kraken,
-		const EOodleCompressionLevel Level = EOodleCompressionLevel::SuperFast);
+		EOodleCompressor Compressor = EOodleCompressor::Kraken,
+		EOodleCompressionLevel Level = EOodleCompressionLevel::SuperFast);
 
 	/**
 	 * Decodes Unreal FOodleCompressedArray data produced by OodleCompress.

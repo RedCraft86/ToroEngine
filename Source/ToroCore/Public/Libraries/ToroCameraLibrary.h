@@ -47,7 +47,7 @@ public:
 	 * @return True for intersecting bounds; false for invalid inputs, unavailable local projection, or no intersection.
 	 */
 	UFUNCTION(BlueprintPure, Category = PlayerView, meta = (DefaultToSelf = TestActor))
-	[[nodiscard]] static bool IsActorInViewFrustum(const AActor* TestActor, const int32 PlayerIdx = 0);
+	[[nodiscard]] static bool IsActorInViewFrustum(const AActor* TestActor, int32 PlayerIdx = 0);
 
 	/**
 	 * Returns camera location and rotation with unit scale, or identity when unavailable.
@@ -56,7 +56,7 @@ public:
 	 * @param PlayerIdx Player-camera index used outside the editor viewport path.
 	 */
 	UFUNCTION(BlueprintCallable, Category = PlayerView, meta = (WorldContext = ContextObject, Keywords = "view point"))
-	[[nodiscard]] static FTransform GetViewTransform(const UObject* ContextObject, const int32 PlayerIdx = 0);
+	[[nodiscard]] static FTransform GetViewTransform(const UObject* ContextObject, int32 PlayerIdx = 0);
 
 	/**
 	 * Stops fading on the selected player camera manager.
@@ -64,7 +64,7 @@ public:
 	 * @return True when a camera manager was found and notified; false otherwise.
 	 */
 	UFUNCTION(BlueprintCallable, Category = PlayerViewFade, meta = (WorldContext = ContextObject, Keywords = "fade camera"))
-	static bool StopCameraFade(const UObject* ContextObject, const int32 PlayerIdx = 0);
+	static bool StopCameraFade(const UObject* ContextObject, int32 PlayerIdx = 0);
 
 	/**
 	 * Sets a manual fade on the selected player camera manager.
@@ -75,8 +75,8 @@ public:
 	 * @return True when a camera manager was found and notified; false otherwise.
 	 */
 	UFUNCTION(BlueprintCallable, Category = PlayerViewFade, meta = (WorldContext = ContextObject, Keywords = "fade camera"))
-	static bool SetCameraFade(const UObject* ContextObject, const FLinearColor Color = FLinearColor::Black,
-		const float Alpha = 1.0f, const bool bFadeAudio = true, const int32 PlayerIdx = 0);
+	static bool SetCameraFade(const UObject* ContextObject, FLinearColor Color = FLinearColor::Black,
+		float Alpha = 1.0f, bool bFadeAudio = true, int32 PlayerIdx = 0);
 
 	/**
 	 * Starts a camera fade and waits for its configured duration, not confirmation of completion.
@@ -92,15 +92,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = PlayerViewFade, meta = (Latent, LatentInfo = LatentInfo, WorldContext = ContextObject,
 		Keywords = "fade camera", AdvancedDisplay = "FromAlpha, ToAlpha, bFadeAudio, bHoldAtEnd"))
 	static FVoidCoroutine StartCameraFade(FLatentActionInfo LatentInfo, const UObject* ContextObject, bool& bSuccess,
-		const FLinearColor Color = FLinearColor::Black, const float Duration = 1.0f, const float FromAlpha = 0.0f,
-		const float ToAlpha = 1.0f, const bool bFadeAudio = true, const bool bHoldAtEnd = true, const int32 PlayerIdx = 0);
+		FLinearColor Color = FLinearColor::Black, float Duration = 1.0f, float FromAlpha = 0.0f,
+		float ToAlpha = 1.0f, bool bFadeAudio = true, bool bHoldAtEnd = true, int32 PlayerIdx = 0);
 
 	/**
 	 * Returns the selected controller's current view target, or nullptr when no controller is found.
 	 * @param PlayerIdx Player-controller index.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Game|Player", meta = (WorldContext = ContextObject, Keywords = "get view camera"))
-	static AActor* GetPlayerViewTarget(const UObject* ContextObject, const int32 PlayerIdx = 0);
+	static AActor* GetPlayerViewTarget(const UObject* ContextObject, int32 PlayerIdx = 0);
 
 	/**
 	 * Requests an immediate view-target change.
@@ -109,7 +109,7 @@ public:
 	 * @return True when a controller was found and notified; false otherwise.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Game|Player", meta = (WorldContext = ContextObject, Keywords = "set view camera"))
-	static bool SetPlayerViewTarget(const UObject* ContextObject, AActor* NewTarget, const int32 PlayerIdx = 0);
+	static bool SetPlayerViewTarget(const UObject* ContextObject, AActor* NewTarget, int32 PlayerIdx = 0);
 
 	/**
 	 * Requests a view-target blend and waits its duration, even if the blend is interrupted.
@@ -124,6 +124,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Game|Player", meta = (Latent, LatentInfo = LatentInfo, WorldContext = ContextObject,
 		DefaultToSelf = NewTarget, Keywords = "blend view camera", AdvancedDisplay = "BlendFunc, BlendExp, bLockOutgoing"))
 	static FVoidCoroutine BlendPlayerViewTarget(FLatentActionInfo LatentInfo, const UObject* ContextObject, bool& bSuccess,
-		AActor* NewTarget, const float Duration = 1.0f, const EViewTargetBlendFunction BlendFunc = VTBlend_Linear,
-		const float BlendExp = 0.0f, const bool bLockOutgoing = false, const int32 PlayerIdx = 0);
+		AActor* NewTarget, float Duration = 1.0f, EViewTargetBlendFunction BlendFunc = VTBlend_Linear,
+		float BlendExp = 0.0f, bool bLockOutgoing = false, int32 PlayerIdx = 0);
 };

@@ -27,7 +27,7 @@ int32 UToroUtilityLibrary::GetNumAsyncPackages()
 }
 
 bool UToroUtilityLibrary::OodleCompress(const TArray<uint8>& InData, TArray<uint8>& OutData,
-	const EOodleCompressor Compressor, const EOodleCompressionLevel Level)
+	EOodleCompressor Compressor, EOodleCompressionLevel Level)
 {
 	TArray<uint8> Compressed;
 	const bool bSuccess = FOodleCompressedArray::CompressTArray(Compressed, InData,

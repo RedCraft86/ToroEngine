@@ -25,17 +25,17 @@ namespace
 	}
 }
 
-bool UToroCVarLibrary::SetCVarBool(const FString& InName, const bool InValue)
+bool UToroCVarLibrary::SetCVarBool(const FString& InName, bool InValue)
 {
 	return SetCVar(InName, InValue);
 }
 
-bool UToroCVarLibrary::SetCVarInt(const FString& InName, const int32 InValue)
+bool UToroCVarLibrary::SetCVarInt(const FString& InName, int32 InValue)
 {
 	return SetCVar(InName, InValue);
 }
 
-bool UToroCVarLibrary::SetCVarFloat(const FString& InName, const float InValue)
+bool UToroCVarLibrary::SetCVarFloat(const FString& InName, float InValue)
 {
 	return SetCVar(InName, InValue);
 }
@@ -45,19 +45,19 @@ bool UToroCVarLibrary::SetCVarString(const FString& InName, const FString& InVal
 	return SetCVar(InName, *InValue);
 }
 
-bool UToroCVarLibrary::GetCVarBool(const FString& InName, const bool bInDefault)
+bool UToroCVarLibrary::GetCVarBool(const FString& InName, bool bInDefault)
 {
 	const IConsoleVariable* CVar = FindCVar(InName);
 	return CVar ? CVar->GetBool() : bInDefault;
 }
 
-int32 UToroCVarLibrary::GetCVarInt(const FString& InName, const int32 InDefault)
+int32 UToroCVarLibrary::GetCVarInt(const FString& InName, int32 InDefault)
 {
 	const IConsoleVariable* CVar = FindCVar(InName);
 	return CVar ? CVar->GetInt() : InDefault;
 }
 
-float UToroCVarLibrary::GetCVarFloat(const FString& InName, const float InDefault)
+float UToroCVarLibrary::GetCVarFloat(const FString& InName, float InDefault)
 {
 	const IConsoleVariable* CVar = FindCVar(InName);
 	return CVar ? CVar->GetFloat() : InDefault;

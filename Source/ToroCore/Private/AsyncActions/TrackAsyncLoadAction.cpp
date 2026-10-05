@@ -3,7 +3,7 @@
 #include "AsyncActions/TrackAsyncLoadAction.h"
 #include "UObject/UObjectGlobals.h"
 
-UTrackAsyncLoadAction* UTrackAsyncLoadAction::TrackAsyncLoading(const UObject* ContextObject, const float TestInterval, const float IdleDuration)
+UTrackAsyncLoadAction* UTrackAsyncLoadAction::TrackAsyncLoading(const UObject* ContextObject, float TestInterval, float IdleDuration)
 {
 	checkf(IsInGameThread(), TEXT("UTrackAsyncLoadAction::TrackAsyncLoading(...) should only be called from the GameThread."));
 

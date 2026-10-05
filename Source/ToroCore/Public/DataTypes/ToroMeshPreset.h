@@ -88,14 +88,14 @@ struct TOROCORE_API FToroBaseMeshPreset
 	 * When false, retain valid entries, fill missing or invalid entries, and preserve extra slots.
 	 * Checking existing entries may synchronously load their material assets.
 	 */
-	virtual void FillMaterials(const bool bOverwrite);
+	virtual void FillMaterials(bool bOverwrite);
 
 	/**
 	 * Compares mesh and ordered material references, overlay, and shadow state.
 	 * @param bCheckTransform Also compare bUseTransform and the stored transform using
 	 * FTransform::Equals, even when transform application is disabled.
 	 */
-	[[nodiscard]] virtual bool Equals(const FToroBaseMeshPreset& Other, const bool bCheckTransform) const;
+	[[nodiscard]] virtual bool Equals(const FToroBaseMeshPreset& Other, bool bCheckTransform) const;
 
 	/**
 	 * Captures mesh, effective slot materials, overlay, and shadows from a valid component.
@@ -104,7 +104,7 @@ struct TOROCORE_API FToroBaseMeshPreset
 	 * @param bIncludeTransform Capture the world transform and enable its application;
 	 * otherwise disable transform application and store identity.
 	 */
-	virtual void FromMeshComponent(const UStaticMeshComponent* Target, const bool bIncludeTransform = false);
+	virtual void FromMeshComponent(const UStaticMeshComponent* Target, bool bIncludeTransform = false);
 
 	/**
 	 * Synchronously loads and applies assets, shadow settings, and the optional world transform.
@@ -153,7 +153,7 @@ struct TOROCORE_API FToroSplineMeshPreset : public FToroBaseMeshPreset
 	 * @param bCheckTransform Also compare the use-transform flag and stored transform
 	 * through the base comparison, even when transform application is disabled.
 	 */
-	[[nodiscard]] virtual bool Equals(const FToroSplineMeshPreset& Other, const bool bCheckTransform) const;
+	[[nodiscard]] virtual bool Equals(const FToroSplineMeshPreset& Other, bool bCheckTransform) const;
 
 	/**
 	 * Captures base settings and the forward axis from a valid spline mesh component.
@@ -161,7 +161,7 @@ struct TOROCORE_API FToroSplineMeshPreset : public FToroBaseMeshPreset
 	 * @param bIncludeTransform Capture and enable the world transform; otherwise store identity
 	 * and disable transform application. Spline shape and deformation settings are not captured.
 	 */
-	virtual void FromMeshComponent(const UStaticMeshComponent* Target, const bool bIncludeTransform = false) override;
+	virtual void FromMeshComponent(const UStaticMeshComponent* Target, bool bIncludeTransform = false) override;
 
 	/**
 	 * Applies base settings and the forward axis to a valid spline mesh component.
@@ -174,7 +174,7 @@ struct TOROCORE_API FToroSplineMeshPreset : public FToroBaseMeshPreset
 private:
 
 	// Prevent external code from calling this base type overload by overriding as a private member
-	virtual bool Equals(const FToroBaseMeshPreset& Other, const bool bCheckTransform) const override
+	virtual bool Equals(const FToroBaseMeshPreset& Other, bool bCheckTransform) const override
 	{
 		return Super::Equals(Other, bCheckTransform);
 	}
@@ -204,7 +204,7 @@ public:
 	 * using FTransform::Equals, even when transform application is disabled.
 	 */
 	UFUNCTION(BlueprintPure, Category = "StaticMesh|MeshPreset", DisplayName = "Equals (Mesh Preset)")
-	static bool IsEqualsMeshPreset(const FToroBaseMeshPreset& A, const FToroBaseMeshPreset& B, const bool bCheckTransform = false);
+	static bool IsEqualsMeshPreset(const FToroBaseMeshPreset& A, const FToroBaseMeshPreset& B, bool bCheckTransform = false);
 
 	/**
 	 * Synchronously loads the mesh and fills materials from its default slots.
@@ -213,7 +213,7 @@ public:
 	 * Checking existing material entries may synchronously load them.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "StaticMesh|MeshPreset", DisplayName = "Fill Materials (Mesh Preset)")
-	static void FillMeshPresetMaterials(UPARAM(ref) FToroBaseMeshPreset& Target, const bool bOverwrite);
+	static void FillMeshPresetMaterials(UPARAM(ref) FToroBaseMeshPreset& Target, bool bOverwrite);
 
 	/**
 	 * Captures mesh, effective slot materials, overlay, and shadow state from the component.
@@ -223,7 +223,7 @@ public:
 	 * An invalid component leaves the preset unchanged.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "StaticMesh|MeshPreset", DisplayName = "Set From Component (Mesh Preset)")
-	static void SetMeshPresetFromComponent(UPARAM(ref) FToroBaseMeshPreset& Target, const UStaticMeshComponent* Component, const bool bIncludeTransform = false);
+	static void SetMeshPresetFromComponent(UPARAM(ref) FToroBaseMeshPreset& Target, const UStaticMeshComponent* Component, bool bIncludeTransform = false);
 
 	/**
 	 * Synchronously loads and applies mesh, materials, overlay, and shadow settings.
@@ -253,7 +253,7 @@ public:
 	 * using FTransform::Equals, even when transform application is disabled.
 	 */
 	UFUNCTION(BlueprintPure, Category = "StaticMesh|MeshPreset", DisplayName = "Equals (Spline Mesh Preset)")
-	static bool IsEqualsSplineMeshPreset(const FToroSplineMeshPreset& A, const FToroSplineMeshPreset& B, const bool bCheckTransform = false);
+	static bool IsEqualsSplineMeshPreset(const FToroSplineMeshPreset& A, const FToroSplineMeshPreset& B, bool bCheckTransform = false);
 
 	/**
 	 * Synchronously loads the mesh and fills materials from its default slots.
@@ -262,7 +262,7 @@ public:
 	 * Checking existing material entries may synchronously load them.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "StaticMesh|MeshPreset", DisplayName = "Fill Materials (Spline Mesh Preset)")
-	static void FillSplineMeshPresetMaterials(UPARAM(ref) FToroSplineMeshPreset& Target, const bool bOverwrite);
+	static void FillSplineMeshPresetMaterials(UPARAM(ref) FToroSplineMeshPreset& Target, bool bOverwrite);
 
 	/**
 	 * Captures mesh, effective slot materials, overlay, and shadow state from the component.
@@ -273,7 +273,7 @@ public:
 	 * and leave the preset unchanged.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "StaticMesh|MeshPreset", DisplayName = "Set From Component (Spline Mesh Preset)")
-	static void SetSplineMeshPresetFromComponent(UPARAM(ref) FToroSplineMeshPreset& Target, const USplineMeshComponent* Component, const bool bIncludeTransform = false);
+	static void SetSplineMeshPresetFromComponent(UPARAM(ref) FToroSplineMeshPreset& Target, const USplineMeshComponent* Component, bool bIncludeTransform = false);
 
 	/**
 	 * Synchronously loads and applies mesh, materials, overlay, and shadow settings.

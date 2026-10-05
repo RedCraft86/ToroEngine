@@ -178,7 +178,7 @@ public:
 	 *
 	 * @param bNotifyChange Whether to broadcast OnChanged once if any entries are removed.
 	 */
-	void Cleanup(const bool bNotifyChange)
+	void Cleanup(bool bNotifyChange)
 	{
 		if (Validate)
 		{

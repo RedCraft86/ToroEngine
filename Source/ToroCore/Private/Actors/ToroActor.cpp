@@ -36,7 +36,7 @@ void AToroActor::SetActiveState_Implementation(bool bNewState)
 	}
 }
 
-void AToroActor::ApplyActiveState_Implementation(const bool bInState)
+void AToroActor::ApplyActiveState_Implementation(bool bInState)
 {
 	SetActorHiddenInGame(!bInState);
 	SetActorEnableCollision(bInState);

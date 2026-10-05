@@ -32,7 +32,7 @@ namespace
 }
 
 void UToroImageLibrary::DrawWidgetToRenderTarget(UTextureRenderTarget2D* Target,
-	UUserWidget* UserWidget, const bool bGammaCorrection, const bool bInClearTarget)
+	UUserWidget* UserWidget, bool bGammaCorrection, bool bInClearTarget)
 {
 	if (IsValid(Target) && IsValid(UserWidget))
 	{
@@ -94,7 +94,7 @@ bool UToroImageLibrary::GetDataFromTexture(FToroImageData& OutData, const UTextu
 	return false;
 }
 
-bool UToroImageLibrary::GetDataFromRenderTarget(FToroImageData& OutData, UTextureRenderTarget2D* Target, const bool bInvertAlpha)
+bool UToroImageLibrary::GetDataFromRenderTarget(FToroImageData& OutData, UTextureRenderTarget2D* Target, bool bInvertAlpha)
 {
 	OutData.Empty();
 	if (!IsValid(Target))
@@ -188,7 +188,7 @@ UTexture2D* UToroImageLibrary::CreateTextureFromData(const FToroImageData& InDat
 }
 
 FVoidCoroutine UToroImageLibrary::SaveTextureToFile(FLatentActionInfo LatentInfo, bool& bSuccess,
-	const UTexture2D* Target, const FString& FilePath, const bool bAsync)
+	const UTexture2D* Target, const FString& FilePath, bool bAsync)
 {
 	FToroImageData Data;
 	if (!GetDataFromTexture(Data, Target))
@@ -202,7 +202,7 @@ FVoidCoroutine UToroImageLibrary::SaveTextureToFile(FLatentActionInfo LatentInfo
 }
 
 FVoidCoroutine UToroImageLibrary::SaveRenderTargetToFile(FLatentActionInfo LatentInfo, bool& bSuccess,
-	UTextureRenderTarget2D* Target, const FString& FilePath, const bool bInvertAlpha, const bool bAsync)
+	UTextureRenderTarget2D* Target, const FString& FilePath, bool bInvertAlpha, bool bAsync)
 {
 	FToroImageData Data;
 	if (!GetDataFromRenderTarget(Data, Target, bInvertAlpha))
@@ -216,7 +216,7 @@ FVoidCoroutine UToroImageLibrary::SaveRenderTargetToFile(FLatentActionInfo Laten
 }
 
 FVoidCoroutine UToroImageLibrary::SaveImageDataToFile(FLatentActionInfo LatentInfo, bool& bSuccess,
-	const FToroImageData& InData, const FString& FilePath, const bool bAsync)
+	const FToroImageData& InData, const FString& FilePath, bool bAsync)
 {
 	if (!FPaths::ValidatePath(FilePath))
 	{
@@ -247,7 +247,7 @@ FVoidCoroutine UToroImageLibrary::SaveImageDataToFile(FLatentActionInfo LatentIn
 }
 
 FVoidCoroutine UToroImageLibrary::RequestScreenshot(FLatentActionInfo LatentInfo,
-	FToroImageData& Image, const float ResolutionScale, const bool bIncludeUI)
+	FToroImageData& Image, float ResolutionScale, bool bIncludeUI)
 {
 	Image.Empty();
 	if (!FMath::IsFinite(ResolutionScale) || ResolutionScale <= 0.0f)

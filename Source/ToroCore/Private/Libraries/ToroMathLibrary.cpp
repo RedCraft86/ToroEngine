@@ -17,17 +17,17 @@ float UToroMathLibrary::BigNumber()
 	return UE_BIG_NUMBER;
 }
 
-double UToroMathLibrary::GetHorizontalDistance(const FVector A, const FVector B)
+double UToroMathLibrary::GetHorizontalDistance(FVector A, FVector B)
 {
 	return FVector::DistXY(A, B);
 }
 
-FLinearColor UToroMathLibrary::TemperatureToLinearColor(const float Temperature)
+FLinearColor UToroMathLibrary::TemperatureToLinearColor(float Temperature)
 {
 	return FLinearColor::MakeFromColorTemperature(Temperature);
 }
 
-FLinearColor UToroMathLibrary::RandomLinearColor(const bool bTrueRandom, const bool bRandomAlpha)
+FLinearColor UToroMathLibrary::RandomLinearColor(bool bTrueRandom, bool bRandomAlpha)
 {
 	FLinearColor Result;
 	if (bTrueRandom)
@@ -45,12 +45,12 @@ FLinearColor UToroMathLibrary::RandomLinearColor(const bool bTrueRandom, const b
 	return Result;
 }
 
-FColor UToroMathLibrary::TemperatureToColor(const float Temperature)
+FColor UToroMathLibrary::TemperatureToColor(float Temperature)
 {
 	return FColor::MakeFromColorTemperature(Temperature);
 }
 
-FColor UToroMathLibrary::RandomColor(const bool bTrueRandom, const bool bRandomAlpha)
+FColor UToroMathLibrary::RandomColor(bool bTrueRandom, bool bRandomAlpha)
 {
 	FColor Result;
 	if (bTrueRandom)
@@ -68,17 +68,17 @@ FColor UToroMathLibrary::RandomColor(const bool bTrueRandom, const bool bRandomA
 	return Result;
 }
 
-float UToroMathLibrary::PerlinNoise1D(const float Position)
+float UToroMathLibrary::PerlinNoise1D(float Position)
 {
 	return FMath::PerlinNoise1D(Position);
 }
 
-float UToroMathLibrary::PerlinNoise2D(const FVector2D Position)
+float UToroMathLibrary::PerlinNoise2D(FVector2D Position)
 {
 	return FMath::PerlinNoise2D(Position);
 }
 
-float UToroMathLibrary::PerlinNoise3D(const FVector Position)
+float UToroMathLibrary::PerlinNoise3D(FVector Position)
 {
 	return FMath::PerlinNoise3D(Position);
 }

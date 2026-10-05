@@ -27,7 +27,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = Actor, meta = (DefaultToSelf = Target))
 	static void GetBoundingBoxVertices(TSet<FVector>& OutVerts, FVector& Origin, FVector& Extent, const AActor* Target,
-		const FVector Scale = FVector(1), const bool bOnlyColliding = false, const bool bChildActors = true);
+		FVector Scale = FVector(1), bool bOnlyColliding = false, bool bChildActors = true);
 
 	/**
 	 * Adds an actor tag once; invalid targets are ignored.
@@ -35,7 +35,7 @@ public:
 	 * @param InTag Tag to add, including NAME_None if supplied.
 	 */
 	UFUNCTION(BlueprintCallable, Category = Actor, DisplayName = "Add Tag", meta = (DefaultToSelf = Target))
-	static void AddActorTag(AActor* Target, const FName InTag);
+	static void AddActorTag(AActor* Target, FName InTag);
 
 	/**
 	 * Removes all occurrences of an actor tag; invalid targets are ignored.
@@ -43,5 +43,5 @@ public:
 	 * @param InTag Tag to remove.
 	 */
 	UFUNCTION(BlueprintCallable, Category = Actor, DisplayName = "Remove Tag", meta = (DefaultToSelf = Target))
-	static void RemoveActorTag(AActor* Target, const FName InTag);
+	static void RemoveActorTag(AActor* Target, FName InTag);
 };

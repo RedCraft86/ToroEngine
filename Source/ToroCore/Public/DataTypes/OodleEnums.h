@@ -24,7 +24,7 @@ enum class EOodleCompressor : uint8
  * Converts a Blueprint-compatible compressor to its native Oodle counterpart.
  * @param InCompressor A named EOodleCompressor value. Out-of-range values are not validated.
  */
-inline FOodleDataCompression::ECompressor OodleCompressorToNative(const EOodleCompressor InCompressor)
+inline FOodleDataCompression::ECompressor OodleCompressorToNative(EOodleCompressor InCompressor)
 {
 	return static_cast<FOodleDataCompression::ECompressor>(static_cast<uint8>(InCompressor) + 1);
 }
@@ -35,7 +35,7 @@ inline FOodleDataCompression::ECompressor OodleCompressorToNative(const EOodleCo
  * @param InCompressor A named native ECompressor value, including NotSet.
  *        Other values are not validated and may produce unnamed enum values.
  */
-inline EOodleCompressor NativeToOodleCompressor(const FOodleDataCompression::ECompressor InCompressor)
+inline EOodleCompressor NativeToOodleCompressor(FOodleDataCompression::ECompressor InCompressor)
 {
 	return static_cast<EOodleCompressor>(FMath::Max(static_cast<int8>(InCompressor) - 1, 0));
 }
@@ -69,7 +69,7 @@ enum class EOodleCompressionLevel : uint8
  * Converts a Blueprint-compatible compression level to its native Oodle counterpart.
  * @param InLevel A named EOodleCompressionLevel value. Out-of-range values are not validated.
  */
-inline FOodleDataCompression::ECompressionLevel OodleCompressionLevelToNative(const EOodleCompressionLevel InLevel)
+inline FOodleDataCompression::ECompressionLevel OodleCompressionLevelToNative(EOodleCompressionLevel InLevel)
 {
 	return static_cast<FOodleDataCompression::ECompressionLevel>(static_cast<int8>(InLevel) - 4);
 }
@@ -79,7 +79,7 @@ inline FOodleDataCompression::ECompressionLevel OodleCompressionLevelToNative(co
  * @param InLevel A named native ECompressionLevel value from HyperFast4 (-4) through
  *        Optimal5 (9). Out-of-range values are not validated and may produce unnamed enum values.
  */
-inline EOodleCompressionLevel NativeToOodleCompressionLevel(const FOodleDataCompression::ECompressionLevel InLevel)
+inline EOodleCompressionLevel NativeToOodleCompressionLevel(FOodleDataCompression::ECompressionLevel InLevel)
 {
 	return static_cast<EOodleCompressionLevel>(static_cast<int8>(InLevel) + 4);
 }

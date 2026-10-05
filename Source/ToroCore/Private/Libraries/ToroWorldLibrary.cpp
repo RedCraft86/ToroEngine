@@ -13,7 +13,7 @@ UWorld* UToroWorldLibrary::GetPossibleWorld(const UObject* Context)
 	return FWorldGetter::Get(Context);
 }
 
-void UToroWorldLibrary::ReloadLevel(const UObject* ContextObject, const bool bAbsolute, const FString& Options)
+void UToroWorldLibrary::ReloadLevel(const UObject* ContextObject, bool bAbsolute, const FString& Options)
 {
 	const UWorld* World = FWorldGetter::Get(ContextObject);
 	if (IsValid(World))
@@ -22,7 +22,7 @@ void UToroWorldLibrary::ReloadLevel(const UObject* ContextObject, const bool bAb
 	}
 }
 
-void UToroWorldLibrary::CallRemoteEvent(const UObject* ContextObject, const FName EventName)
+void UToroWorldLibrary::CallRemoteEvent(const UObject* ContextObject, FName EventName)
 {
 	if (!EventName.IsNone())
 	{
@@ -47,7 +47,7 @@ EToroLevelStreamState UToroWorldLibrary::GetLevelStreamState(const UObject* Cont
 }
 
 FVoidCoroutine UToroWorldLibrary::SetLevelStreamState(FLatentActionInfo LatentInfo, const UObject* ContextObject,
-	ULevelStreaming*& StreamedLevel, const TSoftObjectPtr<UWorld> Level, const EToroLevelStreamState State)
+	ULevelStreaming*& StreamedLevel, TSoftObjectPtr<UWorld> Level, EToroLevelStreamState State)
 {
 	const FName LevelName = FName(*FPackageName::ObjectPathToPackageName(Level.ToString()));
 	StreamedLevel = UGameplayStatics::GetStreamingLevel(ContextObject, LevelName);
