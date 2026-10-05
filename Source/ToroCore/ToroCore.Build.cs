@@ -13,10 +13,24 @@ public class ToroCore : ModuleRules
 			    "Core",
 			    "CoreUObject",
 			    "Engine",
+			    "UMG",
 			    "Slate",
 			    "SlateCore",
-			    "GameplayTags"
+			    "RenderCore",
+			    "GameplayTags",
+			    "LevelSequence",
+			    "MovieScene",
+			    "UE5Coro"
 		    ]
 	    );
+
+	    if (Target.Type == TargetType.Editor)
+	    {
+		    PrivateDependencyModuleNames.AddRange(
+			    [
+				    "UnrealEd"
+			    ]
+		    );
+	    }
     }
 }

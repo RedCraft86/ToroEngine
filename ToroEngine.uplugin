@@ -11,8 +11,9 @@
 	"MarketplaceURL": "",
 	"SupportURL": "",
 	"IsBetaVersion": true,
-	"EnabledByDefault": true,
+	"IsExperimentalVersion": false,
 	"CanContainContent": true,
+	"EnabledByDefault": true,
 	"Installed": true,
 	"Modules": [
 		{
@@ -44,6 +45,12 @@
 			"Name": "ToroSystemsEd",
 			"Type": "Editor",
 			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "UE5Coro",
+			"Enabled": true
 		}
 	]
 }
