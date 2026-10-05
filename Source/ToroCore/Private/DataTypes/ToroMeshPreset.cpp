@@ -6,38 +6,33 @@
 
 namespace
 {
-	bool ApplyMeshPreset(const FToroBaseMeshPreset& Preset, UStaticMeshComponent* Target)
+	bool ApplyMeshPreset(const FToroBaseMeshPreset& Preset, UStaticMeshComponent& Target)
 	{
-		if (!IsValid(Target))
-		{
-			return false;
-		}
-
 		UStaticMesh* RequestedMesh = Preset.StaticMesh.LoadSynchronous();
 
-		Target->SetStaticMesh(RequestedMesh);
-		if (Target->GetStaticMesh() != RequestedMesh)
+		Target.SetStaticMesh(RequestedMesh);
+		if (Target.GetStaticMesh() != RequestedMesh)
 		{
 			UE_LOG(LogToroCore, Warning, TEXT("Could not apply mesh preset to %s: the component rejected the requested mesh."),
-				*Target->GetPathName());
+				*Target.GetPathName());
 			return false;
 		}
 
-		Target->EmptyOverrideMaterials();
-		const int32 NumOverrides = FMath::Min(Preset.Materials.Num(), Target->GetNumMaterials());
+		Target.EmptyOverrideMaterials();
+		const int32 NumOverrides = FMath::Min(Preset.Materials.Num(), Target.GetNumMaterials());
 		for (int32 Idx = 0; Idx < NumOverrides; ++Idx)
 		{
 			if (UMaterialInterface* Material = Preset.Materials[Idx].LoadSynchronous(); IsValid(Material))
 			{
-				Target->SetMaterial(Idx, Material);
+				Target.SetMaterial(Idx, Material);
 			}
 		}
 
-		Target->SetOverlayMaterial(Preset.OverlayMaterial.LoadSynchronous());
-		Target->SetCastShadow(Preset.bCastShadows);
+		Target.SetOverlayMaterial(Preset.OverlayMaterial.LoadSynchronous());
+		Target.SetCastShadow(Preset.bCastShadows);
 		if (Preset.bUseTransform)
 		{
-			Target->SetWorldTransform(Preset.Transform);
+			Target.SetWorldTransform(Preset.Transform);
 		}
 
 		return true;
@@ -119,7 +114,10 @@ void FToroBaseMeshPreset::FromMeshComponent(const UStaticMeshComponent* Target, 
 
 void FToroBaseMeshPreset::ToMeshComponent(UStaticMeshComponent* Target) const
 {
-	ApplyMeshPreset(*this, Target);
+	if (::IsValid(Target))
+	{
+		ApplyMeshPreset(*this, *Target);
+	}
 }
 
 bool FToroSplineMeshPreset::Equals(const FToroSplineMeshPreset& Other, const bool bCheckTransform) const
@@ -150,7 +148,7 @@ void FToroSplineMeshPreset::ToMeshComponent(UStaticMeshComponent* Target) const
 		return;
 	}
 
-	if (ApplyMeshPreset(*this, SplineMesh))
+	if (ApplyMeshPreset(*this, *SplineMesh))
 	{
 		SplineMesh->SetForwardAxis(ForwardAxis);
 	}
