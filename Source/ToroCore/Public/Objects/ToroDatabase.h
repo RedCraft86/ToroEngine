@@ -100,7 +100,7 @@ public:
 protected:
 
 	/**
-	 * Creates an unconfigured database; editor validation reports its missing root configuration. 
+	 * Creates an unconfigured database; editor validation reports its missing root configuration.
 	 * Subclass constructors should NOT call this overload and instead use the one with parameters.
 	 */
 	UToroDatabase();

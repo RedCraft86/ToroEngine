@@ -8,12 +8,12 @@ DEFINE_LOG_CATEGORY(LogToroSystems);
 
 void FToroSystemsModule::StartupModule()
 {
-    
+	
 }
 
 void FToroSystemsModule::ShutdownModule()
 {
-    
+	
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -143,7 +143,7 @@ struct TOROCORE_API FToroSplineMeshPreset : public FToroBaseMeshPreset
 	[[nodiscard]] FORCEINLINE friend uint32 GetTypeHash(const FToroSplineMeshPreset& Preset)
 	{
 		return HashCombine(
-			GetTypeHash(static_cast<const FToroBaseMeshPreset&>(Preset)), 
+			GetTypeHash(static_cast<const FToroBaseMeshPreset&>(Preset)),
 			GetTypeHash(Preset.ForwardAxis)
 		);
 	}
