@@ -24,7 +24,7 @@ struct TOROCORE_API FInlineFloatCurve final
 	FORCEINLINE operator FRuntimeFloatCurve&() { return Curve; }
 	FORCEINLINE operator const FRuntimeFloatCurve&() const { return Curve; }
 
-	[[nodiscard]] UCurveFloat* GetCurveAsset() const;
+	[[nodiscard]] const UCurveFloat* GetCurveAsset() const;
 
 	[[nodiscard]] const FRichCurve* GetRichCurve() const;
 	[[nodiscard]] FRichCurve* GetRichCurve();
@@ -57,7 +57,7 @@ struct TOROCORE_API FInlineVectorCurve final
 	FORCEINLINE operator FRuntimeVectorCurve&() { return Curve; }
 	FORCEINLINE operator const FRuntimeVectorCurve&() const { return Curve; }
 
-	[[nodiscard]] UCurveVector* GetCurveAsset() const;
+	[[nodiscard]] const UCurveVector* GetCurveAsset() const;
 
 	[[nodiscard]] const FRichCurve* GetRichCurve(uint8 Idx) const;
 	[[nodiscard]] FRichCurve* GetRichCurve(uint8 Idx);
@@ -91,7 +91,7 @@ struct TOROCORE_API FInlineColorCurve final
 	FORCEINLINE operator FRuntimeCurveLinearColor&() { return Curve; }
 	FORCEINLINE operator const FRuntimeCurveLinearColor&() const { return Curve; }
 
-	[[nodiscard]] UCurveLinearColor* GetCurveAsset() const;
+	[[nodiscard]] const UCurveLinearColor* GetCurveAsset() const;
 
 	[[nodiscard]] const FRichCurve* GetRichCurve(uint8 Idx) const;
 	[[nodiscard]] FRichCurve* GetRichCurve(uint8 Idx);
@@ -121,7 +121,7 @@ public:
 
 	/** Returns the assigned external curve asset, or nullptr when using inline data. */
 	UFUNCTION(BlueprintPure, Category = "Math|Curves|Inline", DisplayName = "Get Curve Asset (Float)")
-	static UCurveFloat* GetInlineCurveAsset_Float(const FInlineFloatCurve& Target);
+	static const UCurveFloat* GetInlineCurveAsset_Float(const FInlineFloatCurve& Target);
 
 	/** Returns whether the active curve has keys or a configured default in any channel. */
 	UFUNCTION(BlueprintPure, Category = "Math|Curves|Inline", DisplayName = "Has Any Data (Float)")
@@ -184,7 +184,7 @@ public:
 
 	/** Returns the assigned external curve asset, or nullptr when using inline data. */
 	UFUNCTION(BlueprintPure, Category = "Math|Curves|Inline", DisplayName = "Get Curve Asset (Vector)")
-	static UCurveVector* GetInlineCurveAsset_Vector(const FInlineVectorCurve& Target);
+	static const UCurveVector* GetInlineCurveAsset_Vector(const FInlineVectorCurve& Target);
 
 	/** Returns whether the active curve has keys or a configured default in any channel. */
 	UFUNCTION(BlueprintPure, Category = "Math|Curves|Inline", DisplayName = "Has Any Data (Vector)")
@@ -247,7 +247,7 @@ public:
 
 	/** Returns the assigned external curve asset, or nullptr when using inline data. */
 	UFUNCTION(BlueprintPure, Category = "Math|Curves|Inline", DisplayName = "Get Curve Asset (Color)")
-	static UCurveLinearColor* GetInlineCurveAsset_Color(const FInlineColorCurve& Target);
+	static const UCurveLinearColor* GetInlineCurveAsset_Color(const FInlineColorCurve& Target);
 
 	/** Returns whether the active curve has keys or a configured default in any channel. */
 	UFUNCTION(BlueprintPure, Category = "Math|Curves|Inline", DisplayName = "Has Any Data (Color)")

@@ -8,7 +8,7 @@ namespace
 	constexpr uint8 NumColor	= 4;
 }
 
-UCurveFloat* FInlineFloatCurve::GetCurveAsset() const
+const UCurveFloat* FInlineFloatCurve::GetCurveAsset() const
 {
 	return Curve.ExternalCurve;
 }
@@ -76,7 +76,7 @@ void FInlineFloatCurve::AddOrUpdatePoint(float Time,
 	}
 }
 
-UCurveVector* FInlineVectorCurve::GetCurveAsset() const
+const UCurveVector* FInlineVectorCurve::GetCurveAsset() const
 {
 	return Curve.ExternalCurve;
 }
@@ -204,7 +204,7 @@ void FInlineVectorCurve::AddOrUpdatePoint(float Time,
 	}
 }
 
-UCurveLinearColor* FInlineColorCurve::GetCurveAsset() const
+const UCurveLinearColor* FInlineColorCurve::GetCurveAsset() const
 {
 	return Curve.ExternalCurve;
 }
@@ -332,7 +332,7 @@ void FInlineColorCurve::AddOrUpdatePoint(float Time,
 	}
 }
 
-UCurveFloat* UInlineCurvesLibrary::GetInlineCurveAsset_Float(const FInlineFloatCurve& Target)
+const UCurveFloat* UInlineCurvesLibrary::GetInlineCurveAsset_Float(const FInlineFloatCurve& Target)
 {
 	return Target.GetCurveAsset();
 }
@@ -373,7 +373,7 @@ void UInlineCurvesLibrary::AddOrUpdateInlineCurvePoint_Float(FInlineFloatCurve& 
 	Target.AddOrUpdatePoint(Time, Value, Tangent);
 }
 
-UCurveVector* UInlineCurvesLibrary::GetInlineCurveAsset_Vector(const FInlineVectorCurve& Target)
+const UCurveVector* UInlineCurvesLibrary::GetInlineCurveAsset_Vector(const FInlineVectorCurve& Target)
 {
 	return Target.GetCurveAsset();
 }
@@ -414,7 +414,7 @@ void UInlineCurvesLibrary::AddOrUpdateInlineCurvePoint_Vector(FInlineVectorCurve
 	Target.AddOrUpdatePoint(Time, Value, Tangent);
 }
 
-UCurveLinearColor* UInlineCurvesLibrary::GetInlineCurveAsset_Color(const FInlineColorCurve& Target)
+const UCurveLinearColor* UInlineCurvesLibrary::GetInlineCurveAsset_Color(const FInlineColorCurve& Target)
 {
 	return Target.GetCurveAsset();
 }
