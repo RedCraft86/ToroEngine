@@ -34,13 +34,14 @@ class TAccumulatorMap final : public TSharedFromThis<TAccumulatorMap<K, V>>
 
 public:
 
+	DECLARE_MULTICAST_DELEGATE(FOnChangedDelegate);
 	/**
 	 * Broadcasts once after an accepted addition or successful removal and its cleanup.
 	 * Additions that overwrite an existing value also notify, even if the value is equal.
 	 * Cleanup broadcasts only when it removes entries and notification is requested,
 	 * including automatic post-GC cleanup.
 	 */
-	TMulticastDelegate<void()> OnChanged;
+	FOnChangedDelegate OnChanged;
 
 	/** Constructs an empty map without validation or automatic post-GC cleanup. */
 	TAccumulatorMap()

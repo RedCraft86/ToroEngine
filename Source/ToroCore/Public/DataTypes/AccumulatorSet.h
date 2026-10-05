@@ -33,12 +33,13 @@ class TAccumulatorSet final : public TSharedFromThis<TAccumulatorSet<T>>
 
 public:
 
+	DECLARE_MULTICAST_DELEGATE(FOnChangedDelegate);
 	/**
 	 * Broadcasts once after a successful addition or removal and its associated cleanup.
 	 * Cleanup broadcasts only when it removes entries and notification is requested,
 	 * including automatic post-GC cleanup.
 	 */
-	TMulticastDelegate<void()> OnChanged;
+	FOnChangedDelegate OnChanged;
 
 	/** Constructs an empty set without validation or automatic post-GC cleanup. */
 	TAccumulatorSet()
