@@ -19,43 +19,13 @@ void UToroActorLibrary::GetBoundingBoxVertices(TSet<FVector>& OutVerts, FVector&
 			return;
 		}
 
-		constexpr uint8 NumCorners = 8;
-		//     (+Z)
-		//      |
-		//      |
-		//      +--------(+Y)
-		//     /
-		//    /
-		//  (+X)
-		//
-		//    (5)---------------(4)
-		//    /|                /|
-		//   / |               / |
-		// (6)---------------(7) |
-		//  |  |              |  |
-		//  |  |     (O)      |  |
-		//  | (0)-------------|-(3)
-		//  | /               | /
-		//  |/                |/
-		// (1)---------------(2)
-		//
-		// O = Origin
-		// 0..7 = Extent Multipliers (Index)
-		const FVector Multipliers[NumCorners]{
-			FVector(-1, -1, -1), // A
-			FVector( 1, -1, -1), // B
-			FVector( 1,  1, -1), // C
-			FVector(-1,  1, -1), // D
-			FVector(-1,  1,  1), // E
-			FVector(-1, -1,  1), // F
-			FVector( 1, -1,  1), // G
-			FVector( 1,  1,  1)  // H
-		};
+		const FBox ActorBox(Origin - Extent, Origin + Extent);
 
-		OutVerts.Reserve(NumCorners);
-		for (int i = 0; i < NumCorners; i++)
+		FVector Vertices[8];
+		ActorBox.GetVertices(Vertices);
+		for (int i = 0; i < 8; i++)
 		{
-			OutVerts.Add(Origin + (Extent * Multipliers[i] * Scale));
+			OutVerts.Add(FMath::Lerp(Origin, Vertices[i], Scale));
 		}
 	}
 }
