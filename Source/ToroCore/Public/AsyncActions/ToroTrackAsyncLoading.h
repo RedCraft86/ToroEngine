@@ -4,7 +4,7 @@
 
 #include "Containers/Ticker.h"
 #include "ToroAsyncActionBase.h"
-#include "TrackAsyncLoadAction.generated.h"
+#include "ToroTrackAsyncLoading.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FTrackAsyncLoadDelegate, FIntPoint, Packages, bool, bIsLoading);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FTrackAsyncLoadDelegateNative, FIntPoint, bool);
@@ -18,8 +18,8 @@ DECLARE_MULTICAST_DELEGATE_TwoParams(FTrackAsyncLoadDelegateNative, FIntPoint, b
  * and does not indicate rendering readiness. Create, activate, and cancel on the game thread.
  * Repeated activation while active or after completion/cancellation has no effect.
  */
-UCLASS(MinimalAPI, NotBlueprintable, BlueprintType, meta = (ExposedAsyncProxy = AsyncAction))
-class UTrackAsyncLoadAction final : public UToroAsyncActionBase
+UCLASS(MinimalAPI, NotBlueprintable, BlueprintType, meta = (ExposedAsyncProxy = Action))
+class UToroTrackAsyncLoading final : public UToroAsyncActionBase
 {
 	GENERATED_BODY()
 
@@ -55,12 +55,12 @@ public:
 	 * native callers bind callbacks and call Activate().
 	 * @param TestInterval Minimum seconds between ordinary updates, clamped to at least 0.01.
 	 *        Nonfinite values use 0.1 seconds. Loader activity is still sampled every frame.
-	 * @param IdleDuration Required observed idle time in seconds, clamped to at least zero.
+	 * @param IdleDuration Required observed idle time in seconds, clamped to at least 0.1.
 	 *        Nonfinite values use 0.2 seconds. Zero completes on the first idle sample.
 	 *        Idle timing begins at the first idle sample and resets whenever activity is observed.
 	 */
 	UFUNCTION(BlueprintCallable, Category = AsyncLoading, DisplayName = "Track Async Loading", meta = (BlueprintInternalUseOnly = true, WorldContext = ContextObject))
-	[[nodiscard]] static TOROCORE_API UTrackAsyncLoadAction* TrackAsyncLoading(const UObject* ContextObject, float TestInterval = 0.1f, float IdleDuration = 0.2f);
+	[[nodiscard]] static TOROCORE_API UToroTrackAsyncLoading* TrackAsyncLoading(const UObject* ContextObject, float TestInterval = 0.1f, float IdleDuration = 0.2f);
 
 	/**
 	 * Stops observation silently and releases game-instance registration, including before
