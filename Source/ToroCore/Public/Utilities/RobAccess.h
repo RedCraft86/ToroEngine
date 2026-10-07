@@ -11,7 +11,7 @@
  * or
  *
  * Define with <c>ROB_DEFINE_FUNC(_CONST)</c><br>
- * Then, use <c>Obj->*RobAccess(class, func)(params);</c>
+ * Then, use <c>(Obj->*RobAccess(class, func))(params);</c>
  */
 template<typename Tag, typename Tag::Type M>
 struct Rob
