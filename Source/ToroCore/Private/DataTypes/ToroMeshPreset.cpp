@@ -13,8 +13,7 @@ namespace
 		Target.SetStaticMesh(RequestedMesh);
 		if (Target.GetStaticMesh() != RequestedMesh)
 		{
-			UE_LOG(LogToroCore, Warning, TEXT("Could not apply mesh preset to %s: the component rejected the requested mesh."),
-				*Target.GetPathName());
+			FFrame::KismetExecutionMessage(TEXT("SetStaticMesh did not accept the new mesh."), ELogVerbosity::Error);
 			return false;
 		}
 
@@ -131,7 +130,7 @@ void FToroSplineMeshPreset::FromMeshComponent(const UStaticMeshComponent* Target
 	const USplineMeshComponent* SplineMesh = ::IsValid(Target) ? Cast<USplineMeshComponent>(Target) : nullptr;
 	if (!SplineMesh)
 	{
-		UE_LOG(LogToroCore, Warning, TEXT("Called FToroSplineMeshPreset::FromMeshComponent without a valid USplineMeshComponent."));
+		FFrame::KismetExecutionMessage(TEXT("Invalid spline mesh component."), ELogVerbosity::Error);
 		return;
 	}
 
@@ -144,7 +143,7 @@ void FToroSplineMeshPreset::ToMeshComponent(UStaticMeshComponent* Target) const
 	USplineMeshComponent* SplineMesh = ::IsValid(Target) ? Cast<USplineMeshComponent>(Target) : nullptr;
 	if (!SplineMesh)
 	{
-		UE_LOG(LogToroCore, Warning, TEXT("Called FToroSplineMeshPreset::ToMeshComponent without a valid USplineMeshComponent."));
+		FFrame::KismetExecutionMessage(TEXT("Invalid spline mesh component."), ELogVerbosity::Error);
 		return;
 	}
 

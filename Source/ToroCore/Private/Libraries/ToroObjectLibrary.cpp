@@ -21,10 +21,7 @@ void UToroObjectLibrary::GetAllObjectsOfClass(TArray<UObject*>& Result, TSubclas
 
 	if (InClass == UObject::StaticClass())
 	{
-		UE_LOG(LogToroCore, Warning,
-			TEXT("UToroObjectLibrary::GetAllObjectsOfClass called with UObject as the class. This includes EVERY active object. Call cancelled.")
-		);
-
+		FFrame::KismetExecutionMessage(TEXT("Called with UObject as the class. This is not allowed for performance reasons."), ELogVerbosity::Error);
 		return;
 	}
 
@@ -40,10 +37,7 @@ UObject* UToroObjectLibrary::GetObjectOfClass(TSubclassOf<UObject> InClass)
 
 	if (InClass == UObject::StaticClass())
 	{
-		UE_LOG(LogToroCore, Warning,
-			TEXT("UToroObjectLibrary::GetObjectOfClass called with UObject as the class. This includes EVERY active object. Call cancelled.")
-		);
-
+		FFrame::KismetExecutionMessage(TEXT("Called with UObject as the class. This is not allowed for performance reasons."), ELogVerbosity::Error);
 		return nullptr;
 	}
 
