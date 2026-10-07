@@ -3,6 +3,7 @@
 #pragma once
 
 #include "UE5Coro.h"
+#include "DataTypes/MiscEnums.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroSequenceLibrary.generated.h"
 
@@ -46,28 +47,31 @@ public:
 	static void StopLevelSequence(const ALevelSequenceActor* Target, EToroSequenceStopType StopType = EToroSequenceStopType::Default);
 
 	/**
-	 * Starts forward playback and optionally waits for natural completion or an explicit stop.
-	 * Looping playback can wait indefinitely until stopped; stopped playback still reports success.
-	 * @param bSuccess False for invalid targets, missing players, or nonfinite rates; true after starting or the optional wait.
-	 * @param Target Sequence actor to play.
-	 * @param PlayRate Finite playback rate, clamped to at least 0.1.
-	 * @param bWaitForFinished Await OnFinished or OnStop rather than return after starting.
+	 * Submits forward or reverse playback on the game thread using a validated sequence player.
+	 * @param Target Sequence actor with a valid player and assigned sequence.
+	 * @param PlayMode Forward or Reverse; unnamed enum values are rejected.
+	 * @param PlayRate Finite speed magnitude, clamped to at least 0.1; PlayMode controls direction.
+	 * @param bResumePlay Continue from the current position when true. When false, stop and restart.
+	 * @return True when a valid playback request is submitted, not confirmation that the engine
+	 *         started playback; false for invalid inputs or a player invalidated during restart preparation.
 	 */
-	UFUNCTION(BlueprintCallable, Category = LevelSequence, DisplayName = "Play Sequence",
-		meta = (Latent, LatentInfo = LatentInfo, DefaultToSelf = Target))
-	static FVoidCoroutine PlayLevelSequence(FLatentActionInfo LatentInfo, bool& bSuccess,
-		const ALevelSequenceActor* Target, float PlayRate = 1.0f, bool bWaitForFinished = true);
+	UFUNCTION(BlueprintCallable, Category = LevelSequence, DisplayName = "Play Sequence", meta = (DefaultToSelf = Target))
+	static bool PlayLevelSequence(const ALevelSequenceActor* Target, EToroAnimationPlayMode PlayMode = EToroAnimationPlayMode::Forward,
+		float PlayRate = 1.0f, bool bResumePlay = true);
 
 	/**
-	 * Starts reverse playback and optionally waits for natural completion or an explicit stop.
-	 * Looping playback can wait indefinitely until stopped; stopped playback still reports success.
-	 * @param bSuccess False for invalid targets, missing players, or nonfinite rates; true after starting or the optional wait.
-	 * @param Target Sequence actor to play in reverse.
-	 * @param PlayRate Finite positive rate magnitude, clamped to at least 0.1.
-	 * @param bWaitForFinished Await OnFinished or OnStop rather than return after starting.
+	 * Submits playback on the game thread and waits for natural completion or an explicit stop.
+	 * Restart preparation occurs before completion listeners are bound. Pausing, infinite looping,
+	 * or an engine refusal to start can leave the wait pending until a finish/stop notification or
+	 * latent cancellation. Cancellation removes the listeners without explicitly stopping playback.
+	 * @param bSuccess False for rejected requests; true after natural completion or explicit stopping.
+	 * @param Target Sequence actor with a valid player and assigned sequence.
+	 * @param PlayMode Forward or Reverse; unnamed enum values are rejected.
+	 * @param PlayRate Finite speed magnitude, clamped to at least 0.1; PlayMode controls direction.
+	 * @param bResumePlay Continue from the current position when true. When false, stop and restart.
 	 */
-	UFUNCTION(BlueprintCallable, Category = LevelSequence, DisplayName = "Reverse Sequence",
+	UFUNCTION(BlueprintCallable, Category = LevelSequence, DisplayName = "Play Sequence (Async)",
 		meta = (Latent, LatentInfo = LatentInfo, DefaultToSelf = Target))
-	static FVoidCoroutine ReverseLevelSequence(FLatentActionInfo LatentInfo, bool& bSuccess,
-		const ALevelSequenceActor* Target, float PlayRate = 1.0f, bool bWaitForFinished = true);
+	static FVoidCoroutine PlayLevelSequenceAsync(FLatentActionInfo LatentInfo, bool& bSuccess, const ALevelSequenceActor* Target,
+		EToroAnimationPlayMode PlayMode = EToroAnimationPlayMode::Forward, float PlayRate = 1.0f, bool bResumePlay = true);
 };

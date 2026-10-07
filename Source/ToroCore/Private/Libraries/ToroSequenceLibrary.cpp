@@ -52,67 +52,55 @@ void UToroSequenceLibrary::StopLevelSequence(const ALevelSequenceActor* Target, 
 	}
 }
 
-FVoidCoroutine UToroSequenceLibrary::PlayLevelSequence(FLatentActionInfo LatentInfo, bool& bSuccess,
-	const ALevelSequenceActor* Target, float PlayRate, bool bWaitForFinished)
+bool UToroSequenceLibrary::PlayLevelSequence(const ALevelSequenceActor* Target, EToroAnimationPlayMode PlayMode, float PlayRate, bool bResumePlay)
 {
-	bSuccess = false;
-	if (!FMath::IsFinite(PlayRate))
+	if (!IsValid(Target) || !IsValid(Target->GetSequencePlayer()) || !FMath::IsFinite(PlayRate))
 	{
-		co_return;
+		return false;
 	}
 
-	if (ULevelSequencePlayer* Player = IsValid(Target) ? Target->GetSequencePlayer() : nullptr)
+	const TWeakObjectPtr Player = Target->GetSequencePlayer();
+	if (!bResumePlay)
 	{
-		Player->SetPlayRate(FMath::Max(0.1f, PlayRate));
-		if (bWaitForFinished)
-		{
-			auto Ended = UE5Coro::Race(
-				WaitForSequenceFinished(*Player),
-				WaitForSequenceStopped(*Player) // Stop listening when stopped
-			);
-
-			Player->Play();
-			co_await Ended;
-		}
-		else
-		{
-			Player->Play();
-		}
-
-		bSuccess = true;
+		Player->RewindForReplay();
 	}
 
-	co_return;
+	switch (PlayMode)
+	{
+	case EToroAnimationPlayMode::Forward:
+		Player->Play();
+		break;
+
+	case EToroAnimationPlayMode::Reverse:
+		Player->PlayReverse();
+		break;
+	}
+
+	return true;
 }
 
-FVoidCoroutine UToroSequenceLibrary::ReverseLevelSequence(FLatentActionInfo LatentInfo, bool& bSuccess,
-	const ALevelSequenceActor* Target, float PlayRate, bool bWaitForFinished)
+FVoidCoroutine UToroSequenceLibrary::PlayLevelSequenceAsync(FLatentActionInfo LatentInfo, bool& bSuccess,
+	const ALevelSequenceActor* Target, EToroAnimationPlayMode PlayMode, float PlayRate, bool bResumePlay)
 {
 	bSuccess = false;
-	if (!FMath::IsFinite(PlayRate))
+	if (!IsValid(Target) || !IsValid(Target->GetSequencePlayer()) || !FMath::IsFinite(PlayRate))
 	{
 		co_return;
 	}
 
-	if (ULevelSequencePlayer* Player = IsValid(Target) ? Target->GetSequencePlayer() : nullptr)
+	const TWeakObjectPtr Player = Target->GetSequencePlayer();
+	if (!bResumePlay)
 	{
-		Player->SetPlayRate(FMath::Max(0.1f, PlayRate));
-		if (bWaitForFinished)
-		{
-			auto Ended = UE5Coro::Race(
-				WaitForSequenceFinished(*Player),
-				WaitForSequenceStopped(*Player) // Stop listening when stopped
-			);
+		// This needs to be called before we bind the delegates since it calls Stop()
+		Player->RewindForReplay();
+	}
 
-			Player->PlayReverse();
-			co_await Ended;
-		}
-		else
-		{
-			Player->PlayReverse();
-		}
-
-		bSuccess = true;
+	const float ExpectedTime = (PlayMode == EToroAnimationPlayMode::Forward ? Player->GetEndTime() : Player->GetStartTime()).AsSeconds();
+	auto OnSequenceEnded = UE5Coro::Race(WaitForSequenceFinished(*Player), WaitForSequenceStopped(*Player));
+	if (PlayLevelSequence(Target, PlayMode, PlayRate, true))
+	{
+		co_await OnSequenceEnded;
+		bSuccess = Player.IsValid() && FMath::IsNearlyEqual(Player->GetCurrentTime().AsSeconds(), ExpectedTime, 0.1f);
 	}
 
 	co_return;
