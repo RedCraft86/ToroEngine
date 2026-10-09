@@ -15,6 +15,12 @@ public class ToroCoreEd : ModuleRules
 			    "Engine",
 			    "Slate",
 			    "SlateCore",
+			    "UnrealEd",
+			    "PropertyEditor",
+			    "ClassViewer",
+			    "ToolMenus",
+			    "AssetDefinition",
+			    "GameplayTags",
 			    "ToroCore"
 		    ]
 	    );
