@@ -6,6 +6,7 @@
 #include "UnrealEdGlobals.h"
 #include "ComponentVisualizer.h"
 #include "Editor/UnrealEdEngine.h"
+#include "ToroVisualizerHelpers.h"
 
 /**
  * Component-visualizer base with tracked registration and optional empty drawing callbacks.
