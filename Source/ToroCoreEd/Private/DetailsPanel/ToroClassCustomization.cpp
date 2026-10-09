@@ -51,7 +51,7 @@ TArray<FString> FToroClassCustomization::GetForceShowCategories()
 
 void FToroClassCustomization::HandleCategoryRenames()
 {
-	static const FName META_RenameCategories("RenameCategories");
+	static const FName META_RenameCategories(TEXT("RenameCategories"));
 
 	if (!CustomizingClass)
 	{
