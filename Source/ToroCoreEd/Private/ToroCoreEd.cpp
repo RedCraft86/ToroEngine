@@ -6,6 +6,8 @@
 #include "MiscEditor/ToroToolbarButton.h"
 #include "ComponentVis/ToroComponentVisualizer.h"
 
+#include "DetailsPanel/ToroIdentityCustomization.h"
+#include "DetailsPanel/SimpleCooldownCustomization.h"
 #include "DetailsPanel/ToroWrapperCustomization.h"
 #include "DetailsPanel/ToroStructCustomization.h"
 #include "DataTypes/WrappedTypes.h"
@@ -34,6 +36,8 @@ void FToroCoreEdModule::StartupModule()
 	FToroStructCustomization::Register<FInlineFloatCurve, FToroWrapperCustomization>();
 	FToroStructCustomization::Register<FInlineVectorCurve, FToroWrapperCustomization>();
 	FToroStructCustomization::Register<FInlineColorCurve, FToroWrapperCustomization>();
+	FToroStructCustomization::Register<FSimpleCooldown, FSimpleCooldownCustomization>();
+	FToroStructCustomization::Register<FToroIdentity, FToroIdentityCustomization>();
 
 	FToroClassCustomization::Register<AToroActor, FToroActorCustomization>();
 	FToroClassCustomization::Register<AToroVolume, FToroVolumeCustomization>();
