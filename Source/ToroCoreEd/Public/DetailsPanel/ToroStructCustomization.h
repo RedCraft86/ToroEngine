@@ -4,6 +4,7 @@
 
 #include "ToroCoreEd.h"
 #include "IPropertyTypeCustomization.h"
+#include "PropertyCustomizationHelpers.h"
 #include "PropertyEditorModule.h"
 #include "PropertyHandle.h"
 

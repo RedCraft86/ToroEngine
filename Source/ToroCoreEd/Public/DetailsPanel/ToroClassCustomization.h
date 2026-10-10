@@ -5,6 +5,7 @@
 #include "ToroCoreEd.h"
 #include "DetailLayoutBuilder.h"
 #include "IDetailCustomization.h"
+#include "PropertyCustomizationHelpers.h"
 #include "PropertyEditorModule.h"
 #include "PropertyHandle.h"
 
