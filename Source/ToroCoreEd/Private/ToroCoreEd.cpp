@@ -4,8 +4,12 @@
 #include "MiscEditor/ToroSlateStyle.h"
 #include "MiscEditor/ToroToolbarButton.h"
 #include "ComponentVis/ToroComponentVisualizer.h"
-#include "DetailsPanel/ToroStructCustomization.h"
 #include "DetailsPanel/ToroClassCustomization.h"
+
+#include "DetailsPanel/ToroWrapperCustomization.h"
+#include "DetailsPanel/ToroStructCustomization.h"
+#include "DataTypes/WrappedTypes.h"
+#include "DataTypes/InlineCurves.h"
 
 DEFINE_LOG_CATEGORY(LogToroCoreEd);
 
@@ -13,7 +17,17 @@ DEFINE_LOG_CATEGORY(LogToroCoreEd);
 
 void FToroCoreEdModule::StartupModule()
 {
-	
+	FToroStructCustomization::Register<FWrappedBool, FToroWrapperCustomization>();
+	FToroStructCustomization::Register<FWrappedFloat, FToroWrapperCustomization>();
+	FToroStructCustomization::Register<FWrappedByte, FToroWrapperCustomization>();
+	FToroStructCustomization::Register<FWrappedInt32, FToroWrapperCustomization>();
+	FToroStructCustomization::Register<FWrappedInt64, FToroWrapperCustomization>();
+	FToroStructCustomization::Register<FWrappedName, FToroWrapperCustomization>();
+	FToroStructCustomization::Register<FWrappedString, FToroWrapperCustomization>();
+	FToroStructCustomization::Register<FWrappedGameplayTag, FToroWrapperCustomization>();
+	FToroStructCustomization::Register<FInlineFloatCurve, FToroWrapperCustomization>();
+	FToroStructCustomization::Register<FInlineVectorCurve, FToroWrapperCustomization>();
+	FToroStructCustomization::Register<FInlineColorCurve, FToroWrapperCustomization>();
 }
 
 void FToroCoreEdModule::ShutdownModule()
