@@ -79,7 +79,6 @@ void FToroWrapperCustomization::CustomizeHeader(TSharedRef<IPropertyHandle> Stru
 		if (!TooltipText.IsEmptyOrWhitespace())
 		{
 			HeaderRow.NameWidget.Widget->SetToolTipText(TooltipText);
-			HeaderRow.ValueWidget.Widget->SetToolTipText(TooltipText);
 			HeaderRow.WholeRowWidget.Widget->SetToolTipText(TooltipText);
 		}
 	}
