@@ -41,11 +41,12 @@ TSharedPtr<IPropertyHandle> FToroWrapperCustomization::GetInnerProperty() const
 	return Property;
 }
 
-void FToroWrapperCustomization::CustomizeHeader(TSharedRef<IPropertyHandle> PropertyHandle,
+void FToroWrapperCustomization::CustomizeHeader(TSharedRef<IPropertyHandle> StructHandle,
 	FDetailWidgetRow& HeaderRow, IPropertyTypeCustomizationUtils& CustomizationUtils)
 {
 	InnerCustomization.Reset();
-	FToroStructCustomization::CustomizeHeader(PropertyHandle, HeaderRow, CustomizationUtils);
+	FToroStructCustomization::CustomizeHeader(StructHandle, HeaderRow, CustomizationUtils);
+
 	if (const TSharedPtr<IPropertyHandle> Property = GetInnerProperty())
 	{
 		FPropertyEditorModule& Module = FModuleManager::GetModuleChecked<FPropertyEditorModule>(TEXT("PropertyEditor"));
@@ -71,10 +72,10 @@ void FToroWrapperCustomization::CustomizeHeader(TSharedRef<IPropertyHandle> Prop
 
 		HeaderRow.NameContent()
 		[
-			PropertyHandle->CreatePropertyNameWidget()
+			StructHandle->CreatePropertyNameWidget()
 		];
 
-		const FText TooltipText = PropertyHandle->GetToolTipText();
+		const FText TooltipText = StructHandle->GetToolTipText();
 		if (!TooltipText.IsEmptyOrWhitespace())
 		{
 			HeaderRow.NameWidget.Widget->SetToolTipText(TooltipText);
@@ -84,10 +85,11 @@ void FToroWrapperCustomization::CustomizeHeader(TSharedRef<IPropertyHandle> Prop
 	}
 }
 
-void FToroWrapperCustomization::CustomizeChildren(TSharedRef<IPropertyHandle> PropertyHandle,
+void FToroWrapperCustomization::CustomizeChildren(TSharedRef<IPropertyHandle> StructHandle,
 	IDetailChildrenBuilder& ChildBuilder, IPropertyTypeCustomizationUtils& CustomizationUtils)
 {
-	FToroStructCustomization::CustomizeChildren(PropertyHandle, ChildBuilder, CustomizationUtils);
+	FToroStructCustomization::CustomizeChildren(StructHandle, ChildBuilder, CustomizationUtils);
+
 	if (const TSharedPtr<IPropertyHandle> Property = GetInnerProperty())
 	{
 		if (InnerCustomization.IsValid())

@@ -27,9 +27,9 @@ class TOROCOREED_API FToroWrapperCustomization final : public FToroStructCustomi
 	 */
 	TSharedPtr<IPropertyHandle> GetInnerProperty() const;
 
-	virtual void CustomizeHeader(TSharedRef<IPropertyHandle> PropertyHandle, FDetailWidgetRow& HeaderRow,
+	virtual void CustomizeHeader(TSharedRef<IPropertyHandle> StructHandle, FDetailWidgetRow& HeaderRow,
 		IPropertyTypeCustomizationUtils& CustomizationUtils) override;
 
-	virtual void CustomizeChildren(TSharedRef<IPropertyHandle> PropertyHandle, IDetailChildrenBuilder& ChildBuilder,
+	virtual void CustomizeChildren(TSharedRef<IPropertyHandle> StructHandle, IDetailChildrenBuilder& ChildBuilder,
 		IPropertyTypeCustomizationUtils& CustomizationUtils) override;
 };
