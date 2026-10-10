@@ -1,15 +1,21 @@
 ﻿// Copyright (C) RedCraft86. Licensed under LGPL-3.0, see LICENSE file for details.
 
 #include "ToroCoreEd.h"
+
 #include "MiscEditor/ToroSlateStyle.h"
 #include "MiscEditor/ToroToolbarButton.h"
 #include "ComponentVis/ToroComponentVisualizer.h"
-#include "DetailsPanel/ToroClassCustomization.h"
 
 #include "DetailsPanel/ToroWrapperCustomization.h"
 #include "DetailsPanel/ToroStructCustomization.h"
 #include "DataTypes/WrappedTypes.h"
 #include "DataTypes/InlineCurves.h"
+
+#include "DetailsPanel/ToroActorCustomizations.h"
+#include "DetailsPanel/ToroClassCustomization.h"
+#include "Actors/ToroCharacter.h"
+#include "Actors/ToroVolume.h"
+#include "Actors/ToroActor.h"
 
 DEFINE_LOG_CATEGORY(LogToroCoreEd);
 
@@ -28,6 +34,10 @@ void FToroCoreEdModule::StartupModule()
 	FToroStructCustomization::Register<FInlineFloatCurve, FToroWrapperCustomization>();
 	FToroStructCustomization::Register<FInlineVectorCurve, FToroWrapperCustomization>();
 	FToroStructCustomization::Register<FInlineColorCurve, FToroWrapperCustomization>();
+
+	FToroClassCustomization::Register<AToroActor, FToroActorCustomization>();
+	FToroClassCustomization::Register<AToroVolume, FToroVolumeCustomization>();
+	FToroClassCustomization::Register<AToroCharacter, FToroCharacterCustomization>();
 }
 
 void FToroCoreEdModule::ShutdownModule()
