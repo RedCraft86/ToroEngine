@@ -3,7 +3,7 @@
 	"Version": 1,
 	"VersionName": "1.0",
 	"FriendlyName": "ToroEngine",
-	"Description": "A game development template for Unreal Engine 5.",
+	"Description": "A game framework template for Unreal Engine 5.",
 	"Category": "Framework",
 	"CreatedBy": "RedCraft86",
 	"CreatedByURL": "https://github.com/RedCraft86",
