@@ -160,7 +160,7 @@ private:
 			}
 
 			LayoutPopup.Reset();
-			LayoutPopup = MakeShared<FActorLayoutPopup>([&Actors](uint8 MaxColumns, float YawOffset, const FVector2D& XYOffset)
+			LayoutPopup = MakeShared<FActorLayoutPopup>([Actors](uint8 MaxColumns, float YawOffset, const FVector2D& XYOffset)
 			{
 				FToroActorEditorUtils::LayoutActors(Actors, MaxColumns, YawOffset, XYOffset);
 			});
