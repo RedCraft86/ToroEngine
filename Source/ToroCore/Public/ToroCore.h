@@ -6,6 +6,10 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogToroCore, All, All);
 
+/**
+ * Reusable types, base classes, abstractions, and utility functions.
+ * Provides building blocks without defining standalone gameplay or engine features.
+ */
 class FToroCoreModule final : public IModuleInterface
 {
     virtual void StartupModule() override;

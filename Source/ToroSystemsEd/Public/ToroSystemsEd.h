@@ -6,6 +6,11 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogToroSystemsEd, All, All);
 
+/**
+ * Editor support for ToroSystems, including system-specific authoring,
+ * configuration, visualization, and validation workflows.
+ * Built upon shared editor infrastructure and the systems it supports.
+ */
 class FToroSystemsEdModule final : public IModuleInterface
 {
     virtual void StartupModule() override;

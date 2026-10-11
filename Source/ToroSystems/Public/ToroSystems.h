@@ -6,6 +6,10 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogToroSystems, All, All);
 
+/**
+ * Complete systems that coordinate related functionality into cohesive gameplay
+ * or application workflows, built upon UnrealEngine, ToroCore, and ToroEngine.
+ */
 class FToroSystemsModule final : public IModuleInterface
 {
     virtual void StartupModule() override;
