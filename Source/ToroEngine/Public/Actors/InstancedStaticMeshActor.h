@@ -5,6 +5,8 @@
 #include "Engine/StaticMeshActor.h"
 #include "InstancedStaticMeshActor.generated.h"
 
+class UInstancedStaticMeshComponent;
+
 UCLASS(meta = (ChildCanTick = true))
 class TOROENGINE_API AInstancedStaticMeshActor : public AStaticMeshActor
 {
