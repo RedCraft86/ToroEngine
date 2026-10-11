@@ -17,7 +17,9 @@ public class ToroEngineEd : ModuleRules
 			"SlateIM",
 			"UnrealEd",
 			"ToolMenus",
+			"ProceduralMeshComponent",
 			"ToroCoreEd",
+			"ToroCore",
 			"ToroEngine"
 		]);
 	}

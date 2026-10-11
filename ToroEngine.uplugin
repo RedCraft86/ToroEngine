@@ -55,6 +55,10 @@
 		{
 			"Name": "UE5Coro",
 			"Enabled": true
+		},
+		{
+			"Name": "ProceduralMeshComponent",
+			"Enabled": true
 		}
 	]
 }
