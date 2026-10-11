@@ -8,15 +8,13 @@ public class ToroEngine : ModuleRules
     {
 	    PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-	    PublicDependencyModuleNames.AddRange(
-		    [
-			    "Core",
-			    "CoreUObject",
-			    "Engine",
-			    "Slate",
-			    "SlateCore",
-			    "ToroCore"
-		    ]
-	    );
+	    PublicDependencyModuleNames.AddRange([
+		    "Core",
+		    "CoreUObject",
+		    "Engine",
+		    "Slate",
+		    "SlateCore",
+		    "ToroCore"
+	    ]);
     }
 }

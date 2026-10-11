@@ -8,21 +8,25 @@ public class ToroCoreEd : ModuleRules
     {
 	    PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-	    PublicDependencyModuleNames.AddRange(
-		    [
-			    "Core",
-			    "CoreUObject",
-			    "Engine",
-			    "Slate",
-			    "SlateCore",
-			    "UnrealEd",
-			    "PropertyEditor",
-			    "ClassViewer",
-			    "ToolMenus",
-			    "AssetDefinition",
-			    "GameplayTags",
-			    "ToroCore"
-		    ]
-	    );
+	    PublicDependencyModuleNames.AddRange([
+		    "Core",
+		    "CoreUObject",
+		    "Engine",
+		    "Slate",
+		    "SlateCore",
+		    "UnrealEd",
+		    "PropertyEditor",
+		    "ClassViewer",
+		    "ToolMenus",
+		    "AssetDefinition",
+		    "GameplayTags",
+		    "ToroCore"
+	    ]);
+
+	    PrivateDependencyModuleNames.AddRange([
+		    "Slate",
+		    "SlateCore",
+		    "SlateIM",
+	    ]);
     }
 }

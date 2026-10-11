@@ -8,29 +8,23 @@ public class ToroCore : ModuleRules
     {
 	    PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-	    PublicDependencyModuleNames.AddRange(
-		    [
-			    "Core",
-			    "CoreUObject",
-			    "Engine",
-			    "UMG",
-			    "Slate",
-			    "SlateCore",
-			    "RenderCore",
-			    "GameplayTags",
-			    "LevelSequence",
-			    "MovieScene",
-			    "UE5Coro"
-		    ]
-	    );
+	    PublicDependencyModuleNames.AddRange([
+		    "Core",
+		    "CoreUObject",
+		    "Engine",
+		    "UMG",
+		    "Slate",
+		    "SlateCore",
+		    "RenderCore",
+		    "GameplayTags",
+		    "LevelSequence",
+		    "MovieScene",
+		    "UE5Coro"
+	    ]);
 
 	    if (Target.Type == TargetType.Editor)
 	    {
-		    PrivateDependencyModuleNames.AddRange(
-			    [
-				    "UnrealEd"
-			    ]
-		    );
+		    PrivateDependencyModuleNames.Add("UnrealEd");
 	    }
     }
 }

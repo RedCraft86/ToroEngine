@@ -8,16 +8,22 @@ public class ToroEngineEd : ModuleRules
     {
 	    PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-	    PublicDependencyModuleNames.AddRange(
-		    [
-			    "Core",
-			    "CoreUObject",
-			    "Engine",
-			    "Slate",
-			    "SlateCore",
-			    "ToroCoreEd",
-			    "ToroEngine"
-		    ]
-	    );
+	    PublicDependencyModuleNames.AddRange([
+		    "Core",
+		    "CoreUObject",
+		    "UnrealEd",
+		    "Engine",
+		    "Slate",
+		    "SlateCore",
+		    "ToolMenus",
+		    "ToroCoreEd",
+		    "ToroEngine"
+	    ]);
+
+	    PrivateDependencyModuleNames.AddRange([
+		    "Slate",
+		    "SlateCore",
+		    "SlateIM",
+	    ]);
     }
 }
