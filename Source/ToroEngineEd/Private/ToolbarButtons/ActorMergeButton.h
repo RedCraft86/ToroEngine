@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Selection.h"
+#include "ToroEngineEd.h"
 #include "ToroEngineStyle.h"
 #include "MiscEditor/ToroToolbarButton.h"
 #include "Widgets/Notifications/SNotificationList.h"
@@ -33,7 +33,7 @@ private:
 
 	virtual void Execute() override
 	{
-		if (!GEditor->GetSelectedActors() || GEditor->GetSelectedActors()->Num() == 0)
+		if (!FToroEngineEdModule::ActorSubsystem.Get() || FToroEngineEdModule::ActorSubsystem->GetSelectedLevelActors().IsEmpty())
 		{
 			static const FNotificationInfo Info(LOCTEXT("NoActorsSelectedNotification", "No Actors Selected!"));
 			FSlateNotificationManager::Get().AddNotification(Info);
