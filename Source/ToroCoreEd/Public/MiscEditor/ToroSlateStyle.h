@@ -59,7 +59,7 @@ public:
 			{
 				if (Style.Value.IsValid())
 				{
-					FSlateStyleRegistry::UnRegisterSlateStyle(*Style.Value);
+					FSlateStyleRegistry::UnRegisterSlateStyle(Style.Key);
 					Style.Value.Reset();
 				}
 			}
