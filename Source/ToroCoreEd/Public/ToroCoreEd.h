@@ -4,7 +4,7 @@
 
 #include "Modules/ModuleManager.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogToroCoreEd, All, All);
+TOROCOREED_API DECLARE_LOG_CATEGORY_EXTERN(LogToroCoreEd, All, All);
 
 /**
  * Editor support for ToroCore types and reusable editor infrastructure,

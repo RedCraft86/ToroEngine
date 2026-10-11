@@ -4,7 +4,7 @@
 
 #include "Modules/ModuleManager.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogToroSystems, All, All);
+TOROSYSTEMS_API DECLARE_LOG_CATEGORY_EXTERN(LogToroSystems, All, All);
 
 /**
  * Complete systems that coordinate related functionality into cohesive gameplay

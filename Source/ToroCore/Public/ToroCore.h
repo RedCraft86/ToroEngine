@@ -4,7 +4,7 @@
 
 #include "Modules/ModuleManager.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogToroCore, All, All);
+TOROCORE_API DECLARE_LOG_CATEGORY_EXTERN(LogToroCore, All, All);
 
 /**
  * Reusable types, base classes, abstractions, and utility functions.

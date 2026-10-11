@@ -4,7 +4,7 @@
 
 #include "Modules/ModuleManager.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogToroSystemsEd, All, All);
+TOROSYSTEMSED_API DECLARE_LOG_CATEGORY_EXTERN(LogToroSystemsEd, All, All);
 
 /**
  * Editor support for ToroSystems, including system-specific authoring,

@@ -4,7 +4,7 @@
 
 #include "Modules/ModuleManager.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogToroEngine, All, All);
+TOROENGINE_API DECLARE_LOG_CATEGORY_EXTERN(LogToroEngine, All, All);
 
 /**
  * Feature implementations and extended engine classes built upon UnrealEngine
