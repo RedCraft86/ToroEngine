@@ -16,6 +16,7 @@ public class ToroCoreEd : ModuleRules
 		    "SlateCore",
 		    "SlateIM",
 		    "UnrealEd",
+		    "Projects",
 		    "PropertyEditor",
 		    "ClassViewer",
 		    "ToolMenus",

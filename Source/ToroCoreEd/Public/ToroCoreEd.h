@@ -13,6 +13,12 @@ TOROCOREED_API DECLARE_LOG_CATEGORY_EXTERN(LogToroCoreEd, All, All);
  */
 class FToroCoreEdModule final : public IModuleInterface
 {
+public:
+
+	TOROCOREED_API static FString GetPluginDir();
+
+private:
+
     virtual void StartupModule() override;
     virtual void ShutdownModule() override;
 };

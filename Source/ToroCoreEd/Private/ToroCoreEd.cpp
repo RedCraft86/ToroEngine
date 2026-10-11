@@ -1,6 +1,7 @@
 ﻿// Copyright (C) RedCraft86. Licensed under LGPL-3.0, see LICENSE file for details.
 
 #include "ToroCoreEd.h"
+#include "Interfaces/IPluginManager.h"
 
 #include "MiscEditor/ToroSlateStyle.h"
 #include "MiscEditor/ToroToolbarButton.h"
@@ -22,6 +23,12 @@
 DEFINE_LOG_CATEGORY(LogToroCoreEd);
 
 #define LOCTEXT_NAMESPACE "FToroCoreEdModule"
+
+FString FToroCoreEdModule::GetPluginDir()
+{
+	static FString PluginDir = IPluginManager::Get().FindPlugin(UE_PLUGIN_NAME)->GetBaseDir();
+	return PluginDir;
+}
 
 void FToroCoreEdModule::StartupModule()
 {
