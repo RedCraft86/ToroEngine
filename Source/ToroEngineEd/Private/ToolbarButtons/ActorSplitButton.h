@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include "Selection.h"
 #include "ToroEngineStyle.h"
+#include "Helpers/ToroActorEditorUtils.h"
 #include "MiscEditor/ToroToolbarButton.h"
-#include "Widgets/Notifications/SNotificationList.h"
-#include "Framework/Notifications/NotificationManager.h"
 
 #define LOCTEXT_NAMESPACE "ToroEngineEd"
 class FActorSplitButton final : public FToroToolbarButton
@@ -33,14 +31,24 @@ private:
 
 	virtual void Execute() override
 	{
-		if (!GEditor->GetSelectedActors() || GEditor->GetSelectedActors()->Num() == 0)
+		if (const TArray<AActor*> Actors = FToroActorEditorUtils::GetSelectedActors(true); !Actors.IsEmpty())
 		{
-			static const FNotificationInfo Info(LOCTEXT("NoActorsSelectedNotification", "No Actors Selected!"));
-			FSlateNotificationManager::Get().AddNotification(Info);
-			return;
-		}
+			if (FMessageDialog::Open(EAppMsgCategory::Info, EAppMsgType::Type::OkCancel,
+				LOCTEXT("ActorSplitDescription",
+					"This will collect mesh components from the selected actors and spawn individual actors from them."),
+				LOCTEXT("ActorSplitQuestion", "Are you sure you want to split selected meshes?")) == EAppReturnType::Cancel)
+			{
+				return;
+			}
 
-		// TODO impl feature
+			const EAppReturnType::Type DestroySrc = FMessageDialog::Open(
+				EAppMsgCategory::Warning, EAppMsgType::Type::YesNo,
+				LOCTEXT("DestroyActorsDesc", "Whether to destroy source actors, otherwise they will be kept."),
+				LOCTEXT("DestroyActorsQuestion", "Do you want to destroy source actors?")
+			);
+
+			FToroActorEditorUtils::SplitActors(Actors, DestroySrc == EAppReturnType::Yes);
+		}
 	}
 };
 #undef LOCTEXT_NAMESPACE
