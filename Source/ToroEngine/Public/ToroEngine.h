@@ -12,6 +12,6 @@ TOROENGINE_API DECLARE_LOG_CATEGORY_EXTERN(LogToroEngine, All, All);
  */
 class FToroEngineModule final : public IModuleInterface
 {
-    virtual void StartupModule() override;
-    virtual void ShutdownModule() override;
+	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
 };

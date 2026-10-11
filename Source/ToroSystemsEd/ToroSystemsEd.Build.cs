@@ -4,20 +4,20 @@ using UnrealBuildTool;
 
 public class ToroSystemsEd : ModuleRules
 {
-    public ToroSystemsEd(ReadOnlyTargetRules Target) : base(Target)
-    {
-        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+	public ToroSystemsEd(ReadOnlyTargetRules Target) : base(Target)
+	{
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDependencyModuleNames.AddRange([
-	        "Core",
-	        "CoreUObject",
-	        "UnrealEd",
-	        "Engine",
-	        "Slate",
-	        "SlateCore",
-	        "SlateIM",
-	        "ToroCoreEd",
-	        "ToroSystems"
-        ]);
-    }
+		PublicDependencyModuleNames.AddRange([
+			"Core",
+			"CoreUObject",
+			"Engine",
+			"Slate",
+			"SlateCore",
+			"SlateIM",
+			"UnrealEd",
+			"ToroCoreEd",
+			"ToroSystems"
+		]);
+	}
 }

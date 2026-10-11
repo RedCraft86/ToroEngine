@@ -105,7 +105,6 @@ bool UToroImageLibrary::GetDataFromRenderTarget(FToroImageData& OutData, UTextur
 	const int64 PixelCount = static_cast<int64>(Target->SizeX) * static_cast<int64>(Target->SizeY);
 	if (Target->SizeX <= 0 || Target->SizeY <= 0 || PixelCount > TNumericLimits<int32>::Max())
 	{
-		
 		FFrame::KismetExecutionMessage(TEXT("Invalid pixel count."), ELogVerbosity::Error);
 		return false;
 	}
@@ -122,7 +121,6 @@ bool UToroImageLibrary::GetDataFromRenderTarget(FToroImageData& OutData, UTextur
 		OutData.Size = FIntPoint(Target->SizeX, Target->SizeY);
 		if (!OutData.IsValid())
 		{
-			
 			FFrame::KismetExecutionMessage(TEXT("Pixel count and data size mismatch."), ELogVerbosity::Error);
 			OutData.Empty();
 			return false;

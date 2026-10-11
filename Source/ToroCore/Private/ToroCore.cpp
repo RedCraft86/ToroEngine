@@ -9,8 +9,8 @@ DEFINE_LOG_CATEGORY(LogToroCore);
 
 void FToroCoreModule::StartupModule()
 {
-    PreLoadMapHandle = FCoreUObjectDelegates::PreLoadMap.AddStatic(PreLoadMap);
-    PostLoadMapHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddStatic(PostLoadMap);
+	PreLoadMapHandle = FCoreUObjectDelegates::PreLoadMap.AddStatic(PreLoadMap);
+	PostLoadMapHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddStatic(PostLoadMap);
 }
 
 void FToroCoreModule::ShutdownModule()

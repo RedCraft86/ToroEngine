@@ -99,69 +99,69 @@ void FToroClassCustomization::HandleCategoryPriority()
 
 void FToroClassCustomization::HandleCategoryVisibility()
 {
-    const TSharedPtr<IDetailLayoutBuilder> Builder = WeakBuilder.Pin();
-    if (!Builder.IsValid())
-    {
-       return;
-    }
+	const TSharedPtr<IDetailLayoutBuilder> Builder = WeakBuilder.Pin();
+	if (!Builder.IsValid())
+	{
+	   return;
+	}
 
-    // True if Category equals an entry or is a child of one ("Entry|Sub").
-    auto MatchesAny = [](const TArray<FString>& Array, const FString& Category) -> bool
-    {
-       for (const FString& Entry : Array)
-       {
-          if (Category.Len() < Entry.Len() || !Category.StartsWith(Entry))
-          {
-             continue;
-          }
+	// True if Category equals an entry or is a child of one ("Entry|Sub").
+	auto MatchesAny = [](const TArray<FString>& Array, const FString& Category) -> bool
+	{
+	   for (const FString& Entry : Array)
+	   {
+	      if (Category.Len() < Entry.Len() || !Category.StartsWith(Entry))
+	      {
+	         continue;
+	      }
 
-          if (Category.Len() == Entry.Len() || Category[Entry.Len()] == TEXT('|'))
-          {
-             return true;
-          }
-       }
+	      if (Category.Len() == Entry.Len() || Category[Entry.Len()] == TEXT('|'))
+	      {
+	         return true;
+	      }
+	   }
 
-       return false;
-    };
+	   return false;
+	};
 
-    TArray<FString> HideCategories, ShowCategories;
-    FEditorCategoryUtils::GetClassHideCategories(CustomizingClass, HideCategories);
-    FEditorCategoryUtils::GetClassShowCategories(CustomizingClass, ShowCategories);
+	TArray<FString> HideCategories, ShowCategories;
+	FEditorCategoryUtils::GetClassHideCategories(CustomizingClass, HideCategories);
+	FEditorCategoryUtils::GetClassShowCategories(CustomizingClass, ShowCategories);
 
-    const TArray<FString> ForceShowCategories = GetForceShowCategories();
-    const TArray<FString> DefaultCategories = GetDefaultCategories();
+	const TArray<FString> ForceShowCategories = GetForceShowCategories();
+	const TArray<FString> DefaultCategories = GetDefaultCategories();
 
-    // "*" in Hide or a non-empty Default list turns this into an allow list.
-    const bool bAllowList = HideCategories.Remove(TEXT("*")) > 0 || !DefaultCategories.IsEmpty();
+	// "*" in Hide or a non-empty Default list turns this into an allow list.
+	const bool bAllowList = HideCategories.Remove(TEXT("*")) > 0 || !DefaultCategories.IsEmpty();
 
-    TArray<FName> CategoriesToHide;
-    Builder->GetCategoryNames(CategoriesToHide);
+	TArray<FName> CategoriesToHide;
+	Builder->GetCategoryNames(CategoriesToHide);
 
-    // Priority: ForceShow > Show > Hide > Default.
-    // Reduce the list to the categories that actually get hidden.
-    CategoriesToHide.RemoveAll([&](const FName& CategoryName) -> bool
-    {
-       const FString Category = CategoryName.ToString();
+	// Priority: ForceShow > Show > Hide > Default.
+	// Reduce the list to the categories that actually get hidden.
+	CategoriesToHide.RemoveAll([&](const FName& CategoryName) -> bool
+	{
+	   const FString Category = CategoryName.ToString();
 
-       if (MatchesAny(ForceShowCategories, Category) || MatchesAny(ShowCategories, Category))
-       {
-          return true; // Forced or shown, keep.
-       }
+	   if (MatchesAny(ForceShowCategories, Category) || MatchesAny(ShowCategories, Category))
+	   {
+	      return true; // Forced or shown, keep.
+	   }
 
-       if (MatchesAny(HideCategories, Category))
-       {
-          return false; // Hidden, beats Default.
-       }
+	   if (MatchesAny(HideCategories, Category))
+	   {
+	      return false; // Hidden, beats Default.
+	   }
 
-       // Untouched by Force/Show/Hide: allow list keeps only Default, otherwise keep everything.
-       return !bAllowList || MatchesAny(DefaultCategories, Category);
-    });
+	   // Untouched by Force/Show/Hide: allow list keeps only Default, otherwise keep everything.
+	   return !bAllowList || MatchesAny(DefaultCategories, Category);
+	});
 
-    for (const FName& Category : CategoriesToHide)
-    {
-       Builder->HideCategory(Category);
-       CategoryMap.Remove(Category);
-    }
+	for (const FName& Category : CategoriesToHide)
+	{
+	   Builder->HideCategory(Category);
+	   CategoryMap.Remove(Category);
+	}
 }
 
 void FToroClassCustomization::CustomizeDetails(const TSharedPtr<IDetailLayoutBuilder>& DetailBuilder)
