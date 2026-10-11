@@ -10,7 +10,7 @@
 
 DEFINE_LOG_CATEGORY(LogToroEngineEd);
 
-#define LOCTEXT_NAMESPACE "FToroEngineEdModule"
+#define LOCTEXT_NAMESPACE "FToroEngineEd"
 
 void FToroEngineEdModule::StartupModule()
 {

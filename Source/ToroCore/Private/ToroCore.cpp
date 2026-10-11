@@ -5,7 +5,7 @@
 
 DEFINE_LOG_CATEGORY(LogToroCore);
 
-#define LOCTEXT_NAMESPACE "FToroCoreModule"
+#define LOCTEXT_NAMESPACE "FToroCore"
 
 void FToroCoreModule::StartupModule()
 {

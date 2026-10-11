@@ -22,7 +22,7 @@
 
 DEFINE_LOG_CATEGORY(LogToroCoreEd);
 
-#define LOCTEXT_NAMESPACE "FToroCoreEdModule"
+#define LOCTEXT_NAMESPACE "FToroCoreEd"
 
 FString FToroCoreEdModule::GetPluginDir()
 {
