@@ -11,19 +11,14 @@ public class ToroEngineEd : ModuleRules
 	    PublicDependencyModuleNames.AddRange([
 		    "Core",
 		    "CoreUObject",
-		    "UnrealEd",
 		    "Engine",
 		    "Slate",
 		    "SlateCore",
+		    "SlateIM",
+		    "UnrealEd",
 		    "ToolMenus",
 		    "ToroCoreEd",
 		    "ToroEngine"
-	    ]);
-
-	    PrivateDependencyModuleNames.AddRange([
-		    "Slate",
-		    "SlateCore",
-		    "SlateIM",
 	    ]);
     }
 }

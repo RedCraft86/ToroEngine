@@ -14,6 +14,7 @@ public class ToroCoreEd : ModuleRules
 		    "Engine",
 		    "Slate",
 		    "SlateCore",
+		    "SlateIM",
 		    "UnrealEd",
 		    "PropertyEditor",
 		    "ClassViewer",
@@ -21,12 +22,6 @@ public class ToroCoreEd : ModuleRules
 		    "AssetDefinition",
 		    "GameplayTags",
 		    "ToroCore"
-	    ]);
-
-	    PrivateDependencyModuleNames.AddRange([
-		    "Slate",
-		    "SlateCore",
-		    "SlateIM",
 	    ]);
     }
 }

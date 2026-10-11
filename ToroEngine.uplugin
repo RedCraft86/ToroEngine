@@ -49,6 +49,10 @@
 	],
 	"Plugins": [
 		{
+			"Name": "SlateIM",
+			"Enabled": true
+		},
+		{
 			"Name": "UE5Coro",
 			"Enabled": true
 		}
