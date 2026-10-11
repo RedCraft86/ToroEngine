@@ -168,6 +168,8 @@ TArray<AActor*> FToroActorEditorUtils::InstanceActors(const TArray<AActor*>& Act
 				if (UInstancedStaticMeshComponent* Comp = Actor->GetMeshComponent<UInstancedStaticMeshComponent>())
 				{
 					Instance.Key.ToMeshComponent(Comp);
+
+					Comp->ClearInstances();
 					for (const FTransform Transform : Instance.Value)
 					{
 						Comp->AddInstance(Transform, true);
