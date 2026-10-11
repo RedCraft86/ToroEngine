@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include "ToroEngineEd.h"
 #include "ToroEngineStyle.h"
+#include "Helpers/ToroActorEditorUtils.h"
 #include "MiscEditor/ToroToolbarButton.h"
-#include "Widgets/Notifications/SNotificationList.h"
-#include "Framework/Notifications/NotificationManager.h"
 
 #define LOCTEXT_NAMESPACE "ToroEngineEd"
 class FActorMergeButton final : public FToroToolbarButton
@@ -33,14 +31,10 @@ private:
 
 	virtual void Execute() override
 	{
-		if (!FToroEngineEdModule::ActorSubsystem.Get() || FToroEngineEdModule::ActorSubsystem->GetSelectedLevelActors().IsEmpty())
+		if (const TArray<AActor*> Actors = FToroActorEditorUtils::GetSelectedActors(true); !Actors.IsEmpty())
 		{
-			static const FNotificationInfo Info(LOCTEXT("NoActorsSelectedNotification", "No Actors Selected!"));
-			FSlateNotificationManager::Get().AddNotification(Info);
-			return;
+			FGlobalTabmanager::Get()->TryInvokeTab(FTabId(TEXT("MergeActors")));
 		}
-
-		FGlobalTabmanager::Get()->TryInvokeTab(FTabId(TEXT("MergeActors")));
 	}
 };
 #undef LOCTEXT_NAMESPACE
