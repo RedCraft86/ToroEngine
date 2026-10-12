@@ -3,6 +3,7 @@
 #include "Actors/InstancedStaticMeshActor.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
+#include "Templates/UnrealTemplate.h"
 
 AInstancedStaticMeshActor::AInstancedStaticMeshActor(const FObjectInitializer& ObjectInit)
 	: Super(ObjectInit.SetDefaultSubobjectClass<UInstancedStaticMeshComponent>(StaticMeshComponentName))
@@ -40,8 +41,7 @@ void AInstancedStaticMeshActor::UpdateInstances() const
 
 void AInstancedStaticMeshActor::CopyInstancesFromComponent()
 {
-	bLockInstances = true;
-
+	TGuardValue<bool> LockGuard(bLockInstances, true);
 	if (const UInstancedStaticMeshComponent* ISMC = GetMeshComponent())
 	{
 		const int32 NumInstances = ISMC->GetNumInstances();
@@ -50,12 +50,12 @@ void AInstancedStaticMeshActor::CopyInstancesFromComponent()
 		for (int32 i = 0; i < NumInstances; i++)
 		{
 			FTransform Transform;
-			ISMC->GetInstanceTransform(i, Transform, false);
-			Instances.Add(Transform);
+			if (ISMC->GetInstanceTransform(i, Transform, false))
+			{
+				Instances.Add(Transform);
+			}
 		}
 	}
-
-	bLockInstances = false;
 }
 
 void AInstancedStaticMeshActor::OnConstruction(const FTransform& Transform)
