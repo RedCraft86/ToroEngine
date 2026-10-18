@@ -24,7 +24,10 @@ public class ToroCore : ModuleRules
 
 		if (Target.Type == TargetType.Editor)
 		{
-			PrivateDependencyModuleNames.Add("UnrealEd");
+			PrivateDependencyModuleNames.AddRange([
+				"UnrealEd",
+				"MessageLog"
+			]);
 		}
 	}
 }
