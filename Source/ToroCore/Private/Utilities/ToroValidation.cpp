@@ -17,21 +17,18 @@ namespace
 	void ValidateInternal(const UObject& Target, const FName& LogName, const FText& ObjectType, bool bClearPages = false)
 	{
 		const FName& MsgLogName = LogName.IsNone() ? UE::DataValidation::MessageLogName : LogName;
-
-		FMessageLog Log(MsgLogName);
 		if (bClearPages)
 		{
 			FMessageLogModule& Module = FModuleManager::LoadModuleChecked<FMessageLogModule>(TEXT("MessageLog"));
 			Module.GetLogListing(MsgLogName)->ClearMessages();
 		}
-		else
-		{
-			Log.NewPage(FText::Format(
-				LOCTEXT("ValidationPage", "Validate {0}: {1}"),
-				ObjectType,
-				FText::FromString(Target.GetPathName())
-			));
-		}
+
+		FMessageLog Log(MsgLogName);
+		Log.NewPage(FText::Format(
+			LOCTEXT("ValidationPage", "Validate {0}: {1}"),
+			ObjectType,
+			FText::FromString(Target.GetPathName())
+		));
 
 		FDataValidationContext Context(false, EDataValidationUsecase::Manual, {}, MsgLogName);
 		const EDataValidationResult Result = Target.IsDataValid(Context);
@@ -67,11 +64,19 @@ namespace
 	}
 }
 
+void ToroEngine::Validation::ValidateWorld(const UWorld* Target)
+{
+	if (IsValid(Target))
+	{
+		ValidateInternal(*Target, TEXT("MapCheck"), LOCTEXT("ValidationWorldLabel", "World"), true);
+	}
+}
+
 void ToroEngine::Validation::ValidateActor(const AActor* Target)
 {
 	if (IsValid(Target))
 	{
-		ValidateInternal(*Target, "MapCheck", LOCTEXT("ValidationActorLabel", "Actor"));
+		ValidateInternal(*Target, TEXT("MapCheck"), LOCTEXT("ValidationActorLabel", "Actor"));
 	}
 }
 

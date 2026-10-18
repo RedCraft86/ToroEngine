@@ -15,6 +15,12 @@ namespace ToroEngine::Validation
 {
 #if WITH_EDITOR
 	/**
+	 * Runs the current UWorld's data validation and displays issues and the result in MapCheck.
+	 * Does not load unloaded actors if using World Partition.
+	 */
+	TOROCORE_API void ValidateWorld(const UWorld* Target);
+
+	/**
 	 * Runs the actor's own data validation and displays issues and the result in MapCheck.
 	 * Does not invoke CheckForErrors or perform a full map check.
 	 */
