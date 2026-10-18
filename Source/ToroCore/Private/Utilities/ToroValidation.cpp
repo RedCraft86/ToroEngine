@@ -48,9 +48,11 @@ namespace
 			}
 		}
 
-		if (Result == EDataValidationResult::Invalid || Context.GetNumErrors() > 0)
+		if (Result == EDataValidationResult::Invalid || Context.GetNumErrors() > 0 || Context.GetNumWarnings() > 0)
 		{
-			Log.Error(FText::Format(LOCTEXT("ValidationFailed", "{0} Validation failed."), ObjectType));
+			Log.Error(FText::Format(LOCTEXT("ValidationFailed", "{0} Validation failed with {1} Errors and {2} Warnings."),
+				ObjectType, FText::AsNumber(Context.GetNumErrors()), FText::AsNumber(Context.GetNumWarnings())
+			));
 		}
 		else if (Result == EDataValidationResult::Valid)
 		{
