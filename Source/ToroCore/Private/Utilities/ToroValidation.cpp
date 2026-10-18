@@ -3,6 +3,9 @@
 #include "Utilities/ToroValidation.h"
 
 #if WITH_EDITOR
+#include "MessageLogModule.h"
+#include "IMessageLogListing.h"
+#include "Modules/ModuleManager.h"
 #include "GameFramework/Actor.h"
 #include "Misc/DataValidation.h"
 #include "Logging/MessageLog.h"
@@ -11,15 +14,24 @@
 
 namespace
 {
-	void ValidateInternal(const UObject& Target, const FName& LogName, const FText& ObjectType)
+	void ValidateInternal(const UObject& Target, const FName& LogName, const FText& ObjectType, bool bClearPages = false)
 	{
 		const FName& MsgLogName = LogName.IsNone() ? UE::DataValidation::MessageLogName : LogName;
 
 		FMessageLog Log(MsgLogName);
-		Log.NewPage(FText::Format(
-			LOCTEXT("ValidationPage", "Validate {0}: {1}"),
-			ObjectType, FText::FromString(Target.GetPathName())
-		));
+		if (bClearPages)
+		{
+			FMessageLogModule& Module = FModuleManager::LoadModuleChecked<FMessageLogModule>(TEXT("MessageLog"));
+			Module.GetLogListing(MsgLogName)->ClearMessages();
+		}
+		else
+		{
+			Log.NewPage(FText::Format(
+				LOCTEXT("ValidationPage", "Validate {0}: {1}"),
+				ObjectType,
+				FText::FromString(Target.GetPathName())
+			));
+		}
 
 		FDataValidationContext Context(false, EDataValidationUsecase::Manual, {}, MsgLogName);
 		const EDataValidationResult Result = Target.IsDataValid(Context);
