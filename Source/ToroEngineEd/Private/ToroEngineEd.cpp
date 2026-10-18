@@ -1,4 +1,4 @@
-﻿// Copyright (C) RedCraft86. Licensed under LGPL-3.0, see LICENSE file for details.
+// Copyright (C) RedCraft86. Licensed under LGPL-3.0, see LICENSE file for details.
 
 #include "ToroEngineEd.h"
 #include "ToroEngineStyle.h"
@@ -7,6 +7,7 @@
 #include "ToolbarButtons/ActorSplitButton.h"
 #include "ToolbarButtons/ActorInstanceButton.h"
 #include "ToolbarButtons/RestartEditorButton.h"
+#include "ToolbarButtons/ValidateMapButton.h"
 
 DEFINE_LOG_CATEGORY(LogToroEngineEd);
 
@@ -20,6 +21,7 @@ void FToroEngineEdModule::StartupModule()
 	FToroToolbarButton::Register<FActorSplitButton>();
 	FToroToolbarButton::Register<FActorInstanceButton>();
 	FToroToolbarButton::Register<FRestartEditorButton>();
+	FToroToolbarButton::Register<FValidateMapButton>();
 }
 
 void FToroEngineEdModule::ShutdownModule()
