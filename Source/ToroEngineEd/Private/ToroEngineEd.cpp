@@ -2,6 +2,9 @@
 
 #include "ToroEngineEd.h"
 #include "ToroEngineStyle.h"
+
+#include "DetailsPanel/GameEntityComponentRefCustomization.h"
+
 #include "ToolbarButtons/ActorLayoutButton.h"
 #include "ToolbarButtons/ActorMergeButton.h"
 #include "ToolbarButtons/ActorSplitButton.h"
@@ -15,6 +18,8 @@ DEFINE_LOG_CATEGORY(LogToroEngineEd);
 
 void FToroEngineEdModule::StartupModule()
 {
+	FToroStructCustomization::Register<FGameEntityComponentRef, FGameEntityComponentRefCustomization>();
+
 	FToroSlateStyle::Register<FToroEngineStyle>();
 	FToroToolbarButton::Register<FActorLayoutButton>();
 	FToroToolbarButton::Register<FActorMergeButton>();
