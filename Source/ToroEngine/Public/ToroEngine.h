@@ -10,7 +10,7 @@ TOROENGINE_API DECLARE_LOG_CATEGORY_EXTERN(LogToroEngine, All, All)
 /**
  * Base runtime module for the ToroEngine framework.
  */
-class TOROENGINE_API FToroEngineModule final : public IModuleInterface
+class FToroEngineModule final : public IModuleInterface
 {
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;

@@ -10,7 +10,7 @@ TOROSYSTEMSED_API DECLARE_LOG_CATEGORY_EXTERN(LogToroSystemsEd, All, All)
 /**
  * Editor extensions for ToroSystems, built on ToroEngineEd.
  */
-class TOROSYSTEMSED_API FToroSystemsEdModule final : public IModuleInterface
+class FToroSystemsEdModule final : public IModuleInterface
 {
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;

@@ -10,7 +10,7 @@ TOROENGINEED_API DECLARE_LOG_CATEGORY_EXTERN(LogToroEngineEd, All, All)
 /**
  * Editor extensions for the ToroEngine runtime framework.
  */
-class TOROENGINEED_API FToroEngineEdModule final : public IModuleInterface
+class FToroEngineEdModule final : public IModuleInterface
 {
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
