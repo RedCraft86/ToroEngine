@@ -16,7 +16,26 @@
 	"EnabledByDefault": true,
 	"Installed": true,
 	"Modules": [
+		{
+			"Name": "ToroEngine",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "ToroEngineEd",
+			"Type": "EditorNoCommandlet",
+			"LoadingPhase": "PostEngineInit"
+		},
+		{
+			"Name": "ToroSystems",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "ToroSystemsEd",
+			"Type": "EditorNoCommandlet",
+			"LoadingPhase": "PostEngineInit"
+		}
 	],
-	"Plugins": [
-	]
+	"Plugins": []
 }

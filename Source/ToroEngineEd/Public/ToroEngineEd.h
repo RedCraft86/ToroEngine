@@ -1,0 +1,17 @@
+// Copyright (C) RedCraft86. LGPL-3.0-only, see LICENSE file for details.
+
+#pragma once
+
+#include "Logging/LogMacros.h"
+#include "Modules/ModuleInterface.h"
+
+TOROENGINEED_API DECLARE_LOG_CATEGORY_EXTERN(LogToroEngineEd, All, All)
+
+/**
+ * Editor extensions for the ToroEngine runtime framework.
+ */
+class TOROENGINEED_API FToroEngineEdModule final : public IModuleInterface
+{
+	virtual void StartupModule() override;
+	virtual void ShutdownModule() override;
+};
