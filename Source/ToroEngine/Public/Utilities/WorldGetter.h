@@ -81,6 +81,7 @@ public:
 	 * A resolvable context passed to Get() still takes precedence and may replace it.
 	 * Invalid worlds and assignments while editor caching is disabled are ignored.
 	 * @param InWorld Valid world to cache without extending its lifetime.
+	 * @note This is automatically called by the ToroEngine module during <c>FWorldDelegates::OnPostWorldInitialization</c>.
 	 */
 	static void SetWorld(UWorld* InWorld)
 	{
@@ -100,17 +101,10 @@ public:
 
 	/**
 	 * Clears the shared weak cache; must be called on the game thread.
-	 * This is automatically called by the ToroEngine module during <c>FWorldDelegates::OnWorldCleanup</c>.
+	 * @note This is automatically called by the ToroEngine module during <c>FWorldDelegates::OnWorldCleanup</c>.
 	 */
 	static void Reset()
 	{
-#if WITH_EDITOR
-		if (!FApp::IsGame())
-		{
-			return;
-		}
-#endif 
-
 		checkf(IsInGameThread(), TEXT("FWorldGetter::Reset() should only be called from the GameThread."));
 		CachedWorld.Reset();
 	}

@@ -18,6 +18,9 @@ class FToroEngineModule final : public IModuleInterface
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 
+	FDelegateHandle PostWorldInitHandle;
+	static void OnPostWorldInit(UWorld* World, struct FWorldInitializationValues);
+
 	FDelegateHandle WorldCleanupHandle;
 	static void OnWorldCleanup(UWorld*, bool, bool);
 };
