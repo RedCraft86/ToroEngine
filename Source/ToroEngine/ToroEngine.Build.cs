@@ -11,7 +11,8 @@ public class ToroEngine : ModuleRules
 		PublicDependencyModuleNames.AddRange([
 			"Core",
 			"CoreUObject",
-			"Engine"
+			"Engine",
+			"GameplayTags"
 		]);
 
 		if (Target.Type == TargetType.Editor)
