@@ -12,7 +12,14 @@ public class ToroEngineEd : ModuleRules
 		    "Core",
 		    "CoreUObject",
 		    "Engine",
+		    "Slate",
+		    "SlateCore",
 		    "UnrealEd",
+		    "PhysicsCore",
+		    "AssetTools",
+		    "AssetRegistry",
+		    "MeshDescription",
+		    "ProceduralMeshComponent",
 		    "ToroEngine"
 	    ]);
     }
