@@ -39,19 +39,20 @@ struct TOROENGINE_API FSimpleCooldown final
 	FSimpleCooldown(double Time, bool bStartReady = true)
 		: Interval(FMath::IsFinite(Time) ? FMath::Abs(Time) : 0.1)
 	{
-		ensureMsgf(FMath::IsFinite(Time), TEXT("Input time for FSimpleCooldown must be finite."));
+		ensureMsgf(FMath::IsFinite(Time), TEXT("Input time for FSimpleCooldown must be finite. Using 0.1 as default."));
 		Cooldown = bStartReady ? 0.0 : Interval;
 	}
 
 	/**
 	 * Constructs a cooldown with explicitly supplied remaining time.
-	 * @param InInterval Interval in seconds; negative finite values become positive.
-	 *        Non-finite input emits an ensure diagnostic and uses a 0.1-second interval.
+	 * Non-finite input emits an ensure diagnostic and uses a 0.1-second interval.
+	 * @param InInterval Interval in seconds; negative finite values are converted to positive.
 	 * @param InCooldown Remaining seconds, clamped to [0, the normalized interval].
 	 */
 	FSimpleCooldown(double InInterval, double InCooldown)
-		: FSimpleCooldown(InInterval)
+		: FSimpleCooldown(FMath::IsFinite(InInterval) ? FMath::Abs(InInterval) : 0.1)
 	{
+		ensureMsgf(FMath::IsFinite(InInterval), TEXT("Input time for FSimpleCooldown must be finite. Using 0.1 as default."));
 		Cooldown = FMath::Clamp(InCooldown, 0.0, Interval);
 	}
 
