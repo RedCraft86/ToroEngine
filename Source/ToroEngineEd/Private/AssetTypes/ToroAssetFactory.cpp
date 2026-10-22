@@ -5,6 +5,7 @@
 #include "AssetTypes/ToroAssetClassFilter.h"
 #include "Kismet2/SClassPickerDialog.h"
 #include "ClassViewerModule.h"
+#include "ObjectTools.h"
 #include "Misc/Paths.h"
 
 UToroAssetFactory::UToroAssetFactory()
@@ -66,7 +67,7 @@ FString UToroAssetFactory::GetDefaultNewAssetName() const
 {
 	if (!AssetName.IsEmpty())
 	{
-		const FString ValidName = FPaths::MakeValidFileName(AssetName);
+		const FString ValidName = ObjectTools::SanitizeObjectName(FPaths::MakeValidFileName(AssetName));
 		return ValidName.Len() < 2 ? TEXT("New") + ValidName : ValidName;
 	}
 
