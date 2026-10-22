@@ -69,9 +69,9 @@ namespace ToroEngine::ActorEdUtils
 				FString LabelStr = Label.TrimStartAndEnd();
 				if (LabelStr.IsEmpty())
 				{
-					LabelStr.Appendf(TEXT("Spawned_%s"),
-						*FGuid::NewGuid().ToString().Left(5));
+					LabelStr = TEXT("Spawned");
 				}
+				LabelStr.Appendf(TEXT("_%s"), *FGuid::NewGuid().ToString().Left(5));
 				Actor->SetActorLabel(LabelStr);
 
 				return Cast<T>(Actor);
