@@ -1,4 +1,4 @@
-﻿// Copyright (C) RedCraft86. LGPL-3.0-only, see LICENSE file for details.
+﻿// Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 using UnrealBuildTool;
 
@@ -16,9 +16,11 @@ public class ToroEngineEd : ModuleRules
 		    "SlateCore",
 		    "UnrealEd",
 		    "PhysicsCore",
+		    "ToolMenus",
 		    "AssetTools",
 		    "AssetRegistry",
 		    "MeshDescription",
+		    "AssetDefinition",
 		    "ProceduralMeshComponent",
 		    "ToroEngine"
 	    ]);
