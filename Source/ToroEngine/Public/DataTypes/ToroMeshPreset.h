@@ -160,7 +160,6 @@ struct TOROENGINE_API FToroSplineMeshPreset : public FToroStaticMeshPreset
 	/** Constructs a spline preset with the X forward axis and zeroed local geometry. */
 	FToroSplineMeshPreset()
 		: ForwardAxis(0)
-		// Fix: FVector default construction does not initialize saved spline geometry.
 		, StartPos(FVector::ZeroVector)
 		, EndPos(FVector::ZeroVector)
 		, StartTangent(FVector::ZeroVector)
