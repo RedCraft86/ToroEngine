@@ -14,4 +14,8 @@ class FToroEngineEdModule final : public IModuleInterface
 {
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
+
+public:
+
+	static FString GetPluginDir();
 };
