@@ -6,6 +6,11 @@ void FToroToolbarButton::Register()
 {
 	if (!bRegistered && !Name.IsNone() && !MenuHook.IsNone() && !SectionName.IsNone())
 	{
+		if (Label.IsEmptyOrWhitespace())
+		{
+			Label = FText::FromString(FName::NameToDisplayString(Name.ToString(), false));
+		}
+
 		FToolMenuOwnerScoped OwnerScoped(this);
 		if (UToolMenu* Toolbar = UToolMenus::Get()->ExtendMenu(MenuHook))
 		{
