@@ -5,6 +5,12 @@
 #include "AssetDefinitionDefault.h"
 #include "ToroAssetDefinition.generated.h"
 
+/**
+ * Shared editor asset-definition base for Toro data assets.
+ * Defaults to UToroDataAsset, the ToroUtilities category, a green asset color, and an empty description.
+ * Thumbnail and icon overrides defer to the engine's class-brush fallback.
+ * Concrete definitions should override the supported asset class and replace the Unknown Asset display name.
+ */
 UCLASS(Abstract)
 class TOROENGINEED_API UToroAssetDefinition : public UAssetDefinitionDefault
 {

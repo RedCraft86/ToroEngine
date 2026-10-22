@@ -14,12 +14,24 @@
 #include "Styling/SlateStyleRegistry.h"
 #include "Styling/SlateStyleMacros.h"
 
+/**
+ * Base for named editor Slate styles whose resources are populated before registration.
+ * The shared registry retains each accepted style until UnregisterAll() releases it.
+ * Register on the editor game thread and remove consumers before unregistering styles.
+ */
 class TOROENGINEED_API FToroSlateStyle : protected FSlateStyleSet, public TSharedFromThis<FToroSlateStyle>
 {
+	/** Owns the styles registered through this class, keyed by their globally unique style names. */
 	static inline TMap<FName, TSharedPtr<FToroSlateStyle>> Entries = {};
 
 public:
 
+	/**
+	 * Creates a style, populates its resources, and registers it with the global Slate style registry.
+	 * @tparam StyleSet Concrete FToroSlateStyle subclass with a constructor accessible to MakeShared().
+	 *         The type must be constructible without arguments and supply a non-empty style name.
+	 * @return Registered style name, or NAME_None when the name is empty or already registered.
+	 */
 	template<typename StyleSet>
 	static FName Register()
 	{
@@ -52,6 +64,12 @@ public:
 		return Style->GetFName();
 	}
 
+	/**
+	 * Unregisters all retained styles and releases their shared ownership.
+	 * Style destruction deletes the brushes allocated by AddPNG() and AddSVG().
+	 * Remove widgets and other consumers of these styles and brushes before calling this during shutdown.
+	 * Repeated calls are safe.
+	 */
 	static void UnregisterAll()
 	{
 		if (!Entries.IsEmpty())
@@ -70,11 +88,13 @@ public:
 		}
 	}
 
+	/** Returns the style name used as the global registry key. */
 	FORCEINLINE FName GetFName() const
 	{
 		return GetStyleSetName();
 	}
 
+	/** Returns the style registry key as a string for logging or diagnostics. */
 	FORCEINLINE FString GetName() const
 	{
 		return GetStyleSetName().ToString();
@@ -82,28 +102,56 @@ public:
 
 protected:
 
+	/** Standard 20-by-20 brush size in Slate units. */
 	static inline const FVector2D Icon20x20 = FVector2D(20.0f, 20.0f);
+	/** Standard 24-by-24 brush size in Slate units. */
 	static inline const FVector2D Icon24x24 = FVector2D(24.0f, 24.0f);
+	/** Standard 32-by-32 brush size in Slate units. */
 	static inline const FVector2D Icon32x32 = FVector2D(32.0f, 32.0f);
+	/** Standard 64-by-64 brush size in Slate units. */
 	static inline const FVector2D Icon64x64 = FVector2D(64.0f, 64.0f);
 
+	/** Creates an unnamed style, which the static registration API rejects. */
 	FToroSlateStyle()
 		: FSlateStyleSet(NAME_None)
 	{}
 
+	/**
+	 * Creates a style with the supplied registry key.
+	 * @param InName Non-empty name that must be unique across the global Slate style registry.
+	 */
 	FToroSlateStyle(const FName& InName)
 		: FSlateStyleSet(InName)
 	{}
 
+	/**
+	 * Allocates a PNG image brush owned by this style.
+	 * Set the content root before calling and use a unique brush key to avoid replacing an owned allocation.
+	 * @param Name Resource key used by consumers to look up the brush.
+	 * @param Path Path relative to the content root, without the automatically appended .png extension.
+	 * @param Size Desired brush dimensions in Slate units.
+	 */
 	void AddPNG(const FName& Name, const FString& Path, const FVector2D& Size)
 	{
 		Set(Name, new IMAGE_BRUSH(Path, Size));
 	}
 
+	/**
+	 * Allocates an SVG vector image brush owned by this style.
+	 * Set the content root before calling and use a unique brush key to avoid replacing an owned allocation.
+	 * @param Name Resource key used by consumers to look up the brush.
+	 * @param Path Path relative to the content root, without the automatically appended .svg extension.
+	 * @param Size Desired brush dimensions in Slate units.
+	 */
 	void AddSVG(const FName& Name, const FString& Path, const FVector2D& Size)
 	{
 		Set(Name, new IMAGE_BRUSH_SVG(Path, Size));
 	}
 
+	/**
+	 * Populates the style before it is published to the global registry.
+	 * Set the content root and add all resource definitions here.
+	 * Called once by Register() for each accepted style instance.
+	 */
 	virtual void AddResources() = 0;
 };
