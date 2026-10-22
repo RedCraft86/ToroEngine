@@ -14,6 +14,7 @@ public class ToroEngineEd : ModuleRules
 		    "Engine",
 		    "Slate",
 		    "SlateCore",
+		    "SlateIM",
 		    "UnrealEd",
 		    "Projects",
 		    "PhysicsCore",

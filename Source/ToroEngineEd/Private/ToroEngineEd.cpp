@@ -4,18 +4,35 @@
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
 
+#include "SlateStyles/ToroSlateStyle.h"
 #include "SlateStyles/ToroEngineStyle.h"
 #include "SlateStyles/ToroSlateStyle.h"
+
+#include "ToolbarButtons/ToroToolbarButton.h"
+#include "ToolbarButtons/Level/ActorInstanceButton.h"
+#include "ToolbarButtons/Level/ActorLayoutButton.h"
+#include "ToolbarButtons/Level/ActorMergeButton.h"
+#include "ToolbarButtons/Level/ActorSplitButton.h"
+#include "ToolbarButtons/Level/RestartEditorButton.h"
+#include "ToolbarButtons/Level/MapValidateButton.h"
 
 DEFINE_LOG_CATEGORY(LogToroEngineEd)
 
 void FToroEngineEdModule::StartupModule()
 {
 	FToroSlateStyle::Register<FToroEngineStyle>();
+
+	FToroToolbarButton::Register<FActorLayoutButton>();
+	FToroToolbarButton::Register<FActorMergeButton>();
+	FToroToolbarButton::Register<FActorSplitButton>();
+	FToroToolbarButton::Register<FActorInstanceButton>();
+	FToroToolbarButton::Register<FRestartEditorButton>();
+	FToroToolbarButton::Register<FMapValidateButton>();
 }
 
 void FToroEngineEdModule::ShutdownModule()
 {
+	FToroToolbarButton::UnregisterAll();
 	FToroSlateStyle::UnregisterAll();
 }
 

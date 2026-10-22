@@ -20,5 +20,10 @@ private:
 	virtual void AddResources() override
 	{
 		SetContentRoot(FToroEngineEdModule::GetPluginDir() / TEXT("Resources"));
+
+		AddSVG(TEXT("Toolbar.ActorSplit"), TEXT("Toolbar/ActorSplit"), Icon20x20);
+		AddSVG(TEXT("Toolbar.ActorInstance"), TEXT("Toolbar/ActorInstance"), Icon20x20);
+		AddSVG(TEXT("Toolbar.ActorLayout"), TEXT("Toolbar/ActorLayout"), Icon20x20);
+		AddSVG(TEXT("Toolbar.ActorMerge"), TEXT("Toolbar/ActorMerge"), Icon20x20);
 	}
 };
