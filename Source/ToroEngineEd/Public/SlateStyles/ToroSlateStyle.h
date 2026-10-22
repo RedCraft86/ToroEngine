@@ -81,10 +81,11 @@ public:
 					FSlateStyleRegistry::UnRegisterSlateStyle(Entry.Key);
 					Entry.Value.Reset();
 				}
+
+				UE_LOG(LogToroEngineEd, Display, TEXT("FToroSlateStyle: Unregistered all slate styles"));
 			}
 
 			Entries.Empty();
-			UE_LOG(LogToroEngineEd, Display, TEXT("FToroSlateStyle: Unregistered all slate styles"));
 		}
 	}
 

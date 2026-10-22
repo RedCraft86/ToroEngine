@@ -95,10 +95,11 @@ public:
 					Entry.Value.Reset();
 				}
 			}
+
+			UE_LOG(LogToroEngineEd, Log, TEXT("FToroToolbarButton: Unregistered all buttons"));
 		}
 
 		Entries.Empty();
-		UE_LOG(LogToroEngineEd, Log, TEXT("FToroToolbarButton: Unregistered all buttons"));
 	}
 
 	/** Returns the registration key used for duplicate detection and menu-entry identity. */
