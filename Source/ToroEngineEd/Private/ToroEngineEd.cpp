@@ -17,6 +17,8 @@
 #include "ToolbarButtons/Level/RestartEditorButton.h"
 #include "ToolbarButtons/Level/MapValidateButton.h"
 
+#include "Visualizers/ToroComponentVisualizer.h"
+
 DEFINE_LOG_CATEGORY(LogToroEngineEd)
 
 void FToroEngineEdModule::StartupModule()
@@ -35,6 +37,7 @@ void FToroEngineEdModule::StartupModule()
 
 void FToroEngineEdModule::ShutdownModule()
 {
+	FToroComponentVisualizer::UnregisterAll();
 	FToroToolbarButton::UnregisterAll();
 	FToroSlateStyle::UnregisterAll();
 }
