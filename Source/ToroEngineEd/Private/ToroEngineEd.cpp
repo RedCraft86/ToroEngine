@@ -6,9 +6,10 @@
 
 #include "SlateStyles/ToroSlateStyle.h"
 #include "SlateStyles/ToroEngineStyle.h"
-#include "SlateStyles/ToroSlateStyle.h"
 
 #include "ToolbarButtons/ToroToolbarButton.h"
+#include "ToolbarButtons/Asset/AssetRefreshButton.h"
+#include "ToolbarButtons/Asset/AssetValidateButton.h"
 #include "ToolbarButtons/Level/ActorInstanceButton.h"
 #include "ToolbarButtons/Level/ActorLayoutButton.h"
 #include "ToolbarButtons/Level/ActorMergeButton.h"
@@ -22,6 +23,8 @@ void FToroEngineEdModule::StartupModule()
 {
 	FToroSlateStyle::Register<FToroEngineStyle>();
 
+	FToroToolbarButton::Register<FAssetRefreshButton>();
+	FToroToolbarButton::Register<FAssetValidateButton>();
 	FToroToolbarButton::Register<FActorLayoutButton>();
 	FToroToolbarButton::Register<FActorMergeButton>();
 	FToroToolbarButton::Register<FActorSplitButton>();
