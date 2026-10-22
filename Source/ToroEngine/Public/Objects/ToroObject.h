@@ -32,7 +32,7 @@ public:
 
 	/** Reports the configured tick permission, which does not guarantee that ticking is currently possible. */
 	UFUNCTION(BlueprintPure, Category = Object)
-	bool IsTickEnabled() const;
+	[[nodiscard]] bool IsTickEnabled() const;
 
 	virtual UWorld* GetWorld() const override;
 

@@ -16,7 +16,7 @@ class UProceduralMeshComponent;
 namespace ToroEngine::ActorEdUtils
 {
 	/** Returns the editor actor subsystem, or null with an ensure diagnostic when unavailable. */
-	TOROENGINEED_API UEditorActorSubsystem* GetSubsystem();
+	[[nodiscard]] TOROENGINEED_API UEditorActorSubsystem* GetSubsystem();
 
 	/**
 	 * Destroys actors through the editor subsystem inside a deletion undo transaction.
@@ -29,7 +29,7 @@ namespace ToroEngine::ActorEdUtils
 	 * Returns the selected level actors, or an empty array if none or no subsystem is available.
 	 * @param bWarnEmpty Shows an editor notification when the returned selection is empty.
 	 */
-	TOROENGINEED_API TArray<AActor*> GetSelectedActors(bool bWarnEmpty);
+	[[nodiscard]] TOROENGINEED_API TArray<AActor*> GetSelectedActors(bool bWarnEmpty);
 
 	/**
 	 * Spawns an editor actor and applies the supplied world location, rotation, and scale.
@@ -37,7 +37,7 @@ namespace ToroEngine::ActorEdUtils
 	 * @param Transform Initial world transform.
 	 * @return The new actor, or null when the class, subsystem, or spawn is unavailable.
 	 */
-	TOROENGINEED_API AActor* CreateActor(const TSubclassOf<AActor> Class, const FTransform& Transform);
+	[[nodiscard]] TOROENGINEED_API AActor* CreateActor(const TSubclassOf<AActor> Class, const FTransform& Transform);
 
 	/**
 	 * Bakes supported mesh components into separate actors and updates editor selection.
