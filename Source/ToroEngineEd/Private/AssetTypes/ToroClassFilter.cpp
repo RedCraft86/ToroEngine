@@ -1,6 +1,8 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "AssetTypes/ToroAssetClassFilter.h"
+#include "Engine/Blueprint.h"
+#include "UObject/Class.h"
 
 bool FToroAssetClassFilter::IsClassAllowed(const FClassViewerInitializationOptions& InInitOptions,
 	const UClass* InClass, TSharedRef<FClassViewerFilterFuncs> InFilterFuncs)

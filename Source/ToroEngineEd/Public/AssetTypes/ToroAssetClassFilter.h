@@ -3,6 +3,8 @@
 #pragma once
 
 #include "ClassViewerFilter.h"
+#include "UObject/ObjectMacros.h"
+#include "Containers/Set.h"
 
 class TOROENGINEED_API FToroAssetClassFilter : public IClassViewerFilter
 {

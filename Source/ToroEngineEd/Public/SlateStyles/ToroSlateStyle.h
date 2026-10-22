@@ -3,8 +3,16 @@
 #pragma once
 
 #include "ToroEngineEd.h"
-#include "Styling/SlateStyleMacros.h"
+#include "Containers/Map.h"
+#include "Math/Vector2D.h"
+#include "UObject/NameTypes.h"
+#include "Styling/SlateStyle.h"
+#include "Brushes/SlateImageBrush.h"
+#include "Containers/UnrealString.h"
+#include "Templates/SharedPointer.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Styling/SlateStyleRegistry.h"
+#include "Styling/SlateStyleMacros.h"
 
 class TOROENGINEED_API FToroSlateStyle : protected FSlateStyleSet, public TSharedFromThis<FToroSlateStyle>
 {
