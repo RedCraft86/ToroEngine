@@ -68,7 +68,7 @@ public:
 	 * Unregisters all retained styles and releases their shared ownership.
 	 * Style destruction deletes the brushes allocated by AddPNG() and AddSVG().
 	 * Remove widgets and other consumers of these styles and brushes before calling this during shutdown.
-	 * Repeated calls are safe.
+	 * @note Automatically called by ToroEngineEd -> Module Shutdown.
 	 */
 	static void UnregisterAll()
 	{

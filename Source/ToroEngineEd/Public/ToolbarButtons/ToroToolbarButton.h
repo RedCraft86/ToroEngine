@@ -81,7 +81,7 @@ public:
 
 	/**
 	 * Cancels pending startup callbacks, removes owned menu entries, and releases all retained buttons.
-	 * Call during module shutdown before unloading the button implementations. Repeated calls are safe.
+	 * @note Automatically called by ToroEngineEd -> Module Shutdown.
 	 */
 	static void UnregisterAll()
 	{
