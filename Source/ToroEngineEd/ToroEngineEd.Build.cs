@@ -21,6 +21,7 @@ public class ToroEngineEd : ModuleRules
 		    "ToolMenus",
 		    "AssetTools",
 		    "AssetRegistry",
+		    "PropertyEditor",
 		    "MeshDescription",
 		    "AssetDefinition",
 		    "ProceduralMeshComponent",

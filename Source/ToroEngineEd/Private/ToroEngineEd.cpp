@@ -19,6 +19,10 @@
 
 #include "Visualizers/ToroComponentVisualizer.h"
 
+#include "DetailsPanels/ToroStructCustomization.h"
+
+#include "DetailsPanels/ToroClassCustomization.h"
+
 DEFINE_LOG_CATEGORY(LogToroEngineEd)
 
 void FToroEngineEdModule::StartupModule()
@@ -37,6 +41,8 @@ void FToroEngineEdModule::StartupModule()
 
 void FToroEngineEdModule::ShutdownModule()
 {
+	FToroClassCustomization::UnregisterAll();
+	FToroStructCustomization::UnregisterAll();
 	FToroComponentVisualizer::UnregisterAll();
 	FToroToolbarButton::UnregisterAll();
 	FToroSlateStyle::UnregisterAll();
