@@ -10,11 +10,18 @@ class TOROENGINEED_API UToroAssetDefinition : public UAssetDefinitionDefault
 {
 	GENERATED_BODY()
 
+public:
+
+	UToroAssetDefinition() {}
+
 protected:
+
+	virtual TConstArrayView<FAssetCategoryPath> GetAssetCategories() const override;
+	virtual TSoftClassPtr<UObject> GetAssetClass() const override;
 
 	virtual FLinearColor GetAssetColor() const override;
 	virtual FText GetAssetDisplayName() const override;
 	virtual FText GetAssetDescription(const FAssetData& Asset) const override;
-	virtual TConstArrayView<FAssetCategoryPath> GetAssetCategories() const override;
-	virtual TSoftClassPtr<UObject> GetAssetClass() const override;
+	virtual const FSlateBrush* GetThumbnailBrush(const FAssetData& InAssetData, const FName InClassName) const override;
+	virtual const FSlateBrush* GetIconBrush(const FAssetData& InAssetData, const FName InClassName) const override;
 };
