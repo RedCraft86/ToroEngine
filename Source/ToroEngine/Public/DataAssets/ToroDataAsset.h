@@ -9,7 +9,7 @@
  * Abstract data asset base for native subclasses with editor-only refresh and validation hooks.
  * Asset references are available to Blueprint, but Blueprint subclasses are not supported.
  */
-UCLASS(Abstract, NotBlueprintable, BlueprintType)
+UCLASS(Abstract, NotBlueprintable, BlueprintType, PrioritizeCategories = (Asset))
 class TOROENGINE_API UToroDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
