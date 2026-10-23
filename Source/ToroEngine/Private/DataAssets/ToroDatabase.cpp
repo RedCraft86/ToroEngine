@@ -56,7 +56,7 @@ EDataValidationResult UToroDatabase::IsDataValid(FDataValidationContext& Context
 	}
 
 	bool bHasErrors = false;
-	for (const TPair<FWrappedGameplayTag, FInstancedStruct>& Entry : Entries)
+	for (const TPair<FGameplayTag, FInstancedStruct>& Entry : Entries)
 	{
 		if (!IsValidKey(Entry.Key))
 		{
@@ -95,7 +95,7 @@ void UToroDatabase::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(UToroDatabase, Entries)
 		&& RootStruct && RootStruct->IsChildOf<FToroDatabaseEntry>())
 	{
-		for (TPair<FWrappedGameplayTag, FInstancedStruct>& Entry : Entries)
+		for (TPair<FGameplayTag, FInstancedStruct>& Entry : Entries)
 		{
 			if (!Entry.Value.IsValid())
 			{

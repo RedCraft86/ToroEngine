@@ -11,7 +11,6 @@
 #include "Templates/UnrealTypeTraits.h"
 #include "Concepts/StaticStructProvider.h"
 #include "StructUtils/InstancedStruct.h"
-#include "DataTypes/WrappedTypes.h"
 #include "ToroDatabase.generated.h"
 
 /**
@@ -60,7 +59,7 @@ public:
 	 * C++ callers receive a borrowed reference that must not outlive the asset or data mutation.
 	 */
 	UFUNCTION(BlueprintPure, Category = Database)
-	[[nodiscard]] const TMap<FWrappedGameplayTag, FInstancedStruct>& GetEntries() const
+	[[nodiscard]] const TMap<FGameplayTag, FInstancedStruct>& GetEntries() const
 	{
 		return Entries;
 	}
@@ -134,7 +133,7 @@ protected:
 	 * Invalid keys, incompatible types, and data-specific errors are reported by editor validation.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Data, TextExportTransient, meta = (ForceInlineRow))
-	TMap<FWrappedGameplayTag, FInstancedStruct> Entries;
+	TMap<FGameplayTag, FInstancedStruct> Entries;
 
 	/**
 	 * Creates an unconfigured database for validation testing.
