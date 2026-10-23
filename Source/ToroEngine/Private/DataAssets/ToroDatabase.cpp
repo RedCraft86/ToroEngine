@@ -27,7 +27,7 @@ const FInstancedStruct& UToroDatabase::GetValue(const FGameplayTag& Key) const
 	}
 
 	const FInstancedStruct* FoundValue = Entries.Find(Key);
-	if (FoundValue && FoundValue->IsValid() && FoundValue->GetScriptStruct()->IsChildOf(RootStruct))
+	if (!FoundValue || !FoundValue->IsValid() || !FoundValue->GetScriptStruct()->IsChildOf(RootStruct))
 	{
 		return EmptyValue;
 	}
