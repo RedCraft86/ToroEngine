@@ -6,7 +6,8 @@
 void FToroStructCustomization::ForwardMetadata(const TSharedPtr<IPropertyHandle>& Property) const
 {
 	const TSharedPtr<IPropertyHandle> StructHandle = WeakStructHandle.Pin();
-	if (!StructHandle.IsValid() || !StructHandle->IsValidHandle() || !Property.IsValid() || !Property->IsValidHandle())
+	if (!StructHandle.IsValid() || !StructHandle->IsValidHandle()
+		|| !Property.IsValid() || !Property->IsValidHandle())
 	{
 		return;
 	}
