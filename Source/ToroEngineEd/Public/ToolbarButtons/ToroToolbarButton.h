@@ -22,7 +22,7 @@
 class TOROENGINEED_API FToroToolbarButton : public TSharedFromThis<FToroToolbarButton>
 {
 	/** Retains accepted buttons until their callbacks and menu entries are removed by UnregisterAll(). */
-	static inline TMap<FName, TSharedPtr<FToroToolbarButton>> Entries = {};
+	static inline TMap<FName, TSharedPtr<FToroToolbarButton>> RegisteredEntries = {};
 
 public:
 
@@ -60,7 +60,7 @@ public:
 			return NAME_None;
 		}
 
-		if (Entries.Contains(Button->GetFName()))
+		if (RegisteredEntries.Contains(Button->GetFName()))
 		{
 			UE_LOG(LogToroEngineEd, Warning,
 				TEXT("FToroToolbarButton: Attempting to register multiple buttons with name %s"), *Button->GetName()
@@ -70,7 +70,7 @@ public:
 			return NAME_None;
 		}
 
-		Entries.Add(Button->GetFName(), Button);
+		RegisteredEntries.Add(Button->GetFName(), Button);
 		UToolMenus::RegisterStartupCallback(FSimpleMulticastDelegate::FDelegate::CreateSP(
 			Button.ToSharedRef(), &FToroToolbarButton::Register
 		));
@@ -85,9 +85,9 @@ public:
 	 */
 	static void UnregisterAll()
 	{
-		if (!Entries.IsEmpty())
+		if (!RegisteredEntries.IsEmpty())
 		{
-			for (TPair<FName, TSharedPtr<FToroToolbarButton>>& Entry : Entries)
+			for (TPair<FName, TSharedPtr<FToroToolbarButton>>& Entry : RegisteredEntries)
 			{
 				if (Entry.Value.IsValid())
 				{
@@ -99,7 +99,7 @@ public:
 			UE_LOG(LogToroEngineEd, Log, TEXT("FToroToolbarButton: Unregistered all buttons"));
 		}
 
-		Entries.Empty();
+		RegisteredEntries.Empty();
 	}
 
 	/** Returns the registration key used for duplicate detection and menu-entry identity. */

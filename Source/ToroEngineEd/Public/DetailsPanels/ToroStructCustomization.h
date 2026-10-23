@@ -69,7 +69,7 @@
 class TOROENGINEED_API FToroStructCustomization : public IPropertyTypeCustomization
 {
 	/** Struct names registered through this helper, tracked for duplicate detection and cleanup. */
-	static inline TSet<FName> Entries = {};
+	static inline TSet<FName> RegisteredEntries = {};
 
 public:
 
@@ -105,7 +105,7 @@ public:
 			return NAME_None;
 		}
 
-		if (Entries.Contains(EntryName))
+		if (RegisteredEntries.Contains(EntryName))
 		{
 			UE_LOG(LogToroEngineEd, Warning,
 				TEXT("FToroStructCustomization: Attempting to register multiple customizations for %s"), *EntryName.ToString()
@@ -113,7 +113,7 @@ public:
 			return NAME_None;
 		}
 
-		Entries.Add(EntryName);
+		RegisteredEntries.Add(EntryName);
 		ModulePtr->RegisterCustomPropertyTypeLayout(EntryName,
 			FOnGetPropertyTypeCustomizationInstance::CreateLambda([]() -> TSharedRef<IPropertyTypeCustomization>
 			{
@@ -132,9 +132,9 @@ public:
 	static void UnregisterAll()
 	{
 		FPropertyEditorModule* ModulePtr = FModuleManager::GetModulePtr<FPropertyEditorModule>(TEXT("PropertyEditor"));
-		if (ModulePtr && !Entries.IsEmpty())
+		if (ModulePtr && !RegisteredEntries.IsEmpty())
 		{
-			for (const FName& Entry : Entries)
+			for (const FName& Entry : RegisteredEntries)
 			{
 				ModulePtr->UnregisterCustomPropertyTypeLayout(Entry);
 			}
@@ -142,7 +142,7 @@ public:
 			UE_LOG(LogToroEngineEd, Display, TEXT("FToroStructCustomization: Unregistered all struct customizations"));
 		}
 
-		Entries.Empty();
+		RegisteredEntries.Empty();
 	}
 
 protected:

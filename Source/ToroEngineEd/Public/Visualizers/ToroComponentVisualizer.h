@@ -21,7 +21,7 @@
 class TOROENGINEED_API FToroComponentVisualizer : public FComponentVisualizer
 {
 	/** Component-class names registered through this helper and retained for shutdown cleanup. */
-	static inline TSet<FName> Entries = {};
+	static inline TSet<FName> RegisteredEntries = {};
 
 public:
 
@@ -56,7 +56,7 @@ public:
 			return NAME_None;
 		}
 
-		if (Entries.Contains(EntryName) || GUnrealEd->FindComponentVisualizer(EntryName).IsValid())
+		if (RegisteredEntries.Contains(EntryName) || GUnrealEd->FindComponentVisualizer(EntryName).IsValid())
 		{
 			UE_LOG(LogToroEngineEd, Warning,
 				TEXT("FToroComponentVisualizer: Attempting to register multiple visualizers for %s"), *EntryName.ToString()
@@ -64,7 +64,7 @@ public:
 			return NAME_None;
 		}
 
-		Entries.Add(EntryName);
+		RegisteredEntries.Add(EntryName);
 		const TSharedPtr<FComponentVisualizer> VisInstance = MakeShared<Visualizer>();
 		GUnrealEd->RegisterComponentVisualizer(EntryName, VisInstance);
 		VisInstance->OnRegister();
@@ -79,9 +79,9 @@ public:
 	 */
 	static void UnregisterAll()
 	{
-		if (GUnrealEd && !Entries.IsEmpty())
+		if (GUnrealEd && !RegisteredEntries.IsEmpty())
 		{
-			for (const FName& Entry : Entries)
+			for (const FName& Entry : RegisteredEntries)
 			{
 				GUnrealEd->UnregisterComponentVisualizer(Entry);
 			}
@@ -89,7 +89,7 @@ public:
 			UE_LOG(LogToroEngineEd, Log, TEXT("FToroComponentVisualizer: Unregistered all visualizers"));
 		}
 
-		Entries.Empty();
+		RegisteredEntries.Empty();
 	}
 
 protected:

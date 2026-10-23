@@ -22,7 +22,7 @@
 class TOROENGINEED_API FToroSlateStyle : protected FSlateStyleSet, public TSharedFromThis<FToroSlateStyle>
 {
 	/** Owns the styles registered through this class, keyed by their globally unique style names. */
-	static inline TMap<FName, TSharedPtr<FToroSlateStyle>> Entries = {};
+	static inline TMap<FName, TSharedPtr<FToroSlateStyle>> RegisteredEntries = {};
 
 public:
 
@@ -46,7 +46,7 @@ public:
 			return NAME_None;
 		}
 
-		if (Entries.Contains(Style->GetFName()) || FSlateStyleRegistry::FindSlateStyle(Style->GetFName()))
+		if (RegisteredEntries.Contains(Style->GetFName()) || FSlateStyleRegistry::FindSlateStyle(Style->GetFName()))
 		{
 			UE_LOG(LogToroEngineEd, Warning,
 				TEXT("FToroSlateStyle: Attempting to register multiple slate styles with name %s"), *Style->GetName()
@@ -58,7 +58,7 @@ public:
 
 		Style->AddResources();
 		FSlateStyleRegistry::RegisterSlateStyle(*Style);
-		Entries.Add(Style->GetFName(), Style);
+		RegisteredEntries.Add(Style->GetFName(), Style);
 
 		UE_LOG(LogToroEngineEd, Display, TEXT("FToroSlateStyle: Registered slate style with name %s"), *Style->GetName());
 		return Style->GetFName();
@@ -72,9 +72,9 @@ public:
 	 */
 	static void UnregisterAll()
 	{
-		if (!Entries.IsEmpty())
+		if (!RegisteredEntries.IsEmpty())
 		{
-			for (TPair<FName, TSharedPtr<FToroSlateStyle>>& Entry : Entries)
+			for (TPair<FName, TSharedPtr<FToroSlateStyle>>& Entry : RegisteredEntries)
 			{
 				if (Entry.Value.IsValid())
 				{
@@ -85,7 +85,7 @@ public:
 				UE_LOG(LogToroEngineEd, Display, TEXT("FToroSlateStyle: Unregistered all slate styles"));
 			}
 
-			Entries.Empty();
+			RegisteredEntries.Empty();
 		}
 	}
 
