@@ -132,7 +132,7 @@ protected:
 	 * Stored tag-to-payload mapping; editor changes initialize empty payloads using a valid RootStruct.
 	 * Invalid keys, incompatible types, and data-specific errors are reported by editor validation.
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Data, TextExportTransient, meta = (ForceInlineRow))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Data, NoClear, TextExportTransient, meta = (ForceInlineRow, ShowTreeView))
 	TMap<FGameplayTag, FInstancedStruct> Entries;
 
 	/**
