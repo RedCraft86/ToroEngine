@@ -25,6 +25,8 @@ public class ToroEngineEd : ModuleRules
 		    "MeshDescription",
 		    "AssetDefinition",
 		    "ProceduralMeshComponent",
+		    "GameplayTagsEditor",
+		    "StructUtilsEditor",
 		    "ToroEngine"
 	    ]);
     }

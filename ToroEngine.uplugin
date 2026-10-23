@@ -43,6 +43,10 @@
 			"Enabled": true
 		},
 		{
+			"Name": "GameplayTagsEditor",
+			"Enabled": true
+		},
+		{
 			"Name": "ProceduralMeshComponent",
 			"Enabled": true
 		}

@@ -22,6 +22,7 @@
 #include "DetailsPanels/ToroStructCustomization.h"
 
 #include "DetailsPanels/ToroClassCustomization.h"
+#include "DetailsPanels/ToroDatabaseCustomization.h"
 
 DEFINE_LOG_CATEGORY(LogToroEngineEd)
 
@@ -37,6 +38,8 @@ void FToroEngineEdModule::StartupModule()
 	FToroToolbarButton::Register<FActorInstanceButton>();
 	FToroToolbarButton::Register<FRestartEditorButton>();
 	FToroToolbarButton::Register<FMapValidateButton>();
+
+	FToroClassCustomization::Register<FToroDatabaseCustomization, UToroDatabase>();
 }
 
 void FToroEngineEdModule::ShutdownModule()
