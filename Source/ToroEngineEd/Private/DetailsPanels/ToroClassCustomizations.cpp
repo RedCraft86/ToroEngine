@@ -4,30 +4,26 @@
 #include "DetailCategoryBuilder.h"
 #include "DetailsPanels/ToroClassCustomization.h"
 
-IDetailCategoryBuilder* FToroClassCustomization::FindOrAddCategory(FName CategoryName)
+IDetailCategoryBuilder& FToroClassCustomization::FindOrAddCategory(FName CategoryName)
 {
+	checkf(WeakBuilder.IsValid(), TEXT("Detail Builder is null and cannot access category info."))
 	const TSharedPtr<IDetailLayoutBuilder> Builder = WeakBuilder.Pin();
-	if (Builder.IsValid())
+	if (const FToroCategoryInfo* Info = CategoryMap.Find(CategoryName))
 	{
-		if (const FToroCategoryInfo* Info = CategoryMap.Find(CategoryName))
-		{
-			IDetailCategoryBuilder& Category = Builder->EditCategory(CategoryName, Info->DisplayName, Info->Priority);
-			return &Category;
-		}
-
-		return &Builder->EditCategory(CategoryName);
+		IDetailCategoryBuilder& Category = Builder->EditCategory(CategoryName, Info->DisplayName, Info->Priority);
+		return Category;
 	}
 
-	return nullptr;
+	return Builder->EditCategory(CategoryName);
 }
 
-IDetailCategoryBuilder* FToroClassCustomization::SetCategoryDisplayName(FName CategoryName, const FText& DisplayName)
+IDetailCategoryBuilder& FToroClassCustomization::SetCategoryDisplayName(FName CategoryName, const FText& DisplayName)
 {
 	CategoryMap.FindOrAdd(CategoryName).DisplayName = DisplayName;
 	return FindOrAddCategory(CategoryName);
 }
 
-IDetailCategoryBuilder* FToroClassCustomization::SetCategoryPriority(FName CategoryName, ECategoryPriority::Type Priority)
+IDetailCategoryBuilder& FToroClassCustomization::SetCategoryPriority(FName CategoryName, ECategoryPriority::Type Priority)
 {
 	CategoryMap.FindOrAdd(CategoryName).Priority = Priority;
 	return FindOrAddCategory(CategoryName);

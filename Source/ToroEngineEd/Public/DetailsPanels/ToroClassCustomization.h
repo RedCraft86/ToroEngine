@@ -182,27 +182,26 @@ protected:
 	/**
 	 * Edits or creates a category, applying stored display-name and priority overrides when present.
 	 * @param CategoryName Internal category name.
-	 * @return Borrowed category-builder pointer, or null if the layout builder is unavailable.
-	 * Do not retain the pointer across layout rebuilds.
+	 * @return Reference to the category.
 	 */
-	IDetailCategoryBuilder* FindOrAddCategory(FName CategoryName);
+	IDetailCategoryBuilder& FindOrAddCategory(FName CategoryName);
 
 	/**
 	 * Records a category display label and edits the category if the layout builder is available.
 	 * The internal category name is unchanged.
 	 * @param CategoryName Internal category name.
 	 * @param DisplayName User-visible category label.
-	 * @return Borrowed category-builder pointer, or null if the layout builder is unavailable.
+	 * @return Reference to the category.
 	 */
-	IDetailCategoryBuilder* SetCategoryDisplayName(FName CategoryName, const FText& DisplayName);
+	IDetailCategoryBuilder& SetCategoryDisplayName(FName CategoryName, const FText& DisplayName);
 
 	/**
 	 * Records a category priority and edits the category if the layout builder is available.
 	 * @param CategoryName Internal category name.
 	 * @param Priority Sorting priority supplied to the Details builder.
-	 * @return Borrowed category-builder pointer, or null if the layout builder is unavailable.
+	 * @return Reference to the category.
 	 */
-	IDetailCategoryBuilder* SetCategoryPriority(FName CategoryName, ECategoryPriority::Type Priority);
+	IDetailCategoryBuilder& SetCategoryPriority(FName CategoryName, ECategoryPriority::Type Priority);
 
 	/**
 	 * Supplies categories retained by default when the visibility pass uses an allow list.
