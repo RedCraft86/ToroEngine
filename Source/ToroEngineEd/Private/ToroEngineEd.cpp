@@ -1,6 +1,10 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "ToroEngineEd.h"
+
+#include "Actors/ToroActor.h"
+#include "Actors/ToroCharacter.h"
+#include "Actors/ToroVolume.h"
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
 
@@ -23,6 +27,8 @@
 #include "DetailsPanels/Struct/ToroInlineStructCustomization.h"
 
 #include "DetailsPanels/ToroClassCustomization.h"
+#include "DetailsPanels/Class/ToroActorBaseCustomization.h"
+#include "DetailsPanels/Class/ToroCharacterBaseCustomization.h"
 #include "DetailsPanels/Class/ToroDatabaseCustomization.h"
 
 #include "DataTypes/WrappedTypes.h"
@@ -58,6 +64,9 @@ void FToroEngineEdModule::StartupModule()
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FToroIdentity>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FSimpleCooldown>();
 
+	FToroClassCustomization::Register<FToroActorBaseCustomization, AToroActor>();
+	FToroClassCustomization::Register<FToroActorBaseCustomization, AToroVolume>();
+	FToroClassCustomization::Register<FToroCharacterBaseCustomization, AToroCharacter>();
 	FToroClassCustomization::Register<FToroDatabaseCustomization, UToroDatabase>();
 }
 
