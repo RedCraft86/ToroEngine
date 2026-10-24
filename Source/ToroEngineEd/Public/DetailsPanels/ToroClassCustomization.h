@@ -66,20 +66,24 @@
  * Base for class Details customizations with shared registration and category metadata processing.
  * Accepts valid objects of one exact class; mixed-class selections are rejected.
  * Templates are excluded unless bCustomizeTemplate is enabled.
- * The shared-builder callback prepares state, category metadata, and visibility before dispatching
- * to the derived reference-based CustomizeDetails() implementation.
+ * The shared-builder callback prepares selection state for each instance. The most-derived class
+ * registered through this helper in the selected class's ancestry owns automatic category metadata
+ * and visibility processing, performed before its reference-based CustomizeDetails() implementation.
+ * Other registered instances still dispatch their UI customization; ownership does not establish
+ * execution order or guarantee a single invocation per layout.
  * Register on the editor game thread and call UnregisterAll() before unloading customization code.
  */
 class TOROENGINEED_API FToroClassCustomization : public IDetailCustomization
 {
-	/** Class names registered through this helper, tracked for duplicate detection and shutdown cleanup. */
+	/** Class names tracked for duplicate detection, category ownership selection, and shutdown cleanup. */
 	static inline TSet<FName> RegisteredEntries = {};
 
 public:
 
 	/**
 	 * Loads PropertyEditor if needed and registers a factory that constructs a new customization per request.
-	 * Duplicate detection covers this helper's registrations, not registrations made by other modules.
+	 * The factory assigns Class's reflected name to RegisteredClassName to identify category ownership.
+	 * Duplicate detection and ownership selection cover this helper's registrations, not other modules'.
 	 * @tparam Customization Concrete FToroClassCustomization subclass constructible without arguments by MakeShared().
 	 * @tparam Class Reflected UObject subclass exposing StaticClass().
 	 * @return Registered class name, or NAME_None if module loading fails, the name is invalid,
@@ -118,9 +122,11 @@ public:
 
 		RegisteredEntries.Add(EntryName);
 		ModulePtr->RegisterCustomClassLayout(EntryName,
-			FOnGetDetailCustomizationInstance::CreateLambda([]() -> TSharedRef<IDetailCustomization>
+			FOnGetDetailCustomizationInstance::CreateLambda([EntryName]() -> TSharedRef<IDetailCustomization>
 				{
-					return MakeShared<Customization>();
+					TSharedRef<Customization> Instance = MakeShared<Customization>();
+					Instance->RegisteredClassName = EntryName;
+					return Instance;
 				})
 		);
 
@@ -139,7 +145,6 @@ public:
 		{
 			for (const FName& Entry : RegisteredEntries)
 			{
-				// Fix: Remove the class layout registered by this helper, not an unrelated property-type layout.
 				ModulePtr->UnregisterCustomClassLayout(Entry);
 			}
 
@@ -169,6 +174,12 @@ protected:
 
 	/** Allows template objects, including class defaults and archetypes, when true; disabled by default. */
 	bool bCustomizeTemplate = false;
+
+	/**
+	 * Reflected class name assigned by the registration factory for this instance.
+	 * Identifies its registration rather than the selected object's actual class; defaults to NAME_None.
+	 */
+	FName RegisteredClassName = NAME_None;
 
 	/** Non-owning class of the accepted selection, reset before each customization pass. */
 	UClass* CustomizingClass = nullptr;
@@ -223,6 +234,14 @@ protected:
 private:
 
 	/**
+	 * Determines whether this instance owns automatic category processing for the accepted selection.
+	 * Walks from CustomizingClass through its ancestors and stops at the first class in RegisteredEntries.
+	 * @return True if that class matches RegisteredClassName; false if the selection is unset,
+	 *         no tracked registration is found, or this instance belongs to another registration.
+	 */
+	bool ShouldManageCategories() const;
+
+	/**
 	 * Reads RenameCategories metadata as comma-separated Old=New pairs.
 	 * Trims names, ignores incomplete entries, and records display labels without changing category keys.
 	 */
@@ -236,7 +255,9 @@ private:
 	/**
 	 * Hides existing categories using ForceShow, Show, Hide, then Default precedence.
 	 * Matches include pipe-delimited descendants. A hide wildcard or non-empty default list
-	 * enables allow-list behavior; hidden categories are also removed from CategoryMap.
+	 * enables allow-list behavior. Categories marked IsEmpty() are exempt from HideCategory().
+	 * All categories selected by the hide rules lose their pending CategoryMap overrides,
+	 * including empty categories that remain exempt from hiding.
 	 */
 	void HandleCategoryVisibility();
 

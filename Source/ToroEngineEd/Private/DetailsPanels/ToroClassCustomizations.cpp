@@ -42,6 +42,20 @@ TArray<FString> FToroClassCustomization::GetForceShowCategories()
 	};
 }
 
+bool FToroClassCustomization::ShouldManageCategories() const
+{
+	for (const UClass* Class = CustomizingClass; Class; Class = Class->GetSuperClass())
+	{
+		const FName ClassName = Class->GetFName();
+		if (RegisteredEntries.Contains(ClassName))
+		{
+			return RegisteredClassName == ClassName;
+		}
+	}
+
+	return false;
+}
+
 void FToroClassCustomization::HandleCategoryRenames()
 {
 	static const FName META_RenameCategories(TEXT("RenameCategories"));
@@ -201,9 +215,12 @@ void FToroClassCustomization::CustomizeDetails(const TSharedPtr<IDetailLayoutBui
 	WeakBuilder = DetailBuilder;
 	CustomizingClass = SelectedClass;
 
-	HandleCategoryRenames();
-	HandleCategoryPriority();
-	HandleCategoryVisibility();
+	if (ShouldManageCategories())
+	{
+		HandleCategoryRenames();
+		HandleCategoryPriority();
+		HandleCategoryVisibility();
+	}
 
 	// Apply changes made by the handler functions
 	for (const TPair<FName, FToroCategoryInfo>& CategoryInfo : CategoryMap)
