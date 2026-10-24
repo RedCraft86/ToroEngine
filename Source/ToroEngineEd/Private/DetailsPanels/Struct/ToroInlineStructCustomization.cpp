@@ -88,20 +88,21 @@ void FToroInlineStructCustomization::CustomizeChildren(TSharedRef<IPropertyHandl
 {
 	FToroStructCustomization::CustomizeChildren(StructHandle, ChildBuilder, CustomizationUtils);
 
-	const TSharedPtr<IPropertyHandle> Property = GetHeaderProperty();
-	if (!Property.IsValid() || !Property->IsValidHandle() || !Property->GetProperty() || !HeaderValueWidget.IsValid())
+	const TSharedPtr<IPropertyHandle> HeaderProp = GetHeaderProperty();
+	if (!HeaderProp.IsValid() || !HeaderProp->IsValidHandle() || !HeaderProp->GetProperty() || !HeaderValueWidget.IsValid())
 	{
 		return;
 	}
 
-	const FStructProperty* StructProperty = CastField<FStructProperty>(Property->GetProperty());
+	// Other members within the header property will need to be exposed
+	const FStructProperty* StructProperty = CastField<FStructProperty>(HeaderProp->GetProperty());
 	const FPropertyEditorModule& Module = FModuleManager::GetModuleChecked<FPropertyEditorModule>(TEXT("PropertyEditor"));
 	if (StructProperty && Module.IsCustomizedStruct(StructProperty->Struct, FCustomPropertyTypeLayoutMap()))
 	{
 		// For structs with customization, add the property as a normal row to generate its header and expanded children.
 		// Move its value widget into the wrapper header, then hide the inner row's header so only its children appear when expanded.
 
-		IDetailPropertyRow& Row = ChildBuilder.AddProperty(Property.ToSharedRef());
+		IDetailPropertyRow& Row = ChildBuilder.AddProperty(HeaderProp.ToSharedRef());
 
 		TSharedPtr<SWidget> NameWidget, ValueWidget;
 		Row.GetDefaultWidgets(NameWidget, ValueWidget);
@@ -115,7 +116,7 @@ void FToroInlineStructCustomization::CustomizeChildren(TSharedRef<IPropertyHandl
 	else
 	{
 		uint32 NumHeaderChildren = 0;
-		if (Property->GetNumChildren(NumHeaderChildren) != FPropertyAccess::Success)
+		if (HeaderProp->GetNumChildren(NumHeaderChildren) != FPropertyAccess::Success)
 		{
 			return;
 		}
@@ -123,7 +124,7 @@ void FToroInlineStructCustomization::CustomizeChildren(TSharedRef<IPropertyHandl
 		// Ordinary compound properties expose their children directly. Single property types like scalars add nothing.
 		for (uint32 i = 0; i < NumHeaderChildren; i++)
 		{
-			const TSharedPtr<IPropertyHandle> Child = Property->GetChildHandle(i);
+			const TSharedPtr<IPropertyHandle> Child = HeaderProp->GetChildHandle(i);
 			if (Child.IsValid() && Child->IsValidHandle() && Child->GetProperty())
 			{
 				ChildBuilder.AddProperty(Child.ToSharedRef());
@@ -131,18 +132,19 @@ void FToroInlineStructCustomization::CustomizeChildren(TSharedRef<IPropertyHandl
 		}
 	}
 
+	// Any remaining properties of this struct (if any) expose their children directly.
+
 	uint32 NumChildren = 0;
 	if (StructHandle->GetNumChildren(NumChildren) != FPropertyAccess::Success)
 	{
 		return;
 	}
 
-	// Any remaining properties of this struct (if any) expose their children directly.
 	for (uint32 i = 0; i < NumChildren; i++)
 	{
 		const TSharedPtr<IPropertyHandle> Child = StructHandle->GetChildHandle(i);
 		if (Child.IsValid() && Child->IsValidHandle() && Child->GetProperty()
-			&& Child->GetProperty() != Property->GetProperty()) // Avoid re-adding the header
+			&& Child->GetProperty() != HeaderProp->GetProperty()) // Avoid re-adding the header
 		{
 			ChildBuilder.AddProperty(Child.ToSharedRef());
 		}

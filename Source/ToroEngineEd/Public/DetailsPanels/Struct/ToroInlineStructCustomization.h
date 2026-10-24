@@ -12,8 +12,7 @@
  * cannot be resolved.
  *
  * Displays the selected property's children and the remaining struct properties
- * beneath the header, preserving nested struct customizations without duplicating
- * the selected property's row.
+ * beneath the header, preserving nested struct customizations.
  */
 class TOROENGINEED_API FToroInlineStructCustomization final : public FToroStructCustomization
 {
