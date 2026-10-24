@@ -153,8 +153,11 @@ void FToroClassCustomization::HandleCategoryVisibility()
 
 	for (const FName& Category : CategoriesToHide)
 	{
-		Builder->HideCategory(Category);
 		CategoryMap.Remove(Category);
+		if (!Builder->EditCategory(Category).IsEmpty())
+		{
+			Builder->HideCategory(Category);
+		}
 	}
 }
 
