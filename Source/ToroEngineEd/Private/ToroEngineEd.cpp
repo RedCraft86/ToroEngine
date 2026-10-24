@@ -25,8 +25,10 @@
 #include "DetailsPanels/ToroClassCustomization.h"
 #include "DetailsPanels/Class/ToroDatabaseCustomization.h"
 
-#include "DataTypes/InlineCurves.h"
 #include "DataTypes/WrappedTypes.h"
+#include "DataTypes/InlineCurves.h"
+#include "DataTypes/ToroIdentity.h"
+#include "DataTypes/SimpleCooldown.h"
 
 DEFINE_LOG_CATEGORY(LogToroEngineEd)
 
@@ -53,6 +55,8 @@ void FToroEngineEdModule::StartupModule()
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FInlineFloatCurve>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FInlineVectorCurve>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FInlineColorCurve>();
+	FToroStructCustomization::Register<FToroInlineStructCustomization, FToroIdentity>();
+	FToroStructCustomization::Register<FToroInlineStructCustomization, FSimpleCooldown>();
 
 	FToroClassCustomization::Register<FToroDatabaseCustomization, UToroDatabase>();
 }
