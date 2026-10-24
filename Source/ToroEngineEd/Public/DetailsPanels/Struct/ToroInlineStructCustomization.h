@@ -4,11 +4,12 @@
 
 #include "DetailsPanels/ToroStructCustomization.h"
 
-class TOROENGINEED_API FToroWrapperCustomization final : public FToroStructCustomization
+class TOROENGINEED_API FToroInlineStructCustomization final : public FToroStructCustomization
 {
 	TSharedPtr<SBox> HeaderValueWidget;
+	TSharedPtr<IPropertyHandle> HeaderProperty;
 
-	TSharedPtr<IPropertyHandle> GetInnerProperty() const;
+	TSharedPtr<IPropertyHandle> GetHeaderProperty();
 
 	virtual bool ShouldInlineKey() const override { return true; }
 
