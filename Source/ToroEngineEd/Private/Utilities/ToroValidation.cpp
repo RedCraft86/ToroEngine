@@ -5,6 +5,7 @@
 #include "Misc/DataValidation.h"
 #include "GameFramework/Actor.h"
 #include "Logging/MessageLog.h"
+#include "Misc/UObjectToken.h"
 #include "UObject/Object.h"
 #include "Engine/World.h"
 
@@ -44,19 +45,30 @@ namespace ToroEngine::Validation
 				}
 			}
 
+			TSharedPtr<FTokenizedMessage> ResultMessage;
 			if (ValidateResult == EDataValidationResult::Invalid || Context.GetNumErrors() > 0)
 			{
-				Log.Error(FText::Format(LOCTEXT("ValidationFailed", "{0} validation failed with {1} errors and {2} warnings."),
+				ResultMessage = Log.Error(FText::Format(
+					LOCTEXT("ValidationFailed", "{0} validation failed with {1} errors and {2} warnings."),
 					TypeName, FText::AsNumber(Context.GetNumErrors()), FText::AsNumber(Context.GetNumWarnings())
-				));
+				)).ToSharedPtr();
 			}
 			else if (ValidateResult == EDataValidationResult::Valid)
 			{
-				Log.Info(FText::Format(LOCTEXT("ValidationPassed", "{0} validation passed."), TypeName));
+				ResultMessage = Log.Info(FText::Format(
+					LOCTEXT("ValidationPassed", "{0} validation passed."), TypeName
+				)).ToSharedPtr();
 			}
 			else
 			{
-				Log.Info(FText::Format(LOCTEXT("ValidationNotValidated", "{0} was not validated."), TypeName));
+				ResultMessage = Log.Info(FText::Format(
+					LOCTEXT("ValidationNotValidated", "{0} was not validated."), TypeName
+				)).ToSharedPtr();
+			}
+
+			if (ResultMessage.IsValid())
+			{
+				ResultMessage->AddToken(FUObjectToken::Create(&Target));
 			}
 
 			Log.Open(EMessageSeverity::Info, true);
