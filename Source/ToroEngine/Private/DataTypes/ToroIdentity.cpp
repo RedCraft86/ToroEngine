@@ -22,3 +22,18 @@ void FToroIdentity::RegenerateGuid(bool bOnlyIfInvalid)
 		Guid = FGuid::NewGuid();
 	}
 }
+
+#if WITH_EDITOR
+bool FToroIdentity::CanEditChange(const FEditPropertyChain& PropertyChain) const
+{
+	for (const FProperty* Property : PropertyChain)
+	{
+		if (Property && Property->GetFName() == GET_MEMBER_NAME_CHECKED(FToroIdentity, Guid))
+		{
+			return Group.IsValid();
+		}
+	}
+
+	return true;
+}
+#endif

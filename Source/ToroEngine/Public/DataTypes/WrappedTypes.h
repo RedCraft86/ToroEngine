@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NativeGameplayTags.h"
 #include "GameplayTagContainer.h"
+#include "Serialization/Archive.h"
+#include "Serialization/StructuredArchive.h"
+#include "UObject/StructOpsTypeTraits.h"
 #include "WrappedTypes.generated.h"
 
 /**
@@ -49,10 +51,34 @@ struct TOROENGINE_API FWrappedBool final
 		Slot << Wrapper.Value;
 	}
 
+	FORCEINLINE bool Serialize(FArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
+
+	FORCEINLINE bool Serialize(FStructuredArchive::FSlot Slot)
+	{
+		Slot << *this;
+		return true;
+	}
+
 	[[nodiscard]] FORCEINLINE FString ToString() const
 	{
 		return LexToString(Value);
 	}
+};
+
+template<>
+struct TStructOpsTypeTraits<FWrappedBool> : TStructOpsTypeTraitsBase2<FWrappedBool>
+{
+	enum
+	{
+		WithZeroConstructor = true,
+		WithIdenticalViaEquality = true,
+		WithSerializer = true,
+		WithStructuredSerializer = true
+	};
 };
 
 /**
@@ -108,10 +134,34 @@ struct TOROENGINE_API FWrappedFloat final
 		Slot << Wrapper.Value;
 	}
 
+	FORCEINLINE bool Serialize(FArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
+
+	FORCEINLINE bool Serialize(FStructuredArchive::FSlot Slot)
+	{
+		Slot << *this;
+		return true;
+	}
+
 	[[nodiscard]] FORCEINLINE FString ToString() const
 	{
 		return FString::SanitizeFloat(Value);
 	}
+};
+
+template<>
+struct TStructOpsTypeTraits<FWrappedFloat> : TStructOpsTypeTraitsBase2<FWrappedFloat>
+{
+	enum
+	{
+		WithZeroConstructor = true,
+		WithIdenticalViaEquality = true,
+		WithSerializer = true,
+		WithStructuredSerializer = true
+	};
 };
 
 /**
@@ -157,10 +207,34 @@ struct TOROENGINE_API FWrappedByte final
 		Slot << Wrapper.Value;
 	}
 
+	FORCEINLINE bool Serialize(FArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
+
+	FORCEINLINE bool Serialize(FStructuredArchive::FSlot Slot)
+	{
+		Slot << *this;
+		return true;
+	}
+
 	[[nodiscard]] FORCEINLINE FString ToString() const
 	{
 		return LexToString(Value);
 	}
+};
+
+template<>
+struct TStructOpsTypeTraits<FWrappedByte> : TStructOpsTypeTraitsBase2<FWrappedByte>
+{
+	enum
+	{
+		WithZeroConstructor = true,
+		WithIdenticalViaEquality = true,
+		WithSerializer = true,
+		WithStructuredSerializer = true
+	};
 };
 
 /**
@@ -206,10 +280,34 @@ struct TOROENGINE_API FWrappedInt32 final
 		Slot << Wrapper.Value;
 	}
 
+	FORCEINLINE bool Serialize(FArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
+
+	FORCEINLINE bool Serialize(FStructuredArchive::FSlot Slot)
+	{
+		Slot << *this;
+		return true;
+	}
+
 	[[nodiscard]] FORCEINLINE FString ToString() const
 	{
 		return LexToString(Value);
 	}
+};
+
+template<>
+struct TStructOpsTypeTraits<FWrappedInt32> : TStructOpsTypeTraitsBase2<FWrappedInt32>
+{
+	enum
+	{
+		WithZeroConstructor = true,
+		WithIdenticalViaEquality = true,
+		WithSerializer = true,
+		WithStructuredSerializer = true
+	};
 };
 
 /**
@@ -255,10 +353,34 @@ struct TOROENGINE_API FWrappedInt64 final
 		Slot << Wrapper.Value;
 	}
 
+	FORCEINLINE bool Serialize(FArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
+
+	FORCEINLINE bool Serialize(FStructuredArchive::FSlot Slot)
+	{
+		Slot << *this;
+		return true;
+	}
+
 	[[nodiscard]] FORCEINLINE FString ToString() const
 	{
 		return LexToString(Value);
 	}
+};
+
+template<>
+struct TStructOpsTypeTraits<FWrappedInt64> : TStructOpsTypeTraitsBase2<FWrappedInt64>
+{
+	enum
+	{
+		WithZeroConstructor = true,
+		WithIdenticalViaEquality = true,
+		WithSerializer = true,
+		WithStructuredSerializer = true
+	};
 };
 
 /**
@@ -305,10 +427,33 @@ struct TOROENGINE_API FWrappedName final
 		Slot << Wrapper.Value;
 	}
 
+	FORCEINLINE bool Serialize(FArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
+
+	FORCEINLINE bool Serialize(FStructuredArchive::FSlot Slot)
+	{
+		Slot << *this;
+		return true;
+	}
+
 	[[nodiscard]] FORCEINLINE FString ToString() const
 	{
 		return Value.ToString();
 	}
+};
+
+template<>
+struct TStructOpsTypeTraits<FWrappedName> : TStructOpsTypeTraitsBase2<FWrappedName>
+{
+	enum
+	{
+		WithIdenticalViaEquality = true,
+		WithSerializer = true,
+		WithStructuredSerializer = true
+	};
 };
 
 /**
@@ -354,4 +499,27 @@ struct TOROENGINE_API FWrappedString final
 	{
 		Slot << Wrapper.Value;
 	}
+
+	FORCEINLINE bool Serialize(FArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
+
+	FORCEINLINE bool Serialize(FStructuredArchive::FSlot Slot)
+	{
+		Slot << *this;
+		return true;
+	}
+};
+
+template<>
+struct TStructOpsTypeTraits<FWrappedString> : TStructOpsTypeTraitsBase2<FWrappedString>
+{
+	enum
+	{
+		WithIdenticalViaEquality = true,
+		WithSerializer = true,
+		WithStructuredSerializer = true
+	};
 };

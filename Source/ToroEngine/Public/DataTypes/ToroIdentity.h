@@ -3,9 +3,10 @@
 #pragma once
 
 #include "Misc/Guid.h"
+#include "GameplayTagContainer.h"
 #include "Serialization/Archive.h"
 #include "Serialization/StructuredArchive.h"
-#include "GameplayTagContainer.h"
+#include "UObject/StructOpsTypeTraits.h"
 #include "ToroIdentity.generated.h"
 
 /**
@@ -86,6 +87,18 @@ struct TOROENGINE_API FToroIdentity final
 		Record << SA_VALUE(TEXT("Group"), Identity.Group) << SA_VALUE(TEXT("Guid"), Identity.Guid);
 	}
 
+	FORCEINLINE bool Serialize(FArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
+
+	FORCEINLINE bool Serialize(FStructuredArchive::FSlot Slot)
+	{
+		Slot << *this;
+		return true;
+	}
+
 	/** Returns whether the group is valid and the GUID is nonzero. */
 	[[nodiscard]] FORCEINLINE bool IsValid() const
 	{
@@ -104,4 +117,20 @@ struct TOROENGINE_API FToroIdentity final
 	 *        whether the group is valid. If false, always replaces the GUID.
 	 */
 	void RegenerateGuid(bool bOnlyIfInvalid = false);
+
+#if WITH_EDITOR
+	bool CanEditChange(const FEditPropertyChain& PropertyChain) const;
+#endif
+};
+
+template<>
+struct TStructOpsTypeTraits<FToroIdentity> : TStructOpsTypeTraitsBase2<FToroIdentity>
+{
+	enum
+	{
+		WithIdenticalViaEquality = true,
+		WithSerializer = true,
+		WithStructuredSerializer = true,
+		WithCanEditChange = true
+	};
 };
