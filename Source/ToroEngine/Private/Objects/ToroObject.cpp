@@ -40,9 +40,6 @@ void UToroObject::OnConstruction()
 
 void UToroObject::OnInitialize()
 {
-#if WITH_EDITOR
-	FEditorScriptExecutionGuard ScriptGuard;
-#endif
 	ReceiveInitialize();
 }
 
