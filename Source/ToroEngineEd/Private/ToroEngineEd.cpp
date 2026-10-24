@@ -22,7 +22,7 @@
 #include "DetailsPanels/ToroStructCustomization.h"
 
 #include "DetailsPanels/ToroClassCustomization.h"
-#include "DetailsPanels/ToroDatabaseCustomization.h"
+#include "DetailsPanels/Class/ToroDatabaseCustomization.h"
 
 DEFINE_LOG_CATEGORY(LogToroEngineEd)
 
