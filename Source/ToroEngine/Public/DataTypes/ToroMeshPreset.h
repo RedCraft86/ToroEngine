@@ -10,6 +10,7 @@
 #include "UObject/ObjectMacros.h"
 #include "UObject/SoftObjectPtr.h"
 #include "Components/SplineMeshComponent.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroMeshPreset.generated.h"
 
 class UStaticMesh;
@@ -197,4 +198,108 @@ private:
 	{
 		return Super::Equals(Other, bCheckTransform);
 	}
+};
+
+/**
+ * Blueprint queries, comparisons, capture, and application for static and spline mesh presets.
+ * Material filling and application load soft asset references synchronously.
+ */
+UCLASS(NotBlueprintable, NotBlueprintType)
+class TOROENGINE_API UToroMeshPresetLibrary final : public UBlueprintFunctionLibrary
+{
+	GENERATED_BODY()
+
+public:
+
+	/** Returns whether a mesh reference is assigned; does not load or validate the referenced asset. */
+	UFUNCTION(BlueprintPure, Category = "MeshPreset|Static")
+	static bool IsStaticMeshPresetValid(const FToroStaticMeshPreset& Preset);
+
+	/**
+	 * Compares mesh and material references and lighting flags without loading assets.
+	 * @param bCheckTransform Also compares transform settings, even when application is disabled.
+	 */
+	UFUNCTION(BlueprintPure, Category = "MeshPreset|Static", meta = (CompactNodeTitle = "==", Keywords = "== equal"))
+	static bool EqualStaticMeshPreset(const FToroStaticMeshPreset& A, const FToroStaticMeshPreset& B, bool bCheckTransform = false);
+
+	/**
+	 * Returns the inverse of EqualStaticMeshPreset() with the same comparison options.
+	 * @param bCheckTransform Includes transform settings in the comparison.
+	 */
+	UFUNCTION(BlueprintPure, Category = "MeshPreset|Static", meta = (CompactNodeTitle = "!=", Keywords = "!= not equal"))
+	static bool NotEqualStaticMeshPreset(const FToroStaticMeshPreset& A, const FToroStaticMeshPreset& B, bool bCheckTransform = false);
+
+	/**
+	 * Updates the supplied preset's material overrides from its mesh defaults, loading assets synchronously.
+	 * Successful mesh loads resize the array and fill unresolved slots; resolved overrides are retained.
+	 * @param bOverwrite Clears overrides first; a failed mesh load then leaves them empty.
+	 *        Without overwriting, a failed mesh load preserves the array.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Static")
+	static void FillStaticMeshPresetMaterials(UPARAM(ref) FToroStaticMeshPreset& Preset, bool bOverwrite = false);
+
+	/**
+	 * Updates the supplied preset from a static mesh component.
+	 * @param bIncludeTransform Captures the world transform and enables application.
+	 *        When false, stores identity and disables transform application.
+	 * @return False for an invalid target, leaving the preset unchanged; true otherwise.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Static")
+	static bool CaptureStaticMeshPreset(UPARAM(ref) FToroStaticMeshPreset& Preset, UStaticMeshComponent* Target, bool bIncludeTransform = false);
+
+	/**
+	 * Synchronously loads and applies the preset to a static mesh component.
+	 * Unresolved or unspecified material slots preserve existing overrides.
+	 * Failed mesh or overlay loads may clear the target mesh or overlay.
+	 * Transform application follows bUseTransform.
+	 * @return False for an invalid target or rejected mesh change; asset-load failure alone does not imply failure.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Static")
+	static bool ApplyStaticMeshPreset(const FToroStaticMeshPreset& Preset, UStaticMeshComponent* Target);
+
+	/** Returns whether a mesh reference is assigned; does not load or validate the referenced asset. */
+	UFUNCTION(BlueprintPure, Category = "MeshPreset|Spline")
+	static bool IsSplineMeshPresetValid(const FToroSplineMeshPreset& Preset);
+
+	/**
+	 * Compares mesh and material references, lighting flags, and the spline forward axis without loading assets.
+	 * @param bCheckTransform Also compares transform settings and local spline geometry, even when application is disabled.
+	 */
+	UFUNCTION(BlueprintPure, Category = "MeshPreset|Spline", meta = (CompactNodeTitle = "==", Keywords = "== equal"))
+	static bool EqualSplineMeshPreset(const FToroSplineMeshPreset& A, const FToroSplineMeshPreset& B, bool bCheckTransform = false);
+
+	/**
+	 * Returns the inverse of EqualSplineMeshPreset() with the same comparison options.
+	 * @param bCheckTransform Includes transform settings and local spline geometry in the comparison.
+	 */
+	UFUNCTION(BlueprintPure, Category = "MeshPreset|Spline", meta = (CompactNodeTitle = "!=", Keywords = "!= not equal"))
+	static bool NotEqualSplineMeshPreset(const FToroSplineMeshPreset& A, const FToroSplineMeshPreset& B, bool bCheckTransform = false);
+
+	/**
+	 * Updates the supplied preset's material overrides from its mesh defaults, loading assets synchronously.
+	 * Successful mesh loads resize the array and fill unresolved slots; resolved overrides are retained.
+	 * @param bOverwrite Clears overrides first; a failed mesh load then leaves them empty.
+	 *        Without overwriting, a failed mesh load preserves the array.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Spline")
+	static void FillSplineMeshPresetMaterials(UPARAM(ref) FToroSplineMeshPreset& Preset, bool bOverwrite = false);
+
+	/**
+	 * Updates the supplied preset from a spline mesh component.
+	 * @param bIncludeTransform Captures the world transform and local spline geometry and enables application.
+	 *        When false, stores identity and zeroed local geometry and disables transform application.
+	 * @return False for an invalid target, leaving the preset unchanged; true otherwise.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Spline")
+	static bool CaptureSplineMeshPreset(UPARAM(ref) FToroSplineMeshPreset& Preset, USplineMeshComponent* Target, bool bIncludeTransform = false);
+
+	/**
+	 * Synchronously loads and applies the preset to a spline mesh component.
+	 * Unresolved or unspecified material slots preserve existing overrides.
+	 * Failed mesh or overlay loads may clear the target mesh or overlay.
+	 * Transform and spline geometry application follows bUseTransform. Refreshes spline rendering and collision after success.
+	 * @return False for an invalid target or rejected mesh change; asset-load failure alone does not imply failure.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Spline")
+	static bool ApplySplineMeshPreset(const FToroSplineMeshPreset& Preset, USplineMeshComponent* Target);
 };

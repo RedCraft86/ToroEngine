@@ -183,3 +183,63 @@ bool FToroSplineMeshPreset::ToMeshComponent(UStaticMeshComponent* Target) const
 
 	return true;
 }
+
+bool UToroMeshPresetLibrary::IsStaticMeshPresetValid(const FToroStaticMeshPreset& Preset)
+{
+	return Preset.IsValid();
+}
+
+bool UToroMeshPresetLibrary::EqualStaticMeshPreset(const FToroStaticMeshPreset& A, const FToroStaticMeshPreset& B, bool bCheckTransform)
+{
+	return A.Equals(B, bCheckTransform);
+}
+
+bool UToroMeshPresetLibrary::NotEqualStaticMeshPreset(const FToroStaticMeshPreset& A, const FToroStaticMeshPreset& B, bool bCheckTransform)
+{
+	return !A.Equals(B, bCheckTransform);
+}
+
+void UToroMeshPresetLibrary::FillStaticMeshPresetMaterials(FToroStaticMeshPreset& Preset, bool bOverwrite)
+{
+	Preset.FillMaterials(bOverwrite);
+}
+
+bool UToroMeshPresetLibrary::CaptureStaticMeshPreset(FToroStaticMeshPreset& Preset, UStaticMeshComponent* Target, bool bIncludeTransform)
+{
+	return Preset.FromMeshComponent(Target, bIncludeTransform);
+}
+
+bool UToroMeshPresetLibrary::ApplyStaticMeshPreset(const FToroStaticMeshPreset& Preset, UStaticMeshComponent* Target)
+{
+	return Preset.ToMeshComponent(Target);
+}
+
+bool UToroMeshPresetLibrary::IsSplineMeshPresetValid(const FToroSplineMeshPreset& Preset)
+{
+	return Preset.IsValid();
+}
+
+bool UToroMeshPresetLibrary::EqualSplineMeshPreset(const FToroSplineMeshPreset& A, const FToroSplineMeshPreset& B, bool bCheckTransform)
+{
+	return A.Equals(B, bCheckTransform);
+}
+
+bool UToroMeshPresetLibrary::NotEqualSplineMeshPreset(const FToroSplineMeshPreset& A, const FToroSplineMeshPreset& B, bool bCheckTransform)
+{
+	return !A.Equals(B, bCheckTransform);
+}
+
+void UToroMeshPresetLibrary::FillSplineMeshPresetMaterials(FToroSplineMeshPreset& Preset, bool bOverwrite)
+{
+	Preset.FillMaterials(bOverwrite);
+}
+
+bool UToroMeshPresetLibrary::CaptureSplineMeshPreset(FToroSplineMeshPreset& Preset, USplineMeshComponent* Target, bool bIncludeTransform)
+{
+	return Preset.FromMeshComponent(Target, bIncludeTransform);
+}
+
+bool UToroMeshPresetLibrary::ApplySplineMeshPreset(const FToroSplineMeshPreset& Preset, USplineMeshComponent* Target)
+{
+	return Preset.ToMeshComponent(Target);
+}

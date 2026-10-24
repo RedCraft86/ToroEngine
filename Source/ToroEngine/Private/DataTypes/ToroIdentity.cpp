@@ -37,3 +37,33 @@ bool FToroIdentity::CanEditChange(const FEditPropertyChain& PropertyChain) const
 	return true;
 }
 #endif
+
+bool UToroIdentityLibrary::IsIdentityValid(const FToroIdentity& Identity)
+{
+	return Identity.IsValid();
+}
+
+bool UToroIdentityLibrary::EqualIdentity(const FToroIdentity& A, const FToroIdentity& B)
+{
+	return A == B;
+}
+
+bool UToroIdentityLibrary::NotEqualIdentity(const FToroIdentity& A, const FToroIdentity& B)
+{
+	return A != B;
+}
+
+FString UToroIdentityLibrary::Conv_ToroIdentityToString(const FToroIdentity& Identity)
+{
+	return Identity.ToString();
+}
+
+void UToroIdentityLibrary::InvalidateIdentity(FToroIdentity& Identity)
+{
+	Identity.Invalidate();
+}
+
+void UToroIdentityLibrary::RegenerateIdentityGuid(FToroIdentity& Identity, bool bOnlyIfInvalid)
+{
+	Identity.RegenerateGuid(bOnlyIfInvalid);
+}

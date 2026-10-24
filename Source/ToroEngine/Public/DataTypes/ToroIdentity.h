@@ -7,6 +7,7 @@
 #include "Serialization/Archive.h"
 #include "Serialization/StructuredArchive.h"
 #include "UObject/StructOpsTypeTraits.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroIdentity.generated.h"
 
 /**
@@ -133,4 +134,41 @@ struct TStructOpsTypeTraits<FToroIdentity> : TStructOpsTypeTraitsBase2<FToroIden
 		WithStructuredSerializer = true,
 		WithCanEditChange = true
 	};
+};
+
+/** Blueprint construction, comparison, formatting, and in-place mutation of Toro identities. */
+UCLASS(NotBlueprintable, NotBlueprintType)
+class TOROENGINE_API UToroIdentityLibrary final : public UBlueprintFunctionLibrary
+{
+	GENERATED_BODY()
+
+public:
+
+	/** Returns whether the identity has both a valid group and a nonzero GUID. */
+	UFUNCTION(BlueprintPure, Category = Identity)
+	static bool IsIdentityValid(const FToroIdentity& Identity);
+
+	/** Compares both group and GUID exactly; invalid identities are compared by their stored fields too. */
+	UFUNCTION(BlueprintPure, Category = Identity, meta = (CompactNodeTitle = "==", Keywords = "== equal"))
+	static bool EqualIdentity(const FToroIdentity& A, const FToroIdentity& B);
+
+	/** Returns whether either the group or GUID differs, using exact field comparison. */
+	UFUNCTION(BlueprintPure, Category = Identity, meta = (CompactNodeTitle = "!=", Keywords = "!= not equal"))
+	static bool NotEqualIdentity(const FToroIdentity& A, const FToroIdentity& B);
+
+	/** Formats the identity as Group[Guid], using the default GUID string format. */
+	UFUNCTION(BlueprintPure, Category = Identity, meta = (DisplayName = "To String (ToroIdentity)", CompactNodeTitle = "->", BlueprintAutocast))
+	static FString Conv_ToroIdentityToString(const FToroIdentity& Identity);
+
+	/** Clears the supplied identity's group and invalidates its GUID. */
+	UFUNCTION(BlueprintCallable, Category = Identity)
+	static void InvalidateIdentity(UPARAM(ref) FToroIdentity& Identity);
+
+	/**
+	 * Updates the supplied identity's GUID while preserving its group.
+	 * @param bOnlyIfInvalid Preserves an existing valid GUID when true, even if the group is invalid.
+	 *        When false, generates a replacement GUID on each execution.
+	 */
+	UFUNCTION(BlueprintCallable, Category = Identity)
+	static void RegenerateIdentityGuid(UPARAM(ref) FToroIdentity& Identity, bool bOnlyIfInvalid = false);
 };
