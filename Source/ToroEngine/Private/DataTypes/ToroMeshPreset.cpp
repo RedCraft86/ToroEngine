@@ -116,6 +116,24 @@ bool FToroStaticMeshPreset::ToMeshComponent(UStaticMeshComponent* Target) const
 	return true;
 }
 
+#if WITH_EDITOR
+bool FToroStaticMeshPreset::CanEditChange(const FEditPropertyChain& PropertyChain) const
+{
+	if (!bUseTransform)
+	{
+		for (const FProperty* Property : PropertyChain)
+		{
+			if (Property && Property->GetFName() == GET_MEMBER_NAME_CHECKED(FToroStaticMeshPreset, Transform))
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+#endif
+
 bool FToroSplineMeshPreset::Equals(const FToroSplineMeshPreset& Other, bool bCheckTransform) const
 {
 	if (!Equals(static_cast<const FToroStaticMeshPreset&>(Other), bCheckTransform) || ForwardAxis != Other.ForwardAxis)
@@ -183,6 +201,29 @@ bool FToroSplineMeshPreset::ToMeshComponent(UStaticMeshComponent* Target) const
 
 	return true;
 }
+
+#if WITH_EDITOR
+bool FToroSplineMeshPreset::CanEditChange(const FEditPropertyChain& PropertyChain) const
+{
+	if (!bUseTransform)
+	{
+		for (const FProperty* Property : PropertyChain)
+		{
+			if (Property && (
+				Property->GetFName() == GET_MEMBER_NAME_CHECKED(FToroSplineMeshPreset, Transform)
+				|| Property->GetFName() == GET_MEMBER_NAME_CHECKED(FToroSplineMeshPreset, StartPos)
+				|| Property->GetFName() == GET_MEMBER_NAME_CHECKED(FToroSplineMeshPreset, EndPos)
+				|| Property->GetFName() == GET_MEMBER_NAME_CHECKED(FToroSplineMeshPreset, StartTangent)
+				|| Property->GetFName() == GET_MEMBER_NAME_CHECKED(FToroSplineMeshPreset, EndTangent)))
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+#endif
 
 bool UToroMeshPresetLibrary::IsStaticMeshPresetValid(const FToroStaticMeshPreset& Preset)
 {

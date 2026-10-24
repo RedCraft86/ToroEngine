@@ -28,34 +28,34 @@ struct TOROENGINE_API FToroStaticMeshPreset
 	GENERATED_BODY()
 
 	/** Mesh to load and assign; a null or failed load resolves to a null mesh. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 0))
 	TSoftObjectPtr<UStaticMesh> StaticMesh;
 
 	/**
 	 * Partial per-slot material overrides, applied only within the target material count.
 	 * Null, unresolved, and unspecified entries leave existing overrides unchanged.
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 0))
 	TArray<TSoftObjectPtr<UMaterialInterface>> Materials;
 
 	/** Overlay material to load and assign; a null or failed load clears the overlay. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 0))
 	TSoftObjectPtr<UMaterialInterface> OverlayMaterial;
 
 	/** Whether the target mesh component casts shadows. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 0))
 	bool bCastShadows;
 
 	/** Whether the target affects dynamic indirect lighting. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 0))
 	bool bAffectIndirectLighting;
 
 	/** Whether application sets the world transform and, for spline presets, local spline geometry. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 0))
 	bool bUseTransform;
 
 	/** World-space component transform applied only when bUseTransform is true. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 0))
 	FTransform Transform;
 
 	/** Constructs an empty preset with disabled lighting flags and no transform application. */
@@ -124,6 +124,19 @@ struct TOROENGINE_API FToroStaticMeshPreset
 	 *         Asset-load failures alone do not cause failure: the mesh or overlay may clear.
 	 */
 	virtual bool ToMeshComponent(UStaticMeshComponent* Target) const;
+
+#if WITH_EDITOR
+	virtual bool CanEditChange(const FEditPropertyChain& PropertyChain) const;
+#endif
+};
+
+template<>
+struct TStructOpsTypeTraits<FToroStaticMeshPreset> : TStructOpsTypeTraitsBase2<FToroStaticMeshPreset>
+{
+	enum
+	{
+		WithCanEditChange = true
+	};
 };
 
 /**
@@ -139,23 +152,23 @@ struct TOROENGINE_API FToroSplineMeshPreset : public FToroStaticMeshPreset
 	GENERATED_BODY()
 
 	/** Mesh axis used as the spline forward direction; always captured and applied. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 0))
 	TEnumAsByte<ESplineMeshAxis::Type> ForwardAxis;
 
 	/** Spline start position in component-local space, applied when bUseTransform is true. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Preset|Spline")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 1))
 	FVector StartPos;
 
 	/** Spline end position in component-local space, applied when bUseTransform is true. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Preset|Spline")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 1))
 	FVector EndPos;
 
 	/** Spline start tangent in component-local space, applied when bUseTransform is true. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Preset|Spline")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 1))
 	FVector StartTangent;
 
 	/** Spline end tangent in component-local space, applied when bUseTransform is true. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Preset|Spline")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Preset, meta = (DisplayPriority = 1))
 	FVector EndTangent;
 
 	/** Constructs a spline preset with the X forward axis and zeroed local geometry. */
@@ -191,6 +204,10 @@ struct TOROENGINE_API FToroSplineMeshPreset : public FToroStaticMeshPreset
 	virtual bool FromMeshComponent(const UStaticMeshComponent* Target, bool bIncludeTransform = false) override;
 	virtual bool ToMeshComponent(UStaticMeshComponent* Target) const override;
 
+#if WITH_EDITOR
+	virtual bool CanEditChange(const FEditPropertyChain& PropertyChain) const override;
+#endif
+
 private:
 
 	// Prevent external code from calling this base type overload by overriding as a private member
@@ -198,6 +215,15 @@ private:
 	{
 		return Super::Equals(Other, bCheckTransform);
 	}
+};
+
+template<>
+struct TStructOpsTypeTraits<FToroSplineMeshPreset> : TStructOpsTypeTraitsBase2<FToroSplineMeshPreset>
+{
+	enum
+	{
+		WithCanEditChange = true
+	};
 };
 
 /**
