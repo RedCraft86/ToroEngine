@@ -4,6 +4,17 @@
 
 #include "DetailsPanels/ToroStructCustomization.h"
 
+/**
+ * Displays a selected struct property's value inline in the struct's header.
+ *
+ * Selects a direct child using USTRUCT(meta = (HeaderProperty = "PropertyName")).
+ * Falls back to the first child if the metadata is absent or the named child
+ * cannot be resolved.
+ *
+ * Displays the selected property's children and the remaining struct properties
+ * beneath the header, preserving nested struct customizations without duplicating
+ * the selected property's row.
+ */
 class TOROENGINEED_API FToroInlineStructCustomization final : public FToroStructCustomization
 {
 	TSharedPtr<SBox> HeaderValueWidget;
