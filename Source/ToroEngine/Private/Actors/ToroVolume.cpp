@@ -1,19 +1,67 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Actors/ToroVolume.h"
+#include "Engine/World.h"
+#if WITH_EDITOR
+#include "UObject/Script.h"
+#endif
 
-AToroVolume::AToroVolume()
+AToroVolume::AToroVolume(): bActivated(true)
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
+
+#if WITH_EDITORONLY_DATA
+	bRunConstructionScriptOnDrag = true;
+#endif
+
+	bEnableAutoLODGeneration = false; // Exclude from HLOD assuming this is a gameplay actor
+	SetCanBeDamaged(false);
 }
 
 bool AToroVolume::GetActiveState_Implementation() const
 {
-	return IActivatableObject::GetActiveState_Implementation();
+	return bActivated;
 }
 
 void AToroVolume::SetActiveState_Implementation(bool bNewState)
 {
-	IActivatableObject::SetActiveState_Implementation(bNewState);
+	if (bActivated != bNewState)
+	{
+		bActivated = bNewState;
+		ApplyActiveState(bActivated);
+	}
 }
+
+void AToroVolume::ApplyActiveState_Implementation(bool bInState)
+{
+	SetActorHiddenInGame(!bInState);
+	SetActorEnableCollision(bInState);
+	SetActorTickEnabled(PrimaryActorTick.bStartWithTickEnabled && bInState);
+}
+
+void AToroVolume::BeginPlay()
+{
+	Super::BeginPlay();
+	ApplyActiveState(bActivated);
+}
+
+void AToroVolume::Tick(float DeltaSeconds)
+{
+#if WITH_EDITOR
+	if (bTickInEditor && GetWorld() && GetWorld()->WorldType == EWorldType::Editor)
+	{
+		FEditorScriptExecutionGuard ScriptGuard;
+		Super::Tick(DeltaSeconds);
+		return;
+	}
+#endif
+	Super::Tick(DeltaSeconds);
+}
+
+#if WITH_EDITOR
+bool AToroVolume::ShouldTickIfViewportsOnly() const
+{
+	return bTickInEditor;
+}
+#endif
