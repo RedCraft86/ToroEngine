@@ -20,9 +20,13 @@
 #include "Visualizers/ToroComponentVisualizer.h"
 
 #include "DetailsPanels/ToroStructCustomization.h"
+#include "DetailsPanels/Struct/ToroWrapperCustomization.h"
 
 #include "DetailsPanels/ToroClassCustomization.h"
 #include "DetailsPanels/Class/ToroDatabaseCustomization.h"
+
+#include "DataTypes/InlineCurves.h"
+#include "DataTypes/WrappedTypes.h"
 
 DEFINE_LOG_CATEGORY(LogToroEngineEd)
 
@@ -38,6 +42,17 @@ void FToroEngineEdModule::StartupModule()
 	FToroToolbarButton::Register<FActorInstanceButton>();
 	FToroToolbarButton::Register<FRestartEditorButton>();
 	FToroToolbarButton::Register<FMapValidateButton>();
+
+	FToroStructCustomization::Register<FToroWrapperCustomization, FWrappedBool>();
+	FToroStructCustomization::Register<FToroWrapperCustomization, FWrappedFloat>();
+	FToroStructCustomization::Register<FToroWrapperCustomization, FWrappedByte>();
+	FToroStructCustomization::Register<FToroWrapperCustomization, FWrappedInt32>();
+	FToroStructCustomization::Register<FToroWrapperCustomization, FWrappedInt64>();
+	FToroStructCustomization::Register<FToroWrapperCustomization, FWrappedName>();
+	FToroStructCustomization::Register<FToroWrapperCustomization, FWrappedString>();
+	FToroStructCustomization::Register<FToroWrapperCustomization, FInlineFloatCurve>();
+	FToroStructCustomization::Register<FToroWrapperCustomization, FInlineVectorCurve>();
+	FToroStructCustomization::Register<FToroWrapperCustomization, FInlineColorCurve>();
 
 	FToroClassCustomization::Register<FToroDatabaseCustomization, UToroDatabase>();
 }
