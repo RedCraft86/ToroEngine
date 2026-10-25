@@ -25,3 +25,16 @@ UWorld* ToroEngine::World::Get(const UObject* Context, bool bTryFindPossible)
 
 	return IsValid(World) ? World : nullptr;
 }
+
+FLatentActionInfo ToroEngine::Latent::MakeInfo(UObject* Target, const FString& FuncName)
+{
+	checkf(IsInGameThread(), TEXT("ToroEngine::Latent::MakeInfo(...) should only be called from the GameThread."));
+
+	static int32 LatentId = 1000;
+	if (LatentId == TNumericLimits<int32>::Max())
+	{
+		LatentId = 1000;
+	}
+
+	return FLatentActionInfo(0, LatentId++, *FuncName, Target);
+}
