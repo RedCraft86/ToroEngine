@@ -16,7 +16,7 @@ namespace ToroEngine
 		 * @param bTryFindPossible Whether to try fallback worlds when the context has no valid world.
 		 * @return The resolved valid world, or nullptr if resolution fails.
 		 */
-		[[nodiscard]] TOROENGINE_API UWorld* Get(const UObject* Context = nullptr, bool bTryFindPossible = true);
+		[[nodiscard]] TOROENGINE_API UWorld* Get(const UObject* Context = nullptr, bool bTryFindPossible = false);
 	}
 
 	namespace Latent
