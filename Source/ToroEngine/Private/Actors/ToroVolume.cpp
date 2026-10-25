@@ -60,6 +60,14 @@ void AToroVolume::Tick(float DeltaSeconds)
 }
 
 #if WITH_EDITOR
+void AToroVolume::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+	VolumeColor.A = 255;
+	BrushColor = VolumeColor;
+	bColored = bColoredVolume;
+}
+
 bool AToroVolume::ShouldTickIfViewportsOnly() const
 {
 	return bTickInEditor;

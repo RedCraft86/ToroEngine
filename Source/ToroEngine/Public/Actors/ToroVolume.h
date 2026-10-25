@@ -38,6 +38,14 @@ protected:
 	 */
 	UPROPERTY(EditDefaultsOnly, Category = Tick)
 	bool bTickInEditor = false;
+
+	/** If the volume brush should use a custom color as opposed to the default color. */
+	UPROPERTY(EditAnywhere, Category = BrushSettings, meta = (InlineEditConditionToggle))
+	bool bColoredVolume = false;
+
+	/** Custom color the volume brush should use. */
+	UPROPERTY(EditAnywhere, Category = BrushSettings, DisplayName = "Color", meta = (HideAlphaChannel, EditCondition = bColoredVolume))
+	FColor VolumeColor = FColor::Green;
 #endif
 
 	/**
@@ -55,6 +63,7 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 #if WITH_EDITOR
+	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual bool ShouldTickIfViewportsOnly() const override;
 #endif
 };
