@@ -4,7 +4,9 @@
 #pragma once
 
 #include "UE5Coro.h"
+#include "CoreMinimal.h"
 #include "Components/AudioComponent.h"
+#include "Engine/LatentActionManager.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroSoundLibrary.generated.h"
 

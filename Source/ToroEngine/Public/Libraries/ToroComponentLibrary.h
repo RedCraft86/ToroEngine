@@ -2,8 +2,12 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
+#include "Templates/SubclassOf.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroComponentLibrary.generated.h"
+
+class UActorComponent;
 
 /**
  * Blueprint utilities for component destruction permissions and world-wide component lookup.

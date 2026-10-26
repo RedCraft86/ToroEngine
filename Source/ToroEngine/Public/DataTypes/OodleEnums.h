@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
+#include "UObject/ObjectMacros.h"
 #include "Compression/OodleDataCompression.h"
 #include "OodleEnums.generated.h"
 

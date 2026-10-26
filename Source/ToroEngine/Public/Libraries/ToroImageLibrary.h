@@ -3,9 +3,16 @@
 #pragma once
 
 #include "UE5Coro.h"
+#include "CoreMinimal.h"
+#include "PixelFormat.h"
+#include "Engine/LatentActionManager.h"
 #include "DataTypes/ToroImageData.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroImageLibrary.generated.h"
+
+class UUserWidget;
+class UTexture2D;
+class UTextureRenderTarget2D;
 
 /**
  * Blueprint utilities for widget rendering, screenshots, CPU image data, transient textures, and PNG file export.

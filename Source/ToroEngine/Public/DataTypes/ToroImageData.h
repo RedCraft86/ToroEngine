@@ -2,6 +2,10 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
+#include "UObject/Class.h"
+#include "UObject/ObjectMacros.h"
+#include "Serialization/StructuredArchive.h"
 #include "ToroImageData.generated.h"
 
 /**

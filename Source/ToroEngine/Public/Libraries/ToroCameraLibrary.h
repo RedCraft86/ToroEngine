@@ -3,9 +3,13 @@
 #pragma once
 
 #include "UE5Coro.h"
+#include "CoreMinimal.h"
+#include "Camera/PlayerCameraManager.h"
+#include "Engine/LatentActionManager.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroCameraLibrary.generated.h"
 
+class AActor;
 class UCameraComponent;
 class USceneCaptureComponent2D;
 

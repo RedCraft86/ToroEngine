@@ -4,6 +4,7 @@
 #include "LevelSequencePlayer.h"
 #include "LevelSequenceActor.h"
 #include "MovieSceneSequence.h"
+#include "UObject/Stack.h"
 
 namespace
 {

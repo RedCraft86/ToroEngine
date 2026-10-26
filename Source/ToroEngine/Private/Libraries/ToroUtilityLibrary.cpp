@@ -2,6 +2,7 @@
 
 #include "Libraries/ToroUtilityLibrary.h"
 #include "Compression/OodleDataCompressionUtil.h"
+#include "UObject/UObjectGlobals.h"
 #include "ShaderPipelineCache.h"
 #if WITH_EDITOR
 #include "Misc/App.h"

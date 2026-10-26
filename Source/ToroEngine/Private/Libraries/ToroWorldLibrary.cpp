@@ -5,6 +5,9 @@
 #include "Engine/LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utilities/ToroUtilities.h"
+#include "Misc/PackageName.h"
+#include "Engine/Level.h"
+#include "Engine/World.h"
 
 UWorld* UToroWorldLibrary::GetWorldFromObject(const UObject* Target, bool bTryFindPossible)
 {

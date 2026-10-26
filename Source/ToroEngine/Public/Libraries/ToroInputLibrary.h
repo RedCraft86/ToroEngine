@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
 #include "DataTypes/ToroInputConfig.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroInputLibrary.generated.h"

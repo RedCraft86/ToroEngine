@@ -2,6 +2,7 @@
 
 #include "Libraries/ToroStringLibrary.h"
 #include "Internationalization/StringTableCore.h"
+#include "Misc/Paths.h"
 
 bool UToroStringLibrary::IsNameNone(FName InName)
 {

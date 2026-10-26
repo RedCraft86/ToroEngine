@@ -1,7 +1,10 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Libraries/ToroComponentLibrary.h"
+#include "Components/ActorComponent.h"
 #include "Utilities/ToroUtilities.h"
+#include "UObject/UObjectIterator.h"
+#include "Engine/World.h"
 
 bool UToroComponentLibrary::GetAllowAnyoneToDestroyMe(const UActorComponent* Target)
 {

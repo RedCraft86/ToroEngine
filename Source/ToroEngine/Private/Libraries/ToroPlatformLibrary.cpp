@@ -2,6 +2,11 @@
 
 #include "Libraries/ToroPlatformLibrary.h"
 #include "HAL/PlatformApplicationMisc.h"
+#include "HAL/PlatformFileManager.h"
+#include "HAL/PlatformProperties.h"
+#include "Misc/CoreDelegates.h"
+#include "Misc/FileHelper.h"
+#include "UObject/Stack.h"
 #include "IPlatformFilePak.h"
 
 void UToroPlatformLibrary::CopyStringToClipboard(const FString& InString)

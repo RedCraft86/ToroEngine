@@ -2,9 +2,20 @@
 
 #include "Libraries/ToroImageLibrary.h"
 #include "Engine/TextureRenderTarget2D.h"
+#include "Engine/GameViewportClient.h"
+#include "Engine/Texture2D.h"
+#include "Engine/Engine.h"
 #include "Slate/WidgetRenderer.h"
 #include "Blueprint/UserWidget.h"
 #include "HighResScreenshot.h"
+#include "Widgets/SWidget.h"
+#include "Misc/ScopeExit.h"
+#include "Misc/FileHelper.h"
+#include "Misc/Paths.h"
+#include "UObject/Stack.h"
+#include "TextureResource.h"
+#include "RenderDeferredCleanup.h"
+#include "UnrealClient.h"
 
 namespace
 {

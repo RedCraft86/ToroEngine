@@ -2,8 +2,12 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
+#include "Templates/SubclassOf.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroObjectLibrary.generated.h"
+
+class UWorld;
 
 /**
  * Blueprint utilities for parameterless reflected calls, template and destruction flags, and loaded-object searches.

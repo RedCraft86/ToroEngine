@@ -1,7 +1,11 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Libraries/ToroObjectLibrary.h"
+#include "UObject/UObjectHash.h"
+#include "UObject/Stack.h"
 #include "UObject/Class.h"
+#include "Engine/World.h"
+#include "Stats/Stats.h"
 
 bool UToroObjectLibrary::CallObjectEvent(UObject* Target, FName EventName)
 {

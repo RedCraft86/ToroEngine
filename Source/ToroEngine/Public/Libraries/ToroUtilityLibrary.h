@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
 #include "DataTypes/OodleEnums.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroUtilityLibrary.generated.h"

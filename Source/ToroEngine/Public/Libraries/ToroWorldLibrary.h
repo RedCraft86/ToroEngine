@@ -3,9 +3,15 @@
 #pragma once
 
 #include "UE5Coro.h"
+#include "CoreMinimal.h"
 #include "DataTypes/MiscEnums.h"
+#include "Engine/LatentActionManager.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroWorldLibrary.generated.h"
+
+class UWorld;
+class ULevel;
+class ULevelStreaming;
 
 /**
  * Blueprint utilities for world resolution, map travel, level-script events, and level streaming.

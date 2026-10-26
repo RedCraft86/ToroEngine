@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
+#include "Blueprint/UserWidget.h"
+#include "GameFramework/PlayerController.h"
 #include "ToroInputConfig.generated.h"
 
 /** Selects whether input is handled by the game, UI, or both. */

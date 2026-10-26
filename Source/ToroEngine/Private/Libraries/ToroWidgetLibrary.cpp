@@ -9,6 +9,8 @@
 #include "Components/PanelWidget.h"
 #include "Components/Button.h"
 #include "Utilities/RobAccess.h"
+#include "UObject/Class.h"
+#include "UObject/Stack.h"
 #include "MovieScene.h"
 
 ROB_DEFINE_FUNC(

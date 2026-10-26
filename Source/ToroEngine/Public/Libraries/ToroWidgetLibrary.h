@@ -3,13 +3,16 @@
 #pragma once
 
 #include "UE5Coro.h"
+#include "CoreMinimal.h"
 #include "DataTypes/MiscEnums.h"
+#include "Engine/LatentActionManager.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroWidgetLibrary.generated.h"
 
 class UWidget;
 class UButton;
 class UPanelWidget;
+class UUserWidget;
 class UWidgetAnimation;
 
 /**

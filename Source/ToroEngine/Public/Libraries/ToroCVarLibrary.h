@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
+#include "HAL/IConsoleManager.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroCVarLibrary.generated.h"
 

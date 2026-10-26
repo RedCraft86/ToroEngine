@@ -1,6 +1,8 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Libraries/ToroClassLibrary.h"
+#include "UObject/UObjectHash.h"
+#include "UObject/Class.h"
 
 const UObject* UToroClassLibrary::GetClassDefaultObject(TSubclassOf<UObject> InClass)
 {

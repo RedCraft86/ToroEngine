@@ -2,8 +2,11 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroActorLibrary.generated.h"
+
+class AActor;
 
 /**
  * Blueprint utilities for actor bounding-box vertices and actor name tags.
