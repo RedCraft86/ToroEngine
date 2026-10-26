@@ -17,6 +17,7 @@ public class ToroEngine : ModuleRules
 			"SlateCore",
 			"RenderCore",
 			"GameplayTags",
+			"EnhancedInput",
 			"UE5Coro"
 		]);
 
