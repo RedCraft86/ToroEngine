@@ -22,31 +22,32 @@ public:
 
 	/**
 	 * Requests playback of the ambient actor's audio component at the supplied sound offset.
-	 * Invalid actors or audio components and nonfinite offsets produce no request.
+	 * Invalid actors or audio components produce no request. Nonfinite offsets report a Blueprint execution error and produce no request.
 	 * @param Target Ambient sound actor to play.
-	 * @param StartTime Finite offset in seconds; seeking support depends on the sound. Finite negative offsets use native handling.
+	 * @param StartTime Finite offset in seconds; negative values are silently clamped to zero. Seeking support depends on the sound.
 	 */
 	UFUNCTION(BlueprintCallable, Category = Audio, meta = (DefaultToSelf = Target))
 	static void PlayAmbientSound(const AAmbientSound* Target, float StartTime = 0.0f);
 
 	/**
 	 * Requests an immediate or delayed stop without waiting for audio completion.
-	 * Invalid actors or audio components are ignored.
+	 * Invalid actors or audio components are ignored. Nonfinite delays report a Blueprint execution error without stopping audio.
 	 * @param Target Ambient sound actor to stop.
-	 * @param Delay Seconds before stopping, using the absolute value for finite inputs.
-	 * Values at or below UE_KINDA_SMALL_NUMBER after taking the absolute value, and nonfinite inputs, stop immediately.
+	 * @param Delay Finite seconds before stopping; negative values are silently clamped to zero.
+	 *        Values at or below UE_KINDA_SMALL_NUMBER stop immediately.
 	 */
 	UFUNCTION(BlueprintCallable, Category = Audio, meta = (DefaultToSelf = Target))
 	static void StopAmbientSound(const AAmbientSound* Target, float Delay = 0.0f);
 
 	/**
-	 * Requests playback with a volume fade-in, then waits for the sanitized duration in game time.
+	 * Requests playback with a volume fade-in, then waits for the clamped duration in game time.
 	 * The wait does not track interruption, audio-thread completion, or whether playback actually started.
-	 * Invalid actors or audio components and nonfinite start offsets or target levels cause no request or wait.
+	 * Invalid actors or audio components cause no request or wait. Nonfinite duration, start offset, or target level
+	 * reports a Blueprint execution error and causes no request or wait.
 	 * @param Target Ambient sound actor to play and fade in.
-	 * @param Duration Seconds to fade and wait; finite negative values and nonfinite values become zero, adding no coroutine wait.
+	 * @param Duration Finite seconds to fade and wait; negative values are silently clamped to zero, which adds no coroutine wait.
 	 * @param TargetLevel Finite multiplier of the component's calculated volume, passed to native fade handling.
-	 * @param StartTime Finite playback offset in seconds; seeking support and finite negative offsets use native handling.
+	 * @param StartTime Finite playback offset in seconds; negative values are silently clamped to zero. Seeking support depends on the sound.
 	 * @param FadeCurve Native interpolation curve for the volume fade.
 	 */
 	UFUNCTION(BlueprintCallable, Category = Audio, meta = (Latent, LatentInfo = LatentInfo, DefaultToSelf = Target))
@@ -54,13 +55,14 @@ public:
 		float Duration = 1.0f, float TargetLevel = 1.0f, float StartTime = 0.0f, EAudioFaderCurve FadeCurve = EAudioFaderCurve::Linear);
 
 	/**
-	 * Requests a native volume fade-out and delayed stop, then waits for the sanitized duration in game time.
+	 * Requests a native volume fade-out and delayed stop, then waits for the clamped duration in game time.
 	 * Native fade-out schedules stopping even with a nonzero target level, but may ignore requests on inactive audio,
 	 * without an audio device, or when the requested level is at least the current fader target; concurrency fades can also limit requests.
 	 * The wait does not track interruption, audio-thread completion, or whether the request was accepted.
-	 * Invalid actors or audio components and nonfinite target levels cause no request or wait.
+	 * Invalid actors or audio components cause no request or wait. Nonfinite duration or target level
+	 * reports a Blueprint execution error and causes no request or wait.
 	 * @param Target Ambient sound actor to fade out and stop.
-	 * @param Duration Seconds to fade and wait; finite negative values and nonfinite values become zero, adding no coroutine wait.
+	 * @param Duration Finite seconds to fade and wait; negative values are silently clamped to zero, which adds no coroutine wait.
 	 * @param TargetLevel Finite multiplier of the component's calculated volume, passed to native fade handling.
 	 * @param FadeCurve Native interpolation curve for the volume fade.
 	 */

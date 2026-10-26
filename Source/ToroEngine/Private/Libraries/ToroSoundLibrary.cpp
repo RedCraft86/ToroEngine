@@ -2,22 +2,35 @@
 
 #include "Libraries/ToroSoundLibrary.h"
 #include "Sound/AmbientSound.h"
+#include "UObject/Stack.h"
 
 void UToroSoundLibrary::PlayAmbientSound(const AAmbientSound* Target, float StartTime)
 {
+	if (!FMath::IsFinite(StartTime))
+	{
+		FFrame::KismetExecutionMessage(TEXT("StartTime must be finite."), ELogVerbosity::Error);
+		return;
+	}
+
 	UAudioComponent* Audio = IsValid(Target) ? Target->GetAudioComponent() : nullptr;
 	if (IsValid(Audio))
 	{
-		Audio->Play(FMath::IsFinite(StartTime) ? FMath::Max(StartTime, 0.0f) : 0.0f);
+		Audio->Play(FMath::Max(StartTime, 0.0f));
 	}
 }
 
 void UToroSoundLibrary::StopAmbientSound(const AAmbientSound* Target, float Delay)
 {
+	if (!FMath::IsFinite(Delay))
+	{
+		FFrame::KismetExecutionMessage(TEXT("Delay must be finite."), ELogVerbosity::Error);
+		return;
+	}
+
+	const float AdjustedDelay = FMath::Max(Delay, 0.0f);
 	UAudioComponent* Audio = IsValid(Target) ? Target->GetAudioComponent() : nullptr;
 	if (IsValid(Audio))
 	{
-		const float AdjustedDelay = FMath::IsFinite(Delay) ? FMath::Max(Delay, 0.0f) : 0.0f;
 		if (AdjustedDelay > UE_KINDA_SMALL_NUMBER)
 		{
 			Audio->StopDelayed(AdjustedDelay);
@@ -32,16 +45,29 @@ void UToroSoundLibrary::StopAmbientSound(const AAmbientSound* Target, float Dela
 FVoidCoroutine UToroSoundLibrary::FadeInAmbientSound(FLatentActionInfo LatentInfo,
 	const AAmbientSound* Target, float Duration, float TargetLevel, float StartTime, EAudioFaderCurve FadeCurve)
 {
-	if (!FMath::IsFinite(StartTime) || !FMath::IsFinite(TargetLevel))
+	if (!FMath::IsFinite(Duration))
 	{
+		FFrame::KismetExecutionMessage(TEXT("Duration must be finite."), ELogVerbosity::Error);
 		co_return;
 	}
 
-	const float AdjustedDuration = FMath::IsFinite(Duration) ? FMath::Max(0.0f, Duration) : 0.0f;
+	if (!FMath::IsFinite(TargetLevel))
+	{
+		FFrame::KismetExecutionMessage(TEXT("TargetLevel must be finite."), ELogVerbosity::Error);
+		co_return;
+	}
+
+	if (!FMath::IsFinite(StartTime))
+	{
+		FFrame::KismetExecutionMessage(TEXT("StartTime must be finite."), ELogVerbosity::Error);
+		co_return;
+	}
+
+	const float AdjustedDuration = FMath::Max(Duration, 0.0f);
 	UAudioComponent* Audio = IsValid(Target) ? Target->GetAudioComponent() : nullptr;
 	if (IsValid(Audio))
 	{
-		Audio->FadeIn(AdjustedDuration, TargetLevel, StartTime, FadeCurve);
+		Audio->FadeIn(AdjustedDuration, TargetLevel, FMath::Max(StartTime, 0.0f), FadeCurve);
 		if (AdjustedDuration > 0.0f)
 		{
 			co_await UE5Coro::Latent::Seconds(AdjustedDuration);
@@ -52,19 +78,26 @@ FVoidCoroutine UToroSoundLibrary::FadeInAmbientSound(FLatentActionInfo LatentInf
 FVoidCoroutine UToroSoundLibrary::FadeOutAmbientSound(FLatentActionInfo LatentInfo,
 	const AAmbientSound* Target, float Duration, float TargetLevel, EAudioFaderCurve FadeCurve)
 {
-	if (!FMath::IsFinite(TargetLevel))
+	if (!FMath::IsFinite(Duration))
 	{
+		FFrame::KismetExecutionMessage(TEXT("Duration must be finite."), ELogVerbosity::Error);
 		co_return;
 	}
 
-	const float AdjustedTime = FMath::IsFinite(Duration) ? FMath::Max(0.0f, Duration) : 0.0f;
+	if (!FMath::IsFinite(TargetLevel))
+	{
+		FFrame::KismetExecutionMessage(TEXT("TargetLevel must be finite."), ELogVerbosity::Error);
+		co_return;
+	}
+
+	const float AdjustedDuration = FMath::Max(Duration, 0.0f);
 	UAudioComponent* Audio = IsValid(Target) ? Target->GetAudioComponent() : nullptr;
 	if (IsValid(Audio))
 	{
-		Audio->FadeOut(AdjustedTime, TargetLevel, FadeCurve);
-		if (AdjustedTime > 0.0f)
+		Audio->FadeOut(AdjustedDuration, TargetLevel, FadeCurve);
+		if (AdjustedDuration > 0.0f)
 		{
-			co_await UE5Coro::Latent::Seconds(AdjustedTime);
+			co_await UE5Coro::Latent::Seconds(AdjustedDuration);
 		}
 	}
 }

@@ -5,6 +5,7 @@
 #include "Camera/PlayerCameraManager.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "UObject/Stack.h"
 #include "CoreGlobals.h"
 #if WITH_EDITOR
 #include "EditorViewportClient.h"
@@ -165,19 +166,21 @@ FVoidCoroutine UToroCameraLibrary::StartCameraFade(FLatentActionInfo LatentInfo,
 	FLinearColor Color, float Duration, float FromAlpha, float ToAlpha, bool bFadeAudio, bool bHoldAtEnd, int32 PlayerIdx)
 {
 	bSuccess = false;
+
 	if (!FMath::IsFinite(Duration))
 	{
+		FFrame::KismetExecutionMessage(TEXT("Duration must be finite."), ELogVerbosity::Error);
 		co_return;
 	}
 
-	const float AdjustedTime = FMath::Max(0.0f, Duration);
+	const float AdjustedDuration = FMath::Max(Duration, 0.0f);
 	APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(ContextObject, PlayerIdx);
 	if (IsValid(PCM))
 	{
-		if (AdjustedTime > 0.0f)
+		if (AdjustedDuration > 0.0f)
 		{
-			PCM->StartCameraFade(FromAlpha, ToAlpha, AdjustedTime, Color, bFadeAudio, bHoldAtEnd);
-			co_await UE5Coro::Latent::Seconds(AdjustedTime);
+			PCM->StartCameraFade(FromAlpha, ToAlpha, AdjustedDuration, Color, bFadeAudio, bHoldAtEnd);
+			co_await UE5Coro::Latent::Seconds(AdjustedDuration);
 		}
 		else
 		{
@@ -217,19 +220,21 @@ FVoidCoroutine UToroCameraLibrary::BlendPlayerViewTarget(FLatentActionInfo Laten
 	AActor* NewTarget, float Duration, EViewTargetBlendFunction BlendFunc, float BlendExp, bool bLockOutgoing, int32 PlayerIdx)
 {
 	bSuccess = false;
+
 	if (!FMath::IsFinite(Duration))
 	{
+		FFrame::KismetExecutionMessage(TEXT("BlendPlayerViewTarget: Duration must be finite."), ELogVerbosity::Error);
 		co_return;
 	}
 
-	const float AdjustedTime = FMath::Max(0.0f, Duration);
+	const float AdjustedDuration = FMath::Max(Duration, 0.0f);
 	APlayerController* PC = UGameplayStatics::GetPlayerController(ContextObject, PlayerIdx);
 	if (IsValid(PC))
 	{
-		PC->SetViewTargetWithBlend(NewTarget, AdjustedTime, BlendFunc, BlendExp, bLockOutgoing);
-		if (AdjustedTime > 0.0f)
+		PC->SetViewTargetWithBlend(NewTarget, AdjustedDuration, BlendFunc, BlendExp, bLockOutgoing);
+		if (AdjustedDuration > 0.0f)
 		{
-			co_await UE5Coro::Latent::Seconds(AdjustedTime);
+			co_await UE5Coro::Latent::Seconds(AdjustedDuration);
 		}
 
 		bSuccess = true;

@@ -51,8 +51,15 @@ void UToroWidgetLibrary::InitWidgetAnimations(UUserWidget* Target)
 bool UToroWidgetLibrary::PlayWidgetAnimation(UUserWidget* Target, UWidgetAnimation* Animation,
 	EToroAnimationPlayMode PlayMode, float PlayRate, bool bResumePlay)
 {
-	if (!IsValid(Target) || !IsValid(Animation) || !IsValid(Animation->GetMovieScene())
-		|| !FMath::IsFinite(PlayRate)
+	if (!FMath::IsFinite(PlayRate))
+	{
+		FFrame::KismetExecutionMessage(TEXT("PlayRate must be finite."), ELogVerbosity::Error);
+		return false;
+	}
+
+	if (!IsValid(Target)
+		|| !IsValid(Animation)
+		|| !IsValid(Animation->GetMovieScene())
 		|| (PlayMode != EToroAnimationPlayMode::Forward && PlayMode != EToroAnimationPlayMode::Reverse))
 	{
 		return false;
@@ -65,24 +72,25 @@ bool UToroWidgetLibrary::PlayWidgetAnimation(UUserWidget* Target, UWidgetAnimati
 		return false;
 	}
 
+	const float AdjustedRate = FMath::Max(PlayRate, 0.1f);
 	if (!bResumePlay)
 	{
 		// Forward and Reverse should directly map since they're 0 and 1.
 		// PingPong (2) is irrelevant since EToroAnimationPlayMode doesn't have it.
 		const EUMGSequencePlayMode::Type NativeMode = static_cast<EUMGSequencePlayMode::Type>(PlayMode);
-		AnimHandle = Target->PlayAnimation(Animation, 0.0f, 1, NativeMode, FMath::Max(PlayRate, 0.1f));
+		AnimHandle = Target->PlayAnimation(Animation, 0.0f, 1, NativeMode, AdjustedRate);
 	}
 	else
 	{
-		AnimState->SetPlaybackSpeed(FMath::Max(PlayRate, 0.1f));
+		AnimState->SetPlaybackSpeed(AdjustedRate);
 		switch (PlayMode)
 		{
 		case EToroAnimationPlayMode::Forward:
-			AnimHandle = Target->PlayAnimationForward(Animation, FMath::Max(PlayRate, 0.1f));
+			AnimHandle = Target->PlayAnimationForward(Animation, AdjustedRate);
 			break;
 
 		case EToroAnimationPlayMode::Reverse:
-			AnimHandle = Target->PlayAnimationReverse(Animation, FMath::Max(PlayRate, 0.1f));
+			AnimHandle = Target->PlayAnimationReverse(Animation, AdjustedRate);
 			break;
 		}
 	}
@@ -94,8 +102,16 @@ FVoidCoroutine UToroWidgetLibrary::PlayWidgetAnimationAsync(FLatentActionInfo La
 	UWidgetAnimation* Animation, EToroAnimationPlayMode PlayMode, float PlayRate, bool bResumePlay)
 {
 	bSuccess = false;
-	if (!IsValid(Target) || !IsValid(Animation) || !IsValid(Animation->GetMovieScene())
-		|| !FMath::IsFinite(PlayRate)
+
+	if (!FMath::IsFinite(PlayRate))
+	{
+		FFrame::KismetExecutionMessage(TEXT("PlayRate must be finite."), ELogVerbosity::Error);
+		co_return;
+	}
+
+	if (!IsValid(Target)
+		|| !IsValid(Animation)
+		|| !IsValid(Animation->GetMovieScene())
 		|| (PlayMode != EToroAnimationPlayMode::Forward && PlayMode != EToroAnimationPlayMode::Reverse))
 	{
 		co_return;

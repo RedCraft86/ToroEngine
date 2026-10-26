@@ -56,8 +56,14 @@ void UToroSequenceLibrary::StopLevelSequence(const ALevelSequenceActor* Target, 
 bool UToroSequenceLibrary::PlayLevelSequence(const ALevelSequenceActor* Target,
 	EToroAnimationPlayMode PlayMode, float PlayRate, bool bResumePlay)
 {
+	if (!FMath::IsFinite(PlayRate))
+	{
+		FFrame::KismetExecutionMessage(TEXT("PlayRate must be finite."), ELogVerbosity::Error);
+		return false;
+	}
+
 	if (!IsValid(Target) || !IsValid(Target->GetSequencePlayer())
-		|| !IsValid(Target->GetSequencePlayer()->GetSequence()) || !FMath::IsFinite(PlayRate)
+		|| !IsValid(Target->GetSequencePlayer()->GetSequence())
 		|| (PlayMode != EToroAnimationPlayMode::Forward && PlayMode != EToroAnimationPlayMode::Reverse))
 	{
 		return false;
@@ -96,8 +102,15 @@ FVoidCoroutine UToroSequenceLibrary::PlayLevelSequenceAsync(FLatentActionInfo La
 	const ALevelSequenceActor* Target, EToroAnimationPlayMode PlayMode, float PlayRate, bool bResumePlay)
 {
 	bSuccess = false;
+
+	if (!FMath::IsFinite(PlayRate))
+	{
+		FFrame::KismetExecutionMessage(TEXT("PlayRate must be finite."), ELogVerbosity::Error);
+		co_return;
+	}
+
 	if (!IsValid(Target) || !IsValid(Target->GetSequencePlayer())
-		|| !IsValid(Target->GetSequencePlayer()->GetSequence()) || !FMath::IsFinite(PlayRate)
+		|| !IsValid(Target->GetSequencePlayer()->GetSequence())
 		|| (PlayMode != EToroAnimationPlayMode::Forward && PlayMode != EToroAnimationPlayMode::Reverse))
 	{
 		co_return;

@@ -80,15 +80,16 @@ public:
 		float Alpha = 1.0f, bool bFadeAudio = true, int32 PlayerIdx = 0);
 
 	/**
-	 * Starts a camera fade and waits for the requested duration.
+	 * Starts a camera fade and waits for the clamped duration.
 	 * The wait does not track interruption or replacement of the fade and does not verify its final rendered state.
 	 * @param bSuccess True after issuing the request and completing its wait; false for nonfinite duration or a missing camera manager.
 	 * @param Color Fade overlay color.
-	 * @param Duration Seconds to fade; negative values become zero and nonfinite values are rejected.
+	 * @param Duration Finite seconds to fade; negative values are silently clamped to zero.
+	 *        Nonfinite values report a Blueprint execution error without changing the fade.
 	 * @param FromAlpha Starting opacity, conventionally zero to one; passed through without clamping.
 	 * @param ToAlpha Ending opacity, conventionally zero to one; passed through without clamping.
 	 * @param bFadeAudio Whether audio volume should follow the fade amount.
-	 * @param bHoldAtEnd Whether to retain the ending fade. At zero duration, applies ToAlpha immediately when true, otherwise stops fading.
+	 * @param bHoldAtEnd Whether to retain the ending fade. At a clamped duration of zero, applies ToAlpha immediately when true, otherwise stops fading.
 	 * @param PlayerIdx Player controller index used to resolve the camera manager.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Game|Player|View", meta = (Latent, LatentInfo = LatentInfo,
@@ -115,11 +116,12 @@ public:
 	static bool SetPlayerViewTarget(const UObject* ContextObject, AActor* NewTarget, int32 PlayerIdx = 0);
 
 	/**
-	 * Requests a view-target blend and waits for the requested duration.
+	 * Requests a view-target blend and waits for the clamped duration.
 	 * The wait does not track interruption or replacement of the blend and does not verify the final view target.
 	 * @param bSuccess True after issuing the request and completing its wait; false for nonfinite duration or a missing controller.
 	 * @param NewTarget Actor to view; nullptr uses the engine's fallback to the player controller.
-	 * @param Duration Seconds to blend; negative values become zero for an immediate switch, and nonfinite values are rejected.
+	 * @param Duration Finite seconds to blend; negative values are silently clamped to zero for an immediate switch.
+	 *        Nonfinite values report a Blueprint execution error without changing the view target.
 	 * @param BlendFunc Engine interpolation function used for the blend.
 	 * @param BlendExp Exponent used by blend functions that support it.
 	 * @param bLockOutgoing Whether to freeze the outgoing view at its last-frame position for the blend.

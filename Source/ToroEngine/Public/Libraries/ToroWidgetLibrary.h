@@ -35,7 +35,8 @@ public:
 	 * @param Target User widget receiving the animation.
 	 * @param Animation Animation with a valid movie scene.
 	 * @param PlayMode Forward or Reverse; unsupported modes are rejected.
-	 * @param PlayRate Finite playback rate; values below 0.1 are clamped, with direction controlled by PlayMode.
+	 * @param PlayRate Finite playback rate; values below 0.1 are silently clamped, with direction controlled by PlayMode.
+	 *        Nonfinite rates are rejected with an error message.
 	 * @param bResumePlay True preserves the position of an already-playing animation and reverses it if needed,
 	 *        applying the requested rate. Native helpers restart paused or stopped animations. False restarts at the native direction boundary.
 	 * @return True if native playback returns a valid animation handle; false for invalid inputs or unavailable animation state.
@@ -53,7 +54,8 @@ public:
 	 * @param Target User widget receiving the animation.
 	 * @param Animation Animation with a valid movie scene.
 	 * @param PlayMode Forward or Reverse; unsupported modes are rejected.
-	 * @param PlayRate Finite playback rate, clamped to at least 0.1 and applied when continuing active playback.
+	 * @param PlayRate Finite playback rate, silently clamped to at least 0.1 and applied when continuing active playback.
+	 *        Nonfinite rates are rejected with an error message.
 	 * @param bResumePlay True continues or reverses already-playing animations; paused or stopped animations restart through native helpers.
 	 *        False restarts at the native direction boundary.
 	 */
