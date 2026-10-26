@@ -18,6 +18,8 @@ public class ToroEngine : ModuleRules
 			"RenderCore",
 			"GameplayTags",
 			"EnhancedInput",
+			"LevelSequence",
+			"MovieScene",
 			"UE5Coro"
 		]);
 
