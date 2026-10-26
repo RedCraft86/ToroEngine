@@ -12,7 +12,12 @@ public class ToroEngine : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
-			"GameplayTags"
+			"UMG",
+			"Slate",
+			"SlateCore",
+			"RenderCore",
+			"GameplayTags",
+			"UE5Coro"
 		]);
 
 		if (Target.Type == TargetType.Editor)
