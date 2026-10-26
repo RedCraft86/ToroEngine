@@ -35,3 +35,19 @@ enum class EToroSequenceStopType : uint8
 	/** Jump to the end, stop playback, and keep the evaluated end state. */
 	SkipToEnd
 };
+
+/**
+ * Requested level loading and visibility state; asynchronous transitions may still be in progress.
+ */
+UENUM(BlueprintType)
+enum class EToroLevelStreamState : uint8
+{
+	/** The level should be unloaded. */
+	Unloaded,
+
+	/** The level should be loaded without being visible. */
+	Loaded,
+
+	/** The level should be loaded and visible. */
+	Visible
+};
