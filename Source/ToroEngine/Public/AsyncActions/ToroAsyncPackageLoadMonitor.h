@@ -48,6 +48,11 @@ public:
 	FTrackAsyncLoadDelegateNative OnCompletedNative;
 
 	/**
+	 * Observes global async package-loading activity on the game thread until a consecutive idle window elapses.
+	 * Does not initiate or own load requests, and completion does not indicate that all loads succeeded.
+	 * Package progress is an estimate based on the peak sampled outstanding request count, not an exact
+	 * total or percentage when requests arrive between samples or while monitoring.
+	 *
 	 * Creates a game-thread-only global loading monitor and registers it with the context's game instance when available.
 	 * Blueprint async nodes activate it after binding delegates; native callers must call Activate().
 	 * Loading state and idle time are observed every core-ticker frame; package counts are sampled at TestInterval.
