@@ -4,9 +4,9 @@
 #include "Engine/Engine.h"
 #include "Engine/World.h"
 
-UWorld* ToroEngine::World::Get(const UObject* Context, bool bTryFindPossible)
+UWorld* ToroEngine::GetWorld(const UObject* Context, bool bTryFindPossible)
 {
-	checkf(IsInGameThread(), TEXT("ToroEngine::World::Get(...) should only be called from the GameThread."));
+	checkf(IsInGameThread(), TEXT("ToroEngine::Get(...) should only be called from the GameThread."));
 
 	UWorld* World = nullptr;
 	if (IsValid(Context))
@@ -26,9 +26,9 @@ UWorld* ToroEngine::World::Get(const UObject* Context, bool bTryFindPossible)
 	return IsValid(World) ? World : nullptr;
 }
 
-FLatentActionInfo ToroEngine::Latent::MakeInfo(UObject* Target, const FString& FuncName)
+FLatentActionInfo ToroEngine::MakeInfo(UObject* Target, const FString& FuncName)
 {
-	checkf(IsInGameThread(), TEXT("ToroEngine::Latent::MakeInfo(...) should only be called from the GameThread."));
+	checkf(IsInGameThread(), TEXT("ToroEngine::MakeInfo(...) should only be called from the GameThread."));
 
 	static int32 LatentId = 1000;
 	if (LatentId == TNumericLimits<int32>::Max())

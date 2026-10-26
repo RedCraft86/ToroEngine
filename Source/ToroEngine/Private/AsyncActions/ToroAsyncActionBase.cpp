@@ -17,5 +17,5 @@ void UToroAsyncActionBase::SetWorldContext(const UObject* InContext)
 
 UWorld* UToroAsyncActionBase::GetWorld() const
 {
-	return IsTemplate() ? nullptr : ToroEngine::World::Get(GetWorldContext(), bAllowAnyWorld);
+	return IsTemplate() ? nullptr : ToroEngine::GetWorld(GetWorldContext(), bAllowAnyWorld);
 }
