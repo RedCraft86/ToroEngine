@@ -2,6 +2,7 @@
 
 #include "Libraries/ToroUtilityLibrary.h"
 #include "Compression/OodleDataCompressionUtil.h"
+#include "ShaderPipelineCache.h"
 #if WITH_EDITOR
 #include "Misc/App.h"
 #endif
@@ -23,6 +24,16 @@ bool UToroUtilityLibrary::IsAsyncLoading()
 int32 UToroUtilityLibrary::GetNumAsyncPackages()
 {
 	return ::GetNumAsyncPackages();
+}
+
+void UToroUtilityLibrary::PausePrecompilingPSOs()
+{
+	FShaderPipelineCache::PauseBatching();
+}
+
+void UToroUtilityLibrary::ResumePrecompilingPSOs()
+{
+	FShaderPipelineCache::ResumeBatching();
 }
 
 bool UToroUtilityLibrary::OodleCompress(const TArray<uint8>& InData, TArray<uint8>& OutData,

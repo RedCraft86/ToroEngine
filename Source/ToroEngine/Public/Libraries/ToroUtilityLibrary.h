@@ -40,6 +40,22 @@ public:
 	[[nodiscard]] static int32 GetNumAsyncPackages();
 
 	/**
+	 * Pauses global shader pipeline-cache PSO precompilation batching by incrementing the native pause count.
+	 * Nested pauses require matching resume calls before batching is enabled again.
+	 * Has no effect without an initialized cache; does not wait for or cancel already-issued compilation work.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Rendering | Pipeline Cache")
+	static void PausePrecompilingPSOs();
+
+	/**
+	 * Decrements the global shader pipeline-cache pause count and enables batching when the count reaches zero.
+	 * Additional outstanding pauses keep batching paused; the native count is clamped to zero on resumption.
+	 * Has no effect without an initialized cache and does not wait for compilation to complete.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Rendering | Pipeline Cache")
+	static void ResumePrecompilingPSOs();
+
+	/**
 	 * Synchronously compresses bytes into the native size-prefixed FOodleCompressedArray format.
 	 * The output includes size metadata and is intended for OodleDecompress(), rather than raw Oodle-stream decoding.
 	 * @param InData Bytes to compress; native empty-input behavior is preserved.
