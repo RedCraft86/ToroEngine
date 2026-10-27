@@ -3,9 +3,10 @@
 #pragma once
 
 #include "UObject/Object.h"
-#include "UObject/WeakObjectPtr.h"
+#include "Misc/AssertionMacros.h"
 #include "UObject/WeakObjectPtrTemplates.h"
 #include "Templates/UnrealTypeTraits.h"
+#include "Templates/UnrealTemplate.h"
 #include "Templates/Function.h"
 
 /**

@@ -11,7 +11,7 @@
 #include "Editor/UnrealEdEngine.h"
 #include "Templates/UnrealTypeTraits.h"
 #include "Templates/SharedPointer.h"
-#include "ToroVisualizerHelpers.h"
+#include "Components/ActorComponent.h"
 
 /**
  * Base for editor component visualizers with shared registration and shutdown cleanup.

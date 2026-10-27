@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Misc/MessageDialog.h"
 #include "SlateStyles/ToroEngineStyle.h"
 #include "ToolbarButtons/ToroToolbarButton.h"
 #include "Utilities/ToroActorEdUtils.h"

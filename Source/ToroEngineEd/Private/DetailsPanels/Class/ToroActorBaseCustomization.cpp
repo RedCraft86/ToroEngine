@@ -3,6 +3,12 @@
 #include "DetailsPanels/Class/ToroActorBaseCustomization.h"
 #include "Utilities/ToroValidation.h"
 #include "Widgets/Input/SButton.h"
+#include "Widgets/Layout/SBox.h"
+#include "Widgets/SNullWidget.h"
+#include "DetailCategoryBuilder.h"
+#include "DetailWidgetRow.h"
+#include "Input/Reply.h"
+#include "GameFramework/Actor.h"
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
 AActor* FToroActorBaseCustomization::GetPrimaryActor() const

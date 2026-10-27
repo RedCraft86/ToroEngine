@@ -4,6 +4,9 @@
 
 #include "DetailsPanels/ToroClassCustomization.h"
 
+class AActor;
+class FReply;
+
 class TOROENGINEED_API FToroActorBaseCustomization : public FToroClassCustomization
 {
 protected:

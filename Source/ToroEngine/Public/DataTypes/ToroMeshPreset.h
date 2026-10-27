@@ -6,16 +6,20 @@
 #include "Math/Vector.h"
 #include "Math/Transform.h"
 #include "Containers/Array.h"
+#include "Containers/EnumAsByte.h"
 #include "Templates/TypeHash.h"
 #include "UObject/ObjectMacros.h"
 #include "UObject/SoftObjectPtr.h"
+#include "UObject/StructOpsTypeTraits.h"
 #include "Components/SplineMeshComponent.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroMeshPreset.generated.h"
 
+
 class UStaticMesh;
 class UMaterialInterface;
 class UStaticMeshComponent;
+class FEditPropertyChain;
 
 /**
  * Reusable mesh, partial material, lighting, and optional world-transform settings.

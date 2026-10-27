@@ -3,6 +3,7 @@
 #pragma once
 
 #include "ClassViewerFilter.h"
+#include "Templates/SharedPointer.h"
 #include "UObject/ObjectMacros.h"
 #include "Containers/Set.h"
 

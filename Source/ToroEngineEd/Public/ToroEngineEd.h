@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Logging/LogMacros.h"
+#include "Containers/UnrealString.h"
 #include "Modules/ModuleInterface.h"
 
 TOROENGINEED_API DECLARE_LOG_CATEGORY_EXTERN(LogToroEngineEd, All, All)

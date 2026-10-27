@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UObject/WeakObjectPtrTemplates.h"
 #include "GameFramework/PlayerController.h"
 #include "ToroInputConfig.generated.h"
+
+class UUserWidget;
 
 /** Selects whether input is handled by the game, UI, or both. */
 UENUM(BlueprintType)
@@ -81,14 +83,7 @@ public:
 		const bool bInHideCursorOnCapture = true,
 		const bool bInConsumeCaptureMouseDown = true,
 		UUserWidget* InFocusWidget = nullptr
-	)
-		: InputMode(InInputMode)
-		, bShowMouseCursor(bInShowMouseCursor)
-		, MouseLock(InMouseLock)
-		, bHideCursorOnCapture(bInHideCursorOnCapture)
-		, bConsumeCaptureMouseDown(bInConsumeCaptureMouseDown)
-		, FocusWidget(InFocusWidget)
-	{}
+	);
 
 	/** Returns whether cursor visibility is requested and the selected mode permits it. */
 	[[nodiscard]] FORCEINLINE bool ShouldShowMouse() const

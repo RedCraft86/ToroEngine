@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "Serialization/Archive.h"
 #include "Serialization/StructuredArchive.h"
 #include "UObject/StructOpsTypeTraits.h"

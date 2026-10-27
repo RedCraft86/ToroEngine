@@ -6,8 +6,10 @@
 #include "Templates/Models.h"
 #include "Templates/Function.h"
 #include "Templates/SharedPointer.h"
+#include "Templates/UnrealTemplate.h"
 #include "Concepts/EqualityComparable.h"
 #include "Concepts/GetTypeHashable.h"
+#include "Misc/AssertionMacros.h"
 #include "Delegates/Delegate.h"
 
 /**

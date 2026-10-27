@@ -10,7 +10,6 @@
 #include "Templates/UnrealTypeTraits.h"
 #include "Textures/SlateIcon.h"
 #include "UObject/NameTypes.h"
-#include "Styling/CoreStyle.h"
 #include "ToolMenus.h"
 
 /**
@@ -115,10 +114,7 @@ public:
 	}
 
 	/** Supplies the toolbar icon; the base implementation uses the Core style's unknown-instance icon. */
-	virtual FSlateIcon GetSlateIcon()
-	{
-		return FSlateIcon(FCoreStyle::Get().GetStyleSetName(), TEXT("Launcher.Instance_Unknown"));
-	}
+	virtual FSlateIcon GetSlateIcon();
 
 protected:
 

@@ -2,19 +2,14 @@
 
 #pragma once
 
-#include "SceneView.h"
-#include "CanvasItem.h"
-#include "CanvasTypes.h"
-#include "PrimitiveDrawingUtils.h"
-#include "PrimitiveDrawInterface.h"
 #include "Internationalization/Text.h"
-#include "Fonts/SlateFontInfo.h"
-#include "Engine/Engine.h"
-#include "Engine/Font.h"
 #include "Math/Color.h"
 #include "Math/Vector.h"
-#include "Math/Vector2D.h"
-#include "Math/UnrealMathUtility.h"
+
+class UFont;
+class FCanvas;
+class FSceneView;
+class FPrimitiveDrawInterface;
 
 /** Drawing utilities for component-visualizer viewport geometry and projected canvas labels. */
 namespace ToroVisualizerHelpers
@@ -36,39 +31,10 @@ namespace ToroVisualizerHelpers
 	 * @param DepthPriority Scene depth-priority group passed to the drawing interface.
 	 * @param Thickness Positive line thickness passed to the drawing interface.
 	 */
-	TOROENGINEED_API inline void DrawDiscSlice(FPrimitiveDrawInterface* PDI,
+	TOROENGINEED_API void DrawDiscSlice(FPrimitiveDrawInterface* PDI,
 		const FVector& Location, const FVector& AxisX, const FVector& AxisY,
 		const float MinAngle, const float MaxAngle, const float Radius, const uint8 Sections,
-		const FLinearColor& Color, const uint8 DepthPriority, const float Thickness)
-	{
-		if (!PDI
-			|| AxisX.SizeSquared() <= 0.0f
-			|| AxisY.SizeSquared() <= 0.0f
-			|| FMath::IsNearlyEqual(MinAngle, MaxAngle)
-			|| Radius <= 0.0f
-			|| Sections <= 0
-			|| Thickness <= 0.0f)
-		{
-			return;
-		}
-
-		constexpr float DegToRad = UE_PI / 180.0f;
-		const float AngleStep = (MaxAngle - MinAngle) / static_cast<float>(Sections);
-		float CurrentAngle = MinAngle;
-
-		FVector LastVertex = Location + Radius * (FMath::Cos(CurrentAngle * DegToRad) * AxisX + FMath::Sin(CurrentAngle * DegToRad) * AxisY);
-		CurrentAngle += AngleStep;
-
-		PDI->DrawTranslucentLine(Location, LastVertex, Color, DepthPriority, Thickness);
-		for (uint8 i = 0; i < Sections; i++)
-		{
-			FVector ThisVertex = Location + Radius * (FMath::Cos(CurrentAngle * DegToRad) * AxisX + FMath::Sin(CurrentAngle * DegToRad) * AxisY);
-			PDI->DrawTranslucentLine(LastVertex, ThisVertex, Color, DepthPriority, Thickness);
-			CurrentAngle += AngleStep;
-			LastVertex = ThisVertex;
-		}
-		PDI->DrawTranslucentLine(Location, LastVertex, Color, DepthPriority, Thickness);
-	}
+		const FLinearColor& Color, const uint8 DepthPriority, const float Thickness);
 
 	/**
 	 * Draws a canvas label anchored at the projected world position.
@@ -84,44 +50,7 @@ namespace ToroVisualizerHelpers
 	 * @param bDrawShadow Whether to draw a black text shadow.
 	 * @param Font Optional font override; null uses the engine small font when available.
 	 */
-	TOROENGINEED_API inline void DrawText(const FSceneView* View, FCanvas* Canvas, const FVector& Location,
+	TOROENGINEED_API void DrawText(const FSceneView* View, FCanvas* Canvas, const FVector& Location,
 		const FText& Text, const uint8 FontScale = 12, const FLinearColor& Color = FLinearColor::White,
-		const bool bDrawShadow = false, const UFont* Font = nullptr)
-	{
-		if (!View || !Canvas)
-		{
-			return;
-		}
-
-		const UFont* DrawFont = Font ? Font : (GEngine ? GEngine->GetSmallFont() : nullptr);
-		if (!DrawFont)
-		{
-			return;
-		}
-
-		FVector2D ScreenPos;
-		if (FSceneView::ProjectWorldToScreen(Location, View->UnscaledViewRect, View->ViewMatrices.GetWorldToClip(), ScreenPos))
-		{
-			const float DPIScale = Canvas->GetDPIScale();
-			if (!FMath::IsNearlyZero(DPIScale))
-			{
-				ScreenPos /= DPIScale;
-			}
-
-			FCanvasTextItem TextItem = FCanvasTextItem(ScreenPos, Text, FSlateFontInfo(
-				DrawFont, FontScale > 0 ? static_cast<float>(FontScale) : 12.0f, NAME_None
-			), Color);
-
-			if (bDrawShadow)
-			{
-				TextItem.EnableShadow(FColor::Black);
-			}
-			else
-			{
-				TextItem.DisableShadow();
-			}
-
-			Canvas->DrawItem(TextItem);
-		}
-	}
+		const bool bDrawShadow = false, const UFont* Font = nullptr);
 }

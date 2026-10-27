@@ -4,8 +4,13 @@
 
 #include "SlateIM.h"
 #include "SlateIMWidgetBase.h"
+#include "Widgets/SWindow.h"
+#include "Widgets/Layout/SBox.h"
+#include "Layout/WidgetPath.h"
 #include "SlateStyles/ToroEngineStyle.h"
 #include "ToolbarButtons/ToroToolbarButton.h"
+#include "Framework/Application/SlateApplication.h"
+#include "Framework/Application/IMenu.h"
 #include "Utilities/ToroActorEdUtils.h"
 
 #define LOCTEXT_NAMESPACE "ToroEngine"

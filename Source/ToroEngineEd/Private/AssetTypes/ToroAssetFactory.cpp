@@ -4,7 +4,9 @@
 #include "DataAssets/ToroDataAsset.h"
 #include "AssetTypes/ToroAssetClassFilter.h"
 #include "Kismet2/SClassPickerDialog.h"
+#include "Modules/ModuleManager.h"
 #include "ClassViewerModule.h"
+#include "UObject/Class.h"
 #include "ObjectTools.h"
 #include "Misc/Paths.h"
 

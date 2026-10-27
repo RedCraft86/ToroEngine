@@ -2,6 +2,11 @@
 
 #include "DetailsPanels/Struct/ToroInlineStructCustomization.h"
 #include "IDetailChildrenBuilder.h"
+#include "IDetailPropertyRow.h"
+#include "DetailWidgetRow.h"
+#include "PropertyHandle.h"
+#include "UObject/UnrealType.h"
+#include "Widgets/Layout/SBox.h"
 
 TSharedPtr<IPropertyHandle> FToroInlineStructCustomization::GetHeaderProperty()
 {

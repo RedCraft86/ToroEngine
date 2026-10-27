@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Factories/Factory.h"
+#include "Templates/SubclassOf.h"
 #include "ToroAssetFactory.generated.h"
 
 class UToroDataAsset;

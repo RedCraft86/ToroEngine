@@ -2,8 +2,11 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "Engine/LatentActionManager.h"
+#include "Containers/UnrealString.h"
+
+class UObject;
+class UWorld;
+struct FLatentActionInfo;
 
 namespace ToroEngine
 {

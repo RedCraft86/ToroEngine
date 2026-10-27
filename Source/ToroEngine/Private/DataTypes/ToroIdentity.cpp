@@ -1,6 +1,9 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "DataTypes/ToroIdentity.h"
+#if WITH_EDITOR
+#include "UObject/UnrealType.h"
+#endif
 
 const FToroIdentity FToroIdentity::Empty = FToroIdentity();
 

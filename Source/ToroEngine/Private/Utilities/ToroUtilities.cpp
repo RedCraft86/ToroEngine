@@ -1,8 +1,11 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Utilities/ToroUtilities.h"
+#include "Engine/LatentActionManager.h"
+#include "Math/NumericLimits.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
+#include "CoreGlobals.h"
 
 UWorld* ToroEngine::GetWorld(const UObject* Context, bool bTryFindPossible)
 {

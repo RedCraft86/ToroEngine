@@ -10,6 +10,8 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroIdentity.generated.h"
 
+class FEditPropertyChain;
+
 /**
  * Identifies an item by an exact gameplay-tag group and a GUID.
  *

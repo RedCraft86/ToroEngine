@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Styling/AppStyle.h"
+#include "Styling/CoreStyle.h"
 #include "ToolbarButtons/ToroToolbarButton.h"
 #include "UnrealEdMisc.h"
 

@@ -2,15 +2,15 @@
 
 #pragma once
 
+#include "UObject/NameTypes.h"
+#include "Misc/AssertionMacros.h"
 #include "IPropertyTypeCustomization.h"
 #include "Concepts/StaticStructProvider.h"
-#include "PropertyCustomizationHelpers.h"
 #include "Modules/ModuleManager.h"
 #include "PropertyEditorModule.h"
 #include "Templates/UnrealTypeTraits.h"
 #include "Templates/SharedPointer.h"
 #include "Templates/Models.h"
-#include "UObject/UnrealType.h"
 #include "UObject/Class.h"
 #include "Containers/Set.h"
 #include "PropertyHandle.h"

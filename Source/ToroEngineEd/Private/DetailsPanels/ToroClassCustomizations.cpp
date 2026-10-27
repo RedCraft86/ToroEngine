@@ -1,8 +1,9 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
-#include "EditorCategoryUtils.h"
-#include "DetailCategoryBuilder.h"
 #include "DetailsPanels/ToroClassCustomization.h"
+#include "DetailCategoryBuilder.h"
+#include "EditorCategoryUtils.h"
+#include "UObject/UnrealType.h"
 
 IDetailCategoryBuilder& FToroClassCustomization::FindOrAddCategory(FName CategoryName)
 {

@@ -2,6 +2,7 @@
 
 #include "Components/ToroSceneComponent.h"
 #if WITH_EDITOR
+#include "Components/PrimitiveComponent.h"
 #include "Components/BillboardComponent.h"
 #include "UObject/Script.h"
 #include "Misc/App.h"

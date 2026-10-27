@@ -4,6 +4,8 @@
 
 #include "DetailsPanels/ToroStructCustomization.h"
 
+class SBox;
+
 /**
  * Displays a selected struct property's value inline in the struct's header.
  *

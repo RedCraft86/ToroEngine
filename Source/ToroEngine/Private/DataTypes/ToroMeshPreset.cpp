@@ -6,6 +6,10 @@
 #include "Materials/MaterialInterface.h"
 #include "Math/UnrealMathUtility.h"
 #include "Engine/StaticMesh.h"
+#include "UObject/Stack.h"
+#if WITH_EDITOR
+#include "UObject/UnrealType.h"
+#endif
 
 bool FToroStaticMeshPreset::Equals(const FToroStaticMeshPreset& Other, bool bCheckTransform) const
 {

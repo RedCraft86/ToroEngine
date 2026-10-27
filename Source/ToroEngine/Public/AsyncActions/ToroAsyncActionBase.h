@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Delegates/Delegate.h"
+#include "UObject/WeakObjectPtrTemplates.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "ToroAsyncActionBase.generated.h"
 

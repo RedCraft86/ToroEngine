@@ -3,6 +3,7 @@
 #pragma once
 
 #include "SlateStyles/ToroEngineStyle.h"
+#include "Framework/Docking/TabManager.h"
 #include "ToolbarButtons/ToroToolbarButton.h"
 #include "Utilities/ToroActorEdUtils.h"
 

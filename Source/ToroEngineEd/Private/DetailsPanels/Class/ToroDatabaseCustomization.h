@@ -2,12 +2,17 @@
 
 #pragma once
 
+#include "DetailWidgetRow.h"
+#include "Widgets/SBoxPanel.h"
+#include "Widgets/Text/STextBlock.h"
 #include "SGameplayTagCombo.h"
 #include "IPropertyUtilities.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/SNullWidget.h"
 #include "SInstancedStructPicker.h"
 #include "InstancedStructDetails.h"
+#include "DetailCategoryBuilder.h"
+#include "PropertyCustomizationHelpers.h"
 #include "DetailsPanels/ToroClassCustomization.h"
 #include "DataAssets/ToroDatabase.h"
 

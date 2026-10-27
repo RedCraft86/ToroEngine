@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Class.h"
 #include "UObject/ObjectMacros.h"
+#include "UObject/StructOpsTypeTraits.h"
 #include "Serialization/StructuredArchive.h"
 #include "ToroImageData.generated.h"
 
