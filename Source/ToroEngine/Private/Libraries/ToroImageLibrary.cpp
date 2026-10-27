@@ -297,7 +297,6 @@ FVoidCoroutine UToroImageLibrary::SaveImageDataToFile(FLatentActionInfo LatentIn
 
 	if (bAsync)
 	{
-		// Fix: Own the destination path while suspended so the worker never reads caller-owned string storage.
 		const FString OutputFilePath = FilePath;
 		co_await UE5Coro::Async::MoveToTask();
 		const bool bResult = FFileHelper::SaveArrayToFile(PNGImage, *OutputFilePath);
