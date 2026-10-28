@@ -236,17 +236,18 @@ protected:
 	 */
 	virtual TArray<FString> GetForceShowCategories();
 
+	/**
+	 * Determines whether this instance is the primary customization for the accepted selection.
+	 * The most-derived registered class in the selected class's ancestry takes precedence.
+	 * Other registered customizations still run; this determines ownership of shared processing.
+	 * @return True if that registration matches this instance's RegisteredClassName.
+	 *         False if the selection is unset or no matching registration exists.
+	 */
+	bool IsPrimaryCustomization() const;
+
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override = 0;
 
 private:
-
-	/**
-	 * Determines whether this instance owns automatic category processing for the accepted selection.
-	 * Walks from CustomizingClass through its ancestors and stops at the first class in RegisteredEntries.
-	 * @return True if that class matches RegisteredClassName; false if the selection is unset,
-	 *         no tracked registration is found, or this instance belongs to another registration.
-	 */
-	bool ShouldManageCategories() const;
 
 	/**
 	 * Reads RenameCategories metadata as comma-separated Old=New pairs.

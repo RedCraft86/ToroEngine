@@ -43,7 +43,7 @@ TArray<FString> FToroClassCustomization::GetForceShowCategories()
 	};
 }
 
-bool FToroClassCustomization::ShouldManageCategories() const
+bool FToroClassCustomization::IsPrimaryCustomization() const
 {
 	for (const UClass* Class = CustomizingClass; Class; Class = Class->GetSuperClass())
 	{
@@ -220,17 +220,17 @@ void FToroClassCustomization::CustomizeDetails(const TSharedPtr<IDetailLayoutBui
 	CustomizingClass = SelectedClass;
 	bIsTemplateObject = bSelectedTemplate;
 
-	if (ShouldManageCategories())
+	if (IsPrimaryCustomization())
 	{
 		HandleCategoryRenames();
 		HandleCategoryPriority();
 		HandleCategoryVisibility();
-	}
 
-	// Apply changes made by the handler functions
-	for (const TPair<FName, FToroCategoryInfo>& CategoryInfo : CategoryMap)
-	{
-		FindOrAddCategory(CategoryInfo.Key);
+		// Apply changes made by the handler functions
+		for (const TPair<FName, FToroCategoryInfo>& CategoryInfo : CategoryMap)
+		{
+			FindOrAddCategory(CategoryInfo.Key);
+		}
 	}
 
 	IDetailCustomization::CustomizeDetails(DetailBuilder);
