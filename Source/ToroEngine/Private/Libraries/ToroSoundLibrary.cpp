@@ -1,14 +1,14 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Libraries/ToroSoundLibrary.h"
+#include "Utilities/ToroLogging.h"
 #include "Sound/AmbientSound.h"
-#include "UObject/Stack.h"
 
 void UToroSoundLibrary::PlayAmbientSound(const AAmbientSound* Target, float StartTime)
 {
 	if (!FMath::IsFinite(StartTime))
 	{
-		FFrame::KismetExecutionMessage(TEXT("StartTime must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("StartTime must be finite."));
 		return;
 	}
 
@@ -23,7 +23,7 @@ void UToroSoundLibrary::StopAmbientSound(const AAmbientSound* Target, float Dela
 {
 	if (!FMath::IsFinite(Delay))
 	{
-		FFrame::KismetExecutionMessage(TEXT("Delay must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Delay must be finite."));
 		return;
 	}
 
@@ -47,19 +47,19 @@ FVoidCoroutine UToroSoundLibrary::FadeInAmbientSound(FLatentActionInfo LatentInf
 {
 	if (!FMath::IsFinite(Duration))
 	{
-		FFrame::KismetExecutionMessage(TEXT("Duration must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Duration must be finite."));
 		co_return;
 	}
 
 	if (!FMath::IsFinite(TargetLevel))
 	{
-		FFrame::KismetExecutionMessage(TEXT("TargetLevel must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("TargetLevel must be finite."));
 		co_return;
 	}
 
 	if (!FMath::IsFinite(StartTime))
 	{
-		FFrame::KismetExecutionMessage(TEXT("StartTime must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("StartTime must be finite."));
 		co_return;
 	}
 
@@ -80,13 +80,13 @@ FVoidCoroutine UToroSoundLibrary::FadeOutAmbientSound(FLatentActionInfo LatentIn
 {
 	if (!FMath::IsFinite(Duration))
 	{
-		FFrame::KismetExecutionMessage(TEXT("Duration must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Duration must be finite."));
 		co_return;
 	}
 
 	if (!FMath::IsFinite(TargetLevel))
 	{
-		FFrame::KismetExecutionMessage(TEXT("TargetLevel must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("TargetLevel must be finite."));
 		co_return;
 	}
 

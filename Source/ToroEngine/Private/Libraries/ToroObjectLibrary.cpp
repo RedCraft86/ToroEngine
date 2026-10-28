@@ -1,8 +1,8 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Libraries/ToroObjectLibrary.h"
+#include "Utilities/ToroLogging.h"
 #include "UObject/UObjectHash.h"
-#include "UObject/Stack.h"
 #include "UObject/Class.h"
 #include "Engine/World.h"
 #include "Stats/Stats.h"
@@ -17,12 +17,9 @@ bool UToroObjectLibrary::CallObjectEvent(UObject* Target, FName EventName)
 	UFunction* Function = Target->FindFunction(EventName);
 	if (!Function || Function->NumParms != 0)
 	{
-		FFrame::KismetExecutionMessage(
-			*FString::Printf(
-				TEXT("Function %s must not have any parameters to be called via CallObjectEvent."), 
-				*EventName.ToString()
-			),
-			ELogVerbosity::Error
+		TORO_REPORT_ERROR(
+			TEXT("Function %s must not have any parameters to be called via CallObjectEvent."),
+			*EventName.ToString()
 		);
 		return false;
 	}
@@ -53,9 +50,8 @@ void UToroObjectLibrary::GetAllObjectsOfClass(TArray<UObject*>& Result, TSubclas
 
 	if (InClass == UObject::StaticClass())
 	{
-		FFrame::KismetExecutionMessage(
-			TEXT("Called with UObject as the class. This is not allowed as it will cause severe performance issues."),
-			ELogVerbosity::Error
+		TORO_REPORT_ERROR(
+			TEXT("Called with UObject as the class. This is not allowed as it will cause severe performance issues.")
 		);
 		return;
 	}
@@ -76,9 +72,8 @@ UObject* UToroObjectLibrary::GetObjectOfClass(TSubclassOf<UObject> InClass, cons
 
 	if (InClass == UObject::StaticClass())
 	{
-		FFrame::KismetExecutionMessage(
-			TEXT("Called with UObject as the class. This is not allowed as it will cause severe performance issues."),
-			ELogVerbosity::Error
+		TORO_REPORT_ERROR(
+			TEXT("Called with UObject as the class. This is not allowed as it will cause severe performance issues.")
 		);
 		return nullptr;
 	}

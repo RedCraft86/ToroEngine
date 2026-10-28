@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Libraries/ToroCameraLibrary.h"
+#include "Utilities/ToroLogging.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Actor.h"
@@ -11,7 +12,6 @@
 #include "Camera/CameraTypes.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/FrameValue.h"
-#include "UObject/Stack.h"
 #include "UnrealClient.h"
 #include "ConvexVolume.h"
 #include "CoreGlobals.h"
@@ -178,7 +178,7 @@ FVoidCoroutine UToroCameraLibrary::StartCameraFade(FLatentActionInfo LatentInfo,
 
 	if (!FMath::IsFinite(Duration))
 	{
-		FFrame::KismetExecutionMessage(TEXT("Duration must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Duration must be finite."));
 		co_return;
 	}
 
@@ -232,7 +232,7 @@ FVoidCoroutine UToroCameraLibrary::BlendPlayerViewTarget(FLatentActionInfo Laten
 
 	if (!FMath::IsFinite(Duration))
 	{
-		FFrame::KismetExecutionMessage(TEXT("BlendPlayerViewTarget: Duration must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Duration must be finite."));
 		co_return;
 	}
 

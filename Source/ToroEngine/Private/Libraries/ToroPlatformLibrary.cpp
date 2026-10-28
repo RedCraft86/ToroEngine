@@ -1,12 +1,12 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Libraries/ToroPlatformLibrary.h"
+#include "Utilities/ToroLogging.h"
 #include "HAL/PlatformApplicationMisc.h"
 #include "HAL/PlatformFileManager.h"
 #include "HAL/PlatformProperties.h"
 #include "Misc/CoreDelegates.h"
 #include "Misc/FileHelper.h"
-#include "UObject/Stack.h"
 #include "IPlatformFilePak.h"
 
 void UToroPlatformLibrary::CopyStringToClipboard(const FString& InString)
@@ -25,19 +25,13 @@ bool UToroPlatformLibrary::MountPakFile(const FString& FilePath)
 {
 	if (!FPlatformProperties::RequiresCookedData())
 	{
-		FFrame::KismetExecutionMessage(
-			TEXT("Current project does not allow cooked content. This should not be called in-editor."),
-			ELogVerbosity::Error
-		);
+		TORO_REPORT_ERROR(TEXT("Current project does not allow cooked content. This should not be called in-editor."));
 		return false;
 	}
 
 	if (!FCoreDelegates::MountPak.IsBound())
 	{
-		FFrame::KismetExecutionMessage(
-			TEXT("Pak mounting has not been initialized by the engine."),
-			ELogVerbosity::Error
-		);
+		TORO_REPORT_ERROR(TEXT("Pak mounting has not been initialized by the engine."));
 		return false;
 	}
 
@@ -48,19 +42,13 @@ bool UToroPlatformLibrary::UnmountPakFile(const FString& FilePath)
 {
 	if (!FPlatformProperties::RequiresCookedData())
 	{
-		FFrame::KismetExecutionMessage(
-			TEXT("Current project does not allow cooked content. This should not be called in-editor."),
-			ELogVerbosity::Error
-		);
+		TORO_REPORT_ERROR(TEXT("Current project does not allow cooked content. This should not be called in-editor."));
 		return false;
 	}
 
 	if (!FCoreDelegates::OnUnmountPak.IsBound())
 	{
-		FFrame::KismetExecutionMessage(
-			TEXT("Pak mounting has not been initialized by the engine."),
-			ELogVerbosity::Error
-		);
+		TORO_REPORT_ERROR(TEXT("Pak mounting has not been initialized by the engine."));
 		return false;
 	}
 

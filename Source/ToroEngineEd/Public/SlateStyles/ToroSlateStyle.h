@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ToroEngineEd.h"
+#include "Utilities/ToroLogging.h"
 #include "Containers/Map.h"
 #include "Math/Vector2D.h"
 #include "UObject/NameTypes.h"
@@ -41,16 +41,14 @@ public:
 		TSharedPtr<FToroSlateStyle> Style = MakeShared<StyleSet>();
 		if (Style->GetFName().IsNone())
 		{
-			UE_LOG(LogToroEngineEd, Warning, TEXT("FToroSlateStyle: Attempting to register a slate style with an invalid name"));
+			TORO_LOG_WARNING(TEXT("Attempting to register a slate style with an invalid name"));
 			Style.Reset();
 			return NAME_None;
 		}
 
 		if (RegisteredEntries.Contains(Style->GetFName()) || FSlateStyleRegistry::FindSlateStyle(Style->GetFName()))
 		{
-			UE_LOG(LogToroEngineEd, Warning,
-				TEXT("FToroSlateStyle: Attempting to register multiple slate styles with name %s"), *Style->GetName()
-			);
+			TORO_LOG_WARNING(TEXT("Attempting to register multiple slate styles with name %s"), *Style->GetName());
 
 			Style.Reset();
 			return NAME_None;
@@ -60,7 +58,7 @@ public:
 		FSlateStyleRegistry::RegisterSlateStyle(*Style);
 		RegisteredEntries.Add(Style->GetFName(), Style);
 
-		UE_LOG(LogToroEngineEd, Display, TEXT("FToroSlateStyle: Registered slate style with name %s"), *Style->GetName());
+		TORO_LOG_INFO(TEXT("Registered slate style with name %s"), *Style->GetName());
 		return Style->GetFName();
 	}
 
@@ -82,7 +80,7 @@ public:
 					Entry.Value.Reset();
 				}
 
-				UE_LOG(LogToroEngineEd, Display, TEXT("FToroSlateStyle: Unregistered all slate styles"));
+				TORO_LOG_INFO(TEXT("Unregistered all slate styles"));
 			}
 
 			RegisteredEntries.Empty();

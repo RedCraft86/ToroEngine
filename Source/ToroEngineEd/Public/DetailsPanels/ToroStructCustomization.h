@@ -3,6 +3,7 @@
 #pragma once
 
 #include "UObject/NameTypes.h"
+#include "Utilities/ToroLogging.h"
 #include "Misc/AssertionMacros.h"
 #include "IPropertyTypeCustomization.h"
 #include "Concepts/StaticStructProvider.h"
@@ -14,7 +15,6 @@
 #include "UObject/Class.h"
 #include "Containers/Set.h"
 #include "PropertyHandle.h"
-#include "ToroEngineEd.h"
 
 /**
  * Looks up a reflected child by its checked C++ member name.
@@ -94,22 +94,20 @@ public:
 		FPropertyEditorModule* ModulePtr = FModuleManager::LoadModulePtr<FPropertyEditorModule>(TEXT("PropertyEditor"));
 		if (!ModulePtr)
 		{
-			UE_LOG(LogToroEngineEd, Warning, TEXT("FToroStructCustomization: Attempting to register while PropertyEditor module is not loaded."))
+			TORO_LOG_WARNING(TEXT("Attempting to register while PropertyEditor module is not loaded."));
 			return NAME_None;
 		}
 
 		const FName EntryName = Struct::StaticStruct()->GetFName();
 		if (EntryName.IsNone())
 		{
-			UE_LOG(LogToroEngineEd, Warning, TEXT("FToroStructCustomization: Attempting to register with an invalid struct"))
+			TORO_LOG_WARNING(TEXT("Attempting to register with an invalid struct"));
 			return NAME_None;
 		}
 
 		if (RegisteredEntries.Contains(EntryName))
 		{
-			UE_LOG(LogToroEngineEd, Warning,
-				TEXT("FToroStructCustomization: Attempting to register multiple customizations for %s"), *EntryName.ToString()
-			);
+			TORO_LOG_WARNING(TEXT("Attempting to register multiple customizations for %s"), *EntryName.ToString());
 			return NAME_None;
 		}
 
@@ -121,7 +119,7 @@ public:
 			})
 		);
 
-		UE_LOG(LogToroEngineEd, Display, TEXT("FToroStructCustomization: Registered customization for %s"), *EntryName.ToString());
+		TORO_LOG_INFO(TEXT("Registered customization for %s"), *EntryName.ToString());
 		return EntryName;
 	}
 
@@ -139,7 +137,7 @@ public:
 				ModulePtr->UnregisterCustomPropertyTypeLayout(Entry);
 			}
 
-			UE_LOG(LogToroEngineEd, Display, TEXT("FToroStructCustomization: Unregistered all struct customizations"));
+			TORO_LOG_INFO(TEXT("Unregistered all struct customizations"));
 		}
 
 		RegisteredEntries.Empty();

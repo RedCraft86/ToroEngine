@@ -3,6 +3,7 @@
 #pragma once
 
 #include "DetailLayoutBuilder.h"
+#include "Utilities/ToroLogging.h"
 #include "IDetailCustomization.h"
 #include "Containers/Array.h"
 #include "Containers/UnrealString.h"
@@ -20,7 +21,6 @@
 #include "Containers/Set.h"
 #include "Containers/Map.h"
 #include "PropertyHandle.h"
-#include "ToroEngineEd.h"
 
 /**
  * Looks up a property using a checked C++ member name and an accessible DetailBuilder reference.
@@ -104,22 +104,20 @@ public:
 		FPropertyEditorModule* ModulePtr = FModuleManager::LoadModulePtr<FPropertyEditorModule>(TEXT("PropertyEditor"));
 		if (!ModulePtr)
 		{
-			UE_LOG(LogToroEngineEd, Warning, TEXT("FToroClassCustomization: Attempting to register while PropertyEditor module is not loaded."))
+			TORO_LOG_WARNING(TEXT("Attempting to register while PropertyEditor module is not loaded."));
 			return NAME_None;
 		}
 
 		const FName EntryName = Class::StaticClass()->GetFName();
 		if (EntryName.IsNone())
 		{
-			UE_LOG(LogToroEngineEd, Warning, TEXT("FToroClassCustomization: Attempting to register with an invalid class"))
+			TORO_LOG_WARNING(TEXT("Attempting to register with an invalid class"));
 			return NAME_None;
 		}
 
 		if (RegisteredEntries.Contains(EntryName))
 		{
-			UE_LOG(LogToroEngineEd, Warning,
-				TEXT("FToroClassCustomization: Attempting to register multiple customizations for %s"), *EntryName.ToString()
-			);
+			TORO_LOG_WARNING(TEXT("Attempting to register multiple customizations for %s"), *EntryName.ToString());
 			return NAME_None;
 		}
 
@@ -133,7 +131,7 @@ public:
 				})
 		);
 
-		UE_LOG(LogToroEngineEd, Display, TEXT("FToroClassCustomization: Registered customization for %s"), *EntryName.ToString());
+		TORO_LOG_INFO(TEXT("Registered customization for %s"), *EntryName.ToString());
 		return EntryName;
 	}
 
@@ -151,7 +149,7 @@ public:
 				ModulePtr->UnregisterCustomClassLayout(Entry);
 			}
 
-			UE_LOG(LogToroEngineEd, Display, TEXT("FToroClassCustomization: Unregistered all class customizations"));
+			TORO_LOG_INFO(TEXT("Unregistered all class customizations"));
 		}
 
 		RegisteredEntries.Empty();

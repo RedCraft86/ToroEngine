@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Libraries/ToroWidgetLibrary.h"
+#include "Utilities/ToroLogging.h"
 #include "Animation/WidgetAnimation.h"
 #include "Animation/WidgetAnimationState.h"
 #include "Blueprint/WidgetBlueprintGeneratedClass.h"
@@ -10,7 +11,6 @@
 #include "Components/Button.h"
 #include "Utilities/RobAccess.h"
 #include "UObject/Class.h"
-#include "UObject/Stack.h"
 #include "MovieScene.h"
 
 ROB_DEFINE_FUNC(
@@ -55,7 +55,7 @@ bool UToroWidgetLibrary::PlayWidgetAnimation(UUserWidget* Target, UWidgetAnimati
 {
 	if (!FMath::IsFinite(PlayRate))
 	{
-		FFrame::KismetExecutionMessage(TEXT("PlayRate must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("PlayRate must be finite."));
 		return false;
 	}
 
@@ -107,7 +107,7 @@ FVoidCoroutine UToroWidgetLibrary::PlayWidgetAnimationAsync(FLatentActionInfo La
 
 	if (!FMath::IsFinite(PlayRate))
 	{
-		FFrame::KismetExecutionMessage(TEXT("PlayRate must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("PlayRate must be finite."));
 		co_return;
 	}
 

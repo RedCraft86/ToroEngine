@@ -21,6 +21,8 @@ class UToroBehaviorComponent;
  * properties, to its owner on registration and clears their bindings on unregistration.
  * References used elsewhere require explicit owner binding. Neither the owner nor the
  * cached component is kept alive; loading clears both runtime references.
+ * Lookup and compatibility errors use Kismet reporting with an active script frame,
+ * or a native ensureAlwaysMsgf otherwise.
  */
 USTRUCT(BlueprintType)
 struct TOROSYSTEMS_API FToroBehaviorRef final
@@ -85,7 +87,7 @@ public:
 	 * Does not inspect the owner or search for a component.
 	 * @param InClass Expected result type; both classes must be valid and the configured
 	 *        class must equal or derive from this type.
-	 * @param bErrorIfInvalid Whether a failed compatibility check logs a Kismet error.
+	 * @param bErrorIfInvalid Whether a failed compatibility check reports a Toro error.
 	 */
 	[[nodiscard]] bool CanResolveAs(TSubclassOf<UToroBehaviorComponent> InClass, bool bErrorIfInvalid) const;
 
@@ -100,7 +102,7 @@ public:
 
 	/**
 	 * Searches the bound actor for the first component matching the configured class or a subclass.
-	 * Bypasses the cache and required-reference check. An invalid owner or class logs a Kismet error.
+	 * Bypasses the cache and required-reference check. An invalid owner or class reports a Toro error.
 	 * @return The matching component, or nullptr if lookup fails.
 	 */
 	UToroBehaviorComponent* Find() const;
@@ -108,14 +110,14 @@ public:
 	/**
 	 * Returns the valid cached component, searching and updating the weak cache when necessary.
 	 * Failed lookups are retried on subsequent calls and emit an ensure diagnostic if required.
-	 * An invalid owner or class also logs a Kismet error during lookup.
+	 * An invalid owner or class also reports a Toro error during lookup.
 	 * @return The cached or newly resolved component, or nullptr if resolution fails.
 	 */
 	UToroBehaviorComponent* Get();
 
 	/**
 	 * Checks compatibility with T, then resolves through the cached Get() path.
-	 * An incompatible configured class logs a Kismet error without attempting lookup.
+	 * An incompatible configured class reports a Toro error without attempting lookup.
 	 * @tparam T A complete UToroBehaviorComponent-derived type that equals or is a base
 	 *         of the configured lookup class.
 	 * @return The resolved component cast to T, or nullptr on incompatibility or failed resolution.
@@ -162,7 +164,7 @@ public:
 
 	/**
 	 * Searches for a matching component without reading or updating the cache or enforcing required status.
-	 * Incompatible types and invalid lookup classes or owners log a Kismet error.
+	 * Incompatible types and invalid lookup classes or owners report a Toro error.
 	 * @param InClass Expected result type; must equal or be a base of the configured lookup class.
 	 * @return The matching component, or nullptr if compatibility or lookup fails.
 	 */
@@ -173,8 +175,8 @@ public:
 
 	/**
 	 * Resolves a compatible component through the reference's weak cache, updating it when invalid.
-	 * Incompatible types log a Kismet error without lookup. Failed compatible lookups emit an
-	 * ensure diagnostic if required; invalid lookup classes or owners also log a Kismet error.
+	 * Incompatible types report a Toro error without lookup. Failed compatible lookups emit an
+	 * ensure diagnostic if required; invalid lookup classes or owners also report a Toro error.
 	 * @param InClass Expected result type; must equal or be a base of the configured lookup class.
 	 * @return The cached or newly resolved component, or nullptr if compatibility or resolution fails.
 	 */

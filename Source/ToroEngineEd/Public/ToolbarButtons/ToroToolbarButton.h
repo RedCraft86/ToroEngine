@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ToroEngineEd.h"
+#include "Utilities/ToroLogging.h"
 #include "Containers/Map.h"
 #include "Containers/UnrealString.h"
 #include "Internationalization/Text.h"
@@ -43,17 +43,14 @@ public:
 		TSharedPtr<FToroToolbarButton> Button = MakeShareable(new ButtonType());
 		if (Button->GetFName().IsNone())
 		{
-			UE_LOG(LogToroEngineEd, Warning, TEXT("FToroToolbarButton: Attempting to register a button with an invalid name"));
+			TORO_LOG_WARNING(TEXT("Attempting to register a button with an invalid name"));
 			Button.Reset();
 			return NAME_None;
 		}
 
 		if (Button->MenuHook.IsNone() || Button->SectionName.IsNone())
 		{
-			UE_LOG(LogToroEngineEd, Warning,
-				TEXT("FToroToolbarButton: Cannot register button %s with menu %s and section %s; both must be set"),
-				*Button->GetName(), *Button->MenuHook.ToString(), *Button->SectionName.ToString()
-			);
+			TORO_LOG_WARNING(TEXT("Cannot register button %s with menu %s and section %s; both must be set"), *Button->GetName(), *Button->MenuHook.ToString(), *Button->SectionName.ToString());
 
 			Button.Reset();
 			return NAME_None;
@@ -61,9 +58,7 @@ public:
 
 		if (RegisteredEntries.Contains(Button->GetFName()))
 		{
-			UE_LOG(LogToroEngineEd, Warning,
-				TEXT("FToroToolbarButton: Attempting to register multiple buttons with name %s"), *Button->GetName()
-			);
+			TORO_LOG_WARNING(TEXT("Attempting to register multiple buttons with name %s"), *Button->GetName());
 
 			Button.Reset();
 			return NAME_None;
@@ -74,7 +69,7 @@ public:
 			Button.ToSharedRef(), &FToroToolbarButton::Register
 		));
 
-		UE_LOG(LogToroEngineEd, Log, TEXT("FToroToolbarButton: Registered button with name %s"), *Button->GetName());
+		TORO_LOG_INFO(TEXT("Registered button with name %s"), *Button->GetName());
 		return Button->GetFName();
 	}
 
@@ -95,7 +90,7 @@ public:
 				}
 			}
 
-			UE_LOG(LogToroEngineEd, Log, TEXT("FToroToolbarButton: Unregistered all buttons"));
+			TORO_LOG_INFO(TEXT("Unregistered all buttons"));
 		}
 
 		RegisteredEntries.Empty();

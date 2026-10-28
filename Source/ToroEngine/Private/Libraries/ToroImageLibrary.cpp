@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Libraries/ToroImageLibrary.h"
+#include "Utilities/ToroLogging.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "Engine/GameViewportClient.h"
 #include "Engine/Texture2D.h"
@@ -12,7 +13,6 @@
 #include "Misc/ScopeExit.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
-#include "UObject/Stack.h"
 #include "TextureResource.h"
 #include "RenderDeferredCleanup.h"
 #include "UnrealClient.h"
@@ -38,20 +38,20 @@ FVoidCoroutine UToroImageLibrary::RequestScreenshot(FLatentActionInfo LatentInfo
 	Image.Clear();
 	if (!FMath::IsFinite(ResolutionScale) || ResolutionScale <= 0.0f)
 	{
-		FFrame::KismetExecutionMessage(TEXT("Invalid resolution scale."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Invalid resolution scale."));
 		co_return;
 	}
 
 	FViewport* VP = (GEngine && GEngine->GameViewport) ? GEngine->GameViewport->Viewport : nullptr;
 	if (!VP || VP->GetSizeXY().X <= 0 || VP->GetSizeXY().Y <= 0)
 	{
-		FFrame::KismetExecutionMessage(TEXT("No game viewport client found."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("No game viewport client found."));
 		co_return;
 	}
 
 	if (ResolutionScale != 1.0f && bIncludeUI)
 	{
-		FFrame::KismetExecutionMessage(TEXT("Abnormal resolution scales do not support UI capture."), ELogVerbosity::Warning);
+		TORO_REPORT_WARNING(TEXT("Abnormal resolution scales do not support UI capture."));
 		co_return;
 	}
 
@@ -65,7 +65,7 @@ FVoidCoroutine UToroImageLibrary::RequestScreenshot(FLatentActionInfo LatentInfo
 		const FIntPoint Size = VP->GetSizeXY();
 		if ((Size.X * ResolutionScale) < 1.0f || (Size.Y * ResolutionScale) < 1.0f)
 		{
-			FFrame::KismetExecutionMessage(TEXT("Resolution scale too low. <1 pixel on one or both axis."), ELogVerbosity::Error);
+			TORO_REPORT_ERROR(TEXT("Resolution scale too low. <1 pixel on one or both axis."));
 			co_return;
 		}
 
@@ -117,13 +117,13 @@ bool UToroImageLibrary::GetDataFromTexture(FToroImageData& OutData, const UTextu
 	const FTexturePlatformData* PlatformData = Target->GetPlatformData();
 	if (!PlatformData || PlatformData->Mips.IsEmpty())
 	{
-		FFrame::KismetExecutionMessage(TEXT("Invalid PlatformData or no Mips."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Invalid PlatformData or no Mips."));
 		return false;
 	}
 
 	if (PlatformData->PixelFormat != SupportedFormat)
 	{
-		FFrame::KismetExecutionMessage(TEXT("Unsupported pixel format."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Unsupported pixel format."));
 		return false;
 	}
 
@@ -134,7 +134,7 @@ bool UToroImageLibrary::GetDataFromTexture(FToroImageData& OutData, const UTextu
 		|| PixelCount > MAX_int32
 		|| Mip.BulkData.GetBulkDataSize() < PixelCount * static_cast<int64>(sizeof(FColor)))
 	{
-		FFrame::KismetExecutionMessage(TEXT("Invalid pixel count."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Invalid pixel count."));
 		return false;
 	}
 
@@ -145,7 +145,7 @@ bool UToroImageLibrary::GetDataFromTexture(FToroImageData& OutData, const UTextu
 		};
 	if (!TexData)
 	{
-		FFrame::KismetExecutionMessage(TEXT("Failed to lock BulkData."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Failed to lock BulkData."));
 		OutData.Clear();
 		return false;
 	}
@@ -169,7 +169,7 @@ bool UToroImageLibrary::GetDataFromRenderTarget(FToroImageData& OutData, UTextur
 		|| Target->SizeY <= 0
 		|| PixelCount > TNumericLimits<int32>::Max())
 	{
-		FFrame::KismetExecutionMessage(TEXT("Invalid pixel count."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Invalid pixel count."));
 		return false;
 	}
 
@@ -177,7 +177,7 @@ bool UToroImageLibrary::GetDataFromRenderTarget(FToroImageData& OutData, UTextur
 	{
 		if (!Resource->ReadPixels(OutData.Pixels))
 		{
-			FFrame::KismetExecutionMessage(TEXT("Failed to read pixels."), ELogVerbosity::Error);
+			TORO_REPORT_ERROR(TEXT("Failed to read pixels."));
 			OutData.Clear();
 			return false;
 		}
@@ -185,7 +185,7 @@ bool UToroImageLibrary::GetDataFromRenderTarget(FToroImageData& OutData, UTextur
 		OutData.Size = FIntPoint(Target->SizeX, Target->SizeY);
 		if (!OutData.IsValid())
 		{
-			FFrame::KismetExecutionMessage(TEXT("Pixel count and data size mismatch."), ELogVerbosity::Error);
+			TORO_REPORT_ERROR(TEXT("Pixel count and data size mismatch."));
 			OutData.Clear();
 			return false;
 		}
@@ -201,7 +201,7 @@ bool UToroImageLibrary::GetDataFromRenderTarget(FToroImageData& OutData, UTextur
 		return true;
 	}
 
-	FFrame::KismetExecutionMessage(TEXT("Failed to obtain resource."), ELogVerbosity::Error);
+	TORO_REPORT_ERROR(TEXT("Failed to obtain resource."));
 	return false;
 }
 
@@ -215,7 +215,7 @@ UTexture2D* UToroImageLibrary::CreateTextureFromData(const FToroImageData& InDat
 	UTexture2D* Image = UTexture2D::CreateTransient(InData.Size.X, InData.Size.Y, SupportedFormat);
 	if (!IsValid(Image))
 	{
-		FFrame::KismetExecutionMessage(TEXT("Failed to create texture."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Failed to create texture."));
 		return nullptr;
 	}
 
@@ -228,7 +228,7 @@ UTexture2D* UToroImageLibrary::CreateTextureFromData(const FToroImageData& InDat
 	FTexturePlatformData* PlatformData = Image->GetPlatformData();
 	if (!PlatformData || PlatformData->Mips.Num() == 0)
 	{
-		FFrame::KismetExecutionMessage(TEXT("Invalid PlatformData or no Mips."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Invalid PlatformData or no Mips."));
 		Image->MarkAsGarbage();
 		return nullptr;
 	}
@@ -237,7 +237,7 @@ UTexture2D* UToroImageLibrary::CreateTextureFromData(const FToroImageData& InDat
 	void* TextureData = Mip.BulkData.Lock(LOCK_READ_WRITE);
 	if (!TextureData)
 	{
-		FFrame::KismetExecutionMessage(TEXT("Failed to lock BulkData."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Failed to lock BulkData."));
 		Mip.BulkData.Unlock();
 		Image->MarkAsGarbage();
 		return nullptr;
@@ -282,7 +282,7 @@ FVoidCoroutine UToroImageLibrary::SaveImageDataToFile(FLatentActionInfo LatentIn
 {
 	if (!FPaths::ValidatePath(FilePath))
 	{
-		FFrame::KismetExecutionMessage(TEXT("Invalid export path."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Invalid export path."));
 		bSuccess = false;
 		co_return;
 	}
@@ -290,7 +290,7 @@ FVoidCoroutine UToroImageLibrary::SaveImageDataToFile(FLatentActionInfo LatentIn
 	TArray64<uint8> PNGImage;
 	if (!InData.CompressPNG(PNGImage))
 	{
-		FFrame::KismetExecutionMessage(TEXT("Failed to compress PNG."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("Failed to compress PNG."));
 		bSuccess = false;
 		co_return;
 	}

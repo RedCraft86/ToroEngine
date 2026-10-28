@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ToroEngineEd.h"
+#include "Utilities/ToroLogging.h"
 #include "UnrealEdGlobals.h"
 #include "Containers/Set.h"
 #include "UObject/Class.h"
@@ -45,22 +45,20 @@ public:
 
 		if (!GUnrealEd)
 		{
-			UE_LOG(LogToroEngineEd, Warning, TEXT("FToroComponentVisualizer: Attempting to register while GUnrealEd pointer is null"))
+			TORO_LOG_WARNING(TEXT("Attempting to register while GUnrealEd pointer is null"));
 			return NAME_None;
 		}
 
 		const FName EntryName = Component::StaticClass()->GetFName();
 		if (EntryName.IsNone())
 		{
-			UE_LOG(LogToroEngineEd, Warning, TEXT("FToroComponentVisualizer: Attempting to register with an invalid component"))
+			TORO_LOG_WARNING(TEXT("Attempting to register with an invalid component"));
 			return NAME_None;
 		}
 
 		if (RegisteredEntries.Contains(EntryName) || GUnrealEd->FindComponentVisualizer(EntryName).IsValid())
 		{
-			UE_LOG(LogToroEngineEd, Warning,
-				TEXT("FToroComponentVisualizer: Attempting to register multiple visualizers for %s"), *EntryName.ToString()
-			);
+			TORO_LOG_WARNING(TEXT("Attempting to register multiple visualizers for %s"), *EntryName.ToString());
 			return NAME_None;
 		}
 
@@ -69,7 +67,7 @@ public:
 		GUnrealEd->RegisterComponentVisualizer(EntryName, VisInstance);
 		VisInstance->OnRegister();
 
-		UE_LOG(LogToroEngineEd, Display, TEXT("FToroComponentVisualizer: Registered visualizer for %s"), *EntryName.ToString());
+		TORO_LOG_INFO(TEXT("Registered visualizer for %s"), *EntryName.ToString());
 		return EntryName;
 	}
 
@@ -86,7 +84,7 @@ public:
 				GUnrealEd->UnregisterComponentVisualizer(Entry);
 			}
 
-			UE_LOG(LogToroEngineEd, Log, TEXT("FToroComponentVisualizer: Unregistered all visualizers"));
+			TORO_LOG_INFO(TEXT("Unregistered all visualizers"));
 		}
 
 		RegisteredEntries.Empty();

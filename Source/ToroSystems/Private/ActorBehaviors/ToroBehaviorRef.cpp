@@ -1,13 +1,12 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "ActorBehaviors/ToroBehaviorRef.h"
+#include "Utilities/ToroLogging.h"
 #include "ActorBehaviors/ToroBehaviorComponent.h"
 #include "Containers/UnrealString.h"
 #include "Serialization/Archive.h"
-#include "Logging/LogVerbosity.h"
 #include "Misc/AssertionMacros.h"
 #include "UObject/Class.h"
-#include "UObject/Stack.h"
 #include "UObject/UObjectGlobals.h"
 #include "GameFramework/Actor.h"
 
@@ -21,11 +20,7 @@ bool FToroBehaviorRef::CanResolveAs(TSubclassOf<UToroBehaviorComponent> InClass,
 	const bool bValid = IsValid(Class) && IsValid(InClass) && Class->IsChildOf(InClass);
 	if (!bValid && bErrorIfInvalid)
 	{
-		FFrame::KismetExecutionMessage(
-			*FString::Printf(TEXT("Resolving expects %s but BehaviorRef can only find %s"),
-				*GetNameSafe(InClass), *GetNameSafe(Class)),
-			ELogVerbosity::Error
-		);
+		TORO_REPORT_ERROR(TEXT("Resolving expects %s but BehaviorRef can only find %s"), *GetNameSafe(InClass), *GetNameSafe(Class));
 	}
 
 	return bValid;
@@ -46,13 +41,13 @@ UToroBehaviorComponent* FToroBehaviorRef::Find() const
 {
 	if (!Owner.IsValid())
 	{
-		FFrame::KismetExecutionMessage(TEXT("No owner actor bound."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("No owner actor bound."));
 		return nullptr;
 	}
 
 	if (!IsValid(Class))
 	{
-		FFrame::KismetExecutionMessage(TEXT("No component class to get."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("No component class to get."));
 		return nullptr;
 	}
 
@@ -66,10 +61,12 @@ UToroBehaviorComponent* FToroBehaviorRef::Get()
 		Reference = Find();
 	}
 
-	if (bRequired && !ensureMsgf(Reference.IsValid(),
-		TEXT("Failed to find behavior component %s in actor %s but it is required by a different behavior."),
-		*GetNameSafe(Class.Get()), *GetNameSafe(Owner.Get())))
+	if (bRequired && !Reference.IsValid())
 	{
+		TORO_REPORT_FATAL(
+			TEXT("Failed to find behavior component %s in actor %s but it is required by a different behavior."),
+			*GetNameSafe(Class.Get()), *GetNameSafe(Owner.Get())
+		);
 		return nullptr;
 	}
 

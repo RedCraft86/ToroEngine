@@ -1,10 +1,10 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Libraries/ToroSequenceLibrary.h"
+#include "Utilities/ToroLogging.h"
 #include "LevelSequencePlayer.h"
 #include "LevelSequenceActor.h"
 #include "MovieSceneSequence.h"
-#include "UObject/Stack.h"
 
 namespace
 {
@@ -59,7 +59,7 @@ bool UToroSequenceLibrary::PlayLevelSequence(const ALevelSequenceActor* Target,
 {
 	if (!FMath::IsFinite(PlayRate))
 	{
-		FFrame::KismetExecutionMessage(TEXT("PlayRate must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("PlayRate must be finite."));
 		return false;
 	}
 
@@ -106,7 +106,7 @@ FVoidCoroutine UToroSequenceLibrary::PlayLevelSequenceAsync(FLatentActionInfo La
 
 	if (!FMath::IsFinite(PlayRate))
 	{
-		FFrame::KismetExecutionMessage(TEXT("PlayRate must be finite."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("PlayRate must be finite."));
 		co_return;
 	}
 

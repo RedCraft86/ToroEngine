@@ -1,12 +1,12 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "DataTypes/ToroMeshPreset.h"
+#include "Utilities/ToroLogging.h"
 #include "Components/SplineMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInterface.h"
 #include "Math/UnrealMathUtility.h"
 #include "Engine/StaticMesh.h"
-#include "UObject/Stack.h"
 #if WITH_EDITOR
 #include "UObject/UnrealType.h"
 #endif
@@ -95,7 +95,7 @@ bool FToroStaticMeshPreset::ToMeshComponent(UStaticMeshComponent* Target) const
 	UStaticMesh* TargetMesh = StaticMesh.LoadSynchronous();
 	if (Target->GetStaticMesh() != TargetMesh && !Target->SetStaticMesh(TargetMesh))
 	{
-		FFrame::KismetExecutionMessage(TEXT("SetStaticMesh did not accept the new mesh."), ELogVerbosity::Error);
+		TORO_REPORT_ERROR(TEXT("SetStaticMesh did not accept the new mesh."));
 		return false;
 	}
 

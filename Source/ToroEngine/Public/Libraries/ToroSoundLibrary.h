@@ -24,7 +24,7 @@ public:
 
 	/**
 	 * Requests playback of the ambient actor's audio component at the supplied sound offset.
-	 * Invalid actors or audio components produce no request. Nonfinite offsets report a Blueprint execution error and produce no request.
+	 * Invalid actors or audio components produce no request. Nonfinite offsets report an error through Toro logging and produce no request.
 	 * @param Target Ambient sound actor to play.
 	 * @param StartTime Finite offset in seconds; negative values are silently clamped to zero. Seeking support depends on the sound.
 	 */
@@ -33,7 +33,7 @@ public:
 
 	/**
 	 * Requests an immediate or delayed stop without waiting for audio completion.
-	 * Invalid actors or audio components are ignored. Nonfinite delays report a Blueprint execution error without stopping audio.
+	 * Invalid actors or audio components are ignored. Nonfinite delays report an error through Toro logging without stopping audio.
 	 * @param Target Ambient sound actor to stop.
 	 * @param Delay Finite seconds before stopping; negative values are silently clamped to zero.
 	 *        Values at or below UE_KINDA_SMALL_NUMBER stop immediately.
@@ -45,7 +45,7 @@ public:
 	 * Requests playback with a volume fade-in, then waits for the clamped duration in game time.
 	 * The wait does not track interruption, audio-thread completion, or whether playback actually started.
 	 * Invalid actors or audio components cause no request or wait. Nonfinite duration, start offset, or target level
-	 * reports a Blueprint execution error and causes no request or wait.
+	 * reports an error through Toro logging and causes no request or wait.
 	 * @param Target Ambient sound actor to play and fade in.
 	 * @param Duration Finite seconds to fade and wait; negative values are silently clamped to zero, which adds no coroutine wait.
 	 * @param TargetLevel Finite multiplier of the component's calculated volume, passed to native fade handling.
@@ -62,7 +62,7 @@ public:
 	 * without an audio device, or when the requested level is at least the current fader target; concurrency fades can also limit requests.
 	 * The wait does not track interruption, audio-thread completion, or whether the request was accepted.
 	 * Invalid actors or audio components cause no request or wait. Nonfinite duration or target level
-	 * reports a Blueprint execution error and causes no request or wait.
+	 * reports an error through Toro logging and causes no request or wait.
 	 * @param Target Ambient sound actor to fade out and stop.
 	 * @param Duration Finite seconds to fade and wait; negative values are silently clamped to zero, which adds no coroutine wait.
 	 * @param TargetLevel Finite multiplier of the component's calculated volume, passed to native fade handling.
