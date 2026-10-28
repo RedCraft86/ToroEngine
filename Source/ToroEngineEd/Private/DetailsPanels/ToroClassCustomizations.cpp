@@ -181,12 +181,14 @@ void FToroClassCustomization::CustomizeDetails(const TSharedPtr<IDetailLayoutBui
 	WeakBuilder.Reset();
 	CategoryMap.Empty();
 	CustomizingClass = nullptr;
+	bIsTemplateObject = false;
 	if (!DetailBuilder.IsValid())
 	{
 		return;
 	}
 
 	UClass* SelectedClass = nullptr;
+	bool bSelectedTemplate = false;
 	TArray<TWeakObjectPtr<UObject>> Objects;
 	DetailBuilder->GetObjectsBeingCustomized(Objects);
 	for (const TWeakObjectPtr<UObject>& Object : Objects)
@@ -200,10 +202,11 @@ void FToroClassCustomization::CustomizeDetails(const TSharedPtr<IDetailLayoutBui
 		if (!SelectedClass)
 		{
 			SelectedClass = Object->GetClass();
+			bSelectedTemplate = Object->IsTemplate();
 		}
-		else if (SelectedClass != Object->GetClass())
+		else if (SelectedClass != Object->GetClass() || bSelectedTemplate != Object->IsTemplate())
 		{
-			// Disallow customizing different classes
+			// Disallow mixed classes or a mix of templates and instances.
 			return;
 		}
 	}
@@ -215,6 +218,7 @@ void FToroClassCustomization::CustomizeDetails(const TSharedPtr<IDetailLayoutBui
 
 	WeakBuilder = DetailBuilder;
 	CustomizingClass = SelectedClass;
+	bIsTemplateObject = bSelectedTemplate;
 
 	if (ShouldManageCategories())
 	{

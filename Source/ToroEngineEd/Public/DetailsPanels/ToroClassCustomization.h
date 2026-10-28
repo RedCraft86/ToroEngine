@@ -68,7 +68,7 @@
 /**
  * Base for class Details customizations with shared registration and category metadata processing.
  * Accepts valid objects of one exact class; mixed-class selections are rejected.
- * Templates are excluded unless bCustomizeTemplate is enabled.
+ * Templates are excluded unless bCustomizeTemplate is enabled; mixed template/instance selections are always rejected.
  * The shared-builder callback prepares selection state for each instance. The most-derived class
  * registered through this helper in the selected class's ancestry owns automatic category metadata
  * and visibility processing, performed before its reference-based CustomizeDetails() implementation.
@@ -173,7 +173,7 @@ protected:
 		{}
 	};
 
-	/** Allows template objects, including class defaults and archetypes, when true; disabled by default. */
+	/** Allows homogeneous template selections, including class defaults and archetypes, when true; disabled by default. */
 	bool bCustomizeTemplate = false;
 
 	/**
@@ -184,6 +184,12 @@ protected:
 
 	/** Non-owning class of the accepted selection, reset before each customization pass. */
 	UClass* CustomizingClass = nullptr;
+
+	/**
+	 * Whether the accepted selection consists of templates, including class defaults and archetypes.
+	 * Reset to false before each customization pass and remains false when the selection is rejected.
+	 */
+	bool bIsTemplateObject = false;
 
 	/** Accepted layout builder held without extending its lifetime. */
 	TWeakPtr<IDetailLayoutBuilder> WeakBuilder;
