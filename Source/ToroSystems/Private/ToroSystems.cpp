@@ -3,8 +3,6 @@
 #include "ToroSystems.h"
 #include "Modules/ModuleManager.h"
 
-DEFINE_LOG_CATEGORY(LogToroSystems)
-
 void FToroSystemsModule::StartupModule()
 {
 }
