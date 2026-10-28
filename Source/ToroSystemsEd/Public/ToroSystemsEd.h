@@ -2,10 +2,7 @@
 
 #pragma once
 
-#include "Logging/LogMacros.h"
 #include "Modules/ModuleInterface.h"
-
-TOROSYSTEMSED_API DECLARE_LOG_CATEGORY_EXTERN(LogToroSystemsEd, All, All)
 
 /**
  * Editor extensions for ToroSystems, built on ToroEngineEd.

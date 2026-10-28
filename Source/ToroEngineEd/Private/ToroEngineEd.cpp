@@ -36,8 +36,6 @@
 #include "DataTypes/ToroIdentity.h"
 #include "DataTypes/SimpleCooldown.h"
 
-DEFINE_LOG_CATEGORY(LogToroEngineEd)
-
 void FToroEngineEdModule::StartupModule()
 {
 	FToroSlateStyle::Register<FToroEngineStyle>();
