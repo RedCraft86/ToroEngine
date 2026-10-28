@@ -67,13 +67,13 @@ public:
 	/**
 	 * Validates if a key is eligible for use in this database.
 	 * Requires a valid RootTag and a valid strict descendant tag; the root itself is ineligible.
-	 * <pre>
+	 * @verbatim
 	 * e.g., if RootTag is 'Quest'
 	 * 'None'              is invalid
 	 * 'Character'         is invalid
 	 * 'Quest'             is invalid
 	 * 'Quest.WalkForward' is valid
-	 * </pre>
+	 * @endverbatim
 	 * @param Key The tag to check.
 	 * @return True if the key follows the database's tag hierarchy rules.
 	 */

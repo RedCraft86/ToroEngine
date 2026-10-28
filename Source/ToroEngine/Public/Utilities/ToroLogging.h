@@ -138,7 +138,7 @@ namespace ToroEngine::Logging
 	/**
 	 * Reports a printf-formatted Kismet warning when a script frame is active; otherwise logs a native Warning.
 	 * A script frame remains active during synchronous native calls from Blueprint.
-	 * @note Kismet warnings can terminate the process when launched with @code FATALSCRIPTWARNINGS @endcode.
+	 * @note Kismet warnings can terminate the process when launched with <c>FATALSCRIPTWARNINGS</c>.
 	 * @param Format Checked printf-style format string.
 	 * @param Args Values substituted into Format.
 	 */
@@ -151,7 +151,7 @@ namespace ToroEngine::Logging
 	/**
 	 * Reports a printf-formatted Kismet error when a script frame is active; otherwise uses an ensure for stack trace.
 	 * Native ensure reporting is attempted on every call in builds where ensure reporting is enabled.
-	 * @note Kismet errors can terminate the process when launched with @code FATALSCRIPTWARNINGS @endcode.
+	 * @note Kismet errors can terminate the process when launched with <c>FATALSCRIPTWARNINGS</c>.
 	 * @param Format Checked printf-style format string.
 	 * @param Args Values substituted into Format.
 	 */
@@ -164,7 +164,7 @@ namespace ToroEngine::Logging
 	/**
 	 * Reports through ReportError and requests PIE shutdown in the editor; reports Kismet Fatal outside the editor.
 	 * Editor calls return normally, even without an active session. The caller must exit its failing path safely.
-	 * @note Kismet errors can still terminate the process when launched with @code FATALSCRIPTWARNINGS @endcode.
+	 * @note Kismet errors can still terminate the process when launched with <c>FATALSCRIPTWARNINGS</c>.
 	 * @param Format Checked printf-style format string.
 	 * @param Args Values substituted into Format.
 	 */
