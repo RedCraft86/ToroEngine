@@ -29,6 +29,9 @@ struct TOROSYSTEMS_API FToroBehaviorRef final
 {
 	GENERATED_BODY()
 
+#if WITH_EDITOR
+	friend class FToroBehaviorRefCustomization;
+#endif
 private:
 
 	/** Whether Get() emits an ensure diagnostic when no valid component can be resolved. */
@@ -36,7 +39,7 @@ private:
 	bool bRequired;
 
 	/** Component class to search for; instances of derived classes also match. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Reference, meta = (AllowAbstract = false, AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Reference, NoClear, meta = (AllowAbstract = false, AllowPrivateAccess = true))
 	TSubclassOf<UToroBehaviorComponent> Class;
 
 	/** Weak actor binding used for component lookup; never serialized. */

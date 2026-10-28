@@ -13,6 +13,9 @@ public class ToroSystemsEd : ModuleRules
 		    "CoreUObject",
 		    "Engine",
 		    "UnrealEd",
+		    "Slate",
+		    "SlateCore",
+		    "ToroEngine",
 		    "ToroEngineEd",
 		    "ToroSystems"
 	    ]);
