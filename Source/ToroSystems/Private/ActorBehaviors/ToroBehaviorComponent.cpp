@@ -62,11 +62,11 @@ EDataValidationResult UToroBehaviorComponent::IsDataValid(FDataValidationContext
 	}))
 	{
 		Context.AddMessage(EMessageSeverity::Error)
-			->AddToken(FTextToken::Create(LOCTEXT("BehaviorDuplicateComponent", "Component ")))
-			->AddToken(FUObjectToken::Create(this))
-			->AddToken(FTextToken::Create(LOCTEXT("BehaviorDuplicateOnActor", " on actor ")))
+			->AddToken(FTextToken::Create(FText::Format(LOCTEXT("BehaviorComponentOverLimitP1",
+				"Component {0} on actor "), FText::FromString(GetName())
+			)))
 			->AddToken(FUObjectToken::Create(OwnerActor))
-			->AddToken(FTextToken::Create(FText::Format(LOCTEXT("BehaviorComponentOverLimit",
+			->AddToken(FTextToken::Create(FText::Format(LOCTEXT("BehaviorComponentOverLimitP2",
 				" exceeds the limit. Only one component of class '{0}' (including subclasses) is allowed per actor."),
 				FText::FromString(GetNameSafe(CheckClass))
 			)));
