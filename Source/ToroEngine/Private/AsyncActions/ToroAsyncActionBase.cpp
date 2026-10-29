@@ -7,15 +7,15 @@ UToroAsyncActionBase::UToroAsyncActionBase(): bAllowAnyWorld(false)
 {
 }
 
+UWorld* UToroAsyncActionBase::GetWorld() const
+{
+	return IsTemplate() ? nullptr : ToroEngine::GetWorld(GetWorldContext(), bAllowAnyWorld);
+}
+
 void UToroAsyncActionBase::SetWorldContext(const UObject* InContext)
 {
 	if (IsValid(InContext))
 	{
 		WorldContext = InContext;
 	}
-}
-
-UWorld* UToroAsyncActionBase::GetWorld() const
-{
-	return IsTemplate() ? nullptr : ToroEngine::GetWorld(GetWorldContext(), bAllowAnyWorld);
 }

@@ -25,6 +25,8 @@ public:
 
 	UToroAsyncActionBase();
 
+	virtual UWorld* GetWorld() const override;
+
 protected:
 
 	/**
@@ -45,8 +47,6 @@ protected:
 	 * @param InContext Object used to resolve the action's world.
 	 */
 	void SetWorldContext(const UObject* InContext);
-
-	virtual UWorld* GetWorld() const override;
 
 private:
 
