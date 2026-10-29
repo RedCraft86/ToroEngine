@@ -20,11 +20,6 @@ class TOROENGINE_API AInstancedStaticMeshActor : public AStaticMeshActor
 
 public:
 
-	/**
-	 * Replaces the inherited mesh component with an ISM component and disables native ticking.
-	 * Uses engine cube and basic material defaults outside commandlets and dedicated servers.
-	 * @param ObjectInit Initializer carrying default-subobject overrides, including derived HISM types.
-	 */
 	AInstancedStaticMeshActor(const FObjectInitializer& ObjectInit);
 
 #if WITH_EDITORONLY_DATA
@@ -87,9 +82,5 @@ class TOROENGINE_API AHierarchicalInstancedStaticMeshActor : public AInstancedSt
 
 public:
 
-	/**
-	 * Selects the HISM default component while retaining base asset defaults and disabled ticking.
-	 * @param ObjectInit Initializer used to override the inherited mesh component class.
-	 */
 	AHierarchicalInstancedStaticMeshActor(const FObjectInitializer& ObjectInit);
 };
