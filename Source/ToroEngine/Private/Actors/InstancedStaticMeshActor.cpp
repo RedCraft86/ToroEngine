@@ -19,18 +19,15 @@ AInstancedStaticMeshActor::AInstancedStaticMeshActor(const FObjectInitializer& O
 
 	bCanBeInCluster = GetClass() == AInstancedStaticMeshActor::StaticClass();
 
-	if (!IsRunningCommandlet() && !IsRunningDedicatedServer())
+	if (UStaticMeshComponent* MeshComp = GetMeshComponent())
 	{
-		if (UStaticMeshComponent* MeshComp = GetMeshComponent())
-		{
-			static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshFinder(
-				TEXT("/Engine/BasicShapes/Cube.Cube"));
-			if (MeshFinder.Succeeded()) MeshComp->SetStaticMesh(MeshFinder.Object);
+		static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshFinder(
+			TEXT("/Engine/BasicShapes/Cube.Cube"));
+		if (MeshFinder.Succeeded()) MeshComp->SetStaticMesh(MeshFinder.Object);
 
-			static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialFinder(
-				TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-			if (MaterialFinder.Succeeded()) MeshComp->SetMaterial(0, MaterialFinder.Object);
-		}
+		static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialFinder(
+			TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+		if (MaterialFinder.Succeeded()) MeshComp->SetMaterial(0, MaterialFinder.Object);
 	}
 }
 
