@@ -83,13 +83,6 @@ public:
 	[[nodiscard]] static FColor RandomColor(bool bRandomHue = true, bool bRandomAlpha = false);
 
 	/**
-	 * Samples deterministic one-dimensional Perlin noise in the native range [-1, 1].
-	 * @param Position Finite coordinate to sample; repeated coordinates produce the same value.
-	 */
-	UFUNCTION(BlueprintPure, Category = "Math|Random")
-	[[nodiscard]] static float PerlinNoise1D(float Position);
-
-	/**
 	 * Samples deterministic two-dimensional Perlin noise in the native range [-1, 1].
 	 * @param Position Finite XY coordinates to sample; repeated coordinates produce the same value.
 	 */

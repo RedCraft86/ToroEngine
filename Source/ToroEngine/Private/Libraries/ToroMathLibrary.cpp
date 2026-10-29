@@ -78,11 +78,6 @@ FColor UToroMathLibrary::RandomColor(bool bRandomHue, bool bRandomAlpha)
 	return Result;
 }
 
-float UToroMathLibrary::PerlinNoise1D(float Position)
-{
-	return FMath::PerlinNoise1D(Position);
-}
-
 float UToroMathLibrary::PerlinNoise2D(FVector2D Position)
 {
 	return FMath::PerlinNoise2D(Position);
