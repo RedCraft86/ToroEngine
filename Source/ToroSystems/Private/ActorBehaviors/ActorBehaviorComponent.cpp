@@ -1,7 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
-#include "ActorBehaviors/ToroBehaviorComponent.h"
-#include "ActorBehaviors/ToroBehaviorRef.h"
+#include "ActorBehaviors/ActorBehaviorComponent.h"
+#include "ActorBehaviors/ActorBehaviorRef.h"
 #include "UObject/UObjectGlobals.h"
 #include "UObject/UnrealType.h"
 #include "GameFramework/Actor.h"
@@ -14,13 +14,13 @@
 #endif
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
-UToroBehaviorComponent::UToroBehaviorComponent()
+UActorBehaviorComponent::UActorBehaviorComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	bAutoActivate = true;
 }
 
-void UToroBehaviorComponent::OnRegister()
+void UActorBehaviorComponent::OnRegister()
 {
 	const AActor* OwnerActor = GetOwner();
 	if (!IsTemplate() && IsValid(OwnerActor))
@@ -31,24 +31,24 @@ void UToroBehaviorComponent::OnRegister()
 	Super::OnRegister();
 }
 
-void UToroBehaviorComponent::OnUnregister()
+void UActorBehaviorComponent::OnUnregister()
 {
 	SetBehaviorRefTypeOwners(nullptr);
 	Super::OnUnregister();
 }
 
 #if WITH_EDITOR
-TSubclassOf<UToroBehaviorComponent> UToroBehaviorComponent::DuplicateCheckClass() const
+TSubclassOf<UActorBehaviorComponent> UActorBehaviorComponent::DuplicateCheckClass() const
 {
 	return GetClass();
 }
 
-EDataValidationResult UToroBehaviorComponent::IsDataValid(FDataValidationContext& Context) const
+EDataValidationResult UActorBehaviorComponent::IsDataValid(FDataValidationContext& Context) const
 {
 	const EDataValidationResult SuperResult = Super::IsDataValid(Context);
 
 	const AActor* OwnerActor = GetOwner();
-	const TSubclassOf<UToroBehaviorComponent> CheckClass = DuplicateCheckClass();
+	const TSubclassOf<UActorBehaviorComponent> CheckClass = DuplicateCheckClass();
 	if (!IsValid(CheckClass) || !IsValid(OwnerActor))
 	{
 		return SuperResult;
@@ -78,14 +78,14 @@ EDataValidationResult UToroBehaviorComponent::IsDataValid(FDataValidationContext
 }
 #endif
 
-void UToroBehaviorComponent::SetBehaviorRefTypeOwners(const AActor* Owner)
+void UActorBehaviorComponent::SetBehaviorRefTypeOwners(const AActor* Owner)
 {
 	for (TFieldIterator<FStructProperty> It(GetClass(), EFieldIterationFlags::IncludeSuper); It; ++It)
 	{
 		const FStructProperty* StructProp = *It;
-		if (StructProp->Struct == FToroBehaviorRef::StaticStruct())
+		if (StructProp->Struct == FActorBehaviorRef::StaticStruct())
 		{
-			if (FToroBehaviorRef* RefPtr = StructProp->ContainerPtrToValuePtr<FToroBehaviorRef>(this, 0))
+			if (FActorBehaviorRef* RefPtr = StructProp->ContainerPtrToValuePtr<FActorBehaviorRef>(this, 0))
 			{
 				RefPtr->BindOwner(Owner);
 			}

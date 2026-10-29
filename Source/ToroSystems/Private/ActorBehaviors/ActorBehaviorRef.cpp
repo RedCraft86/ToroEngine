@@ -1,8 +1,8 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
-#include "ActorBehaviors/ToroBehaviorRef.h"
+#include "ActorBehaviors/ActorBehaviorRef.h"
 #include "Utilities/ToroLogging.h"
-#include "ActorBehaviors/ToroBehaviorComponent.h"
+#include "ActorBehaviors/ActorBehaviorComponent.h"
 #include "Containers/UnrealString.h"
 #include "Serialization/Archive.h"
 #include "Misc/AssertionMacros.h"
@@ -10,12 +10,12 @@
 #include "UObject/UObjectGlobals.h"
 #include "GameFramework/Actor.h"
 
-bool FToroBehaviorRef::IsInvalid() const
+bool FActorBehaviorRef::IsInvalid() const
 {
 	return !IsValid(Class) || !Owner.IsValid();
 }
 
-bool FToroBehaviorRef::CanResolveAs(TSubclassOf<UToroBehaviorComponent> InClass, bool bErrorIfInvalid) const
+bool FActorBehaviorRef::CanResolveAs(TSubclassOf<UActorBehaviorComponent> InClass, bool bErrorIfInvalid) const
 {
 	const bool bValid = IsValid(Class) && IsValid(InClass) && Class->IsChildOf(InClass);
 	if (!bValid && bErrorIfInvalid)
@@ -26,18 +26,18 @@ bool FToroBehaviorRef::CanResolveAs(TSubclassOf<UToroBehaviorComponent> InClass,
 	return bValid;
 }
 
-void FToroBehaviorRef::Reset()
+void FActorBehaviorRef::Reset()
 {
 	Reference.Reset();
 }
 
-void FToroBehaviorRef::BindOwner(const AActor* InActor)
+void FActorBehaviorRef::BindOwner(const AActor* InActor)
 {
 	Owner = InActor;
 	Reset();
 }
 
-UToroBehaviorComponent* FToroBehaviorRef::Find() const
+UActorBehaviorComponent* FActorBehaviorRef::Find() const
 {
 	if (!Owner.IsValid())
 	{
@@ -51,10 +51,10 @@ UToroBehaviorComponent* FToroBehaviorRef::Find() const
 		return nullptr;
 	}
 
-	return Cast<UToroBehaviorComponent>(Owner->FindComponentByClass(Class));
+	return Cast<UActorBehaviorComponent>(Owner->FindComponentByClass(Class));
 }
 
-UToroBehaviorComponent* FToroBehaviorRef::Get()
+UActorBehaviorComponent* FActorBehaviorRef::Get()
 {
 	if (!Reference.IsValid())
 	{
@@ -73,7 +73,7 @@ UToroBehaviorComponent* FToroBehaviorRef::Get()
 	return Reference.Get();
 }
 
-void FToroBehaviorRef::PostSerialize(const FArchive& Ar)
+void FActorBehaviorRef::PostSerialize(const FArchive& Ar)
 {
 	if (Ar.IsLoading())
 	{
@@ -81,29 +81,29 @@ void FToroBehaviorRef::PostSerialize(const FArchive& Ar)
 	}
 }
 
-bool UToroBehaviorRefLibrary::IsBehaviorRefInvalid(const FToroBehaviorRef& BehaviorRef)
+bool UActorBehaviorRefLibrary::IsBehaviorRefInvalid(const FActorBehaviorRef& BehaviorRef)
 {
 	return BehaviorRef.IsInvalid();
 }
 
-UToroBehaviorComponent* UToroBehaviorRefLibrary::FindBehaviorRef(
-	const FToroBehaviorRef& BehaviorRef, TSubclassOf<UToroBehaviorComponent> InClass)
+UActorBehaviorComponent* UActorBehaviorRefLibrary::FindBehaviorRef(
+	const FActorBehaviorRef& BehaviorRef, TSubclassOf<UActorBehaviorComponent> InClass)
 {
 	return BehaviorRef.CanResolveAs(InClass, true) ? BehaviorRef.Find() : nullptr;
 }
 
-UToroBehaviorComponent* UToroBehaviorRefLibrary::GetBehaviorRef(
-	FToroBehaviorRef& BehaviorRef, TSubclassOf<UToroBehaviorComponent> InClass)
+UActorBehaviorComponent* UActorBehaviorRefLibrary::GetBehaviorRef(
+	FActorBehaviorRef& BehaviorRef, TSubclassOf<UActorBehaviorComponent> InClass)
 {
 	return BehaviorRef.CanResolveAs(InClass, true) ? BehaviorRef.Get() : nullptr;
 }
 
-void UToroBehaviorRefLibrary::ResetBehaviorRef(FToroBehaviorRef& BehaviorRef)
+void UActorBehaviorRefLibrary::ResetBehaviorRef(FActorBehaviorRef& BehaviorRef)
 {
 	BehaviorRef.Reset();
 }
 
-void UToroBehaviorRefLibrary::BindBehaviorRefOwner(FToroBehaviorRef& BehaviorRef, const AActor* InActor)
+void UActorBehaviorRefLibrary::BindBehaviorRefOwner(FActorBehaviorRef& BehaviorRef, const AActor* InActor)
 {
 	BehaviorRef.BindOwner(InActor);
 }

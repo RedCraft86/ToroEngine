@@ -22,12 +22,12 @@
 #include "Widgets/Text/STextBlock.h"
 #include "Internationalization/Text.h"
 #include "DetailsPanels/ToroStructCustomization.h"
-#include "ActorBehaviors/ToroBehaviorComponent.h"
-#include "ActorBehaviors/ToroBehaviorRef.h"
+#include "ActorBehaviors/ActorBehaviorComponent.h"
+#include "ActorBehaviors/ActorBehaviorRef.h"
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
-#define STRUCT_NAME FToroBehaviorRef
-class FToroBehaviorRefCustomization final : public FToroStructCustomization
+#define STRUCT_NAME FActorBehaviorRef
+class FActorBehaviorRefCustomization final : public FToroStructCustomization
 {
 	virtual void CustomizeHeader(TSharedRef<IPropertyHandle> StructHandle,
 		FDetailWidgetRow& HeaderRow, IPropertyTypeCustomizationUtils& CustomizationUtils) override
@@ -123,7 +123,7 @@ class FToroBehaviorRefCustomization final : public FToroStructCustomization
 
 		static const FSlateRoundedBoxBrush BadgeBrush(FStyleColors::Recessed, 4.0f);
 		const FSlateFontInfo MonoFont = FCoreStyle::GetDefaultFontStyle(TEXT("Mono"), 10);
-		const FToroBehaviorRef* StructPtr = static_cast<const FToroBehaviorRef*>(RawData[0]);
+		const FActorBehaviorRef* StructPtr = static_cast<const FActorBehaviorRef*>(RawData[0]);
 
 		FText StatusText;
 		FSlateColor StatusColor;
@@ -137,7 +137,7 @@ class FToroBehaviorRefCustomization final : public FToroStructCustomization
 			StatusText = LOCTEXT("BehaviorRefNoOwner", "No Owner");
 			StatusColor = FStyleColors::AccentRed;
 		}
-		else if (const UToroBehaviorComponent* Comp = StructPtr->Find())
+		else if (const UActorBehaviorComponent* Comp = StructPtr->Find())
 		{
 			StatusText = FText::FromString(Comp->GetName());
 			StatusColor = FSlateColor::UseForeground();

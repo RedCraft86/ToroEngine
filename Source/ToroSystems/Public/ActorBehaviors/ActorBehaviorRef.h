@@ -10,14 +10,14 @@
 #include "UObject/StructOpsTypeTraits.h"
 #include "UObject/WeakObjectPtrTemplates.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "ToroBehaviorRef.generated.h"
+#include "ActorBehaviorRef.generated.h"
 
 class AActor;
-class UToroBehaviorComponent;
+class UActorBehaviorComponent;
 
 /**
  * Resolves a sibling behavior component by class and caches it weakly.
- * UToroBehaviorComponent binds directly declared reference properties, including inherited
+ * UActorBehaviorComponent binds directly declared reference properties, including inherited
  * properties, to its owner on registration and clears their bindings on unregistration.
  * References used elsewhere require explicit owner binding. Neither the owner nor the
  * cached component is kept alive; loading clears both runtime references.
@@ -25,12 +25,12 @@ class UToroBehaviorComponent;
  * or a native ensureAlwaysMsgf otherwise.
  */
 USTRUCT(BlueprintType)
-struct TOROSYSTEMS_API FToroBehaviorRef final
+struct TOROSYSTEMS_API FActorBehaviorRef final
 {
 	GENERATED_BODY()
 
 #if WITH_EDITOR
-	friend class FToroBehaviorRefCustomization;
+	friend class FActorBehaviorRefCustomization;
 #endif
 private:
 
@@ -40,7 +40,7 @@ private:
 
 	/** Component class to search for; instances of derived classes also match. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Reference, NoClear, meta = (AllowAbstract = false, AllowPrivateAccess = true))
-	TSubclassOf<UToroBehaviorComponent> Class;
+	TSubclassOf<UActorBehaviorComponent> Class;
 
 	/** Weak actor binding used for component lookup; never serialized. */
 	UPROPERTY(Transient, BlueprintReadOnly, Category = Reference, meta = (AllowPrivateAccess = "true"))
@@ -48,26 +48,26 @@ private:
 
 	/** Weak cache populated by Get(); invalid cached results are retried on subsequent calls. */
 	UPROPERTY(Transient)
-	TWeakObjectPtr<UToroBehaviorComponent> Reference;
+	TWeakObjectPtr<UActorBehaviorComponent> Reference;
 
 public:
 
-	FToroBehaviorRef()
+	FActorBehaviorRef()
 		: bRequired(false), Class(nullptr), Owner(nullptr), Reference(nullptr)
 	{}
 
 	/**
 	 * Creates an unbound reference configured to search for T or a derived component class.
-	 * @tparam T A complete UToroBehaviorComponent-derived type.
+	 * @tparam T A complete UActorBehaviorComponent-derived type.
 	 * @param bIsRequired Whether Get() should emit an ensure diagnostic on failed resolution.
 	 */
 	template<typename T>
-	[[nodiscard]] static FToroBehaviorRef MakeFor(bool bIsRequired = false)
+	[[nodiscard]] static FActorBehaviorRef MakeFor(bool bIsRequired = false)
 	{
-		static_assert(TIsDerivedFrom<T, UToroBehaviorComponent>::Value,
-			"T must derive from UToroBehaviorComponent");
+		static_assert(TIsDerivedFrom<T, UActorBehaviorComponent>::Value,
+			"T must derive from UActorBehaviorComponent");
 
-		FToroBehaviorRef Ref;
+		FActorBehaviorRef Ref;
 		Ref.Class = T::StaticClass();
 		Ref.bRequired = bIsRequired;
 		return Ref;
@@ -77,7 +77,7 @@ public:
 	[[nodiscard]] FORCEINLINE bool IsRequired() const { return bRequired; }
 
 	/** Returns the configured lookup class, which may be null. */
-	[[nodiscard]] FORCEINLINE TSubclassOf<UToroBehaviorComponent> GetClass() const { return Class; }
+	[[nodiscard]] FORCEINLINE TSubclassOf<UActorBehaviorComponent> GetClass() const { return Class; }
 
 	/** Returns the bound actor, or nullptr if the weak owner binding is invalid. */
 	[[nodiscard]] FORCEINLINE const AActor* GetOwner() const { return Owner.Get(); }
@@ -92,7 +92,7 @@ public:
 	 *        class must equal or derive from this type.
 	 * @param bErrorIfInvalid Whether a failed compatibility check reports a Toro error.
 	 */
-	[[nodiscard]] bool CanResolveAs(TSubclassOf<UToroBehaviorComponent> InClass, bool bErrorIfInvalid) const;
+	[[nodiscard]] bool CanResolveAs(TSubclassOf<UActorBehaviorComponent> InClass, bool bErrorIfInvalid) const;
 
 	/** Clears the cached component without changing the lookup class, required flag, or owner binding. */
 	void Reset();
@@ -108,7 +108,7 @@ public:
 	 * Bypasses the cache and required-reference check. An invalid owner or class reports a Toro error.
 	 * @return The matching component, or nullptr if lookup fails.
 	 */
-	UToroBehaviorComponent* Find() const;
+	UActorBehaviorComponent* Find() const;
 
 	/**
 	 * Returns the valid cached component, searching and updating the weak cache when necessary.
@@ -116,20 +116,20 @@ public:
 	 * An invalid owner or class also reports a Toro error during lookup.
 	 * @return The cached or newly resolved component, or nullptr if resolution fails.
 	 */
-	UToroBehaviorComponent* Get();
+	UActorBehaviorComponent* Get();
 
 	/**
 	 * Checks compatibility with T, then resolves through the cached Get() path.
 	 * An incompatible configured class reports a Toro error without attempting lookup.
-	 * @tparam T A complete UToroBehaviorComponent-derived type that equals or is a base
+	 * @tparam T A complete UActorBehaviorComponent-derived type that equals or is a base
 	 *         of the configured lookup class.
 	 * @return The resolved component cast to T, or nullptr on incompatibility or failed resolution.
 	 */
 	template<typename T>
 	[[nodiscard]] T* Get()
 	{
-		static_assert(TIsDerivedFrom<T, UToroBehaviorComponent>::Value,
-			"T must derive from UToroBehaviorComponent");
+		static_assert(TIsDerivedFrom<T, UActorBehaviorComponent>::Value,
+			"T must derive from UActorBehaviorComponent");
 
 		if (CanResolveAs(T::StaticClass(), true))
 		{
@@ -143,7 +143,7 @@ public:
 };
 
 template<>
-struct TStructOpsTypeTraits<FToroBehaviorRef> : TStructOpsTypeTraitsBase2<FToroBehaviorRef>
+struct TStructOpsTypeTraits<FActorBehaviorRef> : TStructOpsTypeTraitsBase2<FActorBehaviorRef>
 {
 	enum
 	{
@@ -155,7 +155,7 @@ struct TStructOpsTypeTraits<FToroBehaviorRef> : TStructOpsTypeTraitsBase2<FToroB
  * Blueprint compatibility-checked lookup and in-place cache and owner control for behavior references.
  */
 UCLASS(NotBlueprintable, NotBlueprintType)
-class TOROSYSTEMS_API UToroBehaviorRefLibrary final : public UBlueprintFunctionLibrary
+class TOROSYSTEMS_API UActorBehaviorRefLibrary final : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
@@ -163,7 +163,7 @@ public:
 
 	/** Returns true if the reference has an invalid lookup class or owner; does not search for a component. */
 	UFUNCTION(BlueprintPure, Category = "ActorBehaviors|Reference", DisplayName = "Is Invalid")
-	static bool IsBehaviorRefInvalid(const FToroBehaviorRef& BehaviorRef);
+	static bool IsBehaviorRefInvalid(const FActorBehaviorRef& BehaviorRef);
 
 	/**
 	 * Searches for a matching component without reading or updating the cache or enforcing required status.
@@ -173,8 +173,8 @@ public:
 	 */
 	UFUNCTION(BlueprintPure, Category = "ActorBehaviors|Reference", DisplayName = "Find Reference",
 		meta = (DeterminesOutputType = InClass, CompactNodeTitle = "FIND"))
-	static UToroBehaviorComponent* FindBehaviorRef(const FToroBehaviorRef& BehaviorRef,
-		TSubclassOf<UToroBehaviorComponent> InClass);
+	static UActorBehaviorComponent* FindBehaviorRef(const FActorBehaviorRef& BehaviorRef,
+		TSubclassOf<UActorBehaviorComponent> InClass);
 
 	/**
 	 * Resolves a compatible component through the reference's weak cache, updating it when invalid.
@@ -185,17 +185,17 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "ActorBehaviors|Reference", DisplayName = "Get Reference",
 		meta = (DeterminesOutputType = InClass, CompactNodeTitle = "RESOLVE"))
-	static UToroBehaviorComponent* GetBehaviorRef(UPARAM(ref) FToroBehaviorRef& BehaviorRef,
-		TSubclassOf<UToroBehaviorComponent> InClass);
+	static UActorBehaviorComponent* GetBehaviorRef(UPARAM(ref) FActorBehaviorRef& BehaviorRef,
+		TSubclassOf<UActorBehaviorComponent> InClass);
 
 	/** Clears the cached component while preserving the lookup class, required flag, and owner binding. */
 	UFUNCTION(BlueprintCallable, Category = "ActorBehaviors|Reference", DisplayName = "Reset")
-	static void ResetBehaviorRef(UPARAM(ref) FToroBehaviorRef& BehaviorRef);
+	static void ResetBehaviorRef(UPARAM(ref) FActorBehaviorRef& BehaviorRef);
 
 	/**
 	 * Replaces the reference's owner binding and clears its cached component without searching.
 	 * @param InActor Actor to search, or nullptr to clear the owner binding.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "ActorBehaviors|Reference", DisplayName = "Bind Owner", meta = (DefaultToSelf = InActor))
-	static void BindBehaviorRefOwner(UPARAM(ref) FToroBehaviorRef& BehaviorRef, const AActor* InActor);
+	static void BindBehaviorRefOwner(UPARAM(ref) FActorBehaviorRef& BehaviorRef, const AActor* InActor);
 };

@@ -2,11 +2,11 @@
 
 #include "ToroSystemsEd.h"
 #include "Modules/ModuleManager.h"
-#include "DetailsPanels/ToroBehaviorRefCustomization.h"
+#include "DetailsPanels/ActorBehaviorRefCustomization.h"
 
 void FToroSystemsEdModule::StartupModule()
 {
-	FToroStructCustomization::Register<FToroBehaviorRefCustomization, FToroBehaviorRef>();
+	FToroStructCustomization::Register<FActorBehaviorRefCustomization, FActorBehaviorRef>();
 }
 
 void FToroSystemsEdModule::ShutdownModule()
