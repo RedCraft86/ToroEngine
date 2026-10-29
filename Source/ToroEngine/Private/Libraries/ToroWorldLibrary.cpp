@@ -39,6 +39,13 @@ void UToroWorldLibrary::CallRemoteEvent(const UObject* ContextObject, FName Even
 	}
 }
 
+bool UToroWorldLibrary::IsPersistentLevel(const ULevel* Target)
+{
+	return IsValid(Target)
+		&& IsValid(Target->OwningWorld)
+		&& Target->OwningWorld->PersistentLevel == Target;
+}
+
 EToroLevelStreamState UToroWorldLibrary::GetLevelStreamState(const UObject* ContextObject, const TSoftObjectPtr<UWorld>& Level)
 {
 	const FName LevelName = FName(*FPackageName::ObjectPathToPackageName(Level.ToString()));
@@ -77,11 +84,4 @@ FVoidCoroutine UToroWorldLibrary::SetLevelStreamState(FLatentActionInfo LatentIn
 		co_await UE5Coro::Latent::ChainEx(&UGameplayStatics::LoadStreamLevel, ContextObject,
 			LevelName, State == EToroLevelStreamState::Visible, false, std::placeholders::_2);
 	}
-}
-
-bool UToroWorldLibrary::IsPersistentLevel(const ULevel* Target)
-{
-	return IsValid(Target)
-		&& IsValid(Target->OwningWorld)
-		&& Target->OwningWorld->PersistentLevel == Target;
 }

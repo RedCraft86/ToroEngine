@@ -52,6 +52,14 @@ public:
 	static void CallRemoteEvent(const UObject* ContextObject, FName EventName);
 
 	/**
+	 * Tests whether a level is its owning world's persistent level.
+	 * @param Target Level to test.
+	 * @return True if the valid level equals its valid owning world's persistent level; false otherwise.
+	 */
+	UFUNCTION(BlueprintPure, Category = World, meta = (DefaultToSelf = Target))
+	[[nodiscard]] static bool IsPersistentLevel(const ULevel* Target);
+
+	/**
 	 * Reports requested loading and visibility flags for an existing streaming level.
 	 * This is not a completed-state query: loading, unloading, or visibility transitions may still be in progress.
 	 * @param Level Soft world reference identifying the streaming level by package name.
@@ -75,12 +83,4 @@ public:
 	UFUNCTION(BlueprintCallable, Category = World, meta = (Latent, LatentInfo = LatentInfo, WorldContext = ContextObject))
 	static FVoidCoroutine SetLevelStreamState(FLatentActionInfo LatentInfo, const UObject* ContextObject,
 		ULevelStreaming*& StreamedLevel, TSoftObjectPtr<UWorld> Level, EToroLevelStreamState State);
-
-	/**
-	 * Tests whether a level is its owning world's persistent level.
-	 * @param Target Level to test.
-	 * @return True if the valid level equals its valid owning world's persistent level; false otherwise.
-	 */
-	UFUNCTION(BlueprintPure, Category = Level, meta = (DefaultToSelf = Target))
-	[[nodiscard]] static bool IsPersistentLevel(const ULevel* Target);
 };
