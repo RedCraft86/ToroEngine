@@ -46,7 +46,7 @@ bool UToroWorldLibrary::IsPersistentLevel(const ULevel* Target)
 		&& Target->OwningWorld->PersistentLevel == Target;
 }
 
-EToroLevelStreamState UToroWorldLibrary::GetLevelStreamState(const UObject* ContextObject, const TSoftObjectPtr<UWorld>& Level)
+EToroLevelStreamState UToroWorldLibrary::GetLevelStreamState(const UObject* ContextObject, TSoftObjectPtr<UWorld> Level)
 {
 	const FName LevelName = FName(*FPackageName::ObjectPathToPackageName(Level.ToString()));
 	const ULevelStreaming* StreamedLevel = UGameplayStatics::GetStreamingLevel(ContextObject, LevelName);

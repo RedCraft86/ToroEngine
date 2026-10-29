@@ -274,7 +274,7 @@ public:
 	 *        When false, stores identity and disables transform application.
 	 * @return False for an invalid target, leaving the preset unchanged; true otherwise.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Static")
+	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Static", meta = (DefaultToSelf = Target))
 	static bool CaptureStaticMeshPreset(UPARAM(ref) FToroStaticMeshPreset& Preset, UStaticMeshComponent* Target, bool bIncludeTransform = false);
 
 	/**
@@ -284,7 +284,7 @@ public:
 	 * Transform application follows bUseTransform.
 	 * @return False for an invalid target or rejected mesh change; asset-load failure alone does not imply failure.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Static")
+	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Static", meta = (DefaultToSelf = Target))
 	static bool ApplyStaticMeshPreset(const FToroStaticMeshPreset& Preset, UStaticMeshComponent* Target);
 
 	/** Returns whether a mesh reference is assigned; does not load or validate the referenced asset. */
@@ -320,7 +320,7 @@ public:
 	 *        When false, stores identity and zeroed local geometry and disables transform application.
 	 * @return False for an invalid target, leaving the preset unchanged; true otherwise.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Spline")
+	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Spline", meta = (DefaultToSelf = Target))
 	static bool CaptureSplineMeshPreset(UPARAM(ref) FToroSplineMeshPreset& Preset, USplineMeshComponent* Target, bool bIncludeTransform = false);
 
 	/**
@@ -330,6 +330,6 @@ public:
 	 * Transform and spline geometry application follows bUseTransform. Refreshes spline rendering and collision after success.
 	 * @return False for an invalid target or rejected mesh change; asset-load failure alone does not imply failure.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Spline")
+	UFUNCTION(BlueprintCallable, Category = "MeshPreset|Spline", meta = (DefaultToSelf = Target))
 	static bool ApplySplineMeshPreset(const FToroSplineMeshPreset& Preset, USplineMeshComponent* Target);
 };

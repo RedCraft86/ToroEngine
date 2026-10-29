@@ -353,7 +353,7 @@ bool UInlineCurveLibrary::HasVectorCurveData(const FInlineVectorCurve& Curve)
 	return Curve.HasAnyData();
 }
 
-FVector UInlineCurveLibrary::GetVectorCurveValue(const FInlineVectorCurve& Curve, float Time, const FVector& DefaultValue)
+FVector UInlineCurveLibrary::GetVectorCurveValue(const FInlineVectorCurve& Curve, float Time, FVector DefaultValue)
 {
 	return Curve.GetValue(Time, DefaultValue);
 }
@@ -378,7 +378,7 @@ void UInlineCurveLibrary::RemoveVectorCurvePoint(FInlineVectorCurve& Curve, floa
 	Curve.RemovePoint(Time);
 }
 
-void UInlineCurveLibrary::AddOrUpdateVectorCurvePoint(FInlineVectorCurve& Curve, float Time, const FVector& Value, TEnumAsByte<ERichCurveTangentMode> Tangent)
+void UInlineCurveLibrary::AddOrUpdateVectorCurvePoint(FInlineVectorCurve& Curve, float Time, FVector Value, TEnumAsByte<ERichCurveTangentMode> Tangent)
 {
 	Curve.AddOrUpdatePoint(Time, Value, Tangent.GetValue());
 }
@@ -393,7 +393,7 @@ bool UInlineCurveLibrary::HasColorCurveData(const FInlineColorCurve& Curve)
 	return Curve.HasAnyData();
 }
 
-FLinearColor UInlineCurveLibrary::GetColorCurveValue(const FInlineColorCurve& Curve, float Time, const FLinearColor& DefaultValue)
+FLinearColor UInlineCurveLibrary::GetColorCurveValue(const FInlineColorCurve& Curve, float Time, FLinearColor DefaultValue)
 {
 	return Curve.GetValue(Time, DefaultValue);
 }
@@ -418,7 +418,7 @@ void UInlineCurveLibrary::RemoveColorCurvePoint(FInlineColorCurve& Curve, float 
 	Curve.RemovePoint(Time);
 }
 
-void UInlineCurveLibrary::AddOrUpdateColorCurvePoint(FInlineColorCurve& Curve, float Time, const FLinearColor& Value, TEnumAsByte<ERichCurveTangentMode> Tangent)
+void UInlineCurveLibrary::AddOrUpdateColorCurvePoint(FInlineColorCurve& Curve, float Time, FLinearColor Value, TEnumAsByte<ERichCurveTangentMode> Tangent)
 {
 	Curve.AddOrUpdatePoint(Time, Value, Tangent.GetValue());
 }

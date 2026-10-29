@@ -34,7 +34,7 @@ public:
 	 * @param Target Object to inspect.
 	 * @return True if the target is valid and native IsTemplate() reports a template; false otherwise.
 	 */
-	UFUNCTION(BlueprintCallable, Category = Object, meta = (DefaultToSelf = Target))
+	UFUNCTION(BlueprintPure, Category = Object, meta = (DefaultToSelf = Target))
 	static bool IsTemplateObject(UObject* Target);
 
 	/**
@@ -42,7 +42,7 @@ public:
 	 * This flag differs from generic validity or garbage status and can remain set after destruction advances.
 	 * @param Target Accessible allocated object to inspect; nullptr returns false. Freed storage cannot be safely inspected.
 	 */
-	UFUNCTION(BlueprintCallable, Category = Object, meta = (DefaultToSelf = Target))
+	UFUNCTION(BlueprintPure, Category = Object, meta = (DefaultToSelf = Target))
 	static bool IsObjectBeingDestroyed(UObject* Target);
 
 	/**
@@ -50,7 +50,7 @@ public:
 	 * This flag differs from generic validity or garbage status and does not make freed storage safe to inspect.
 	 * @param Target Accessible allocated object to inspect; nullptr returns false.
 	 */
-	UFUNCTION(BlueprintCallable, Category = Object, meta = (DefaultToSelf = Target))
+	UFUNCTION(BlueprintPure, Category = Object, meta = (DefaultToSelf = Target))
 	static bool HasObjectBeenDestroyed(UObject* Target);
 
 	/**

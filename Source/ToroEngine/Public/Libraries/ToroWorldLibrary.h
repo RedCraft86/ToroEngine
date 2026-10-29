@@ -67,7 +67,7 @@ public:
 	 *         otherwise Visible when visibility is requested, or Loaded when it is not.
 	 */
 	UFUNCTION(BlueprintCallable, Category = World, meta = (WorldContext = ContextObject))
-	[[nodiscard]] static EToroLevelStreamState GetLevelStreamState(const UObject* ContextObject, const TSoftObjectPtr<UWorld>& Level);
+	[[nodiscard]] static EToroLevelStreamState GetLevelStreamState(const UObject* ContextObject, TSoftObjectPtr<UWorld> Level);
 
 	/**
 	 * Requests a nonblocking streaming transition and waits for the native action to complete.

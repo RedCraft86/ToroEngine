@@ -37,12 +37,12 @@ FString UToroStringLibrary::CombinePaths(const FString& A, const FString& B)
 	return FPaths::Combine(A, B);
 }
 
-bool UToroStringLibrary::IsTextEmptyOrWhitespace(const FText& InText)
+bool UToroStringLibrary::IsTextEmptyOrWhitespace(FText InText)
 {
 	return InText.IsEmptyOrWhitespace();
 }
 
-bool UToroStringLibrary::IsTextStringTablePlaceholder(const FText& InText)
+bool UToroStringLibrary::IsTextStringTablePlaceholder(FText InText)
 {
 	return InText.ToString() == FStringTableEntry::GetPlaceholderSourceString();
 }

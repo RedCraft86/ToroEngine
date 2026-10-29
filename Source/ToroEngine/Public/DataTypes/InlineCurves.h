@@ -209,7 +209,7 @@ public:
 	 * @param DefaultValue Fallback used by channels without keys or a curve default value.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|InlineCurves|Vector")
-	static FVector GetVectorCurveValue(const FInlineVectorCurve& Curve, float Time, const FVector& DefaultValue = FVector::ZeroVector);
+	static FVector GetVectorCurveValue(const FInlineVectorCurve& Curve, float Time, FVector DefaultValue = FVector::ZeroVector);
 
 	/**
 	 * Gets the earliest and latest key times across the active curve channels.
@@ -244,7 +244,7 @@ public:
 	 * Does nothing when an external curve asset is assigned.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Math|InlineCurves|Vector")
-	static void AddOrUpdateVectorCurvePoint(UPARAM(ref) FInlineVectorCurve& Curve, float Time, const FVector& Value, TEnumAsByte<ERichCurveTangentMode> Tangent = RCTM_Auto);
+	static void AddOrUpdateVectorCurvePoint(UPARAM(ref) FInlineVectorCurve& Curve, float Time, FVector Value, TEnumAsByte<ERichCurveTangentMode> Tangent = RCTM_Auto);
 
 	/** Returns the external curve asset, or null when the curve uses inline data. */
 	UFUNCTION(BlueprintPure, Category = "Math|InlineCurves|Color")
@@ -259,7 +259,7 @@ public:
 	 * @param DefaultValue Fallback used by channels without keys or a curve default value.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Math|InlineCurves|Color")
-	static FLinearColor GetColorCurveValue(const FInlineColorCurve& Curve, float Time, const FLinearColor& DefaultValue = FLinearColor::Black);
+	static FLinearColor GetColorCurveValue(const FInlineColorCurve& Curve, float Time, FLinearColor DefaultValue = FLinearColor::Black);
 
 	/**
 	 * Gets the earliest and latest key times across the active curve channels.
@@ -294,5 +294,5 @@ public:
 	 * Does nothing when an external curve asset is assigned.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Math|InlineCurves|Color")
-	static void AddOrUpdateColorCurvePoint(UPARAM(ref) FInlineColorCurve& Curve, float Time, const FLinearColor& Value, TEnumAsByte<ERichCurveTangentMode> Tangent = RCTM_Auto);
+	static void AddOrUpdateColorCurvePoint(UPARAM(ref) FInlineColorCurve& Curve, float Time, FLinearColor Value, TEnumAsByte<ERichCurveTangentMode> Tangent = RCTM_Auto);
 };

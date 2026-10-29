@@ -116,7 +116,7 @@ public:
 	 * @param PlayerIdx Player controller index.
 	 * @return True if a valid player controller was found and the request was issued.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "Game|Player|View", meta = (WorldContext = ContextObject))
+	UFUNCTION(BlueprintCallable, Category = "Game|Player|View", meta = (WorldContext = ContextObject, DefaultToSelf = NewTarget))
 	static bool SetPlayerViewTarget(const UObject* ContextObject, AActor* NewTarget, int32 PlayerIdx = 0);
 
 	/**

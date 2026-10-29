@@ -39,7 +39,7 @@ public:
 	 * @param Results Replaced with the ancestor classes in order from the immediate parent toward the root; empty for invalid input or a root class.
 	 * @param InClass Class whose parent hierarchy is requested.
 	 */
-	UFUNCTION(BlueprintPure, Category = Class)
+	UFUNCTION(BlueprintCallable, Category = Class)
 	static void GetClassParentHierarchy(TArray<UClass*>& Results, TSubclassOf<UObject> InClass);
 
 	/**
@@ -49,6 +49,6 @@ public:
 	 * @param InClass Base class whose descendants are requested.
 	 * @param bRecursive Whether to include all descendants rather than only direct subclasses.
 	 */
-	UFUNCTION(BlueprintPure, Category = Class, meta = (DeterminesOutputType = InClass, DynamicOutputParam = Results))
+	UFUNCTION(BlueprintCallable, Category = Class, meta = (DeterminesOutputType = InClass, DynamicOutputParam = Results))
 	static void GetDerivedClasses(TArray<UClass*>& Results, TSubclassOf<UObject> InClass, bool bRecursive = true);
 };

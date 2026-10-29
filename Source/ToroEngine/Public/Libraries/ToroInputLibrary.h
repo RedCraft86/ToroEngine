@@ -42,7 +42,7 @@ public:
 	 * @param PlayerIdx Player controller index.
 	 * @return The subsystem, or nullptr if the controller, local player, or subsystem is unavailable.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "Game|Player|Input", meta = (WorldContext = ContextObject))
+	UFUNCTION(BlueprintPure, Category = "Game|Player|Input", meta = (WorldContext = ContextObject))
 	static UEnhancedInputLocalPlayerSubsystem* GetEnhancedInputPlayerSubsystem(const UObject* ContextObject, int32 PlayerIdx = 0);
 
 	/**

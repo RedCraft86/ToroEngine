@@ -12,7 +12,7 @@
  * Manually ticked repeating cooldown that reports at most one expiration per tick.
  * Missed intervals are skipped while preserving cadence; no world or timer is required.
  */
-USTRUCT(BlueprintType)
+USTRUCT(BlueprintType, meta = (HasNativeMake = "/Script/ToroEngine.SimpleCooldownLibrary.MakeSimpleCooldown"))
 struct TOROENGINE_API FSimpleCooldown final
 {
 	GENERATED_BODY()
@@ -94,7 +94,7 @@ public:
 	 * @param Time Interval in seconds.
 	 * @param bStartReady If true, starts ready; otherwise waits one normalized interval.
 	 */
-	UFUNCTION(BlueprintPure, Category = "Math|Cooldown")
+	UFUNCTION(BlueprintPure, Category = "Math|Cooldown", meta = (NativeMakeFunc))
 	static FSimpleCooldown MakeSimpleCooldown(double Time = 0.1, bool bStartReady = true);
 
 	/** Restarts the supplied cooldown; callers must keep its interval nonnegative and finite. */

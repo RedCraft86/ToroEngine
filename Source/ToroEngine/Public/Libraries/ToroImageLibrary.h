@@ -64,7 +64,7 @@ public:
 	 * @param bGammaCorrection Whether the widget renderer applies gamma correction.
 	 * @param bInClearTarget Whether the renderer clears the target before drawing.
 	 */
-	UFUNCTION(BlueprintCallable, Category = ImageUtils)
+	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (DefaultToSelf = Target))
 	static void DrawWidgetToRenderTarget(UTextureRenderTarget2D* Target, UUserWidget* UserWidget,
 		bool bGammaCorrection = true, bool bInClearTarget = false);
 
@@ -75,7 +75,7 @@ public:
 	 * @param Target Texture whose first platform-data mip is read.
 	 * @return True if the pixels were copied; false for invalid input, unsupported format, or unavailable or invalid bulk data.
 	 */
-	UFUNCTION(BlueprintCallable, Category = ImageUtils)
+	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (DefaultToSelf = Target))
 	[[nodiscard]] static bool GetDataFromTexture(FToroImageData& OutData, const UTexture2D* Target);
 
 	/**
@@ -86,7 +86,7 @@ public:
 	 * @param bInvertAlpha Whether to replace each alpha byte with 255 minus its value.
 	 * @return True if readback produces valid image data; false for invalid input, unavailable resources, or readback failure.
 	 */
-	UFUNCTION(BlueprintCallable, Category = ImageUtils)
+	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (DefaultToSelf = Target))
 	[[nodiscard]] static bool GetDataFromRenderTarget(FToroImageData& OutData, UTextureRenderTarget2D* Target, bool bInvertAlpha = false);
 
 	/**
@@ -107,7 +107,7 @@ public:
 	 * @param bAsync Whether to write on a worker thread and resume on the game thread.
 	 * Extraction and PNG compression still run on the calling game thread; false also performs file writing there.
 	 */
-	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (Latent, LatentInfo = LatentInfo))
+	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (Latent, LatentInfo = LatentInfo, DefaultToSelf = Target))
 	static FVoidCoroutine SaveTextureToFile(FLatentActionInfo LatentInfo, bool& bSuccess,
 		const UTexture2D* Target, const FString& FilePath, bool bAsync = true);
 
@@ -121,7 +121,7 @@ public:
 	 * @param bAsync Whether to write on a worker thread and resume on the game thread.
 	 * Readback and PNG compression still run on the calling game thread; false also performs file writing there.
 	 */
-	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (Latent, LatentInfo = LatentInfo))
+	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (Latent, LatentInfo = LatentInfo, DefaultToSelf = Target))
 	static FVoidCoroutine SaveRenderTargetToFile(FLatentActionInfo LatentInfo, bool& bSuccess,
 		UTextureRenderTarget2D* Target, const FString& FilePath, bool bInvertAlpha, bool bAsync = true);
 
@@ -133,7 +133,7 @@ public:
 	 * @param bAsync Whether to write on a worker thread and resume on the game thread.
 	 * PNG compression still runs on the calling game thread; false also performs file writing there.
 	 */
-	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (Latent, LatentInfo = LatentInfo))
+	UFUNCTION(BlueprintCallable, Category = ImageUtils, meta = (Latent, LatentInfo = LatentInfo, DefaultToSelf = Target))
 	static FVoidCoroutine SaveImageDataToFile(FLatentActionInfo LatentInfo, bool& bSuccess,
 		const FToroImageData& InData, const FString& FilePath, bool bAsync = true);
 };

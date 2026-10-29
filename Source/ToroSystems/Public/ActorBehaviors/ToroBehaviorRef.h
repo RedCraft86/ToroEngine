@@ -196,6 +196,6 @@ public:
 	 * Replaces the reference's owner binding and clears its cached component without searching.
 	 * @param InActor Actor to search, or nullptr to clear the owner binding.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "ActorBehaviors|Reference", DisplayName = "Bind Owner")
+	UFUNCTION(BlueprintCallable, Category = "ActorBehaviors|Reference", DisplayName = "Bind Owner", meta = (DefaultToSelf = InActor))
 	static void BindBehaviorRefOwner(UPARAM(ref) FToroBehaviorRef& BehaviorRef, const AActor* InActor);
 };

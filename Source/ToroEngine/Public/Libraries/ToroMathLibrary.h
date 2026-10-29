@@ -54,7 +54,7 @@ public:
 	 * Converts a color temperature to linear RGB using the engine's Planckian-locus approximation.
 	 * @param Temperature Temperature in Kelvin, clamped by the native function to 1000 through 15000 K.
 	 */
-	UFUNCTION(BlueprintPure, Category = "Math|LinearColor")
+	UFUNCTION(BlueprintPure, Category = "Math|LinearColor", meta = (CompactNodeTitle = "TEMPERATURE"))
 	[[nodiscard]] static FLinearColor TemperatureToLinearColor(float Temperature);
 
 	/**
@@ -70,7 +70,7 @@ public:
 	 * Converts a color temperature to an 8-bit sRGB color through the native linear-color conversion.
 	 * @param Temperature Temperature in Kelvin, clamped by the native function to 1000 through 15000 K.
 	 */
-	UFUNCTION(BlueprintPure, Category = "Math|Color")
+	UFUNCTION(BlueprintPure, Category = "Math|Color", meta = (CompactNodeTitle = "TEMPERATURE"))
 	[[nodiscard]] static FColor TemperatureToColor(float Temperature);
 
 	/**

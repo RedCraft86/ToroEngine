@@ -60,7 +60,7 @@ public:
 	 * @param B Following path segment.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Utilities|Path", DisplayName = "Combine Paths",
-		meta = (CommutativeAssociativeBinaryOperator = true, CompactNodeTitle = "/"))
+		meta = (CommutativeAssociativeBinaryOperator = true, CompactNodeTitle = "\\/"))
 	static FString CombinePaths(const FString& A, const FString& B);
 
 	/**
@@ -68,7 +68,7 @@ public:
 	 * @param InText Text to inspect without modifying it.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Utilities|Text", DisplayName = "Is Empty or Whitespace")
-	static bool IsTextEmptyOrWhitespace(const FText& InText);
+	static bool IsTextEmptyOrWhitespace(FText InText);
 
 	/**
 	 * Tests whether the displayed text is the engine's missing string-table-entry placeholder.
@@ -76,5 +76,5 @@ public:
 	 * @param InText Text whose current displayed string is compared with the native placeholder.
 	 */
 	UFUNCTION(BlueprintPure, Category = "Utilities|Text", DisplayName = "Is String Table Placeholder")
-	static bool IsTextStringTablePlaceholder(const FText& InText);
+	static bool IsTextStringTablePlaceholder(FText InText);
 };
