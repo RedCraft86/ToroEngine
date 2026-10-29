@@ -31,7 +31,7 @@ private:
 	virtual void Execute(const FToolMenuContext& Context) override
 	{
 		static FTabId MergeActorsTab(TEXT("MergeActors"));
-		if (!ToroEngine::ActorEdUtils::GetSelectedActors(true).IsEmpty())
+		if (!ToroEngineEd::ActorUtils::GetSelectedActors(true).IsEmpty())
 		{
 			FGlobalTabmanager::Get()->TryInvokeTab(MergeActorsTab);
 		}

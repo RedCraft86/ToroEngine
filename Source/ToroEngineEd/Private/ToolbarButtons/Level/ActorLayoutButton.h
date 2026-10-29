@@ -111,7 +111,7 @@ class FActorLayoutButton final : public FToroToolbarButton
 			{
 				if (WeakButton.IsValid())
 				{
-					ToroEngine::ActorEdUtils::LayoutActors(
+					ToroEngineEd::ActorUtils::LayoutActors(
 						WeakButton.Pin()->GetSelectedActors(),
 						MaxColumns, YawOffset, XYOffset
 					);
@@ -162,7 +162,7 @@ private:
 			return;
 		}
 
-		SelectedActors = ToroEngine::ActorEdUtils::GetSelectedActors(true);
+		SelectedActors = ToroEngineEd::ActorUtils::GetSelectedActors(true);
 		if (SelectedActors.IsEmpty())
 		{
 			return;

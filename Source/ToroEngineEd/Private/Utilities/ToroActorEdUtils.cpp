@@ -48,8 +48,9 @@
 #include "Widgets/Notifications/SNotificationList.h"
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
-namespace ToroEngine::ActorEdUtils
+namespace ToroEngineEd::ActorUtils
 {
+	using namespace ToroEngine::Logging;
 	namespace
 	{
 		template <typename T>
@@ -326,7 +327,7 @@ namespace ToroEngine::ActorEdUtils
 	UEditorActorSubsystem* GetSubsystem()
 	{
 		UEditorActorSubsystem* Subsystem = GEditor ? GEditor->GetEditorSubsystem<UEditorActorSubsystem>() : nullptr;
-		ensureMsgf(Subsystem, TEXT("ToroEngine::ActorEdUtils::GetSubsystem failed to get EditorActorSubsystem"));
+		ensureMsgf(Subsystem, TEXT("ToroEngineEd::ActorUtils::GetSubsystem failed to get EditorActorSubsystem"));
 		return Subsystem;
 	}
 
@@ -383,7 +384,7 @@ namespace ToroEngine::ActorEdUtils
 		TArray<AActor*> Results;
 		TArray<AActor*> Processed, Missed;
 		const int32 SrcCount = Actors.Num();
-		Logging::LogInfo(TEXT("[SplitActors] Starting split for %d actors..."), SrcCount);
+		LogInfo(TEXT("[SplitActors] Starting split for %d actors..."), SrcCount);
 		{
 			const FScopedTransaction Transaction(LOCTEXT("SplitActors", "Split Actors"));
 
@@ -410,7 +411,7 @@ namespace ToroEngine::ActorEdUtils
 					}
 				}
 
-				Logging::LogInfo(TEXT("[SplitActors] \t Processed [%d/%d] actors"), i + 1, SrcCount);
+				LogInfo(TEXT("[SplitActors] \t Processed [%d/%d] actors"), i + 1, SrcCount);
 			}
 		}
 
@@ -424,7 +425,7 @@ namespace ToroEngine::ActorEdUtils
 			DestroyActors(Processed);
 		}
 
-		Logging::LogInfo(TEXT("[SplitActors] Finished splitting with %d actors created!"), CreatedNum);
+		LogInfo(TEXT("[SplitActors] Finished splitting with %d actors created!"), CreatedNum);
 		return Results;
 	}
 
@@ -441,7 +442,7 @@ namespace ToroEngine::ActorEdUtils
 		TArray<const UMeshComponent*> RemainComponents;
 
 		const int32 SrcCount = Actors.Num();
-		Logging::LogInfo(TEXT("[InstanceActors] Starting instancing for %d actors..."), SrcCount);
+		LogInfo(TEXT("[InstanceActors] Starting instancing for %d actors..."), SrcCount);
 		{
 			const FScopedTransaction Transaction(LOCTEXT("InstanceActors", "Instance Actors"));
 
@@ -461,14 +462,14 @@ namespace ToroEngine::ActorEdUtils
 					}
 				}
 
-				Logging::LogInfo(TEXT("[InstanceActors] \t\t Processed [%d/%d] actors"), i + 1, SrcCount);
+				LogInfo(TEXT("[InstanceActors] \t\t Processed [%d/%d] actors"), i + 1, SrcCount);
 			}
 
 			const int32 InstCount = Instances.Num();
 			const int32 RemainCompCount = RemainComponents.Num();
 			Instances.Reserve(InstCount + RemainCompCount);
 
-			Logging::LogInfo(TEXT("[InstanceActors] \t %d Unique instances found"), InstCount);
+			LogInfo(TEXT("[InstanceActors] \t %d Unique instances found"), InstCount);
 
 			int32 InstIdx = 0;
 			for (const TPair<FToroStaticMeshPreset, TArray<FTransform>>& Instance : Instances)
@@ -527,10 +528,10 @@ namespace ToroEngine::ActorEdUtils
 					}
 				}
 
-				Logging::LogInfo(TEXT("[InstanceActors] \t\t Processed [%d/%d] unique instances"), ++InstIdx, InstCount);
+				LogInfo(TEXT("[InstanceActors] \t\t Processed [%d/%d] unique instances"), ++InstIdx, InstCount);
 			}
 
-			Logging::LogInfo(TEXT("[InstanceActors] \t %d Components remain"), RemainCompCount);
+			LogInfo(TEXT("[InstanceActors] \t %d Components remain"), RemainCompCount);
 
 			for (int32 i = 0; i < RemainCompCount; i++)
 			{
@@ -540,7 +541,7 @@ namespace ToroEngine::ActorEdUtils
 					Results.Append(BakeResult);
 				}
 
-				Logging::LogInfo(TEXT("[InstanceActors] \t\t Processed [%d/%d] remaining components"), i + 1, RemainCompCount);
+				LogInfo(TEXT("[InstanceActors] \t\t Processed [%d/%d] remaining components"), i + 1, RemainCompCount);
 			}
 		}
 
@@ -551,7 +552,7 @@ namespace ToroEngine::ActorEdUtils
 			DestroyActors(Actors);
 		}
 
-		Logging::LogInfo(TEXT("[InstanceActors] Finished instancing with %d actors created!"), Results.Num());
+		LogInfo(TEXT("[InstanceActors] Finished instancing with %d actors created!"), Results.Num());
 		return Results;
 	}
 
@@ -581,7 +582,7 @@ namespace ToroEngine::ActorEdUtils
 		};
 
 		const int32 ActorCount = Actors.Num();
-		Logging::LogInfo(TEXT("[LayoutActors] Starting layout for %d actors..."), ActorCount);
+		LogInfo(TEXT("[LayoutActors] Starting layout for %d actors..."), ActorCount);
 
 		TArray<FGridEntry> Entries;
 		Entries.Reserve(ActorCount);
@@ -604,7 +605,7 @@ namespace ToroEngine::ActorEdUtils
 
 		CellSize += XYOffset;
 
-		Logging::LogInfo(TEXT("[LayoutActors] \t Cell Size: %.1f x %.1f"), CellSize.X, CellSize.Y);
+		LogInfo(TEXT("[LayoutActors] \t Cell Size: %.1f x %.1f"), CellSize.X, CellSize.Y);
 
 		Entries.Sort([](const FGridEntry& A, const FGridEntry& B) -> bool
 			{
@@ -628,10 +629,10 @@ namespace ToroEngine::ActorEdUtils
 				Subsystem->SetActorTransform(Entry.Actor.Get(), Transform);
 			}
 
-			Logging::LogInfo(TEXT("[LayoutActors] \t Laid out [%d/%d] actor at (%d, %d)"), i + 1, EntryCount, Pos.X, Pos.Y);
+			LogInfo(TEXT("[LayoutActors] \t Laid out [%d/%d] actor at (%d, %d)"), i + 1, EntryCount, Pos.X, Pos.Y);
 		}
 
-		Logging::LogInfo(TEXT("[LayoutActors] Finished laying out %d actors!"), EntryCount);
+		LogInfo(TEXT("[LayoutActors] Finished laying out %d actors!"), EntryCount);
 		return true;
 	}
 

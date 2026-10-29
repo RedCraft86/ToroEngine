@@ -30,7 +30,7 @@ private:
 
 	virtual void Execute(const FToolMenuContext& Context) override
 	{
-		const TArray<AActor*> Actors = ToroEngine::ActorEdUtils::GetSelectedActors(true);
+		const TArray<AActor*> Actors = ToroEngineEd::ActorUtils::GetSelectedActors(true);
 		if (Actors.IsEmpty())
 		{
 			return;
@@ -51,7 +51,7 @@ private:
 			LOCTEXT("DestroySourceActorsDesc", "Whether to destroy source actors or keep them instead."),
 			LOCTEXT("DestroySourceActorsMConfirm", "Destroy source actors?")) == EAppReturnType::Yes;
 
-		ToroEngine::ActorEdUtils::InstanceActors(Actors, bUseHISM, bDestroySources);
+		ToroEngineEd::ActorUtils::InstanceActors(Actors, bUseHISM, bDestroySources);
 	}
 };
 #undef LOCTEXT_NAMESPACE

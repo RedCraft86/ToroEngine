@@ -11,7 +11,7 @@
 #include "Engine/World.h"
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
-namespace ToroEngine::Validation
+namespace ToroEngineEd::Validation
 {
 	namespace
 	{

@@ -13,7 +13,7 @@ class UEditorActorSubsystem;
 class UProceduralMeshComponent;
 
 /** Editor-thread utilities for mesh conversion, actor selection, and grid layout. */
-namespace ToroEngine::ActorEdUtils
+namespace ToroEngineEd::ActorUtils
 {
 	/** Returns the editor actor subsystem, or null with an ensure diagnostic when unavailable. */
 	[[nodiscard]] TOROENGINEED_API UEditorActorSubsystem* GetSubsystem();

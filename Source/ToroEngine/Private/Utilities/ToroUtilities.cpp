@@ -7,37 +7,40 @@
 #include "Engine/World.h"
 #include "CoreGlobals.h"
 
-UWorld* ToroEngine::GetWorld(const UObject* Context, bool bTryFindPossible)
+namespace ToroEngine
 {
-	checkf(IsInGameThread(), TEXT("ToroEngine::Get(...) should only be called from the GameThread."));
-
-	UWorld* World = nullptr;
-	if (IsValid(Context))
+	UWorld* GetWorld(const UObject* Context, bool bTryFindPossible)
 	{
-		World = Context->GetWorld();
-	}
+		checkf(IsInGameThread(), TEXT("ToroEngine::Get(...) should only be called from the GameThread."));
 
-	if (!IsValid(World) && bTryFindPossible)
-	{
-		World = GEngine ? GEngine->GetCurrentPlayWorld() : nullptr;
-		if (!IsValid(World))
+		UWorld* World = nullptr;
+		if (IsValid(Context))
 		{
-			World = GWorld.GetReference();
+			World = Context->GetWorld();
 		}
+
+		if (!IsValid(World) && bTryFindPossible)
+		{
+			World = GEngine ? GEngine->GetCurrentPlayWorld() : nullptr;
+			if (!IsValid(World))
+			{
+				World = GWorld.GetReference();
+			}
+		}
+
+		return IsValid(World) ? World : nullptr;
 	}
 
-	return IsValid(World) ? World : nullptr;
-}
-
-FLatentActionInfo ToroEngine::MakeInfo(UObject* Target, const FString& FuncName)
-{
-	checkf(IsInGameThread(), TEXT("ToroEngine::MakeInfo(...) should only be called from the GameThread."));
-
-	static int32 LatentId = 1000;
-	if (LatentId == TNumericLimits<int32>::Max())
+	FLatentActionInfo MakeInfo(UObject* Target, const FString& FuncName)
 	{
-		LatentId = 1000;
-	}
+		checkf(IsInGameThread(), TEXT("ToroEngine::MakeInfo(...) should only be called from the GameThread."));
 
-	return FLatentActionInfo(0, LatentId++, *FuncName, Target);
+		static int32 LatentId = 1000;
+		if (LatentId == TNumericLimits<int32>::Max())
+		{
+			LatentId = 1000;
+		}
+
+		return FLatentActionInfo(0, LatentId++, *FuncName, Target);
+	}
 }

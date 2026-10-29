@@ -35,7 +35,7 @@ private:
 		const UWorld* World = GEditor ? GEditor->GetEditorWorldContext().World() : nullptr;
 		if (IsValid(World) && World->IsEditorWorld())
 		{
-			ToroEngine::Validation::ValidateWorld(World);
+			ToroEngineEd::Validation::ValidateWorld(World);
 		}
 	}
 };

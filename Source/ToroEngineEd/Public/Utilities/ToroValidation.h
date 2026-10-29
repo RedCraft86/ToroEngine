@@ -8,7 +8,7 @@ class UObject;
 class AActor;
 class UWorld;
 
-namespace ToroEngine::Validation
+namespace ToroEngineEd::Validation
 {
 	/**
 	 * Runs IsDataValid() on the object with the manual validation use case.

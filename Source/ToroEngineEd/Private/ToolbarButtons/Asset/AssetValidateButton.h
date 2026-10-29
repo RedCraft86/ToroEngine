@@ -52,7 +52,7 @@ private:
 				if (UToroDataAsset* Asset = Cast<UToroDataAsset>(Object))
 				{
 					Asset->RefreshData();
-					ToroEngine::Validation::ValidateAsset(Asset);
+					ToroEngineEd::Validation::ValidateAsset(Asset);
 				}
 			}
 		}

@@ -39,7 +39,7 @@ FReply FToroActorBaseCustomization::OnValidateActor() const
 {
 	if (const AActor* Actor = GetPrimaryActor())
 	{
-		ToroEngine::Validation::ValidateActor(Actor);
+		ToroEngineEd::Validation::ValidateActor(Actor);
 	}
 
 	return FReply::Handled();
