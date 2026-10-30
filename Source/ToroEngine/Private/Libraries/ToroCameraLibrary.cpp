@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Libraries/ToroCameraLibrary.h"
+#include "Utilities/ToroUtilities.h"
 #include "Utilities/ToroLogging.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "GameFramework/PlayerController.h"
@@ -17,7 +18,6 @@
 #include "UnrealClient.h"
 #include "ConvexVolume.h"
 #include "SceneView.h"
-#include "Utilities/ToroUtilities.h"
 #if WITH_EDITOR
 #include "EditorViewportClient.h"
 #include "Editor.h"
