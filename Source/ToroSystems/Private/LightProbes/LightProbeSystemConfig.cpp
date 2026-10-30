@@ -56,7 +56,7 @@ float FLightProbeSystemConfig::GetUpdateInterval()
 	if (!FApp::IsGame())
 	{
 		const float EditorInterval = CVarLightProbesEditorUpdateInterval.GetValueOnGameThread();
-		if (EditorInterval < 0.0f)
+		if (EditorInterval >= 0.0f)
 		{
 			Interval = EditorInterval;
 		}

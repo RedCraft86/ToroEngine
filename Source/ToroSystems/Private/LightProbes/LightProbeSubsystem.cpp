@@ -2,10 +2,13 @@
 
 #include "LightProbes/LightProbeSubsystem.h"
 #include "LightProbes/LightProbeComponent.h"
+#include "LightProbes/LightProbeSystemConfig.h"
 #include "PostProcess/WorldPostProcessComponent.h"
+#include "Materials/MaterialParameterCollectionInstance.h"
 #include "Framework/ToroWorldSettings.h"
 #include "Libraries/ToroCameraLibrary.h"
-#include "Materials/MaterialParameterCollectionInstance.h"
+#include "Utilities/ToroUtilities.h"
+#include "Engine/World.h"
 
 namespace
 {
@@ -22,6 +25,12 @@ namespace
 		const uint8 LightIdx = FMath::Clamp(Index, 0, MAX_SUPPORTED_LIGHT_PROBE_COUNT);
 		return *(TEXT("EffectData_") + FString::FromInt(LightIdx));
 	}
+}
+
+ULightProbeSubsystem* ULightProbeSubsystem::Get(const UObject* Context)
+{
+	const UWorld* World = ToroEngine::GetWorld(Context);
+	return IsValid(World) ? World->GetSubsystem<ULightProbeSubsystem>() : nullptr;
 }
 
 void ULightProbeSubsystem::RegisterProbe(const ULightProbeComponent* InComponent)
@@ -88,9 +97,6 @@ void ULightProbeSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	// Pause ticking for a moment
-	SetTickableTickType(ETickableTickType::Never);
-
 	const UWorld* World = GetWorld();
 	if (!ensureMsgf(IsValid(World), TEXT("[%s] Cannot initialize LightProbes due to an invalid world."), *GetName()))
 	{
@@ -113,15 +119,9 @@ void ULightProbeSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 		return;
 	}
 
-	if (!ensureMsgf(GetConfig().IsValid(),
+	ensureMsgf(GetConfig().IsValid(),
 		TEXT("[%s] Cannot initialize Light Probes due to invalid configs.")
-		TEXT("Is the material and/or parameter collection provided in the World Settings."), *GetName()))
-	{
-		return;
-	}
-
-	// Resume ticking based on Super's decision
-	SetTickableTickType(GetTickableTickType());
+		TEXT("Is the material and/or parameter collection provided in the World Settings."), *GetName());
 }
 
 void ULightProbeSubsystem::Deinitialize()

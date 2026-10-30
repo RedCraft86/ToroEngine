@@ -18,6 +18,7 @@ void ALightProbe::EditorApplyScale(const FVector& DeltaScale,
 {
 	const FVector ModifiedScale = DeltaScale * (bUsePercentageBasedScaling ? 10000.0f : 100.0f);
 	FMath::ApplyScaleToFloat(LightProbeComponent->Radius, ModifiedScale, 1.0f);
+	LightProbeComponent->Radius = FMath::Max(50.0f, LightProbeComponent->Radius);
 	PostEditChange();
 }
 #endif

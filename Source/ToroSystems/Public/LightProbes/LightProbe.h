@@ -7,6 +7,10 @@
 
 class ULightProbeComponent;
 
+/**
+ * Placeable actor that provides a light probe contribution through its root light probe component.
+ * Editor scaling adjusts the probe's influence radius instead of the actor's scale.
+ */
 UCLASS(MinimalAPI, NotBlueprintable, BlueprintType, ComponentWrapperClass, ClassGroup = (Lights, PointLights))
 class ALightProbe : public AActor
 {
