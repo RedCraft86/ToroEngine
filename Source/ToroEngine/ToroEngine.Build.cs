@@ -17,10 +17,12 @@ public class ToroEngine : ModuleRules
 			"SlateCore",
 			"RenderCore",
 			"ApplicationCore",
-			"GameplayTags",
+			"EngineSettings",
 			"EnhancedInput",
+			"GameplayTags",
 			"LevelSequence",
 			"MovieScene",
+			"CommonUI",
 			"PakFile",
 			"UE5Coro"
 		]);
