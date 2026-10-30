@@ -22,6 +22,7 @@
 #include "ToolbarButtons/Level/MapValidateButton.h"
 
 #include "Visualizers/ToroComponentVisualizer.h"
+#include "Visualizers/WireShapeVisualizer.h"
 
 #include "DetailsPanels/ToroStructCustomization.h"
 #include "DetailsPanels/Struct/ToroInlineStructCustomization.h"
@@ -48,6 +49,8 @@ void FToroEngineEdModule::StartupModule()
 	FToroToolbarButton::Register<FActorInstanceButton>();
 	FToroToolbarButton::Register<FRestartEditorButton>();
 	FToroToolbarButton::Register<FMapValidateButton>();
+
+	FToroComponentVisualizer::Register<FWireShapeVisualizer, UWireShapeComponent>();
 
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FWrappedBool>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FWrappedFloat>();

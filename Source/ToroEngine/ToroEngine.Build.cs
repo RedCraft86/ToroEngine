@@ -18,6 +18,7 @@ public class ToroEngine : ModuleRules
 			"RenderCore",
 			"ApplicationCore",
 			"EngineSettings",
+			"NavigationSystem",
 			"EnhancedInput",
 			"GameplayTags",
 			"LevelSequence",
