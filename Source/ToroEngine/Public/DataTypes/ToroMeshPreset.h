@@ -2,7 +2,6 @@
 
 #pragma once
 
-
 #include "Math/Vector.h"
 #include "Math/Transform.h"
 #include "Containers/Array.h"
@@ -14,7 +13,6 @@
 #include "Components/SplineMeshComponent.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroMeshPreset.generated.h"
-
 
 class UStaticMesh;
 class UMaterialInterface;
