@@ -31,7 +31,9 @@ class TCachedGetter final
 
 public:
 
-	TCachedGetter() = delete;
+	/** This constructor should not be used. */
+	TCachedGetter() = default;
+
 	TCachedGetter(const TCachedGetter&) = delete;
 	TCachedGetter& operator=(const TCachedGetter&) = delete;
 
