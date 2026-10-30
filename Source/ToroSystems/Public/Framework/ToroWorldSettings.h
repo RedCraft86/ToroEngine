@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/WorldSettings.h"
+#include "LightProbes/LightProbeSystemConfig.h"
 #include "ToroWorldSettings.generated.h"
 
 class UWorldPostProcessComponent;
@@ -16,13 +17,14 @@ public:
 
 	AToroWorldSettings();
 
-	[[nodiscard]] FORCEINLINE UWorldPostProcessComponent* GetPostProcess() const
-	{
-		return PostProcess;
-	}
+	[[nodiscard]] UWorldPostProcessComponent* GetPostProcess() const { return PostProcess; }
+	[[nodiscard]] const FLightProbeSystemConfig& GetLightProbeConfig() const { return LightProbes; }
 
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Subobjects)
 	TObjectPtr<UWorldPostProcessComponent> PostProcess;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Systems)
+	FLightProbeSystemConfig LightProbes;
 };

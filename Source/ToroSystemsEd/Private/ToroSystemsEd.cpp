@@ -2,10 +2,17 @@
 
 #include "ToroSystemsEd.h"
 #include "Modules/ModuleManager.h"
+
+#include "ToroSystemsStyle.h"
+#include "Visualizers/LightProbeComponentVisualizer.h"
 #include "DetailsPanels/ActorBehaviorRefCustomization.h"
 
 void FToroSystemsEdModule::StartupModule()
 {
+	FToroSlateStyle::Register<FToroSystemsStyle>();
+
+	FToroComponentVisualizer::Register<FLightProbeComponentVisualizer, ULightProbeComponent>();
+
 	FToroStructCustomization::Register<FActorBehaviorRefCustomization, FActorBehaviorRef>();
 }
 
