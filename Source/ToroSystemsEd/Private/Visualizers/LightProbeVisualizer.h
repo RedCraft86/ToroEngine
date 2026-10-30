@@ -5,7 +5,7 @@
 #include "LightProbes/LightProbeComponent.h"
 #include "Visualizers/ToroComponentVisualizer.h"
 
-class FLightProbeComponentVisualizer final : public FToroComponentVisualizer
+class FLightProbeVisualizer final : public FToroComponentVisualizer
 {
 	virtual void DrawVisualization(const UActorComponent* Component,
 		const FSceneView* View, FPrimitiveDrawInterface* PDI) override
