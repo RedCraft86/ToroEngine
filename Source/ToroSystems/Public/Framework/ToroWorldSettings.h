@@ -8,7 +8,7 @@
 
 class UWorldPostProcessComponent;
 
-UCLASS(Blueprintable, BlueprintType)
+UCLASS(Blueprintable, BlueprintType, PrioritizeCategories = (Systems))
 class TOROSYSTEMS_API AToroWorldSettings : public AWorldSettings
 {
 	GENERATED_BODY()
