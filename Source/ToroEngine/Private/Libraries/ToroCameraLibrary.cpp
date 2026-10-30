@@ -101,10 +101,15 @@ bool UToroCameraLibrary::IsActorInViewFrustum(const AActor* TestActor, int32 Pla
 
 FTransform UToroCameraLibrary::GetViewTransform(const UObject* ContextObject, int32 PlayerIdx)
 {
+	return TryGetViewTransform(ContextObject, PlayerIdx).Get(FTransform::Identity);
+}
+
+TOptional<FTransform> UToroCameraLibrary::TryGetViewTransform(const UObject* ContextObject, int32 PlayerIdx)
+{
 	const UWorld* World = ToroEngine::GetWorld(ContextObject);
 	if (!IsValid(World))
 	{
-		return FTransform::Identity;
+		return {};
 	}
 
 	int32 CacheKey = PlayerIdx;
@@ -117,7 +122,7 @@ FTransform UToroCameraLibrary::GetViewTransform(const UObject* ContextObject, in
 #endif
 	if (!World->IsGameWorld() || PlayerIdx < 0)
 	{
-		return FTransform::Identity;
+		return {};
 	}
 
 	static TMap<int32, TFrameValue<FTransform>> IndexToTransform;
@@ -147,7 +152,7 @@ FTransform UToroCameraLibrary::GetViewTransform(const UObject* ContextObject, in
 			}
 		}
 
-		return FTransform::Identity;
+		return {};
 	}
 #endif
 
@@ -162,7 +167,7 @@ FTransform UToroCameraLibrary::GetViewTransform(const UObject* ContextObject, in
 		return CachedTransform.GetValue();
 	}
 
-	return FTransform::Identity;
+	return {};
 }
 
 bool UToroCameraLibrary::StopCameraFade(const UObject* ContextObject, int32 PlayerIdx)

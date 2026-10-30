@@ -4,6 +4,7 @@
 
 #include "UE5Coro.h"
 #include "CoreMinimal.h"
+#include "Misc/Optional.h"
 #include "Camera/PlayerCameraManager.h"
 #include "Engine/LatentActionManager.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -63,6 +64,7 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Game|Player|View", meta = (WorldContext = ContextObject))
 	[[nodiscard]] static FTransform GetViewTransform(const UObject* ContextObject, int32 PlayerIdx = 0);
+	[[nodiscard]] static TOptional<FTransform> TryGetViewTransform(const UObject* ContextObject, int32 PlayerIdx = 0);
 
 	/**
 	 * Stops camera fading and any associated audio fade for the selected player.
