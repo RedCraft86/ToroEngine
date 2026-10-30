@@ -103,10 +103,16 @@ protected:
 
 	/** Standard 20-by-20 brush size in Slate units. */
 	static inline const FVector2D Icon20x20 = FVector2D(20.0f, 20.0f);
+
+	/** Standard 16-by-16 brush size in Slate units. */
+	static inline const FVector2D Icon16x16 = FVector2D(16.0f, 16.0f);
+
 	/** Standard 24-by-24 brush size in Slate units. */
 	static inline const FVector2D Icon24x24 = FVector2D(24.0f, 24.0f);
+
 	/** Standard 32-by-32 brush size in Slate units. */
 	static inline const FVector2D Icon32x32 = FVector2D(32.0f, 32.0f);
+
 	/** Standard 64-by-64 brush size in Slate units. */
 	static inline const FVector2D Icon64x64 = FVector2D(64.0f, 64.0f);
 
