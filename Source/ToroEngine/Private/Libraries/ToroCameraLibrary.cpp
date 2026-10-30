@@ -11,14 +11,15 @@
 #include "Camera/CameraComponent.h"
 #include "Camera/CameraTypes.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/Engine.h"
+#include "Engine/World.h"
 #include "Misc/FrameValue.h"
 #include "UnrealClient.h"
 #include "ConvexVolume.h"
-#include "CoreGlobals.h"
 #include "SceneView.h"
+#include "Utilities/ToroUtilities.h"
 #if WITH_EDITOR
 #include "EditorViewportClient.h"
-#include "Misc/App.h"
 #include "Editor.h"
 #endif
 
@@ -100,51 +101,68 @@ bool UToroCameraLibrary::IsActorInViewFrustum(const AActor* TestActor, int32 Pla
 
 FTransform UToroCameraLibrary::GetViewTransform(const UObject* ContextObject, int32 PlayerIdx)
 {
-	static TMap<int32, TFrameValue<FTransform>> IndexToTransform;
-#if WITH_EDITOR
-	if (!FApp::IsGame())
+	const UWorld* World = ToroEngine::GetWorld(ContextObject);
+	if (!IsValid(World))
 	{
-		// >= 0 are reserved for gameplay
-		PlayerIdx = -1;
+		return FTransform::Identity;
 	}
+
+	int32 CacheKey = PlayerIdx;
+#if WITH_EDITOR
+	if (World->WorldType == EWorldType::Editor)
+	{
+		CacheKey = -1;
+	}
+	else
 #endif
-
-	TFrameValue<FTransform>& OutTransform = IndexToTransform.FindOrAdd(PlayerIdx);
-	if (OutTransform.IsSet())
+	if (!World->IsGameWorld() || PlayerIdx < 0)
 	{
-		return OutTransform.GetValue();
+		return FTransform::Identity;
 	}
 
-	OutTransform = FTransform::Identity;
+	static TMap<int32, TFrameValue<FTransform>> IndexToTransform;
+	TFrameValue<FTransform>& CachedTransform = IndexToTransform.FindOrAdd(CacheKey);
+	if (CachedTransform.IsSet())
+	{
+		return CachedTransform.GetValue();
+	}
 
 #if WITH_EDITOR
-	if (!FApp::IsGame() && GEditor)
+	if (World->WorldType == EWorldType::Editor)
 	{
-		const FViewport* VP = GEditor->GetActiveViewport();
-		if (const FEditorViewportClient* VPC = VP ? static_cast<FEditorViewportClient*>(VP->GetClient()) : nullptr)
+		const FViewport* Viewport = GEditor ? GEditor->GetActiveViewport() : nullptr;
+		if (const FViewportClient* ActiveClient = Viewport ? Viewport->GetClient() : nullptr)
 		{
-			OutTransform = FTransform(
-				VPC->GetViewRotation(),
-				VPC->GetViewLocation(),
-				FVector::OneVector
-			);
+			for (const FEditorViewportClient* EditorClient : GEditor->GetAllViewportClients())
+			{
+				if (EditorClient && EditorClient == ActiveClient && EditorClient->GetWorld() == World)
+				{
+					CachedTransform = FTransform(
+						EditorClient->GetViewRotation(),
+						EditorClient->GetViewLocation(),
+						FVector::OneVector
+					);
+					return CachedTransform.GetValue();
+				}
+			}
 		}
 
-		return OutTransform.GetValue();
+		return FTransform::Identity;
 	}
 #endif
 
-	const APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(ContextObject, PlayerIdx);
+	const APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(World, PlayerIdx);
 	if (IsValid(PCM))
 	{
-		OutTransform = FTransform(
+		CachedTransform = FTransform(
 			PCM->GetCameraRotation(),
 			PCM->GetCameraLocation(),
 			FVector::OneVector
 		);
+		return CachedTransform.GetValue();
 	}
 
-	return OutTransform.GetValue();
+	return FTransform::Identity;
 }
 
 bool UToroCameraLibrary::StopCameraFade(const UObject* ContextObject, int32 PlayerIdx)

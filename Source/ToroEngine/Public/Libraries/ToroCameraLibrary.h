@@ -55,8 +55,9 @@ public:
 
 	/**
 	 * Gets the selected player camera's location and rotation with unit scale.
-	 * In editor builds outside game mode, uses the active registered editor viewport instead.
-	 * Successful results are cached per frame by camera manager or editor viewport; failures are not cached.
+	 * For editor worlds, uses the active registered editor viewport only when it belongs to that world.
+	 * Game worlds, including PIE, use their own player camera manager.
+	 * Successful results are cached per frame by player index, with -1 reserved for the editor; failures are not cached.
 	 * @param PlayerIdx Player controller index; ignored when using an editor viewport.
 	 * @return The view transform, or identity when the required camera or editor viewport is unavailable.
 	 */
