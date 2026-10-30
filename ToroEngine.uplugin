@@ -55,6 +55,10 @@
 			"Enabled": true
 		},
 		{
+			"Name": "CommonUI",
+			"Enabled": true
+		},
+		{
 			"Name": "UE5Coro",
 			"Enabled": true
 		}
