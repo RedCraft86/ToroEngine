@@ -11,7 +11,7 @@ extern ENGINE_API float GAverageFPS;
 extern ENGINE_API float GAverageMS;
 
 UFrameRateBlock::UFrameRateBlock()
-	: UserSettings([] -> UGameUserSettings* {
+	: UserSettings([]() -> UGameUserSettings* {
 		return GEngine ? GEngine->GetGameUserSettings() : nullptr;
 	})
 {
