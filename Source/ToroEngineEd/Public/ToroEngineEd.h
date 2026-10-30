@@ -15,5 +15,5 @@ class FToroEngineEdModule final : public IModuleInterface
 
 public:
 
-	static FString GetPluginDir();
+	TOROENGINEED_API static FString GetPluginDir();
 };
