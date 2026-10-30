@@ -174,7 +174,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ActorBehaviors|Reference", DisplayName = "Find Reference",
 		meta = (DeterminesOutputType = InClass, CompactNodeTitle = "FIND"))
 	static UActorBehaviorComponent* FindBehaviorRef(const FActorBehaviorRef& BehaviorRef,
-		TSubclassOf<UActorBehaviorComponent> InClass);
+		UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UActorBehaviorComponent> InClass);
 
 	/**
 	 * Resolves a compatible component through the reference's weak cache, updating it when invalid.
@@ -186,7 +186,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ActorBehaviors|Reference", DisplayName = "Get Reference",
 		meta = (DeterminesOutputType = InClass, CompactNodeTitle = "RESOLVE"))
 	static UActorBehaviorComponent* GetBehaviorRef(UPARAM(ref) FActorBehaviorRef& BehaviorRef,
-		TSubclassOf<UActorBehaviorComponent> InClass);
+		UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UActorBehaviorComponent> InClass);
 
 	/** Clears the cached component while preserving the lookup class, required flag, and owner binding. */
 	UFUNCTION(BlueprintCallable, Category = "ActorBehaviors|Reference", DisplayName = "Reset")
