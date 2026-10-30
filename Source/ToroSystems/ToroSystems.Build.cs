@@ -12,6 +12,7 @@ public class ToroSystems : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
+			"RenderCore",
 			"ToroEngine"
 		]);
 	}
