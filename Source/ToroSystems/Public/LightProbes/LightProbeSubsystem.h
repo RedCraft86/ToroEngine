@@ -19,7 +19,7 @@ struct FLightProbeSystemConfig;
  * the material parameter collection and post-process blendable. Updates also run while paused.
  */
 UCLASS(MinimalAPI, NotBlueprintable, BlueprintType)
-class ULightProbeSubsystem : public UTickableWorldSubsystem
+class ULightProbeSubsystem final : public UTickableWorldSubsystem
 {
 	GENERATED_BODY()
 
