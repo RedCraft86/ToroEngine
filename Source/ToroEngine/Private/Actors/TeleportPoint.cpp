@@ -165,6 +165,7 @@ void ATeleportPoint::OnConstruction(const FTransform& Transform)
 
 	if (PreviewCapsule)
 	{
+		PreviewCapsule->SetCapsuleRadius(CapsuleRadius);
 		PreviewCapsule->SetCapsuleHalfHeight(CapsuleHeight);
 		SupportPlane->SetRelativeLocation(FVector(0.0f, 0.0f, -PreviewCapsule->GetScaledCapsuleHalfHeight() - 5.0f));
 		if (!LastPosition.Equals(PreviewCapsule->GetComponentLocation(), 0.01f))

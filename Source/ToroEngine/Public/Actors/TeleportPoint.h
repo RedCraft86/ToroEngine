@@ -9,7 +9,7 @@ class ACharacter;
 class UStaticMeshComponent;
 
 /**
- * Tagged destination for character teleportation, with an optional pawn-blocking support plane.
+ * Destination for character teleportation, with an optional pawn-blocking support plane.
  * Provides an editor capsule preview and floor snapping; editor placement allows yaw rotation only and no scaling.
  */
 UCLASS(MinimalAPI, NotBlueprintable, BlueprintType, PrioritizeCategories = (Tools), HideCategories = (
@@ -54,6 +54,10 @@ private:
 #if WITH_EDITORONLY_DATA
 	UPROPERTY()
 	TObjectPtr<class UCapsuleComponent> PreviewCapsule;
+
+	/** Requested preview capsule radius in centimeters. */
+	UPROPERTY(EditAnywhere, Category = Settings, meta = (ClampMin = 5.0f, UIMin = 5.0f, Units = "cm"))
+	float CapsuleRadius = 34.0f;
 
 	/** Requested preview capsule half-height in centimeters, clamped by the capsule to at least its radius. */
 	UPROPERTY(EditAnywhere, Category = Settings, meta = (ClampMin = 10.0f, UIMin = 10.0f, Units = "cm"))
