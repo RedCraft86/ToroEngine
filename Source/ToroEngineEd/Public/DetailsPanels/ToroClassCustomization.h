@@ -66,31 +66,30 @@
 	GET_CLASS_PROPERTY_VAR(CLASS_NAME, Member, VarName)
 
 /**
- * Base for class Details customizations with shared registration and category metadata processing.
- * Accepts valid objects of one exact class; mixed-class selections are rejected.
+ * Base for class Details customizations with shared registration and selection validation.
+ * Requires a nonempty selection of valid objects of one exact class; mixed-class selections are rejected.
  * Templates are excluded unless bCustomizeTemplate is enabled; mixed template/instance selections are always rejected.
- * The shared-builder callback prepares selection state for each instance. The most-derived class
- * registered through this helper in the selected class's ancestry owns automatic category metadata
- * and visibility processing, performed before its reference-based CustomizeDetails() implementation.
- * Other registered instances still dispatch their UI customization; ownership does not establish
- * execution order or guarantee a single invocation per layout.
+ * The shared-builder callback resets cached state, validates the selection, and prepares accepted
+ * selection state before dispatching to the derived reference-based CustomizeDetails() implementation.
+ * IsPrimaryCustomization() identifies the most-derived tracked registration in the selected class's
+ * ancestry. It does not gate dispatch, enforce execution order, or process category metadata or visibility.
  * Register on the editor game thread and call UnregisterAll() before unloading customization code.
  */
 class TOROENGINEED_API FToroClassCustomization : public IDetailCustomization
 {
-	/** Class names tracked for duplicate detection, category ownership selection, and shutdown cleanup. */
+	/** Class names tracked for duplicate detection, primary-registration lookup, and shutdown cleanup. */
 	static inline TSet<FName> RegisteredEntries = {};
 
 public:
 
 	/**
 	 * Loads PropertyEditor if needed and registers a factory that constructs a new customization per request.
-	 * The factory assigns Class's reflected name to RegisteredClassName to identify category ownership.
-	 * Duplicate detection and ownership selection cover this helper's registrations, not other modules'.
+	 * The factory assigns Class's reflected name to RegisteredClassName to identify the instance's registration.
+	 * Duplicate detection and primary-registration lookup cover this helper's registrations, not other modules'.
 	 * @tparam Customization Concrete FToroClassCustomization subclass constructible without arguments by MakeShared().
 	 * @tparam Class Reflected UObject subclass exposing StaticClass().
 	 * @return Registered class name, or NAME_None if module loading fails, the name is invalid,
-	 * or this helper already tracks a customization for that class name.
+	 *         or this helper already tracks a customization for that class name.
 	 */
 	template<typename Customization, typename Class>
 	static FName Register()
@@ -157,22 +156,6 @@ public:
 
 protected:
 
-	/** Display label and priority overrides associated with an internal category name. */
-	struct FToroCategoryInfo
-	{
-		/** Optional display label; an empty value leaves label selection to the Details builder. */
-		FText DisplayName;
-
-		/** Sorting priority passed to the Details builder when editing the category. */
-		ECategoryPriority::Type Priority;
-
-		/** Starts with no display-name override and the default category priority. */
-		FToroCategoryInfo()
-			: DisplayName(FText::GetEmpty())
-			, Priority(ECategoryPriority::Default)
-		{}
-	};
-
 	/** Allows homogeneous template selections, including class defaults and archetypes, when true; disabled by default. */
 	bool bCustomizeTemplate = false;
 
@@ -182,7 +165,7 @@ protected:
 	 */
 	FName RegisteredClassName = NAME_None;
 
-	/** Non-owning class of the accepted selection, reset before each customization pass. */
+	/** Non-owning class shared by all accepted objects; reset to null before each customization pass. */
 	UClass* CustomizingClass = nullptr;
 
 	/**
@@ -191,55 +174,13 @@ protected:
 	 */
 	bool bIsTemplateObject = false;
 
-	/** Accepted layout builder held without extending its lifetime. */
+	/** Accepted layout builder held without extending its lifetime; reset before each customization pass. */
 	TWeakPtr<IDetailLayoutBuilder> WeakBuilder;
-
-	/** Category overrides for the current pass, keyed by internal name and cleared before each pass. */
-	TMap<FName, FToroCategoryInfo> CategoryMap;
-
-	/**
-	 * Edits or creates a category, applying stored display-name and priority overrides when present.
-	 * @param CategoryName Internal category name.
-	 * @return Reference to the category.
-	 */
-	IDetailCategoryBuilder& FindOrAddCategory(FName CategoryName);
-
-	/**
-	 * Records a category display label and edits the category if the layout builder is available.
-	 * The internal category name is unchanged.
-	 * @param CategoryName Internal category name.
-	 * @param DisplayName User-visible category label.
-	 * @return Reference to the category.
-	 */
-	IDetailCategoryBuilder& SetCategoryDisplayName(FName CategoryName, const FText& DisplayName);
-
-	/**
-	 * Records a category priority and edits the category if the layout builder is available.
-	 * @param CategoryName Internal category name.
-	 * @param Priority Sorting priority supplied to the Details builder.
-	 * @return Reference to the category.
-	 */
-	IDetailCategoryBuilder& SetCategoryPriority(FName CategoryName, ECategoryPriority::Type Priority);
-
-	/**
-	 * Supplies categories retained by default when the visibility pass uses an allow list.
-	 * The base implementation returns an empty array. A non-empty result or a hide-categories wildcard
-	 * enables allow-list behavior; explicit hide entries beat defaults, while show and force-show entries win.
-	 * Entries match the named category and its pipe-delimited descendants.
-	 */
-	virtual TArray<FString> GetDefaultCategories();
-
-	/**
-	 * Supplies categories preserved by this helper's visibility pass even when hide metadata matches.
-	 * The base list contains Transform and TransformCommon.
-	 * Entries also match pipe-delimited child categories.
-	 */
-	virtual TArray<FString> GetForceShowCategories();
 
 	/**
 	 * Determines whether this instance is the primary customization for the accepted selection.
 	 * The most-derived registered class in the selected class's ancestry takes precedence.
-	 * Other registered customizations still run; this determines ownership of shared processing.
+	 * This is a query only: it does not suppress other customizations or perform shared processing.
 	 * @return True if that registration matches this instance's RegisteredClassName.
 	 *         False if the selection is unset or no matching registration exists.
 	 */
@@ -248,26 +189,6 @@ protected:
 	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override = 0;
 
 private:
-
-	/**
-	 * Reads RenameCategories metadata as comma-separated Old=New pairs.
-	 * Trims names, ignores incomplete entries, and records display labels without changing category keys.
-	 */
-	void HandleCategoryRenames();
-
-	/**
-	 * Records Important priority for the categories listed by the selected class's prioritization metadata.
-	 */
-	void HandleCategoryPriority();
-
-	/**
-	 * Hides existing categories using ForceShow, Show, Hide, then Default precedence.
-	 * Matches include pipe-delimited descendants. A hide wildcard or non-empty default list
-	 * enables allow-list behavior. Categories marked IsEmpty() are exempt from HideCategory().
-	 * All categories selected by the hide rules lose their pending CategoryMap overrides,
-	 * including empty categories that remain exempt from hiding.
-	 */
-	void HandleCategoryVisibility();
 
 	virtual void CustomizeDetails(const TSharedPtr<IDetailLayoutBuilder>& DetailBuilder) override;
 };
