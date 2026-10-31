@@ -17,9 +17,9 @@ AToroActor::AToroActor(): bActivated(true)
 
 #if WITH_EDITORONLY_DATA
 	bRunConstructionScriptOnDrag = true;
+	bIsSpatiallyLoaded = false; // Stop World Partition from unloading this
 #endif
 
-	bIsSpatiallyLoaded = false; // Stop World Partition from unloading this
 	bEnableAutoLODGeneration = false; // Exclude from HLOD assuming this is a gameplay actor
 	SetCanBeDamaged(false);
 }
