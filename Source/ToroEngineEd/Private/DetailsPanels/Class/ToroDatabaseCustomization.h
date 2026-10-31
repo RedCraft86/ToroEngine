@@ -263,7 +263,7 @@ private:
 			return;
 		}
 
-		IDetailCategoryBuilder& Entries = SetCategoryDisplayName(TEXT("Entries"), LOCTEXT("DatabaseEntryLabel", "Entries"));
+		IDetailCategoryBuilder& Entries = DetailBuilder.EditCategory(TEXT("Entries"), LOCTEXT("DatabaseEntryLabel", "Entries"));
 		Entries.HeaderContent(
 			SNew(SHorizontalBox)
 			+SHorizontalBox::Slot()
