@@ -7,7 +7,7 @@
 class AActor;
 class FReply;
 
-class TOROENGINEED_API FToroActorBaseCustomization : public FToroClassCustomization
+class TOROENGINEED_API FToroActorCustomization : public FToroClassCustomization
 {
 protected:
 
