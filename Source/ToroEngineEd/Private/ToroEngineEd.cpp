@@ -28,8 +28,8 @@
 #include "DetailsPanels/Struct/ToroInlineStructCustomization.h"
 
 #include "DetailsPanels/ToroClassCustomization.h"
-#include "DetailsPanels/Class/ToroCharacterBaseCustomization.h"
 #include "DetailsPanels/Class/ToroActorCustomization.h"
+#include "DetailsPanels/Class/ToroCharacterCustomization.h"
 #include "DetailsPanels/Class/ToroDatabaseCustomization.h"
 
 #include "DataTypes/WrappedTypes.h"
@@ -65,9 +65,9 @@ void FToroEngineEdModule::StartupModule()
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FToroIdentity>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FSimpleCooldown>();
 
-	FToroClassCustomization::Register<FToroCharacterBaseCustomization, AToroCharacter>();
 	FToroClassCustomization::Register<FToroActorCustomization, AToroActor>();
 	FToroClassCustomization::Register<FToroActorCustomization, AToroVolume>();
+	FToroClassCustomization::Register<FToroCharacterCustomization, AToroCharacter>();
 	FToroClassCustomization::Register<FToroDatabaseCustomization, UToroDatabase>();
 }
 
