@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include "Materials/MaterialInterface.h"
-#include "Materials/MaterialParameterCollection.h"
 #include "LightProbeSystemConfig.generated.h"
+
+class UMaterialInterface;
+class UMaterialParameterCollection;
 
 /**
  * Per-world light probe settings and access to global light probe console variables.
@@ -34,11 +35,7 @@ struct TOROSYSTEMS_API FLightProbeSystemConfig final
 	{}
 
 	/** Whether both required material assets are valid, independent of enablement settings. */
-	[[nodiscard]] FORCEINLINE bool IsValid() const
-	{
-		return ::IsValid(PostProcessMaterial)
-			&& ::IsValid(ParameterCollection);
-	}
+	[[nodiscard]] bool IsValid() const;
 
 	/**
 	 * Whether this world allows light probes, r.LightProbes.Enable is enabled,

@@ -1,6 +1,8 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "LightProbes/LightProbeSystemConfig.h"
+#include "Materials/MaterialParameterCollection.h"
+#include "Materials/MaterialInterface.h"
 #include "HAL/IConsoleManager.h"
 #if WITH_EDITOR
 #include "Misc/App.h"
@@ -35,6 +37,12 @@ static TAutoConsoleVariable<float> CVarLightProbesEditorUpdateInterval(
 	ECVF_Scalability
 );
 #endif
+
+bool FLightProbeSystemConfig::IsValid() const
+{
+	return ::IsValid(PostProcessMaterial)
+		&& ::IsValid(ParameterCollection);
+}
 
 bool FLightProbeSystemConfig::IsEnabled() const
 {

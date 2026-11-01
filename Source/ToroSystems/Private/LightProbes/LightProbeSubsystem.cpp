@@ -5,6 +5,7 @@
 #include "LightProbes/LightProbeSystemConfig.h"
 #include "PostProcess/WorldPostProcessComponent.h"
 #include "Materials/MaterialParameterCollectionInstance.h"
+#include "Materials/MaterialParameterCollection.h"
 #include "Framework/ToroWorldSettings.h"
 #include "Libraries/ToroCameraLibrary.h"
 #include "Utilities/ToroUtilities.h"
