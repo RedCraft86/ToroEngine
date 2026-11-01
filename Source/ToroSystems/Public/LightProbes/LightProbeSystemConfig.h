@@ -29,6 +29,8 @@ struct TOROSYSTEMS_API FLightProbeSystemConfig final
 
 	FLightProbeSystemConfig()
 		: bEnableForWorld(true)
+		, PostProcessMaterial(nullptr)
+		, ParameterCollection(nullptr)
 	{}
 
 	/** Whether both required material assets are valid, independent of enablement settings. */
