@@ -93,9 +93,18 @@ public:
 	}
 
 	/**
-	 * Provides read-only access to the stored set without running validation.
+	 * Provides writable access to the stored set without running validation.
 	 * The reference is valid only while this accumulator lives. Mutations affect the
 	 * same container and may invalidate references and iterators to its contents.
+	 */
+	[[nodiscard]] FORCEINLINE TSet<T>& GetInnerSet()
+	{
+		return InnerSet;
+	}
+
+	/**
+	 * Provides read-only access to the stored set without running validation.
+	 * The reference is valid only while this accumulator lives.
 	 */
 	[[nodiscard]] FORCEINLINE const TSet<T>& GetInnerSet() const
 	{

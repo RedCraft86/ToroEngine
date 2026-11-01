@@ -95,9 +95,18 @@ public:
 	}
 
 	/**
-	 * Provides read-only access to the stored map without running validation.
+	 * Provides writable access to the stored map without running validation.
 	 * The reference is valid only while this accumulator lives. Mutations affect the
 	 * same container and may invalidate references and iterators to its contents.
+	 */
+	[[nodiscard]] FORCEINLINE TMap<K, V>& GetInnerMap()
+	{
+		return InnerMap;
+	}
+
+	/**
+	 * Provides read-only access to the stored map without running validation.
+	 * The reference is valid only while this accumulator lives.
 	 */
 	[[nodiscard]] FORCEINLINE const TMap<K, V>& GetInnerMap() const
 	{
