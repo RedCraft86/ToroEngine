@@ -55,6 +55,10 @@
 			"Enabled": true
 		},
 		{
+			"Name": "Metasound",
+			"Enabled": true
+		},
+		{
 			"Name": "CommonUI",
 			"Enabled": true
 		},

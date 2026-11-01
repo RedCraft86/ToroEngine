@@ -13,6 +13,7 @@ public class ToroSystems : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"RenderCore",
+			"MetasoundEngine",
 			"ToroEngine"
 		]);
 	}

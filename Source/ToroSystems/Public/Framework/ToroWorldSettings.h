@@ -4,6 +4,7 @@
 
 #include "GameFramework/WorldSettings.h"
 #include "LightProbes/LightProbeSystemConfig.h"
+#include "WorldMusic/WorldMusicSystemConfig.h"
 #include "ToroWorldSettings.generated.h"
 
 class UWorldPostProcessComponent;
@@ -19,6 +20,7 @@ public:
 
 	[[nodiscard]] UWorldPostProcessComponent* GetPostProcess() const { return PostProcess; }
 	[[nodiscard]] const FLightProbeSystemConfig& GetLightProbeConfig() const { return LightProbes; }
+	[[nodiscard]] const FWorldMusicSystemConfig& GetWorldMusicConfig() const { return WorldMusic; }
 
 protected:
 
@@ -27,4 +29,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Systems)
 	FLightProbeSystemConfig LightProbes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Systems)
+	FWorldMusicSystemConfig WorldMusic;
 };
