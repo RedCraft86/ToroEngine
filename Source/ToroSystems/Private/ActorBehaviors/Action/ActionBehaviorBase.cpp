@@ -1,7 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
-#include "ActorBehaviors/Native/ActionBehaviorBase.h"
-#include "ActorBehaviors/Native/TriggerBehaviorBase.h"
+#include "ActorBehaviors/Action/ActionBehaviorBase.h"
+#include "ActorBehaviors/Trigger/TriggerBehaviorBase.h"
 
 UActionBehaviorBase::UActionBehaviorBase(): bOnlyOnce(false), bTriggered(false)
 {

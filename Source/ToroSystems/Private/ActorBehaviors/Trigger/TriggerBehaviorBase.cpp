@@ -1,6 +1,6 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
-#include "ActorBehaviors/Native/TriggerBehaviorBase.h"
+#include "ActorBehaviors/Trigger/TriggerBehaviorBase.h"
 
 UTriggerBehaviorBase::UTriggerBehaviorBase(): bTriggered(false), ElapsedTime(0.0f)
 {
