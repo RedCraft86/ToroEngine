@@ -22,7 +22,7 @@
 #include "Widgets/Text/STextBlock.h"
 #include "Internationalization/Text.h"
 #include "DetailsPanels/ToroStructCustomization.h"
-#include "ActorBehaviors/ActorBehaviorComponent.h"
+#include "ActorBehaviors/ActorBehaviorBase.h"
 #include "ActorBehaviors/ActorBehaviorRef.h"
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
@@ -137,7 +137,7 @@ class FActorBehaviorRefCustomization final : public FToroStructCustomization
 			StatusText = LOCTEXT("BehaviorRefNoOwner", "No Owner");
 			StatusColor = FStyleColors::AccentRed;
 		}
-		else if (const UActorBehaviorComponent* Comp = StructPtr->Find())
+		else if (const UActorBehaviorBase* Comp = StructPtr->Find())
 		{
 			StatusText = FText::FromString(Comp->GetName());
 			StatusColor = FSlateColor::UseForeground();

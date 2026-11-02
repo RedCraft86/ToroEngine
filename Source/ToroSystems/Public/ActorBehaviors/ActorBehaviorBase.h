@@ -4,7 +4,7 @@
 
 #include "Templates/SubclassOf.h"
 #include "Components/ToroActorComponent.h"
-#include "ActorBehaviorComponent.generated.h"
+#include "ActorBehaviorBase.generated.h"
 
 class AActor;
 
@@ -18,13 +18,13 @@ class AActor;
 UCLASS(Abstract, Blueprintable, BlueprintType, ClassGroup = (Feature), PrioritizeCategories = (Settings),
 	HideCategories = (Activation, AssetUserData, Replication, ComponentReplication, Variable, Navigation, Cooking),
 	meta = (BlueprintSpawnableComponent, ChildCanTick = true))
-class TOROSYSTEMS_API UActorBehaviorComponent : public UToroActorComponent
+class TOROSYSTEMS_API UActorBehaviorBase : public UToroActorComponent
 {
 	GENERATED_BODY()
 
 public:
 
-	UActorBehaviorComponent();
+	UActorBehaviorBase();
 
 protected:
 
@@ -38,7 +38,7 @@ protected:
 	 * returning a shared ancestor prevents sibling subclasses from coexisting on an actor.
 	 * A null or invalid class skips the duplicate check while preserving superclass validation.
 	 */
-	virtual TSubclassOf<UActorBehaviorComponent> DuplicateCheckClass() const;
+	virtual TSubclassOf<UActorBehaviorBase> DuplicateCheckClass() const;
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
 #endif
 

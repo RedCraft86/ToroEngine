@@ -2,7 +2,7 @@
 
 #include "ActorBehaviors/ActorBehaviorRef.h"
 #include "Utilities/ToroLogging.h"
-#include "ActorBehaviors/ActorBehaviorComponent.h"
+#include "ActorBehaviors/ActorBehaviorBase.h"
 #include "Containers/UnrealString.h"
 #include "Serialization/Archive.h"
 #include "Misc/AssertionMacros.h"
@@ -15,7 +15,7 @@ bool FActorBehaviorRef::IsInvalid() const
 	return !IsValid(Class) || !Owner.IsValid();
 }
 
-bool FActorBehaviorRef::CanResolveAs(TSubclassOf<UActorBehaviorComponent> InClass, bool bErrorIfInvalid) const
+bool FActorBehaviorRef::CanResolveAs(TSubclassOf<UActorBehaviorBase> InClass, bool bErrorIfInvalid) const
 {
 	const bool bValid = IsValid(Class) && IsValid(InClass) && Class->IsChildOf(InClass);
 	if (!bValid && bErrorIfInvalid)
@@ -37,7 +37,7 @@ void FActorBehaviorRef::BindOwner(const AActor* InActor)
 	Reset();
 }
 
-UActorBehaviorComponent* FActorBehaviorRef::Find() const
+UActorBehaviorBase* FActorBehaviorRef::Find() const
 {
 	if (!Owner.IsValid())
 	{
@@ -51,10 +51,10 @@ UActorBehaviorComponent* FActorBehaviorRef::Find() const
 		return nullptr;
 	}
 
-	return Cast<UActorBehaviorComponent>(Owner->FindComponentByClass(Class));
+	return Cast<UActorBehaviorBase>(Owner->FindComponentByClass(Class));
 }
 
-UActorBehaviorComponent* FActorBehaviorRef::Get()
+UActorBehaviorBase* FActorBehaviorRef::Get()
 {
 	if (!Reference.IsValid())
 	{
@@ -86,14 +86,14 @@ bool UActorBehaviorRefLibrary::IsBehaviorRefInvalid(const FActorBehaviorRef& Beh
 	return BehaviorRef.IsInvalid();
 }
 
-UActorBehaviorComponent* UActorBehaviorRefLibrary::FindBehaviorRef(
-	const FActorBehaviorRef& BehaviorRef, TSubclassOf<UActorBehaviorComponent> InClass)
+UActorBehaviorBase* UActorBehaviorRefLibrary::FindBehaviorRef(
+	const FActorBehaviorRef& BehaviorRef, TSubclassOf<UActorBehaviorBase> InClass)
 {
 	return BehaviorRef.CanResolveAs(InClass, true) ? BehaviorRef.Find() : nullptr;
 }
 
-UActorBehaviorComponent* UActorBehaviorRefLibrary::GetBehaviorRef(
-	FActorBehaviorRef& BehaviorRef, TSubclassOf<UActorBehaviorComponent> InClass)
+UActorBehaviorBase* UActorBehaviorRefLibrary::GetBehaviorRef(
+	FActorBehaviorRef& BehaviorRef, TSubclassOf<UActorBehaviorBase> InClass)
 {
 	return BehaviorRef.CanResolveAs(InClass, true) ? BehaviorRef.Get() : nullptr;
 }

@@ -13,7 +13,7 @@
 #include "ActorBehaviorRef.generated.h"
 
 class AActor;
-class UActorBehaviorComponent;
+class UActorBehaviorBase;
 
 /**
  * Resolves a sibling behavior component by class and caches it weakly.
@@ -40,7 +40,7 @@ private:
 
 	/** Component class to search for; instances of derived classes also match. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Reference, NoClear, meta = (AllowAbstract = false, AllowPrivateAccess = true))
-	TSubclassOf<UActorBehaviorComponent> Class;
+	TSubclassOf<UActorBehaviorBase> Class;
 
 	/** Weak actor binding used for component lookup; never serialized. */
 	UPROPERTY(Transient, BlueprintReadOnly, Category = Reference, meta = (AllowPrivateAccess = "true"))
@@ -48,7 +48,7 @@ private:
 
 	/** Weak cache populated by Get(); invalid cached results are retried on subsequent calls. */
 	UPROPERTY(Transient)
-	TWeakObjectPtr<UActorBehaviorComponent> Reference;
+	TWeakObjectPtr<UActorBehaviorBase> Reference;
 
 public:
 
@@ -64,7 +64,7 @@ public:
 	template<typename T>
 	[[nodiscard]] static FActorBehaviorRef MakeFor(bool bIsRequired = false)
 	{
-		static_assert(TIsDerivedFrom<T, UActorBehaviorComponent>::Value,
+		static_assert(TIsDerivedFrom<T, UActorBehaviorBase>::Value,
 			"T must derive from UActorBehaviorComponent");
 
 		FActorBehaviorRef Ref;
@@ -77,7 +77,7 @@ public:
 	[[nodiscard]] FORCEINLINE bool IsRequired() const { return bRequired; }
 
 	/** Returns the configured lookup class, which may be null. */
-	[[nodiscard]] FORCEINLINE TSubclassOf<UActorBehaviorComponent> GetClass() const { return Class; }
+	[[nodiscard]] FORCEINLINE TSubclassOf<UActorBehaviorBase> GetClass() const { return Class; }
 
 	/** Returns the bound actor, or nullptr if the weak owner binding is invalid. */
 	[[nodiscard]] FORCEINLINE const AActor* GetOwner() const { return Owner.Get(); }
@@ -92,7 +92,7 @@ public:
 	 *        class must equal or derive from this type.
 	 * @param bErrorIfInvalid Whether a failed compatibility check reports a Toro error.
 	 */
-	[[nodiscard]] bool CanResolveAs(TSubclassOf<UActorBehaviorComponent> InClass, bool bErrorIfInvalid) const;
+	[[nodiscard]] bool CanResolveAs(TSubclassOf<UActorBehaviorBase> InClass, bool bErrorIfInvalid) const;
 
 	/** Clears the cached component without changing the lookup class, required flag, or owner binding. */
 	void Reset();
@@ -108,7 +108,7 @@ public:
 	 * Bypasses the cache and required-reference check. An invalid owner or class reports a Toro error.
 	 * @return The matching component, or nullptr if lookup fails.
 	 */
-	UActorBehaviorComponent* Find() const;
+	UActorBehaviorBase* Find() const;
 
 	/**
 	 * Returns the valid cached component, searching and updating the weak cache when necessary.
@@ -116,7 +116,7 @@ public:
 	 * An invalid owner or class also reports a Toro error during lookup.
 	 * @return The cached or newly resolved component, or nullptr if resolution fails.
 	 */
-	UActorBehaviorComponent* Get();
+	UActorBehaviorBase* Get();
 
 	/**
 	 * Checks compatibility with T, then resolves through the cached Get() path.
@@ -128,7 +128,7 @@ public:
 	template<typename T>
 	[[nodiscard]] T* Get()
 	{
-		static_assert(TIsDerivedFrom<T, UActorBehaviorComponent>::Value,
+		static_assert(TIsDerivedFrom<T, UActorBehaviorBase>::Value,
 			"T must derive from UActorBehaviorComponent");
 
 		if (CanResolveAs(T::StaticClass(), true))
@@ -173,8 +173,8 @@ public:
 	 */
 	UFUNCTION(BlueprintPure, Category = "ActorBehaviors|Reference", DisplayName = "Find Reference",
 		meta = (DeterminesOutputType = InClass, CompactNodeTitle = "FIND"))
-	static UActorBehaviorComponent* FindBehaviorRef(const FActorBehaviorRef& BehaviorRef,
-		UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UActorBehaviorComponent> InClass);
+	static UActorBehaviorBase* FindBehaviorRef(const FActorBehaviorRef& BehaviorRef,
+		UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UActorBehaviorBase> InClass);
 
 	/**
 	 * Resolves a compatible component through the reference's weak cache, updating it when invalid.
@@ -185,8 +185,8 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "ActorBehaviors|Reference", DisplayName = "Get Reference",
 		meta = (DeterminesOutputType = InClass, CompactNodeTitle = "RESOLVE"))
-	static UActorBehaviorComponent* GetBehaviorRef(UPARAM(ref) FActorBehaviorRef& BehaviorRef,
-		UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UActorBehaviorComponent> InClass);
+	static UActorBehaviorBase* GetBehaviorRef(UPARAM(ref) FActorBehaviorRef& BehaviorRef,
+		UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UActorBehaviorBase> InClass);
 
 	/** Clears the cached component while preserving the lookup class, required flag, and owner binding. */
 	UFUNCTION(BlueprintCallable, Category = "ActorBehaviors|Reference", DisplayName = "Reset")

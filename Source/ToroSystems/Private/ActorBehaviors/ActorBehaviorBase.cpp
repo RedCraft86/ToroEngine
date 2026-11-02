@@ -1,6 +1,6 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
-#include "ActorBehaviors/ActorBehaviorComponent.h"
+#include "ActorBehaviors/ActorBehaviorBase.h"
 #include "ActorBehaviors/ActorBehaviorRef.h"
 #include "UObject/UObjectGlobals.h"
 #include "UObject/UnrealType.h"
@@ -14,13 +14,13 @@
 #endif
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
-UActorBehaviorComponent::UActorBehaviorComponent()
+UActorBehaviorBase::UActorBehaviorBase()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	bAutoActivate = true;
 }
 
-void UActorBehaviorComponent::OnRegister()
+void UActorBehaviorBase::OnRegister()
 {
 	const AActor* OwnerActor = GetOwner();
 	if (!IsTemplate() && IsValid(OwnerActor))
@@ -31,24 +31,24 @@ void UActorBehaviorComponent::OnRegister()
 	Super::OnRegister();
 }
 
-void UActorBehaviorComponent::OnUnregister()
+void UActorBehaviorBase::OnUnregister()
 {
 	SetBehaviorRefTypeOwners(nullptr);
 	Super::OnUnregister();
 }
 
 #if WITH_EDITOR
-TSubclassOf<UActorBehaviorComponent> UActorBehaviorComponent::DuplicateCheckClass() const
+TSubclassOf<UActorBehaviorBase> UActorBehaviorBase::DuplicateCheckClass() const
 {
 	return GetClass();
 }
 
-EDataValidationResult UActorBehaviorComponent::IsDataValid(FDataValidationContext& Context) const
+EDataValidationResult UActorBehaviorBase::IsDataValid(FDataValidationContext& Context) const
 {
 	const EDataValidationResult SuperResult = Super::IsDataValid(Context);
 
 	const AActor* OwnerActor = GetOwner();
-	const TSubclassOf<UActorBehaviorComponent> CheckClass = DuplicateCheckClass();
+	const TSubclassOf<UActorBehaviorBase> CheckClass = DuplicateCheckClass();
 	if (!IsValid(CheckClass) || !IsValid(OwnerActor))
 	{
 		return SuperResult;
@@ -78,7 +78,7 @@ EDataValidationResult UActorBehaviorComponent::IsDataValid(FDataValidationContex
 }
 #endif
 
-void UActorBehaviorComponent::SetBehaviorRefTypeOwners(const AActor* Owner)
+void UActorBehaviorBase::SetBehaviorRefTypeOwners(const AActor* Owner)
 {
 	for (TFieldIterator<FStructProperty> It(GetClass(), EFieldIterationFlags::IncludeSuper); It; ++It)
 	{
