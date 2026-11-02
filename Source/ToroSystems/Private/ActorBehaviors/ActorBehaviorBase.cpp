@@ -38,6 +38,15 @@ void UActorBehaviorBase::OnUnregister()
 	Super::OnUnregister();
 }
 
+void UActorBehaviorBase::OnConstruction()
+{
+	if (!BehaviorId.IsValid())
+	{
+		BehaviorId = FGuid::NewGuid();
+	}
+	Super::OnConstruction();
+}
+
 #if WITH_EDITOR
 TSubclassOf<UActorBehaviorBase> UActorBehaviorBase::DuplicateCheckClass() const
 {

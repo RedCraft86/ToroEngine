@@ -26,10 +26,19 @@ public:
 
 	UActorBehaviorBase();
 
+	/** Returns this behavior's identifier. */
+	UFUNCTION(BlueprintPure, Category = ActorBehaviors)
+	[[nodiscard]] const FGuid& GetBehaviorId() const { return BehaviorId; }
+
 protected:
+
+	/** Behavior identifier, generated during construction if invalid. */
+	UPROPERTY(EditAnywhere, Category = Settings, meta = (DisplayPriority = -99))
+	FGuid BehaviorId;
 
 	virtual void OnRegister() override;
 	virtual void OnUnregister() override;
+	virtual void OnConstruction() override;
 
 #if WITH_EDITOR
 	/**
