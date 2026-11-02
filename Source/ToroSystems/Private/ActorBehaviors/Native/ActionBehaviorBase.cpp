@@ -17,6 +17,12 @@ void UActionBehaviorBase::BeginPlay()
 	}
 }
 
+void UActionBehaviorBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	UnbindTrigger();
+	Super::EndPlay(EndPlayReason);
+}
+
 void UActionBehaviorBase::DoTrigger()
 {
 	if (!bTriggered)
@@ -24,13 +30,18 @@ void UActionBehaviorBase::DoTrigger()
 		if (bOnlyOnce)
 		{
 			bTriggered = true;
-			if (UTriggerBehaviorBase* Trigger = TriggerRef.Get<UTriggerBehaviorBase>())
-			{
-				Trigger->OnBeginTriggerNative.RemoveAll(this);
-			}
+			UnbindTrigger();
 		}
 
 		OnTriggered();
 		ReceiveOnTriggered();
+	}
+}
+
+void UActionBehaviorBase::UnbindTrigger()
+{
+	if (UTriggerBehaviorBase* Trigger = TriggerRef.Get<UTriggerBehaviorBase>())
+	{
+		Trigger->OnBeginTriggerNative.RemoveAll(this);
 	}
 }

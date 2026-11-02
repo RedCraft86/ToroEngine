@@ -27,14 +27,14 @@ private:
 	 * @param OtherActor Actor entering the owner's overlap.
 	 */
 	UFUNCTION()
-	void OnBeginOverlap(AActor*, AActor* OtherActor);
+	void OnBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 	/**
 	 * Ends the trigger if OtherActor is still a valid player-controlled pawn on exit.
 	 * @param OtherActor Actor leaving the owner's overlap.
 	 */
 	UFUNCTION()
-	void OnEndOverlap(AActor*, AActor* OtherActor);
+	void OnEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

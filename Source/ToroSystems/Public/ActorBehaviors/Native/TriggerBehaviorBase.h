@@ -5,11 +5,11 @@
 #include "ActorBehaviors/ActorBehaviorBase.h"
 #include "TriggerBehaviorBase.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTriggerBehaviorDelegate)
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FTriggerBehaviorTickDelegate, float, ElapsedTime, float, DeltaTime)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTriggerBehaviorDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FTriggerBehaviorTickDelegate, float, ElapsedTime, float, DeltaTime);
 
-DECLARE_MULTICAST_DELEGATE(FTriggerBehaviorDelegateNative)
-DECLARE_MULTICAST_DELEGATE_TwoParams(FTriggerBehaviorTickDelegateNative, float /* ElapsedTime */, float /* DeltaTime */)
+DECLARE_MULTICAST_DELEGATE(FTriggerBehaviorDelegateNative);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FTriggerBehaviorTickDelegateNative, float /*ElapsedTime*/, float /*DeltaTime*/);
 
 /**
  * Base behavior for a trigger with begin, end, and elapsed-time tick notifications.

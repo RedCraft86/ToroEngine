@@ -17,6 +17,7 @@
 UActorBehaviorBase::UActorBehaviorBase()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+	bAllowAnyoneToDestroyMe = false;
 	bAutoActivate = true;
 }
 

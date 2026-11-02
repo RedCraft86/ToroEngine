@@ -36,10 +36,13 @@ protected:
 
 	/** Native action hook, dispatched before ReceiveOnTriggered(). */
 	virtual void OnTriggered() {}
+
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
 
 	bool bTriggered;
 	void DoTrigger();
+	void UnbindTrigger();
 };
