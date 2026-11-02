@@ -30,6 +30,11 @@ public:
 	UFUNCTION(BlueprintPure, Category = ActorBehaviors)
 	[[nodiscard]] const FGuid& GetBehaviorId() const { return BehaviorId; }
 
+	/** Whether this behavior is eligible for saving; false by default. */
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent, Category = ActorBehaviors)
+	[[nodiscard]] bool EligibleForSaving() const;
+	virtual bool EligibleForSaving_Implementation() const { return false; }
+
 protected:
 
 	/** Behavior identifier, generated during construction if invalid. */

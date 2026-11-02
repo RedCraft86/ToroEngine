@@ -3,7 +3,8 @@
 #include "ActorBehaviors/Action/ActionBehaviorBase.h"
 #include "ActorBehaviors/Trigger/TriggerBehaviorBase.h"
 
-UActionBehaviorBase::UActionBehaviorBase(): bOnlyOnce(false), bTriggered(false)
+UActionBehaviorBase::UActionBehaviorBase()
+	: bOneShot(false), bPersistent(false), bTriggered(false)
 {
 	TriggerRef = FActorBehaviorRef::MakeFor<UTriggerBehaviorBase>(true);
 }
@@ -27,7 +28,7 @@ void UActionBehaviorBase::DoTrigger()
 {
 	if (!bTriggered)
 	{
-		if (bOnlyOnce)
+		if (bOneShot)
 		{
 			bTriggered = true;
 			UnbindTrigger();

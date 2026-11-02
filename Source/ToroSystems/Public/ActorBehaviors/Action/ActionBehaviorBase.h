@@ -10,6 +10,7 @@
  * Dispatches an action when a required sibling trigger broadcasts its native begin event.
  * Actions repeat by default. One-shot actions are consumed and unsubscribed before callbacks,
  * preventing recursive execution. The native hook runs before the Blueprint event.
+ * Persistent one-shot actions retain their consumed state when saved and loaded.
  */
 UCLASS(Abstract)
 class TOROSYSTEMS_API UActionBehaviorBase : public UActorBehaviorBase
@@ -32,17 +33,27 @@ protected:
 
 	/** Whether to consume and unsubscribe the action on its first execution; false by default. */
 	UPROPERTY(EditAnywhere, Category = Settings, meta = (DisplayPriority = -10))
-	bool bOnlyOnce;
+	bool bOneShot;
+
+	/** Whether this component is eligible for saving its one-shot trigger status; false by default. */
+	UPROPERTY(EditAnywhere, Category = Settings, meta = (DisplayPriority = -10, EditCondition = "bOneShot"))
+	bool bPersistent;
 
 	/** Native action hook, dispatched before ReceiveOnTriggered(). */
 	virtual void OnTriggered() {}
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual bool EligibleForSaving_Implementation() const override
+	{
+		return bOneShot && bPersistent;
+	}
 
 private:
 
+	UPROPERTY(SaveGame)
 	bool bTriggered;
+
 	void DoTrigger();
 	void UnbindTrigger();
 };
