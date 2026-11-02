@@ -15,7 +15,9 @@ class AActor;
  * their owner bindings and cached components. Containers and nested structs are not traversed.
  * Editor validation rejects other components matching DuplicateCheckClass(), including subclasses.
  */
-UCLASS(Abstract, Blueprintable, ClassGroup = (Feature), meta = (BlueprintSpawnableComponent, ChildCanTick = true))
+UCLASS(Abstract, Blueprintable, BlueprintType, ClassGroup = (Feature), PrioritizeCategories = (Settings),
+	HideCategories = (Activation, AssetUserData, Replication, ComponentReplication, Variable, Navigation, Cooking),
+	meta = (BlueprintSpawnableComponent, ChildCanTick = true))
 class TOROSYSTEMS_API UActorBehaviorComponent : public UToroActorComponent
 {
 	GENERATED_BODY()
