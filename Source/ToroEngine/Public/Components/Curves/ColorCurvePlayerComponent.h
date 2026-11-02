@@ -3,27 +3,27 @@
 #pragma once
 
 #include "DataTypes/InlineCurves.h"
-#include "BaseCurvePlayerComponent.h"
-#include "FloatCurvePlayerComponent.generated.h"
+#include "Components/Curves/BaseCurvePlayerComponent.h"
+#include "ColorCurvePlayerComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FFloatCurvePlayerEvaluateDelegate, float, Value, float, Time);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FColorCurvePlayerEvaluateDelegate, FLinearColor, Value, float, Time);
 
 /**
- * Plays a curve of scalar values, broadcasting its value and time as playback advances.
- * Uses inline keys or an external curve asset through FInlineFloatCurve.
- * Defaults to a one-second curve from 0 to 1; playback is initially stopped.
+ * Plays a curve of linear RGBA values, broadcasting its value and time as playback advances.
+ * Uses inline keys or an external curve asset through FInlineColorCurve.
+ * Defaults to a one-second curve from black to white; playback is initially stopped.
  * BeginPlay initializes the cached range and resets time to its start without notification.
  * SetCurve can initialize the range earlier; playback requires a duration greater than 0.1 seconds.
  */
-UCLASS(NotBlueprintable, BlueprintType, DisplayName = "Curve Player (Float)",
+UCLASS(NotBlueprintable, BlueprintType, DisplayName = "Curve Player (Color)",
 	ClassGroup = (Animation), meta = (BlueprintSpawnableComponent))
-class TOROSYSTEMS_API UFloatCurvePlayerComponent final : public UBaseCurvePlayerComponent
+class TOROENGINE_API UColorCurvePlayerComponent final : public UBaseCurvePlayerComponent
 {
 	GENERATED_BODY()
 
 public:
 
-	UFloatCurvePlayerComponent();
+	UColorCurvePlayerComponent();
 
 	/**
 	 * Replaces the curve when it contains data; empty input leaves the player unchanged.
@@ -32,24 +32,24 @@ public:
 	 * @param InCurve Curve data to copy, including any assigned external asset reference.
 	 */
 	UFUNCTION(BlueprintCallable, Category = CurvePlayer)
-	void SetCurve(const FInlineFloatCurve& InCurve);
+	void SetCurve(const FInlineColorCurve& InCurve);
 
 	/** Gets the stored curve wrapper by const reference. */
 	UFUNCTION(BlueprintPure, Category = CurvePlayer)
-	[[nodiscard]] const FInlineFloatCurve& GetCurve() const { return Curve; }
+	[[nodiscard]] const FInlineColorCurve& GetCurve() const { return Curve; }
 
 	/** Evaluates the curve at the current time without notifying listeners or requiring playback validity. */
 	UFUNCTION(BlueprintPure, Category = CurvePlayer)
-	[[nodiscard]] float GetValue() const { return Curve.GetValue(CurrentTime); }
+	[[nodiscard]] FLinearColor GetValue() const { return Curve.GetValue(CurrentTime); }
 
 	/**
 	 * Broadcasts the evaluated value and curve time in seconds after native evaluation listeners.
 	 * Emitted on playback ticks, accepted curve replacements, and notified seeks that change time.
 	 */
 	UPROPERTY(BlueprintAssignable, DisplayName = "On Evaluate")
-	FFloatCurvePlayerEvaluateDelegate OnEvaluate;
+	FColorCurvePlayerEvaluateDelegate OnEvaluate;
 
-	DECLARE_MULTICAST_DELEGATE_TwoParams(FEvaluateDelegateNative, float, float);
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FEvaluateDelegateNative, FLinearColor, float);
 	/** Native evaluated-value and current-time notification, broadcast before OnEvaluate. */
 	FEvaluateDelegateNative OnEvaluateNative;
 
@@ -62,7 +62,7 @@ protected:
 
 	/** Inline keys or an external asset; use SetCurve at runtime to refresh the cached range. */
 	UPROPERTY(EditAnywhere, Category = Settings)
-	FInlineFloatCurve Curve;
+	FInlineColorCurve Curve;
 
 	virtual void InitializeCurve() override;
 	virtual void BroadcastEval() const override;

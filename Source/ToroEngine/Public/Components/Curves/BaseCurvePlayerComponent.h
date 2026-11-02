@@ -31,7 +31,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCurvePlayerStateChangedDelegate, co
  * Playback and seeking require a valid curve with a duration greater than 0.1 seconds.
  */
 UCLASS(Abstract, NotBlueprintable, BlueprintType)
-class TOROSYSTEMS_API UBaseCurvePlayerComponent : public UActorComponent
+class TOROENGINE_API UBaseCurvePlayerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 

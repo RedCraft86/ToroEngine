@@ -3,7 +3,7 @@
 #pragma once
 
 #include "DataTypes/InlineCurves.h"
-#include "BaseCurvePlayerComponent.h"
+#include "Components/Curves/BaseCurvePlayerComponent.h"
 #include "VectorCurvePlayerComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FVectorCurvePlayerEvaluateDelegate, FVector, Value, float, Time);
@@ -17,7 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FVectorCurvePlayerEvaluateDelegate,
  */
 UCLASS(NotBlueprintable, BlueprintType, DisplayName = "Curve Player (Vector)",
 	ClassGroup = (Animation), meta = (BlueprintSpawnableComponent))
-class TOROSYSTEMS_API UVectorCurvePlayerComponent final : public UBaseCurvePlayerComponent
+class TOROENGINE_API UVectorCurvePlayerComponent final : public UBaseCurvePlayerComponent
 {
 	GENERATED_BODY()
 

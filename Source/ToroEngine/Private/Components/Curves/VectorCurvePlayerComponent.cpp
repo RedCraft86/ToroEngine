@@ -1,6 +1,6 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
-#include "CurvePlayers/VectorCurvePlayerComponent.h"
+#include "Components/Curves/VectorCurvePlayerComponent.h"
 
 UVectorCurvePlayerComponent::UVectorCurvePlayerComponent()
 {
