@@ -68,13 +68,19 @@ struct FWorldMusicSourceRef final
 
 /**
  * Manages nonspatial music and configurable per-track crossfades in game and PIE worlds.
- * Reads baseline configuration and loads the default track during initialization, then attempts playback at world BeginPlay.
- * Weak requester identities control dipping, pressure, and tension; stale requests are pruned after garbage collection
- * and during successful accumulator mutations. MetaSounds can consume Dipped, Pressure, Tension, and MoodDelta inputs.
- * Final pressure and tension are clamped to [0, 1]. MoodDelta is the change in their weighted intensity
- * since the previous parameter update: positive for increases, negative for decreases, and zero when unchanged.
- * Weights are defined in SetAudioParameters and default to 0.7 and 0.3 for Pressure and Tension respectively.
- * Outgoing tracks receive zero pressure, tension, and MoodDelta. Call this system on the game thread.
+ * Initialization reads baseline configuration and loads the default track.
+ * Playback is attempted at world BeginPlay.
+ * Requesters control dipping, pressure, and tension without being kept alive.
+ * Stale requests are pruned after garbage collection and during successful accumulator mutations.
+ * Compatible MetaSounds can consume these inputs:
+ * - Dipped: true while any dip request exists; also sent to outgoing tracks.
+ * - Pressure: combined pressure modifiers, clamped to [0, 1].
+ * - Tension: combined tension modifiers, clamped to [0, 1].
+ * - MoodDelta: change in weighted intensity since the previous parameter update.
+ *   Positive means increasing intensity, negative means decreasing, and zero means unchanged.
+ *   SetAudioParameters defines the weights: 0.7 for pressure and 0.3 for tension.
+ * Outgoing tracks receive zero Pressure, Tension, and MoodDelta.
+ * @note Call this system on the game thread.
  */
 UCLASS(MinimalAPI, NotBlueprintable, BlueprintType)
 class UWorldMusicSubsystem final : public UWorldSubsystem
@@ -85,22 +91,21 @@ public:
 
 	UWorldMusicSubsystem();
 
-	/** Returns the context world's music subsystem, or nullptr if the world or subsystem is unavailable. */
 	TOROSYSTEMS_API static UWorldMusicSubsystem* Get(const UObject* Context);
 
 	/**
-	 * Crossfades to a different track, or restarts a stopped track; failures are logged.
-	 * Requesting the current active track, including paused playback, succeeds without changes or parameter resets.
-	 * If component creation succeeds, the outgoing track fades out using the duration stored when it started.
+	 * Crossfades to a different track or restarts a stopped track.
+	 * Requesting the current active track, including paused playback, succeeds without changes or resets.
+	 * After successful component creation, the outgoing track fades out using its stored fade duration.
 	 * @param InTrack Sound to play. Parameter-driven behavior requires compatible MetaSound inputs.
-	 * @param FadeTime Incoming fade duration in seconds, also retained for its eventual fade-out.
-	 *        When starting a track, negative or non-finite values log a warning and become zero;
-	 *        zero or nearly zero durations switch immediately.
-	 * @param bResetParams Clears dip requests and external modifiers, then restores configured baseline contributions.
-	 *        Reset occurs before component creation and remains in effect if creation fails.
-	 *        On successful creation, the incoming track receives the reset's mood delta in one parameter update.
-	 * @return True if the track is already current or its component was created and playback requested;
-	 *         false if the system or track is invalid, or component creation fails. Does not confirm audible playback.
+	 * @param FadeTime Incoming fade duration in seconds, retained for this track's eventual fade-out.
+	 *        Zero or nearly zero starts immediately; negative or non-finite values log a warning and become zero.
+	 * @param bResetParams Clear dip requests and external modifiers, then restore configured baselines.
+	 * @return True if the track is already current or its component was created and playback requested.
+	 *         False if the system or track is invalid, or component creation fails; failures are logged.
+	 *         Success does not confirm audible playback.
+	 * @note Parameter resets happen before component creation and persist if creation fails.
+	 *       On success, the incoming track receives the reset's mood delta in one parameter update.
 	 */
 	UFUNCTION(BlueprintCallable, Category = WorldMusic)
 	TOROSYSTEMS_API bool SetCurrentTrack(USoundBase* InTrack, float FadeTime, bool bResetParams);
