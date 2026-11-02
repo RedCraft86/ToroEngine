@@ -34,7 +34,7 @@
 
 #include "DataTypes/WrappedTypes.h"
 #include "DataTypes/InlineCurves.h"
-#include "DataTypes/ToroIdentity.h"
+#include "DataTypes/TaggedIdentity.h"
 #include "DataTypes/SimpleCooldown.h"
 
 void FToroEngineEdModule::StartupModule()
@@ -62,7 +62,7 @@ void FToroEngineEdModule::StartupModule()
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FInlineFloatCurve>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FInlineVectorCurve>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FInlineColorCurve>();
-	FToroStructCustomization::Register<FToroInlineStructCustomization, FToroIdentity>();
+	FToroStructCustomization::Register<FToroInlineStructCustomization, FTaggedIdentity>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FSimpleCooldown>();
 
 	FToroClassCustomization::Register<FToroActorCustomization, AToroActor>();

@@ -8,7 +8,7 @@
 #include "Serialization/StructuredArchive.h"
 #include "UObject/StructOpsTypeTraits.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "ToroIdentity.generated.h"
+#include "TaggedIdentity.generated.h"
 
 class FEditPropertyChain;
 
@@ -19,7 +19,7 @@ class FEditPropertyChain;
  * both fields, so do not modify them while this identity is stored as a hashed key.
  */
 USTRUCT(BlueprintType)
-struct TOROENGINE_API FToroIdentity final
+struct TOROENGINE_API FTaggedIdentity final
 {
 	GENERATED_BODY()
 
@@ -32,10 +32,10 @@ struct TOROENGINE_API FToroIdentity final
 	FGuid Guid;
 
 	/** Empty identity with no group and an invalid, all-zero GUID. */
-	static const FToroIdentity Empty;
+	static const FTaggedIdentity Empty;
 
 	/** Constructs an empty identity with no group and an invalid GUID. */
-	FToroIdentity()
+	FTaggedIdentity()
 		: Group(FGameplayTag::EmptyTag)
 		, Guid()
 	{}
@@ -44,7 +44,7 @@ struct TOROENGINE_API FToroIdentity final
 	 * Constructs an identity with the supplied group and a newly generated GUID.
 	 * @param InGroup Group to assign; an empty tag leaves the identity invalid.
 	 */
-	explicit FToroIdentity(const FGameplayTag& InGroup)
+	explicit FTaggedIdentity(const FGameplayTag& InGroup)
 		: Group(InGroup)
 		, Guid(FGuid::NewGuid())
 	{}
@@ -54,7 +54,7 @@ struct TOROENGINE_API FToroIdentity final
 	 * @param InGroup Group to assign.
 	 * @param InGuid GUID to assign. Both components must be valid for IsValid() to succeed.
 	 */
-	FToroIdentity(const FGameplayTag& InGroup, const FGuid& InGuid)
+	FTaggedIdentity(const FGameplayTag& InGroup, const FGuid& InGuid)
 		: Group(InGroup)
 		, Guid(InGuid)
 	{}
@@ -64,27 +64,27 @@ struct TOROENGINE_API FToroIdentity final
 		return IsValid();
 	}
 
-	[[nodiscard]] FORCEINLINE bool operator==(const FToroIdentity& Other) const
+	[[nodiscard]] FORCEINLINE bool operator==(const FTaggedIdentity& Other) const
 	{
 		return Group == Other.Group && Guid == Other.Guid;
 	}
 
-	[[nodiscard]] FORCEINLINE bool operator!=(const FToroIdentity& Other) const
+	[[nodiscard]] FORCEINLINE bool operator!=(const FTaggedIdentity& Other) const
 	{
 		return Group != Other.Group || Guid != Other.Guid;
 	}
 
-	[[nodiscard]] FORCEINLINE friend uint32 GetTypeHash(const FToroIdentity& Identity)
+	[[nodiscard]] FORCEINLINE friend uint32 GetTypeHash(const FTaggedIdentity& Identity)
 	{
 		return HashCombine(GetTypeHash(Identity.Group), GetTypeHash(Identity.Guid));
 	}
 
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, FToroIdentity& Identity)
+	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, FTaggedIdentity& Identity)
 	{
 		return Ar << Identity.Group << Identity.Guid;
 	}
 
-	FORCEINLINE friend void operator<<(FStructuredArchive::FSlot Slot, FToroIdentity& Identity)
+	FORCEINLINE friend void operator<<(FStructuredArchive::FSlot Slot, FTaggedIdentity& Identity)
 	{
 		FStructuredArchive::FRecord Record = Slot.EnterRecord();
 		Record << SA_VALUE(TEXT("Group"), Identity.Group) << SA_VALUE(TEXT("Guid"), Identity.Guid);
@@ -127,7 +127,7 @@ struct TOROENGINE_API FToroIdentity final
 };
 
 template<>
-struct TStructOpsTypeTraits<FToroIdentity> : TStructOpsTypeTraitsBase2<FToroIdentity>
+struct TStructOpsTypeTraits<FTaggedIdentity> : TStructOpsTypeTraitsBase2<FTaggedIdentity>
 {
 	enum
 	{
@@ -138,9 +138,11 @@ struct TStructOpsTypeTraits<FToroIdentity> : TStructOpsTypeTraitsBase2<FToroIden
 	};
 };
 
-/** Blueprint construction, comparison, formatting, and in-place mutation of Toro identities. */
+/**
+ * Blueprint comparison, formatting, validation, and in-place mutation of tagged identities.
+ */
 UCLASS(NotBlueprintable, NotBlueprintType)
-class TOROENGINE_API UToroIdentityLibrary final : public UBlueprintFunctionLibrary
+class TOROENGINE_API UTaggedIdentityLibrary final : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
@@ -148,23 +150,23 @@ public:
 
 	/** Returns whether the identity has both a valid group and a nonzero GUID. */
 	UFUNCTION(BlueprintPure, Category = Identity)
-	static bool IsIdentityValid(const FToroIdentity& Identity);
+	static bool IsIdentityValid(const FTaggedIdentity& Identity);
 
 	/** Compares both group and GUID exactly; invalid identities are compared by their stored fields too. */
 	UFUNCTION(BlueprintPure, Category = Identity, meta = (CompactNodeTitle = "==", Keywords = "== equal"))
-	static bool EqualIdentity(const FToroIdentity& A, const FToroIdentity& B);
+	static bool EqualIdentity(const FTaggedIdentity& A, const FTaggedIdentity& B);
 
 	/** Returns whether either the group or GUID differs, using exact field comparison. */
 	UFUNCTION(BlueprintPure, Category = Identity, meta = (CompactNodeTitle = "!=", Keywords = "!= not equal"))
-	static bool NotEqualIdentity(const FToroIdentity& A, const FToroIdentity& B);
+	static bool NotEqualIdentity(const FTaggedIdentity& A, const FTaggedIdentity& B);
 
 	/** Formats the identity as Group[Guid], using the default GUID string format. */
-	UFUNCTION(BlueprintPure, Category = Identity, meta = (DisplayName = "To String (ToroIdentity)", CompactNodeTitle = "->", BlueprintAutocast))
-	static FString Conv_ToroIdentityToString(const FToroIdentity& Identity);
+	UFUNCTION(BlueprintPure, Category = Identity, meta = (DisplayName = "To String (TaggedIdentity)", CompactNodeTitle = "->", BlueprintAutocast))
+	static FString Conv_TaggedIdentityToString(const FTaggedIdentity& Identity);
 
 	/** Clears the supplied identity's group and invalidates its GUID. */
 	UFUNCTION(BlueprintCallable, Category = Identity)
-	static void InvalidateIdentity(UPARAM(ref) FToroIdentity& Identity);
+	static void InvalidateIdentity(UPARAM(ref) FTaggedIdentity& Identity);
 
 	/**
 	 * Updates the supplied identity's GUID while preserving its group.
@@ -172,5 +174,5 @@ public:
 	 *        When false, generates a replacement GUID on each execution.
 	 */
 	UFUNCTION(BlueprintCallable, Category = Identity)
-	static void RegenerateIdentityGuid(UPARAM(ref) FToroIdentity& Identity, bool bOnlyIfInvalid = false);
+	static void RegenerateIdentityGuid(UPARAM(ref) FTaggedIdentity& Identity, bool bOnlyIfInvalid = false);
 };

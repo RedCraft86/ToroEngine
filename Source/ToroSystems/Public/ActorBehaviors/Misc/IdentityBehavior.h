@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "DataTypes/ToroIdentity.h"
+#include "DataTypes/TaggedIdentity.h"
 #include "ActorBehaviors/ActorBehaviorBase.h"
 #include "IdentityBehavior.generated.h"
 
@@ -22,7 +22,7 @@ public:
 
 	/** Returns the stored identity by const reference; it may be invalid. */
 	UFUNCTION(BlueprintPure, Category = ActorBehaviors)
-	[[nodiscard]] TOROSYSTEMS_API const FToroIdentity& GetIdentity() const
+	[[nodiscard]] TOROSYSTEMS_API const FTaggedIdentity& GetIdentity() const
 	{
 		return Identity;
 	}
@@ -34,7 +34,7 @@ private:
 	 * Existing valid GUIDs are preserved, so the author must ensure uniqueness across duplicated actors.
 	 */
 	UPROPERTY(EditAnywhere, Category = Settings)
-	FToroIdentity Identity;
+	FTaggedIdentity Identity;
 
 	virtual void OnConstruction() override
 	{
