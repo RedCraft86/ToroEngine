@@ -70,10 +70,11 @@ struct FWorldMusicSourceRef final
  * Manages nonspatial music and configurable per-track crossfades in game and PIE worlds.
  * Reads baseline configuration and loads the default track during initialization, then attempts playback at world BeginPlay.
  * Weak requester identities control dipping, pressure, and tension; stale requests are pruned after garbage collection
- * and during successful accumulator mutations.
- * MetaSounds can consume Dipped, Pressure, Tension, and MoodDelta inputs. Call this system on the game thread.
- * MoodDelta is the change in pressure plus tension since the previous parameter update: positive for increases,
- * negative for decreases, and zero when unchanged. Outgoing tracks receive zero pressure, tension, and MoodDelta.
+ * and during successful accumulator mutations. MetaSounds can consume Dipped, Pressure, Tension, and MoodDelta inputs.
+ * Final pressure and tension are clamped to [0, 1]. MoodDelta is the change in their weighted intensity
+ * since the previous parameter update: positive for increases, negative for decreases, and zero when unchanged.
+ * Weights are defined in SetAudioParameters and default to 0.7 and 0.3 for Pressure and Tension respectively.
+ * Outgoing tracks receive zero pressure, tension, and MoodDelta. Call this system on the game thread.
  */
 UCLASS(MinimalAPI, NotBlueprintable, BlueprintType)
 class UWorldMusicSubsystem final : public UWorldSubsystem
@@ -120,7 +121,7 @@ public:
 	 * Adds or replaces one pressure modifier for a valid source without retaining the source.
 	 * @param Source Request identity; invalid sources are ignored.
 	 * @param Value Additive contribution or multiplier. Values are not clamped.
-	 * @param Type Final pressure is the additive sum multiplied by the multiplier product.
+	 * @param Type Final pressure is the additive sum multiplied by the multiplier product, then clamped to [0, 1].
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = WorldMusic)
 	TOROSYSTEMS_API void AddPressure(const UObject* Source, float Value,
@@ -134,7 +135,7 @@ public:
 	 * Adds or replaces one tension modifier for a valid source without retaining the source.
 	 * @param Source Request identity; invalid sources are ignored.
 	 * @param Value Additive contribution or multiplier. Values are not clamped.
-	 * @param Type Final tension is the additive sum multiplied by the multiplier product.
+	 * @param Type Final tension is the additive sum multiplied by the multiplier product, then clamped to [0, 1].
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = WorldMusic)
 	TOROSYSTEMS_API void AddTension(const UObject* Source, float Value,

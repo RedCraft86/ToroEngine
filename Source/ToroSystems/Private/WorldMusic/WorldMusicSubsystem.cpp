@@ -91,7 +91,7 @@ void FWorldMusicSourceRef::Destroy()
 	}
 }
 
-UWorldMusicSubsystem::UWorldMusicSubsystem() : DefaultFadeTime(1.0f), LastMoodIntensity(0.0f)
+UWorldMusicSubsystem::UWorldMusicSubsystem(): DefaultFadeTime(1.0f), LastMoodIntensity(0.0f)
 {
 	DipRequests = TAccumulatorSet<TWeakObjectPtr<const UObject>>::Make(
 		[](const TWeakObjectPtr<const UObject>& Key) -> bool
@@ -259,7 +259,14 @@ void UWorldMusicSubsystem::SetAudioParameters(float FinalPressure, float FinalTe
 		static const FName PARAM_Tension(TEXT("Tension"));
 		static const FName PARAM_MoodDelta(TEXT("MoodDelta"));
 
-		const float CurrentMood = FinalPressure + FinalTension;
+		// Keep weights nonnegative and summing to one for a normalized mood intensity.
+		constexpr float PressureWeight = 0.7f;
+		constexpr float TensionWeight = 1.0f - PressureWeight;
+
+		FinalPressure = FMath::Clamp(FinalPressure, 0.0f, 1.0f);
+		FinalTension = FMath::Clamp(FinalTension, 0.0f, 1.0f);
+
+		const float CurrentMood = FinalPressure * PressureWeight + FinalTension * TensionWeight;
 		const float MoodDelta = CurrentMood - LastMoodIntensity;
 		LastMoodIntensity = CurrentMood;
 
