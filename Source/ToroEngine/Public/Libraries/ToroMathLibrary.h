@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Templates/Function.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ToroMathLibrary.generated.h"
 
@@ -104,7 +105,7 @@ public:
 	 * @param Func Valid callable receiving the current accumulator and next element by const reference, returning the next T value.
 	 */
 	template <typename T>
-	[[nodiscard]] static T ArrayOperate(const TArray<T>& InArray, const T& BaseValue, const TFunction<T(const T&, const T&)>& Func)
+	[[nodiscard]] static T ArrayOperate(const TArray<T>& InArray, const T& BaseValue, const TFunctionRef<T(const T&, const T&)>& Func)
 	{
 		T Result = BaseValue;
 		for (int32 i = 0; i < InArray.Num(); i++)
