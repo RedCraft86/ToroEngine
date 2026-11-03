@@ -12,6 +12,7 @@ public class ToroSystems : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
+			"Json",
 			"RenderCore",
 			"MetasoundEngine",
 			"ToroEngine"
