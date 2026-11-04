@@ -39,17 +39,17 @@ enum class EToroSequenceStopType : uint8
 };
 
 /**
- * Requested level loading and visibility state; asynchronous transitions may still be in progress.
+ * Requested level or data-layer loading and visibility state; asynchronous transitions may still be in progress.
  */
 UENUM(BlueprintType)
-enum class EToroLevelStreamState : uint8
+enum class EToroStreamingState : uint8
 {
-	/** The level should be unloaded. */
+	/** The level or data-layer should be unloaded. */
 	Unloaded,
 
-	/** The level should be loaded without being visible. */
+	/** The level or data-layer should be loaded without being visible. */
 	Loaded,
 
-	/** The level should be loaded and visible. */
-	Visible
+	/** The level or data-layer should be loaded and visible. */
+	Activated
 };

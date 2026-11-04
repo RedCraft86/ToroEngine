@@ -67,7 +67,7 @@ public:
 	 *         otherwise Visible when visibility is requested, or Loaded when it is not.
 	 */
 	UFUNCTION(BlueprintCallable, Category = World, meta = (WorldContext = ContextObject))
-	[[nodiscard]] static EToroLevelStreamState GetLevelStreamState(const UObject* ContextObject, TSoftObjectPtr<UWorld> Level);
+	[[nodiscard]] static EToroStreamingState GetLevelStreamState(const UObject* ContextObject, TSoftObjectPtr<UWorld> Level);
 
 	/**
 	 * Requests a nonblocking streaming transition and waits for the native action to complete.
@@ -82,5 +82,5 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = World, meta = (Latent, LatentInfo = LatentInfo, WorldContext = ContextObject))
 	static FVoidCoroutine SetLevelStreamState(FLatentActionInfo LatentInfo, const UObject* ContextObject,
-		ULevelStreaming*& StreamedLevel, TSoftObjectPtr<UWorld> Level, EToroLevelStreamState State);
+		ULevelStreaming*& StreamedLevel, TSoftObjectPtr<UWorld> Level, EToroStreamingState State);
 };

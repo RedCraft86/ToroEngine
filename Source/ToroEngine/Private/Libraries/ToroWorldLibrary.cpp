@@ -46,20 +46,20 @@ bool UToroWorldLibrary::IsPersistentLevel(const ULevel* Target)
 		&& Target->OwningWorld->PersistentLevel == Target;
 }
 
-EToroLevelStreamState UToroWorldLibrary::GetLevelStreamState(const UObject* ContextObject, TSoftObjectPtr<UWorld> Level)
+EToroStreamingState UToroWorldLibrary::GetLevelStreamState(const UObject* ContextObject, TSoftObjectPtr<UWorld> Level)
 {
 	const FName LevelName = FName(*FPackageName::ObjectPathToPackageName(Level.ToString()));
 	const ULevelStreaming* StreamedLevel = UGameplayStatics::GetStreamingLevel(ContextObject, LevelName);
 	if (!IsValid(StreamedLevel) || !StreamedLevel->ShouldBeLoaded())
 	{
-		return EToroLevelStreamState::Unloaded;
+		return EToroStreamingState::Unloaded;
 	}
 
-	return StreamedLevel->ShouldBeVisible() ? EToroLevelStreamState::Visible : EToroLevelStreamState::Loaded;
+	return StreamedLevel->ShouldBeVisible() ? EToroStreamingState::Activated : EToroStreamingState::Loaded;
 }
 
 FVoidCoroutine UToroWorldLibrary::SetLevelStreamState(FLatentActionInfo LatentInfo, const UObject* ContextObject,
-	ULevelStreaming*& StreamedLevel, TSoftObjectPtr<UWorld> Level, EToroLevelStreamState State)
+	ULevelStreaming*& StreamedLevel, TSoftObjectPtr<UWorld> Level, EToroStreamingState State)
 {
 	const FName LevelName = FName(*FPackageName::ObjectPathToPackageName(Level.ToString()));
 	StreamedLevel = UGameplayStatics::GetStreamingLevel(ContextObject, LevelName);
@@ -68,7 +68,7 @@ FVoidCoroutine UToroWorldLibrary::SetLevelStreamState(FLatentActionInfo LatentIn
 		co_return;
 	}
 
-	if (State == EToroLevelStreamState::Unloaded)
+	if (State == EToroStreamingState::Unloaded)
 	{
 		co_await UE5Coro::Latent::ChainEx(&UGameplayStatics::UnloadStreamLevel,
 			ContextObject, LevelName, std::placeholders::_2, false);
@@ -76,12 +76,12 @@ FVoidCoroutine UToroWorldLibrary::SetLevelStreamState(FLatentActionInfo LatentIn
 	else // State == Loaded or Visible
 	{
 		const TWeakObjectPtr<ULevelStreaming> WeakLevel(StreamedLevel);
-		if (State == EToroLevelStreamState::Loaded)
+		if (State == EToroStreamingState::Loaded)
 		{
 			StreamedLevel->SetShouldBeVisible(false);
 		}
 
 		co_await UE5Coro::Latent::ChainEx(&UGameplayStatics::LoadStreamLevel, ContextObject,
-			LevelName, State == EToroLevelStreamState::Visible, false, std::placeholders::_2);
+			LevelName, State == EToroStreamingState::Activated, false, std::placeholders::_2);
 	}
 }
