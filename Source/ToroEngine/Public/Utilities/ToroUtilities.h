@@ -2,14 +2,30 @@
 
 #pragma once
 
+#include "UObject/Class.h"
+#include "UObject/Object.h"
+#include "UObject/Interface.h"
 #include "Containers/UnrealString.h"
+#include "Templates/UnrealTypeTraits.h"
 
-class UObject;
 class UWorld;
 struct FLatentActionInfo;
 
 namespace ToroEngine
 {
+	/**
+	 * Checks if an interface is implemented on the target object.
+	 * @tparam T Reflected UInterface subclass, such as UActivatableObject, rather than its native I... type.
+	 * @param Target Object to inspect; may be null.
+	 * @return True when Target is valid and implements T; false for null, invalid, or non-implementing objects.
+	 */
+	template<typename T>
+	bool ImplementsInterface(const UObject* Target)
+	{
+		static_assert(TIsDerivedFrom<T, UInterface>::Value, "T must derive from UInterface");
+		return IsValid(Target) && Target->Implements<T>();
+	}
+
 	/**
 	 * Resolves a valid world from the optional context on the game thread.
 	 * If permitted and context resolution fails, tries the current play world, then GWorld.
