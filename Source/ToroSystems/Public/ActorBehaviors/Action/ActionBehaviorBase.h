@@ -7,6 +7,14 @@
 #include "ActorBehaviors/ActorBehaviorRef.h"
 #include "ActionBehaviorBase.generated.h"
 
+/** How an action changes a target's boolean state. */
+UENUM(BlueprintType)
+enum class EToroActionApplyType : uint8
+{
+	Set,
+	Toggle
+};
+
 /**
  * Dispatches an action when a required sibling trigger broadcasts its native begin event.
  * Actions repeat by default. One-shot actions are consumed and unsubscribed before scheduling or execution.
