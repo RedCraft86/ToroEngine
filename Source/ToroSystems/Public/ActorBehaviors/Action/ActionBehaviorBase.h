@@ -80,7 +80,13 @@ private:
 	void DoTrigger();
 	void ExecuteAction();
 	void UnbindTrigger();
-#if WITH_EDITORONLY_DATA
+
+#if WITH_EDITOR
+	virtual TSubclassOf<UActorBehaviorBase> DuplicateCheckClass() const override
+	{
+		return nullptr;
+	}
+
 	virtual bool CanEditChange(const FProperty* InProperty) const override
 	{
 		const bool bSuper = Super::CanEditChange(InProperty);
