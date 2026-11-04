@@ -59,6 +59,10 @@
 			"Enabled": true
 		},
 		{
+			"Name": "AsyncMessageSystem",
+			"Enabled": true
+		},
+		{
 			"Name": "CommonUI",
 			"Enabled": true
 		},
