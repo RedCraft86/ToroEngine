@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CommonTextBlock.h"
+#include "Components/TextBlock.h"
 #include "GameVersionBlock.generated.h"
 
 /**
@@ -11,7 +11,7 @@
  * rebuilt and uses "Version: Unknown" if project settings are unavailable.
  */
 UCLASS(MinimalAPI, NotBlueprintable, BlueprintType)
-class UGameVersionBlock final : public UCommonTextBlock
+class UGameVersionBlock final : public UTextBlock
 {
 	GENERATED_BODY()
 

@@ -23,7 +23,6 @@ public class ToroEngine : ModuleRules
 			"GameplayTags",
 			"LevelSequence",
 			"MovieScene",
-			"CommonUI",
 			"PakFile",
 			"UE5Coro"
 		]);

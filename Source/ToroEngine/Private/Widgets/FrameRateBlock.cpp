@@ -83,11 +83,13 @@ TSharedRef<SWidget> UFrameRateBlock::RebuildWidget()
 {
 	ClearActiveTimer();
 	TSharedRef<SWidget> Widget = Super::RebuildWidget();
+#if WITH_EDITOR
 	if (IsDesignTime())
 	{
 		SetText(INVTEXT("60 FPS\n16.67 ms"));
 	}
 	else
+#endif
 	{
 		TickHandle = Widget->RegisterActiveTimer(0.1f, FWidgetActiveTimerDelegate
 			::CreateUObject(this, &UFrameRateBlock::Update)

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CommonTextBlock.h"
+#include "Components/TextBlock.h"
 #include "DataTypes/CachedGetter.h"
 #include "GameFramework/GameUserSettings.h"
 #include "FrameRateBlock.generated.h"
@@ -14,7 +14,7 @@
  * Hidden and collapsed widgets skip display updates; the designer uses static preview text.
  */
 UCLASS(MinimalAPI, NotBlueprintable, BlueprintType)
-class UFrameRateBlock final : public UCommonTextBlock
+class UFrameRateBlock final : public UTextBlock
 {
 	GENERATED_BODY()
 
