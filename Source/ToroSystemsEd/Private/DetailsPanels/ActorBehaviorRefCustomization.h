@@ -122,7 +122,7 @@ class FActorBehaviorRefCustomization final : public FToroStructCustomization
 		}
 
 		static const FSlateRoundedBoxBrush BadgeBrush(FStyleColors::Recessed, 4.0f);
-		const FSlateFontInfo MonoFont = FCoreStyle::GetDefaultFontStyle(TEXT("Mono"), 10);
+		const FSlateFontInfo MonoFont = FCoreStyle::GetDefaultFontStyle(TEXT("Mono"), 10.0f);
 		const FActorBehaviorRef* StructPtr = static_cast<const FActorBehaviorRef*>(RawData[0]);
 
 		FText StatusText;
@@ -148,9 +148,14 @@ class FActorBehaviorRefCustomization final : public FToroStructCustomization
 			StatusColor = StructPtr->IsRequired() ? FStyleColors::AccentRed : FStyleColors::AccentYellow;
 		}
 
+		const FText RequireText = StructPtr->IsRequired()
+			? LOCTEXT("BehaviorRefRequired", "(Required)")
+			: LOCTEXT("BehaviorRefOptional", "(Optional)");
+
 		HeaderRow.ValueContent()
 		[
 			SNew(SHorizontalBox)
+			.ToolTipText(FText::Format(INVTEXT("{0} {1}"), StatusText, RequireText))
 			+SHorizontalBox::Slot()
 			.VAlign(VAlign_Center)
 			.AutoWidth()
@@ -180,22 +185,17 @@ class FActorBehaviorRefCustomization final : public FToroStructCustomization
 					.OverflowPolicy(ETextOverflowPolicy::Ellipsis)
 				]
 			]
-		];
-
-		if (StructPtr->IsRequired())
-		{
-			HeaderRow.ExtensionContent()
+			+SHorizontalBox::Slot()
+			.AutoWidth()
+			.VAlign(VAlign_Center)
+			.Padding(2.0f, 0.0f)
 			[
-				SNew(SBox)
-				.Padding(5.0f, 0.0f)
-				[
-					SNew(STextBlock)
-					.Font(IDetailLayoutBuilder::GetDetailFontBold())
-					.ColorAndOpacity(FSlateColor::UseSubduedForeground())
-					.Text(LOCTEXT("BehaviorRefRequired", "(Required)"))
-				]
-			];
-		}
+				SNew(STextBlock)
+				.Font(IDetailLayoutBuilder::GetDetailFontBold())
+				.ColorAndOpacity(FSlateColor::UseSubduedForeground())
+				.Text(RequireText)
+			]
+		];
 	}
 };
 #undef STRUCT_NAME
