@@ -44,9 +44,9 @@ void USaveGameBehavior::OnLoadedDifferentSlot()
 TOptional<FTaggedIdentity> USaveGameBehavior::GetIdentity()
 {
 	const UIdentityBehavior* Identity = IdentityRef.Get<UIdentityBehavior>();
-	if (IsValid(Identity) && Identity->GetIdentity().IsValid())
+	if (IsValid(Identity) && Identity->Identity.IsValid())
 	{
-		return Identity->GetIdentity();
+		return Identity->Identity;
 	}
 
 	return TOptional<FTaggedIdentity>();

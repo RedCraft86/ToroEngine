@@ -7,9 +7,10 @@
 #include "IdentityBehavior.generated.h"
 
 /**
- * Exposes an identity for the owning actor with a manually configured group.
- * Construction generates a GUID only when missing, preserving existing valid GUIDs.
- * Uniqueness across duplicated actors is not enforced.
+ * Exposes a mutable identity for the owning actor with a manually configured group.
+ * Construction generates a random GUID only when missing, preserving existing valid
+ * GUIDs and leaving the group unchanged. Callers can assign a deterministic identity
+ * when replacement actors must share the same persistent identity.
  */
 UCLASS(MinimalAPI, NotBlueprintable, ClassGroup = (Feature), meta = (BlueprintSpawnableComponent))
 class UIdentityBehavior final : public UActorBehaviorBase
@@ -18,27 +19,19 @@ class UIdentityBehavior final : public UActorBehaviorBase
 
 public:
 
-	UIdentityBehavior() {}
-
-	/** Returns the stored identity by const reference; it may be invalid. */
-	UFUNCTION(BlueprintPure, Category = ActorBehaviors)
-	[[nodiscard]] TOROSYSTEMS_API const FTaggedIdentity& GetIdentity() const
-	{
-		return Identity;
-	}
+	/**
+	 * Caller-editable identity; consumers determine whether it meets their requirements.
+	 * Construction fills an invalid GUID with a random GUID without assigning a group.
+	 * Assign distinct identities when actors of the same class require separate save records.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
+	FTaggedIdentity Identity;
 
 private:
-
-	/**
-	 * Identity requiring a manually assigned valid group; construction generates a missing GUID.
-	 * Existing valid GUIDs are preserved, so the author must ensure uniqueness across duplicated actors.
-	 */
-	UPROPERTY(EditAnywhere, Category = Settings)
-	FTaggedIdentity Identity;
 
 	virtual void OnConstruction() override
 	{
 		Super::OnConstruction();
-		Identity.RegenerateGuid(true);
+		Identity.RegenerateGuid();
 	}
 };
