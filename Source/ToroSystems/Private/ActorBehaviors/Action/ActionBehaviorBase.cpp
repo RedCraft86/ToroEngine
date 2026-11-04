@@ -34,7 +34,7 @@ void UActionBehaviorBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void UActionBehaviorBase::DoTrigger()
 {
 	const UWorld* World = GetWorld();
-	if (bTriggered || !World)
+	if (bTriggered || !World || !CanTrigger())
 	{
 		return;
 	}

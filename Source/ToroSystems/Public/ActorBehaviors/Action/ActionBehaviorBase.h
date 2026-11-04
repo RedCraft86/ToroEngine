@@ -52,6 +52,9 @@ protected:
 	/** Native action hook, dispatched before ReceiveOnTriggered(). */
 	virtual void OnTriggered() {}
 
+	/** Whether a new trigger may be accepted before one-shot consumption or delay scheduling. */
+	virtual bool CanTrigger() const { return true; }
+
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual bool EligibleForSaving_Implementation() const override
