@@ -30,6 +30,7 @@ class UAmbientSoundActionBehavior final : public UActionBehaviorBase
 
 	/** Existing ambient-sound actor to control. */
 	UPROPERTY(EditAnywhere, Category = Settings)
+	// ReSharper disable once UnrealHeaderToolError
 	TSoftObjectPtr<AAmbientSound> Target;
 
 	/** Playback command to request. */
