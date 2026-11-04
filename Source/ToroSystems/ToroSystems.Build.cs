@@ -16,6 +16,7 @@ public class ToroSystems : ModuleRules
 			"RenderCore",
 			"MetasoundEngine",
 			"AsyncMessageSystem",
+			"DeveloperSettings",
 			"LevelSequence",
 			"ToroEngine"
 		]);
