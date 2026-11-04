@@ -54,7 +54,7 @@ protected:
 	float Delay;
 
 	/** Whether repeatable triggers restart a pending delay; otherwise they are ignored. False by default. */
-	UPROPERTY(EditAnywhere, Category = Control, meta = (EditCondition = "!bOneShot && Delay >= 0.1f"))
+	UPROPERTY(EditAnywhere, Category = Control)
 	bool bRetriggerable;
 
 	/** Native action hook, dispatched before ReceiveOnTriggered(). */
@@ -80,4 +80,16 @@ private:
 	void DoTrigger();
 	void ExecuteAction();
 	void UnbindTrigger();
+#if WITH_EDITORONLY_DATA
+	virtual bool CanEditChange(const FProperty* InProperty) const override
+	{
+		const bool bSuper = Super::CanEditChange(InProperty);
+		if (InProperty && InProperty->GetFName() == GET_MEMBER_NAME_CHECKED(UActionBehaviorBase, bRetriggerable))
+		{
+			return bSuper && !bOneShot && Delay > 0.1f;
+		}
+
+		return bSuper;
+	}
+#endif
 };
