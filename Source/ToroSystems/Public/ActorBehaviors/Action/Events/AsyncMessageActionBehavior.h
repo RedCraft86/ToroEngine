@@ -18,7 +18,7 @@ class UAsyncMessageActionBehavior final : public UActionBehaviorBase
 	GENERATED_BODY()
 
 	/** Message identifier to broadcast. */
-	UPROPERTY(EditAnywhere, Category = Settings, meta = (ShowOnlyInnerProperties = true))
+	UPROPERTY(EditAnywhere, Category = Settings)
 	FAsyncMessageId MessageId;
 
 	/** Optional struct payload copied into the message queue. */
