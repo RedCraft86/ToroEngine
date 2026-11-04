@@ -68,13 +68,11 @@ class TAccumulatorSet final : public TSharedFromThis<TAccumulatorSet<T>>
 
 public:
 
-	DECLARE_MULTICAST_DELEGATE(FOnChangedDelegate);
-
 	/**
 	 * Broadcasts synchronously after a successful addition or removal and its cleanup,
 	 * or after explicit Cleanup() removes elements.
 	 */
-	FOnChangedDelegate OnChanged;
+	FSimpleMulticastDelegate OnChanged;
 
 	TAccumulatorSet() = delete;
 	TAccumulatorSet(const TAccumulatorSet&) = delete;

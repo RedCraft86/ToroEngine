@@ -69,14 +69,12 @@ class TAccumulatorMap final : public TSharedFromThis<TAccumulatorMap<K, V>>
 
 public:
 
-	DECLARE_MULTICAST_DELEGATE(FOnChangedDelegate);
-
 	/**
 	 * Broadcasts synchronously after a successful addition or removal and its cleanup,
 	 * or after explicit Cleanup() removes entries.
 	 * Accepted additions notify even when replacing a value with an equal value.
 	 */
-	FOnChangedDelegate OnChanged;
+	FSimpleMulticastDelegate OnChanged;
 
 	TAccumulatorMap() = delete;
 	TAccumulatorMap(const TAccumulatorMap&) = delete;
