@@ -16,11 +16,8 @@ public class ToroSystems : ModuleRules
 			"RenderCore",
 			"MetasoundEngine",
 			"AsyncMessageSystem",
+			"LevelSequence",
 			"ToroEngine"
-		]);
-
-		PrivateDependencyModuleNames.AddRange([
-			"LevelSequence"
 		]);
 	}
 }

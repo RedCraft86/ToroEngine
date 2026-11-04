@@ -28,6 +28,7 @@ public class ToroEngineEd : ModuleRules
 		    "ProceduralMeshComponent",
 		    "GameplayTagsEditor",
 		    "StructUtilsEditor",
+		    "AsyncMessageSystem",
 		    "ToroEngine"
 	    ]);
     }

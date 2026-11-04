@@ -1,10 +1,6 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "ToroEngineEd.h"
-
-#include "Actors/ToroActor.h"
-#include "Actors/ToroCharacter.h"
-#include "Actors/ToroVolume.h"
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
 
@@ -32,10 +28,14 @@
 #include "DetailsPanels/Class/ToroCharacterCustomization.h"
 #include "DetailsPanels/Class/ToroDatabaseCustomization.h"
 
+#include "Actors/ToroActor.h"
+#include "Actors/ToroVolume.h"
+#include "Actors/ToroCharacter.h"
 #include "DataTypes/WrappedTypes.h"
 #include "DataTypes/InlineCurves.h"
 #include "DataTypes/TaggedIdentity.h"
 #include "DataTypes/SimpleCooldown.h"
+#include "AsyncMessageId.h"
 
 void FToroEngineEdModule::StartupModule()
 {
@@ -64,6 +64,8 @@ void FToroEngineEdModule::StartupModule()
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FInlineColorCurve>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FTaggedIdentity>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FSimpleCooldown>();
+
+	FToroStructCustomization::Register<FToroInlineStructCustomization, FAsyncMessageId>();
 
 	FToroClassCustomization::Register<FToroActorCustomization, AToroActor>();
 	FToroClassCustomization::Register<FToroActorCustomization, AToroVolume>();
