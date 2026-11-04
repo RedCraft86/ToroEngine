@@ -18,11 +18,12 @@ void FTaggedIdentity::Invalidate()
 	Guid.Invalidate();
 }
 
-void FTaggedIdentity::RegenerateGuid(bool bOnlyIfInvalid)
+void FTaggedIdentity::RegenerateGuid(bool bOnlyIfInvalid, const FString& Determinant)
 {
 	if (!bOnlyIfInvalid || !Guid.IsValid())
 	{
-		Guid = FGuid::NewGuid();
+		const FString Det = Determinant.TrimStartAndEnd();
+		Guid = Det.IsEmpty() ? FGuid::NewGuid() : FGuid::NewDeterministicGuid(Determinant);
 	}
 }
 
@@ -69,7 +70,8 @@ void UTaggedIdentityLibrary::InvalidateIdentity(FTaggedIdentity& Identity)
 	Identity.Invalidate();
 }
 
-void UTaggedIdentityLibrary::RegenerateIdentityGuid(FTaggedIdentity& Identity, bool bOnlyIfInvalid)
+void UTaggedIdentityLibrary::RegenerateIdentityGuid(FTaggedIdentity& Identity,
+	bool bOnlyIfInvalid, const FString& Determinant)
 {
-	Identity.RegenerateGuid(bOnlyIfInvalid);
+	Identity.RegenerateGuid(bOnlyIfInvalid, Determinant);
 }

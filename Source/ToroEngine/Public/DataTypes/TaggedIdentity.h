@@ -14,7 +14,6 @@ class FEditPropertyChain;
 
 /**
  * Identifies an item by an exact gameplay-tag group and a GUID.
- *
  * Both fields must be valid for the identity to be valid. Equality and hashing use
  * both fields, so do not modify them while this identity is stored as a hashed key.
  */
@@ -115,11 +114,13 @@ struct TOROENGINE_API FTaggedIdentity final
 	void Invalidate();
 
 	/**
-	 * Generates a new GUID while preserving the group.
-	 * @param bOnlyIfInvalid If true, preserves an existing valid GUID, regardless of
-	 *        whether the group is valid. If false, always replaces the GUID.
+	 * Generates a random or deterministic GUID while preserving the group.
+	 * @param bOnlyIfInvalid Preserves an existing valid GUID by default, even if the group is invalid.
+	 *        If false, always assigns a generated GUID; the same determinant reproduces the same GUID.
+	 * @param Determinant Empty or whitespace-only strings select random generation. Otherwise, the string
+	 *        is hashed as supplied to generate a deterministic GUID; surrounding whitespace affects the result.
 	 */
-	void RegenerateGuid(bool bOnlyIfInvalid = false);
+	void RegenerateGuid(bool bOnlyIfInvalid = true, const FString& Determinant = FString());
 
 #if WITH_EDITOR
 	bool CanEditChange(const FEditPropertyChain& PropertyChain) const;
@@ -170,9 +171,13 @@ public:
 
 	/**
 	 * Updates the supplied identity's GUID while preserving its group.
-	 * @param bOnlyIfInvalid Preserves an existing valid GUID when true, even if the group is invalid.
-	 *        When false, generates a replacement GUID on each execution.
+	 * @param Identity Identity to update in place.
+	 * @param bOnlyIfInvalid Preserves an existing valid GUID by default, even if the group is invalid.
+	 *        If false, always assigns a generated GUID; the same determinant reproduces the same GUID.
+	 * @param Determinant Empty or whitespace-only strings select random generation. Otherwise, the string
+	 *        is hashed as supplied to generate a deterministic GUID; surrounding whitespace affects the result.
 	 */
 	UFUNCTION(BlueprintCallable, Category = Identity)
-	static void RegenerateIdentityGuid(UPARAM(ref) FTaggedIdentity& Identity, bool bOnlyIfInvalid = false);
+	static void RegenerateIdentityGuid(UPARAM(ref) FTaggedIdentity& Identity,
+		bool bOnlyIfInvalid = true, const FString& Determinant = FString());
 };
