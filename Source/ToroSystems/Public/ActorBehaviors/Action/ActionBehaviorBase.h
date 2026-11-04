@@ -2,17 +2,19 @@
 
 #pragma once
 
+#include "Engine/TimerHandle.h"
 #include "ActorBehaviors/ActorBehaviorBase.h"
 #include "ActorBehaviors/ActorBehaviorRef.h"
 #include "ActionBehaviorBase.generated.h"
 
 /**
  * Dispatches an action when a required sibling trigger broadcasts its native begin event.
- * Actions repeat by default. One-shot actions are consumed and unsubscribed before callbacks,
- * preventing recursive execution. The native hook runs before the Blueprint event.
- * Persistent one-shot actions retain their consumed state when saved and loaded.
+ * Actions repeat by default. One-shot actions are consumed and unsubscribed before scheduling or execution.
+ * Delays below 0.1 seconds execute immediately; pending repeatable actions can optionally restart their delay.
+ * The native hook runs before the Blueprint event. EndPlay cancels pending execution.
+ * Persistent one-shot actions save their consumed state, but pending timers are not saved.
  */
-UCLASS(Abstract)
+UCLASS(Abstract, PrioritizeCategories = (Dependencies, Settings, Control))
 class TOROSYSTEMS_API UActionBehaviorBase : public UActorBehaviorBase
 {
 	GENERATED_BODY()
@@ -31,13 +33,21 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Dependencies, DisplayName = "Trigger")
 	FActorBehaviorRef TriggerRef;
 
-	/** Whether to consume and unsubscribe the action on its first execution; false by default. */
-	UPROPERTY(EditAnywhere, Category = Settings, meta = (DisplayPriority = -10))
+	/** Whether to consume and unsubscribe on the first accepted trigger, before any delay; false by default. */
+	UPROPERTY(EditAnywhere, Category = Control)
 	bool bOneShot;
 
 	/** Whether this component is eligible for saving its one-shot trigger status; false by default. */
-	UPROPERTY(EditAnywhere, Category = Settings, meta = (DisplayPriority = -10, EditCondition = "bOneShot"))
+	UPROPERTY(EditAnywhere, Category = Control, meta = (EditCondition = "bOneShot"))
 	bool bPersistent;
+
+	/** Delay in game-time seconds; values below 0.1 execute immediately. Defaults to zero. */
+	UPROPERTY(EditAnywhere, Category = Control, meta = (ClampMin = 0.0f, UIMin = 0.0f))
+	float Delay;
+
+	/** Whether repeatable triggers restart a pending delay; otherwise they are ignored. False by default. */
+	UPROPERTY(EditAnywhere, Category = Control, meta = (EditCondition = "!bOneShot && Delay >= 0.1f"))
+	bool bRetriggerable;
 
 	/** Native action hook, dispatched before ReceiveOnTriggered(). */
 	virtual void OnTriggered() {}
@@ -54,6 +64,9 @@ private:
 	UPROPERTY(SaveGame)
 	bool bTriggered;
 
+	FTimerHandle DelayTimer;
+
 	void DoTrigger();
+	void ExecuteAction();
 	void UnbindTrigger();
 };
