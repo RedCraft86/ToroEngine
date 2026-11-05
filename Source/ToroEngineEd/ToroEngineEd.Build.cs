@@ -4,32 +4,32 @@ using UnrealBuildTool;
 
 public class ToroEngineEd : ModuleRules
 {
-    public ToroEngineEd(ReadOnlyTargetRules Target) : base(Target)
-    {
-	    PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+	public ToroEngineEd(ReadOnlyTargetRules Target) : base(Target)
+	{
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-	    PublicDependencyModuleNames.AddRange([
-		    "Core",
-		    "CoreUObject",
-		    "Engine",
-		    "Slate",
-		    "SlateIM",
-		    "SlateCore",
-		    "PhysicsCore",
-		    "UnrealEd",
-		    "Projects",
-		    "ClassViewer",
-		    "ToolMenus",
-		    "AssetTools",
-		    "AssetRegistry",
-		    "PropertyEditor",
-		    "MeshDescription",
-		    "AssetDefinition",
-		    "ProceduralMeshComponent",
-		    "GameplayTagsEditor",
-		    "StructUtilsEditor",
-		    "AsyncMessageSystem",
-		    "ToroEngine"
-	    ]);
-    }
+		PublicDependencyModuleNames.AddRange([
+			"Core",
+			"CoreUObject",
+			"Engine",
+			"Slate",
+			"SlateIM",
+			"SlateCore",
+			"PhysicsCore",
+			"UnrealEd",
+			"Projects",
+			"ClassViewer",
+			"ToolMenus",
+			"AssetTools",
+			"AssetRegistry",
+			"PropertyEditor",
+			"MeshDescription",
+			"AssetDefinition",
+			"ProceduralMeshComponent",
+			"GameplayTagsEditor",
+			"StructUtilsEditor",
+			"AsyncMessageSystem",
+			"ToroEngine"
+		]);
+	}
 }
