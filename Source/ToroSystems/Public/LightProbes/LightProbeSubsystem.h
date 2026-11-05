@@ -33,7 +33,7 @@ public:
 	 * Resolves the light probe subsystem for the context's world on the game thread.
 	 * @return The world's subsystem, or nullptr if no valid world or subsystem is available.
 	 */
-	TOROSYSTEMS_API static ULightProbeSubsystem* Get(const UObject* Context);
+	[[nodiscard]] TOROSYSTEMS_API static ULightProbeSubsystem* Get(const UObject* Context);
 
 	/**
 	 * Registers a valid probe once using a weak reference, then removes stale registrations.

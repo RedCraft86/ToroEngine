@@ -21,8 +21,11 @@ public:
 
 	USaveGameSubsystem();
 
-	/** Returns the context world's save subsystem, or nullptr if its world or game instance is unavailable. */
-	TOROSYSTEMS_API static USaveGameSubsystem* Get(const UObject* Context);
+	/**
+	 * Resolves the save game subsystem for the context's game instance on the game thread.
+	 * @return The subsystem, or nullptr if no valid game instance or subsystem is available.
+	 */
+	[[nodiscard]] TOROSYSTEMS_API static USaveGameSubsystem* Get(const UObject* Context);
 
 	/** Loads global flags, or an empty set for a missing file; returns false on persistence failure. */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = SaveSystem)
