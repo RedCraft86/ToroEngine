@@ -95,16 +95,16 @@ struct TOROENGINE_API FToroStaticMeshPreset
 	 * Compares mesh and material references and lighting flags without loading assets.
 	 * @param Other Preset to compare against.
 	 * @param bCheckTransform Also compares bUseTransform and the stored world transform,
-	 *         using FTransform::Equals even when transform application is disabled.
+	 *        using FTransform::Equals even when transform application is disabled.
 	 */
-	[[nodiscard]] virtual bool Equals(const FToroStaticMeshPreset& Other, bool bCheckTransform) const;
+	[[nodiscard]] bool Equals(const FToroStaticMeshPreset& Other, bool bCheckTransform) const;
 
 	/**
 	 * Synchronously loads the mesh and fills material slots from its default materials.
 	 * On a successful mesh load, resizes Materials to match its slot count and fills entries
 	 * that fail to resolve. Existing entries that resolve are retained unless overwritten.
 	 * @param bOverwrite Clears Materials before loading the mesh; a failed mesh load then
-	 *         leaves it empty. Without overwriting, a failed mesh load preserves Materials.
+	 *        leaves it empty. Without overwriting, a failed mesh load preserves Materials.
 	 */
 	virtual void FillMaterials(bool bOverwrite);
 
@@ -112,7 +112,7 @@ struct TOROENGINE_API FToroStaticMeshPreset
 	 * Captures mesh, resolved materials, overlay, and lighting settings from a component.
 	 * @param Target Component to read.
 	 * @param bIncludeTransform Captures the world transform and enables its application.
-	 *         Otherwise stores identity and disables transform application.
+	 *        Otherwise stores identity and disables transform application.
 	 * @return False for an invalid target, leaving the preset unchanged; true otherwise.
 	 */
 	virtual bool FromMeshComponent(const UStaticMeshComponent* Target, bool bIncludeTransform = false);
@@ -202,7 +202,7 @@ struct TOROENGINE_API FToroSplineMeshPreset : public FToroStaticMeshPreset
 	 * @param bCheckTransform Also compares the base transform settings and all four spline
 	 *         vectors using their default equality tolerances, even when bUseTransform is false.
 	 */
-	[[nodiscard]] virtual bool Equals(const FToroSplineMeshPreset& Other, bool bCheckTransform) const;
+	[[nodiscard]] bool Equals(const FToroSplineMeshPreset& Other, bool bCheckTransform) const;
 	virtual bool FromMeshComponent(const UStaticMeshComponent* Target, bool bIncludeTransform = false) override;
 	virtual bool ToMeshComponent(UStaticMeshComponent* Target) const override;
 
@@ -212,11 +212,7 @@ struct TOROENGINE_API FToroSplineMeshPreset : public FToroStaticMeshPreset
 
 private:
 
-	// Prevent external code from calling this base type overload by overriding as a private member
-	virtual bool Equals(const FToroStaticMeshPreset& Other, bool bCheckTransform) const override
-	{
-		return Super::Equals(Other, bCheckTransform);
-	}
+	using FToroStaticMeshPreset::Equals;
 };
 
 template<>
