@@ -74,7 +74,7 @@ UCommonActivatableWidget* UActivatableWidgetOverlay::AddWidget(TSubclassOf<UComm
 
 void UActivatableWidgetOverlay::RemoveWidget(TSubclassOf<UCommonActivatableWidget> InClass)
 {
-	if (!IsValid(InClass))
+	if (!IsValid(InClass) || InClass->HasAnyClassFlags(CLASS_Abstract))
 	{
 		return;
 	}
