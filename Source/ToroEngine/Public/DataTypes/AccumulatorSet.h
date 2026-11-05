@@ -72,7 +72,10 @@ public:
 	 * Broadcasts synchronously after a successful addition or removal and its cleanup,
 	 * or after explicit Cleanup() removes elements.
 	 */
-	FSimpleMulticastDelegate OnChanged;
+	FSimpleMulticastDelegate::RegistrationType& OnChanged()
+	{
+		return OnChangedEvent;
+	}
 
 	TAccumulatorSet() = delete;
 	TAccumulatorSet(const TAccumulatorSet&) = delete;
@@ -151,7 +154,7 @@ public:
 		{
 			InnerSet.Add(Value);
 			CleanupInternal();
-			OnChanged.Broadcast();
+			OnChangedEvent.Broadcast();
 		}
 	}
 
@@ -165,7 +168,7 @@ public:
 		if (InnerSet.Remove(Value) > 0)
 		{
 			CleanupInternal();
-			OnChanged.Broadcast();
+			OnChangedEvent.Broadcast();
 		}
 	}
 
@@ -179,8 +182,14 @@ public:
 		{
 			if (CleanupInternal())
 			{
-				OnChanged.Broadcast();
+				OnChangedEvent.Broadcast();
 			}
 		}
 	}
+
+private:
+
+	/** Private notification storage; callers subscribe through OnChanged(). */
+	FSimpleMulticastDelegate OnChangedEvent;
+
 };

@@ -31,6 +31,6 @@ void UColorCurvePlayerComponent::InitializeCurve()
 void UColorCurvePlayerComponent::BroadcastEval() const
 {
 	const FLinearColor Value = GetValue();
-	OnEvaluateNative.Broadcast(Value, CurrentTime);
+	OnEvaluateNativeEvent.Broadcast(Value, CurrentTime);
 	OnEvaluate.Broadcast(Value, CurrentTime);
 }

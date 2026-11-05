@@ -34,7 +34,10 @@ public:
 	 * Native counterpart of OnUpdate, broadcast before the Blueprint delegate.
 	 * Cancelling from a native listener suppresses the subsequent Blueprint update.
 	 */
-	FTrackAsyncLoadDelegateNative OnUpdateNative;
+	FTrackAsyncLoadDelegateNative::RegistrationType& OnUpdateNative()
+	{
+		return OnUpdateNativeEvent;
+	}
 
 	/**
 	 * Broadcast once after loading is observed idle for the configured duration; never broadcast on cancellation.
@@ -45,7 +48,10 @@ public:
 	FTrackAsyncLoadDelegate OnCompleted;
 
 	/** Native counterpart of OnCompleted, broadcast first after the action has been marked finished. */
-	FTrackAsyncLoadDelegateNative OnCompletedNative;
+	FTrackAsyncLoadDelegateNative::RegistrationType& OnCompletedNative()
+	{
+		return OnCompletedNativeEvent;
+	}
 
 	/**
 	 * Observes global async package-loading activity on the game thread until a consecutive idle window elapses.
@@ -76,6 +82,12 @@ public:
 	TOROENGINE_API virtual void Activate() override;
 
 private:
+
+	/** Private notification storage; callers subscribe through OnUpdateNative(). */
+	FTrackAsyncLoadDelegateNative OnUpdateNativeEvent;
+
+	/** Private notification storage; callers subscribe through OnCompletedNative(). */
+	FTrackAsyncLoadDelegateNative OnCompletedNativeEvent;
 
 	/** Sanitized interval in seconds between package-count samples. */
 	float Interval = 0.1f;

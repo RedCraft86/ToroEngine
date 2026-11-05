@@ -63,7 +63,7 @@ void USaveGameBehavior::BeginPlay()
 	Subsystem = USaveGameSubsystem::Get(this);
 	if (Subsystem.IsValid())
 	{
-		Subsystem->OnLoadedDifferentSlot.AddUObject(this, &USaveGameBehavior::OnLoadedDifferentSlot);
+		Subsystem->OnLoadedDifferentSlot().AddUObject(this, &USaveGameBehavior::OnLoadedDifferentSlot);
 		ExecuteOnGameThread(*FString(TEXT("Load_") + GetOwner()->GetName()), [WeakThis = TWeakObjectPtr(this)]()
 		{
 			if (WeakThis.IsValid())
@@ -78,7 +78,7 @@ void USaveGameBehavior::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	if (Subsystem.IsValid())
 	{
-		Subsystem->OnLoadedDifferentSlot.RemoveAll(this);
+		Subsystem->OnLoadedDifferentSlot().RemoveAll(this);
 	}
 	Subsystem.Reset();
 	Super::EndPlay(EndPlayReason);

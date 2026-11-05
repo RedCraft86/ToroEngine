@@ -51,7 +51,10 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FEvaluateDelegateNative, FVector, float);
 	/** Native evaluated-value and current-time notification, broadcast before OnEvaluate. */
-	FEvaluateDelegateNative OnEvaluateNative;
+	FEvaluateDelegateNative::RegistrationType& OnEvaluateNative()
+	{
+		return OnEvaluateNativeEvent;
+	}
 
 	virtual bool IsValidCurve() const override
 	{
@@ -66,4 +69,10 @@ protected:
 
 	virtual void InitializeCurve() override;
 	virtual void BroadcastEval() const override;
+
+private:
+
+	/** Private notification storage; callers subscribe through OnEvaluateNative(). */
+	FEvaluateDelegateNative OnEvaluateNativeEvent;
+
 };

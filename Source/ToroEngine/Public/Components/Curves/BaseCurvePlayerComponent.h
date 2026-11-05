@@ -148,7 +148,10 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FStateChangedDelegateNative, const ECurvePlayerState);
 	/** Native playback-state notification, broadcast before OnStateChanged. */
-	FStateChangedDelegateNative OnStateChangedNative;
+	FStateChangedDelegateNative::RegistrationType& OnStateChangedNative()
+	{
+		return OnStateChangedNativeEvent;
+	}
 
 protected:
 
@@ -190,4 +193,10 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* Func) override;
+
+private:
+
+	/** Private notification storage; callers subscribe through OnStateChangedNative(). */
+	FStateChangedDelegateNative OnStateChangedNativeEvent;
+
 };

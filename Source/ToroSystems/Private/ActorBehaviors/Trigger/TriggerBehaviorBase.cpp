@@ -15,7 +15,7 @@ void UTriggerBehaviorBase::StartTrigger()
 	{
 		bTriggered = true;
 		ElapsedTime = 0.0f;
-		OnBeginTriggerNative.Broadcast();
+		OnBeginTriggerNativeEvent.Broadcast();
 		OnBeginTrigger.Broadcast();
 		SetComponentTickEnabled(true);
 	}
@@ -26,7 +26,7 @@ void UTriggerBehaviorBase::EndTrigger()
 	if (bTriggered)
 	{
 		SetComponentTickEnabled(false);
-		OnEndTriggerNative.Broadcast();
+		OnEndTriggerNativeEvent.Broadcast();
 		OnEndTrigger.Broadcast();
 		ElapsedTime = 0.0f;
 		bTriggered = false;
@@ -39,7 +39,7 @@ void UTriggerBehaviorBase::TickComponent(float DeltaTime, ELevelTick TickType, F
 	if (bTriggered)
 	{
 		ElapsedTime += DeltaTime;
-		OnTriggerTickNative.Broadcast(ElapsedTime, DeltaTime);
+		OnTriggerTickNativeEvent.Broadcast(ElapsedTime, DeltaTime);
 		OnTriggerTick.Broadcast(ElapsedTime, DeltaTime);
 	}
 }

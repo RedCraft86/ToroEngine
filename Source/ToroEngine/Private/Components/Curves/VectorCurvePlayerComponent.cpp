@@ -31,6 +31,6 @@ void UVectorCurvePlayerComponent::InitializeCurve()
 void UVectorCurvePlayerComponent::BroadcastEval() const
 {
 	const FVector Value = GetValue();
-	OnEvaluateNative.Broadcast(Value, CurrentTime);
+	OnEvaluateNativeEvent.Broadcast(Value, CurrentTime);
 	OnEvaluate.Broadcast(Value, CurrentTime);
 }

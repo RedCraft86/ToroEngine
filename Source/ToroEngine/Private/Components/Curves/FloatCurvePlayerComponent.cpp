@@ -31,6 +31,6 @@ void UFloatCurvePlayerComponent::InitializeCurve()
 void UFloatCurvePlayerComponent::BroadcastEval() const
 {
 	const float Value = GetValue();
-	OnEvaluateNative.Broadcast(Value, CurrentTime);
+	OnEvaluateNativeEvent.Broadcast(Value, CurrentTime);
 	OnEvaluate.Broadcast(Value, CurrentTime);
 }

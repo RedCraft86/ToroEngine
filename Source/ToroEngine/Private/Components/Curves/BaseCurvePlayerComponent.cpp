@@ -97,7 +97,7 @@ void UBaseCurvePlayerComponent::SetPlaybackTime(float InTime, bool bNotify)
 
 void UBaseCurvePlayerComponent::BroadcastState() const
 {
-	OnStateChangedNative.Broadcast(PlayState);
+	OnStateChangedNativeEvent.Broadcast(PlayState);
 	OnStateChanged.Broadcast(PlayState);
 }
 

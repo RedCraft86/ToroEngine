@@ -74,7 +74,10 @@ public:
 	 * or after explicit Cleanup() removes entries.
 	 * Accepted additions notify even when replacing a value with an equal value.
 	 */
-	FSimpleMulticastDelegate OnChanged;
+	FSimpleMulticastDelegate::RegistrationType& OnChanged()
+	{
+		return OnChangedEvent;
+	}
 
 	TAccumulatorMap() = delete;
 	TAccumulatorMap(const TAccumulatorMap&) = delete;
@@ -155,7 +158,7 @@ public:
 		{
 			InnerMap.Add(Key, Value);
 			CleanupInternal();
-			OnChanged.Broadcast();
+			OnChangedEvent.Broadcast();
 		}
 	}
 
@@ -169,7 +172,7 @@ public:
 		if (InnerMap.Remove(Key) > 0)
 		{
 			CleanupInternal();
-			OnChanged.Broadcast();
+			OnChangedEvent.Broadcast();
 		}
 	}
 
@@ -183,8 +186,14 @@ public:
 		{
 			if (CleanupInternal())
 			{
-				OnChanged.Broadcast();
+				OnChangedEvent.Broadcast();
 			}
 		}
 	}
+
+private:
+
+	/** Private notification storage; callers subscribe through OnChanged(). */
+	FSimpleMulticastDelegate OnChangedEvent;
+
 };

@@ -44,13 +44,22 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FTriggerBehaviorDelegateNative)
 
 	/** Native begin notification, emitted before OnBeginTrigger. */
-	FTriggerBehaviorDelegateNative OnBeginTriggerNative;
+	FTriggerBehaviorDelegateNative::RegistrationType& OnBeginTriggerNative()
+	{
+		return OnBeginTriggerNativeEvent;
+	}
 
 	/** Native end notification, emitted before OnEndTrigger. */
-	FTriggerBehaviorDelegateNative OnEndTriggerNative;
+	FTriggerBehaviorDelegateNative::RegistrationType& OnEndTriggerNative()
+	{
+		return OnEndTriggerNativeEvent;
+	}
 
 	/** Native tick notification with accumulated elapsed seconds and tick delta seconds, emitted before OnTriggerTick. */
-	FTriggerBehaviorTickDelegateNative OnTriggerTickNative;
+	FTriggerBehaviorTickDelegateNative::RegistrationType& OnTriggerTickNative()
+	{
+		return OnTriggerTickNativeEvent;
+	}
 
 protected:
 
@@ -69,6 +78,15 @@ protected:
 	void EndTrigger();
 
 private:
+
+	/** Private notification storage; callers subscribe through OnBeginTriggerNative(). */
+	FTriggerBehaviorDelegateNative OnBeginTriggerNativeEvent;
+
+	/** Private notification storage; callers subscribe through OnEndTriggerNative(). */
+	FTriggerBehaviorDelegateNative OnEndTriggerNativeEvent;
+
+	/** Private notification storage; callers subscribe through OnTriggerTickNative(). */
+	FTriggerBehaviorTickDelegateNative OnTriggerTickNativeEvent;
 
 	bool bTriggered;
 	float ElapsedTime;

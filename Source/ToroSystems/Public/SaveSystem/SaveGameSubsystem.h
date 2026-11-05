@@ -3,6 +3,7 @@
 #pragma once
 
 #include "SaveGameContainer.h"
+#include "Delegates/Delegate.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "SaveGameSubsystem.generated.h"
 
@@ -69,9 +70,15 @@ public:
 	 * Native notification after LoadSlotted successfully selects a different slot number.
 	 * Reloading the selected slot and saving to another slot do not broadcast this notification.
 	 */
-	FSimpleMulticastDelegate OnLoadedDifferentSlot;
+	FSimpleMulticastDelegate::RegistrationType& OnLoadedDifferentSlot()
+	{
+		return OnLoadedDifferentSlotEvent;
+	}
 
 private:
+
+	/** Private notification storage; callers subscribe through OnLoadedDifferentSlot(). */
+	FSimpleMulticastDelegate OnLoadedDifferentSlotEvent;
 
 	/** Global state owned from initialization until deinitialization. */
 	TUniquePtr<FGlobalSaveContainer> GlobalContainer;

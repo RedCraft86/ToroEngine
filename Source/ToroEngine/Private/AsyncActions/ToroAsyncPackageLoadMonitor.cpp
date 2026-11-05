@@ -66,7 +66,7 @@ bool UToroAsyncPackageLoadMonitor::OnTick(float DeltaTime)
 	if (IdleTime <= 0.0f)
 	{
 		MarkFinished();
-		OnCompletedNative.Broadcast(TotalPackages, TotalPackages, false);
+		OnCompletedNativeEvent.Broadcast(TotalPackages, TotalPackages, false);
 		OnCompleted.Broadcast(TotalPackages, TotalPackages, false);
 		SetReadyToDestroy();
 		return false;
@@ -88,7 +88,7 @@ bool UToroAsyncPackageLoadMonitor::OnTick(float DeltaTime)
 	TotalPackages = FMath::Max(TotalPackages, RemainPackages);
 	const int32 CompletedPackages = TotalPackages - RemainPackages;
 
-	OnUpdateNative.Broadcast(CompletedPackages, TotalPackages, bIsLoading);
+	OnUpdateNativeEvent.Broadcast(CompletedPackages, TotalPackages, bIsLoading);
 	OnUpdate.Broadcast(CompletedPackages, TotalPackages, bIsLoading);
 	return !bFinished;
 }

@@ -101,7 +101,7 @@ UWorldMusicSubsystem::UWorldMusicSubsystem(): DefaultFadeTime(1.0f), LastMoodInt
 	);
 	if (DipRequests.IsValid())
 	{
-		DipRequests->OnChanged.AddUObject(this, &UWorldMusicSubsystem::OnUpdateParameters);
+		DipRequests->OnChanged().AddUObject(this, &UWorldMusicSubsystem::OnUpdateParameters);
 	}
 
 	Pressure = TAccumulatorMap<TWeakObjectPtr<const UObject>, TPair<EWorldMusicModType, float>>::Make(
@@ -112,7 +112,7 @@ UWorldMusicSubsystem::UWorldMusicSubsystem(): DefaultFadeTime(1.0f), LastMoodInt
 	);
 	if (Pressure.IsValid())
 	{
-		Pressure->OnChanged.AddUObject(this, &UWorldMusicSubsystem::OnUpdateParameters);
+		Pressure->OnChanged().AddUObject(this, &UWorldMusicSubsystem::OnUpdateParameters);
 	}
 
 	Tension = TAccumulatorMap<TWeakObjectPtr<const UObject>, TPair<EWorldMusicModType, float>>::Make(
@@ -123,7 +123,7 @@ UWorldMusicSubsystem::UWorldMusicSubsystem(): DefaultFadeTime(1.0f), LastMoodInt
 	);
 	if (Tension.IsValid())
 	{
-		Tension->OnChanged.AddUObject(this, &UWorldMusicSubsystem::OnUpdateParameters);
+		Tension->OnChanged().AddUObject(this, &UWorldMusicSubsystem::OnUpdateParameters);
 	}
 }
 

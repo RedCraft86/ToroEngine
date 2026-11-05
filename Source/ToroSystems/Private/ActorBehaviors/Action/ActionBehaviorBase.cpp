@@ -16,7 +16,7 @@ void UActionBehaviorBase::BeginPlay()
 	Super::BeginPlay();
 	if (UTriggerBehaviorBase* Trigger = TriggerRef.Get<UTriggerBehaviorBase>())
 	{
-		Trigger->OnBeginTriggerNative.AddUObject(this, &UActionBehaviorBase::DoTrigger);
+		Trigger->OnBeginTriggerNative().AddUObject(this, &UActionBehaviorBase::DoTrigger);
 	}
 }
 
@@ -76,6 +76,6 @@ void UActionBehaviorBase::UnbindTrigger()
 {
 	if (UTriggerBehaviorBase* Trigger = TriggerRef.Get<UTriggerBehaviorBase>())
 	{
-		Trigger->OnBeginTriggerNative.RemoveAll(this);
+		Trigger->OnBeginTriggerNative().RemoveAll(this);
 	}
 }
