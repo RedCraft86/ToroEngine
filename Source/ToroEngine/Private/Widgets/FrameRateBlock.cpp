@@ -91,8 +91,8 @@ TSharedRef<SWidget> UFrameRateBlock::RebuildWidget()
 	else
 #endif
 	{
-		TickHandle = Widget->RegisterActiveTimer(0.1f, FWidgetActiveTimerDelegate
-			::CreateUObject(this, &UFrameRateBlock::Update)
+		TickHandle = Widget->RegisterActiveTimer(0.1f,
+			FWidgetActiveTimerDelegate::CreateUObject(this, &UFrameRateBlock::Update)
 		);
 	}
 	return Widget;

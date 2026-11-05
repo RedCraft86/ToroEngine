@@ -140,9 +140,10 @@ bool UToroImageLibrary::GetDataFromTexture(FToroImageData& OutData, const UTextu
 
 	const void* TexData = Mip.BulkData.LockReadOnly();
 	ON_SCOPE_EXIT
-		{
-			Mip.BulkData.Unlock();
-		};
+	{
+		Mip.BulkData.Unlock();
+	};
+
 	if (!TexData)
 	{
 		TORO_REPORT_ERROR(TEXT("Failed to lock BulkData."));
