@@ -12,13 +12,17 @@ public class ToroSystems : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
+			"Slate",
+			"SlateCore",
+			"UMG",
 			"Json",
 			"RenderCore",
 			"MetasoundEngine",
 			"AsyncMessageSystem",
 			"DeveloperSettings",
 			"LevelSequence",
-			"ToroEngine"
+			"CommonUI",
+			"ToroEngine",
 		]);
 	}
 }
