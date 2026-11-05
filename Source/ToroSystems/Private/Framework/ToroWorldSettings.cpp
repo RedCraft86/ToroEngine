@@ -2,6 +2,14 @@
 
 #include "Framework/ToroWorldSettings.h"
 #include "PostProcess/WorldPostProcessComponent.h"
+#include "Utilities/ToroUtilities.h"
+
+AWorldSettings* AToroWorldSettings::Get(const UObject* ContextObject, TSubclassOf<AWorldSettings> Class)
+{
+	const UWorld* World = ToroEngine::GetWorld(ContextObject);
+	AWorldSettings* WS = IsValid(World) ? World->GetWorldSettings() : nullptr;
+	return IsValid(WS) && (!IsValid(Class) || WS->IsA(Class)) ? WS : nullptr;
+}
 
 AToroWorldSettings::AToroWorldSettings()
 {
