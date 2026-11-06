@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/HUD.h"
+#include "UserInterface/ToroMasterWidget.h"
 #include "ToroPlayerHUD.generated.h"
 
 UCLASS(Blueprintable, BlueprintType)
@@ -36,4 +37,14 @@ public:
 			"T must derive from AHUD");
 		return Cast<T>(Get(ContextObject, T::StaticClass(), PlayerIdx));
 	}
+
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = HUD, meta = (DeterminesOutputType = InClass))
+	UToroMasterWidget* GetMasterWidget() const { return MasterWidget; }
+
+protected:
+
+	UPROPERTY(Transient)
+	TObjectPtr<UToroMasterWidget> MasterWidget;
+
+	virtual void BeginPlay() override;
 };
