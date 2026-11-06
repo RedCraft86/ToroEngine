@@ -31,7 +31,7 @@ bool USaveGameSubsystem::LoadSlotted(uint8 SlotNum) const
 	{
 		if (OldSlot != SlottedContainer->GetActiveSlot())
 		{
-			OnLoadedDifferentSlotEvent.Broadcast();
+			OnSlotRefreshedEvent.Broadcast();
 		}
 
 		return true;

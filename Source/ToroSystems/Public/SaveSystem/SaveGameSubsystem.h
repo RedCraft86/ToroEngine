@@ -37,7 +37,7 @@ public:
 
 	/**
 	 * Loads slot metadata and payload, initializing empty data if its binary file is missing.
-	 * Broadcasts OnLoadedDifferentSlot only after success when the selected slot number changes.
+	 * Broadcasts OnSlotRefreshed only after success when the selected slot number changes.
 	 * @param SlotNum Slot in 1 through FSlottedSaveContainer::MaxNumSlots, or zero for the current selection.
 	 * @return False for an invalid selection or persistence failure if fatal reporting returns.
 	 */
@@ -46,7 +46,7 @@ public:
 
 	/**
 	 * Saves the current payload and standard metadata without a custom metadata callback.
-	 * Does not broadcast OnLoadedDifferentSlot, even when saving to a different slot.
+	 * Does not broadcast OnSlotRefreshed, even when saving to a different slot.
 	 * @param SlotNum Destination in 1 through FSlottedSaveContainer::MaxNumSlots, or zero for the current selection.
 	 * @return True only if binary and metadata persistence both succeed.
 	 */
@@ -56,7 +56,6 @@ public:
 	/**
 	 * Saves the current payload and lets native callers customize slot metadata.
 	 * Binary and metadata writes are separate; metadata failure does not undo a completed binary write.
-	 * Does not broadcast OnLoadedDifferentSlot.
 	 * @param SlotNum Destination in 1 through FSlottedSaveContainer::MaxNumSlots, or zero for the current selection.
 	 * @param ApplyMetadata Synchronous callback editing slot JSON after standard fields are populated; must not reenter container operations.
 	 * @return True only if binary and metadata persistence both succeed.
@@ -73,15 +72,15 @@ public:
 	 * Native notification after LoadSlotted successfully selects a different slot number.
 	 * Reloading the selected slot and saving to another slot do not broadcast this notification.
 	 */
-	FSimpleMulticastDelegate::RegistrationType& OnLoadedDifferentSlot()
+	FSimpleMulticastDelegate::RegistrationType& OnSlotRefreshed()
 	{
-		return OnLoadedDifferentSlotEvent;
+		return OnSlotRefreshedEvent;
 	}
 
 private:
 
-	/** Private notification storage; callers subscribe through OnLoadedDifferentSlot(). */
-	FSimpleMulticastDelegate OnLoadedDifferentSlotEvent;
+	/** Private notification storage; callers subscribe through OnSlotRefreshed(). */
+	FSimpleMulticastDelegate OnSlotRefreshedEvent;
 
 	/** Global state owned from initialization until deinitialization. */
 	TUniquePtr<FGlobalSaveContainer> GlobalContainer;
