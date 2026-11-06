@@ -53,6 +53,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = SaveSystem)
 	TOROSYSTEMS_API bool SaveSlotted(uint8 SlotNum) const;
 
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = SaveSystem)
+	TOROSYSTEMS_API bool DeleteSlotted(uint8 SlotNum) const;
+
 	/**
 	 * Saves the current payload and lets native callers customize slot metadata.
 	 * Binary and metadata writes are separate; metadata failure does not undo a completed binary write.

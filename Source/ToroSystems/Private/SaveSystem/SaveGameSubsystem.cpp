@@ -45,6 +45,21 @@ bool USaveGameSubsystem::SaveSlotted(uint8 SlotNum) const
 	return SaveSlotted(SlotNum, [](FJsonObject&) -> void {});
 }
 
+bool USaveGameSubsystem::DeleteSlotted(uint8 SlotNum) const
+{
+	if (SlottedContainer->DeleteContainer(SlotNum))
+	{
+		if (SlotNum == 0 || SlotNum == SlottedContainer->GetActiveSlot())
+		{
+			OnSlotRefreshedEvent.Broadcast();
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
 bool USaveGameSubsystem::SaveSlotted(uint8 SlotNum, TFunctionRef<void(FJsonObject&)> ApplyMetadata) const
 {
 	return SlottedContainer->SaveContainer(SlotNum, ApplyMetadata);

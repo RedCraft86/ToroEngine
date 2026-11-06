@@ -100,10 +100,16 @@ public:
 	[[nodiscard]] FORCEINLINE uint8 GetActiveSlot() const { return ActiveSlotNum; }
 
 	/** Whether the selected slot is in range; does not imply its payload has been loaded. */
-	[[nodiscard]] FORCEINLINE bool IsValidSlot() const { return ActiveSlotNum != 0 && ActiveSlotNum <= MaxNumSlots; }
+	[[nodiscard]] FORCEINLINE bool IsValidSlot() const
+	{
+		return ActiveSlotNum != 0 && ActiveSlotNum <= MaxNumSlots;
+	}
 
 	/** Whether the selection is valid and loading, flag addition, or record access has marked the payload in use. */
-	[[nodiscard]] FORCEINLINE bool IsValidContainer() const { return bContainsData && IsValidSlot(); }
+	[[nodiscard]] FORCEINLINE bool IsValidContainer() const
+	{
+		return LastSaveTime.GetTicks() != 0 && IsValidSlot();
+	}
 
 	/**
 	 * Reloads metadata and loads a slot's payload, initializing empty data if its binary file is missing.
@@ -122,12 +128,6 @@ public:
 	 */
 	bool SaveContainer(uint8 InSlot, TFunctionRef<void(FJsonObject&)> ApplyMetadata);
 
-	/**
-	 * Deletes a slot's binary file and persists removal of its metadata; an already-missing binary is accepted.
-	 * Deleting the selected slot clears its payload, selection, and payload-use flag before metadata writing.
-	 * @param InSlot Slot in 1 through MaxNumSlots, or zero to use the current selection.
-	 * @return False for an invalid selection or persistence failure; metadata failure does not undo binary deletion.
-	 */
 	bool DeleteContainer(uint8 InSlot);
 
 	/** Adds an exact flag and marks the current payload in use. */
@@ -153,9 +153,6 @@ public:
 	TSharedPtr<FJsonObject> GetSlotMetadata(uint8 InSlot, bool bCreateIfNeeded) const;
 
 protected:
-
-	/** Payload-use flag set by successful loading, flag addition, or record access; cleared on selected-slot deletion. */
-	bool bContainsData = false;
 
 	/** Current or remembered slot; zero denotes no selection. */
 	uint8 ActiveSlotNum = 0;

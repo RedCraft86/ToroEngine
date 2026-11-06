@@ -200,7 +200,6 @@ bool FSlottedSaveContainer::LoadContainer(uint8 InSlot)
 		return false;
 	}
 
-	bContainsData = true;
 	return true;
 }
 
@@ -232,6 +231,12 @@ bool FSlottedSaveContainer::DeleteContainer(uint8 InSlot)
 		return false;
 	}
 
+	const FString MetaKey = GetSlotKey(InSlot);
+	if (!Metadata->HasField(MetaKey))
+	{
+		return false;
+	}
+
 	if (!Metadata.IsValid())
 	{
 		TORO_REPORT_FATAL(TEXT("Metadata json object is null"));
@@ -246,14 +251,11 @@ bool FSlottedSaveContainer::DeleteContainer(uint8 InSlot)
 		return false;
 	}
 
-	Metadata->RemoveField(GetSlotKey(InSlot));
+	Metadata->RemoveField(MetaKey);
 
 	if (ActiveSlotNum == InSlot)
 	{
 		ResetData();
-		Metadata->SetNumberField(JsonFields::ActiveSlot, 0);
-		bContainsData = false;
-		ActiveSlotNum = 0;
 	}
 
 	return WriteMetadata();
@@ -261,7 +263,6 @@ bool FSlottedSaveContainer::DeleteContainer(uint8 InSlot)
 
 void FSlottedSaveContainer::AddFlag(const FGameplayTag& InFlag)
 {
-	bContainsData = true;
 	SlotFlags.Add(InFlag);
 }
 
@@ -272,7 +273,6 @@ bool FSlottedSaveContainer::HasFlag(const FGameplayTag& InFlag) const
 
 FActorSaveRecord& FSlottedSaveContainer::GetActorRecord(const FTaggedIdentity& InIdentity)
 {
-	bContainsData = true;
 	return ActorRecords.FindOrAdd(InIdentity);
 }
 
