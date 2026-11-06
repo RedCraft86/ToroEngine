@@ -71,7 +71,7 @@ UCommonActivatableWidget* UToroMasterWidget::AddOverlayWidget(TSubclassOf<UCommo
 
 void UToroMasterWidget::RemoveOverlayWidget(TSubclassOf<UCommonActivatableWidget> InClass) const
 {
-	if (OverlayLayer && IsValid(InClass))
+	if (OverlayLayer && IsValid(InClass) && !InClass->HasAnyClassFlags(CLASS_Abstract))
 	{
 		OverlayLayer->RemoveWidget(InClass);
 	}
