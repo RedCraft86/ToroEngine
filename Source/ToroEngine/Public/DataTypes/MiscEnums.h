@@ -7,6 +7,19 @@
 #include "MiscEnums.generated.h"
 
 /**
+ * Specifies how a modifier value is applied to an input value.
+ */
+UENUM(BlueprintType)
+enum class EToroValueModifierType : uint8
+{
+    /** Adds the modifier value to the input. */
+	Add,
+
+	/** Multiplies the input by the modifier value. */
+	Multiply
+};
+
+/**
  * Playback direction for widget animations and level sequences.
  */
 UENUM(BlueprintType)
