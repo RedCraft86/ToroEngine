@@ -1,64 +1,46 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "WorldMusic/WorldMusicSubsystem.h"
+#include "WorldMusic/WorldMusicSystemConfig.h"
 #include "Framework/ToroWorldSettings.h"
 #include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "UObject/UObjectGlobals.h"
 #include "Utilities/ToroUtilities.h"
 #include "Utilities/ToroLogging.h"
 #include "MetasoundSource.h"
-#include "Engine/World.h"
 
-namespace
+float FWorldMusicParam::GetResult() const
 {
-	/** Returns the additive sum times the multiplier product, or zero for an empty array. */
-	float ProcessModifiers(const TArray<TPair<EWorldMusicModType, float>>& Modifiers)
+	float Sum = 0.0f, Product = 1.0f;
+	Entries->ForEachValue([&Sum, &Product](const TPair<EToroValueModifierType, float>& Pair) -> bool
 	{
-		float Sum = 0.0f, Product = 1.0f;
-		for (const TPair<EWorldMusicModType, float>& Modifier : Modifiers)
+		switch (Pair.Key)
 		{
-			switch (Modifier.Key)
-			{
-			case EWorldMusicModType::Additive:
-				Sum += Modifier.Value;
-				break;
+		case EToroValueModifierType::Add:
+			Sum += Pair.Value;
+			break;
 
-			case EWorldMusicModType::Multiplier:
-				Product *= Modifier.Value;
-				break;
-			}
+		case EToroValueModifierType::Multiply:
+			Product *= Pair.Value;
+			break;
 		}
-		return Sum * Product;
-	}
+
+		return true;
+	});
+
+	return Sum * Product;
 }
 
-bool FWorldMusicSourceRef::IsValid() const
+bool FWorldMusicSource::IsValid() const
 {
-	return ::IsValid(Source) && FadeTime >= 0.0f && FMath::IsFinite(FadeTime);
+	return IsInitialized() && ::IsValid(Source);
 }
 
-void FWorldMusicSourceRef::Start() const
+void FWorldMusicSource::Stop() const
 {
 	if (IsValid())
 	{
-		Source->SetPaused(false);
-		if (FMath::IsNearlyZero(FadeTime))
-		{
-			Source->Play();
-		}
-		else
-		{
-			Source->FadeIn(FadeTime);
-		}
-	}
-}
-
-void FWorldMusicSourceRef::Stop() const
-{
-	if (IsValid())
-	{
-		if (FMath::IsNearlyZero(FadeTime))
+		if (FMath::IsNearlyZero(FadeTime) || Source->bIsPaused)
 		{
 			Source->Stop();
 		}
@@ -69,62 +51,52 @@ void FWorldMusicSourceRef::Stop() const
 	}
 }
 
-void FWorldMusicSourceRef::SetPaused(bool bPaused) const
+void FWorldMusicSource::Start() const
 {
 	if (IsValid())
 	{
-		Source->SetPaused(bPaused);
+		Source->SetPaused(false);
+		if (FMath::IsNearlyZero(FadeTime))
+		{
+			Source->Play();
+		}
+		else
+		{
+			Source->FadeIn(FadeTime, 1.0f);
+		}
 	}
 }
 
-void FWorldMusicSourceRef::Destroy()
+void FWorldMusicSource::SetPause(bool bInPaused) const
+{
+	if (IsValid())
+	{
+		Source->SetPaused(bInPaused);
+	}
+}
+
+void FWorldMusicSource::Destroy()
 {
 	if (::IsValid(Source))
 	{
 		Source->OnAudioFinishedNative.Clear();
-		Source->Stop();
+		if (Source->IsPlaying() || Source->bIsPaused)
+		{
+			Source->Stop();
+		}
 
 		Source->bAllowAnyoneToDestroyMe = true;
 		Source->DestroyComponent();
-
-		Source = nullptr;
 	}
+
+	Source = nullptr;
+	FadeTime = -1.0f;
 }
 
-UWorldMusicSubsystem::UWorldMusicSubsystem(): DefaultFadeTime(1.0f), LastMoodIntensity(0.0f)
+UWorldMusicSubsystem::UWorldMusicSubsystem()
+	: bPauseParamUpdates(false), DipRequests(FRequestSet::Make())
 {
-	DipRequests = TAccumulatorSet<TWeakObjectPtr<const UObject>>::Make(
-		[](const TWeakObjectPtr<const UObject>& Key) -> bool
-		{
-			return Key.IsValid();
-		}
-	);
-	if (DipRequests.IsValid())
-	{
-		DipRequests->OnChanged().AddUObject(this, &UWorldMusicSubsystem::OnUpdateParameters);
-	}
-
-	Pressure = TAccumulatorMap<TWeakObjectPtr<const UObject>, TPair<EWorldMusicModType, float>>::Make(
-		[](const TWeakObjectPtr<const UObject>& Key, const TPair<EWorldMusicModType, float>&) -> bool
-		{
-			return Key.IsValid();
-		}
-	);
-	if (Pressure.IsValid())
-	{
-		Pressure->OnChanged().AddUObject(this, &UWorldMusicSubsystem::OnUpdateParameters);
-	}
-
-	Tension = TAccumulatorMap<TWeakObjectPtr<const UObject>, TPair<EWorldMusicModType, float>>::Make(
-		[](const TWeakObjectPtr<const UObject>& Key, const TPair<EWorldMusicModType, float>&) -> bool
-		{
-			return Key.IsValid();
-		}
-	);
-	if (Tension.IsValid())
-	{
-		Tension->OnChanged().AddUObject(this, &UWorldMusicSubsystem::OnUpdateParameters);
-	}
+	DipRequests->OnChanged().AddUObject(this, &UWorldMusicSubsystem::OnParamsChanged);
 }
 
 UWorldMusicSubsystem* UWorldMusicSubsystem::Get(const UObject* Context)
@@ -133,116 +105,142 @@ UWorldMusicSubsystem* UWorldMusicSubsystem::Get(const UObject* Context)
 	return IsValid(World) ? World->GetSubsystem<UWorldMusicSubsystem>() : nullptr;
 }
 
-bool UWorldMusicSubsystem::SetCurrentTrack(USoundBase* InTrack, float FadeTime, bool bResetParams)
+bool UWorldMusicSubsystem::ChangeTrack(USoundBase* InTrack, float FadeTime, bool bResetParams)
 {
 	if (!IsSystemValid())
 	{
-		TORO_LOG_ERROR(TEXT("[%s] Cannot set music track %s: world settings or accumulators are invalid."),
-			*GetName(), *GetNameSafe(InTrack));
+		TORO_LOG_ERROR(
+			TEXT("[%s] Cannot set music track %s: world settings or accumulators are invalid."),
+			*GetName(), *GetNameSafe(InTrack)
+		);
 		return false;
 	}
 
 	if (!IsValid(InTrack))
 	{
-		TORO_LOG_WARNING(TEXT("[%s] Cannot set music track: track %s is invalid."),
-			*GetName(), *GetNameSafe(InTrack));
+		TORO_LOG_WARNING(
+			TEXT("[%s] Cannot set music track: track %s is invalid."),
+			*GetName(), *GetNameSafe(InTrack)
+		);
 		return false;
 	}
 
-	CleanupAudioSources();
+	CleanupSources();
 
-	if (!AudioSources[0].IsValid() || AudioSources[0].Source->Sound != InTrack
-		|| AudioSources[0].Source->GetPlayState() == EAudioComponentPlayState::Stopped)
+	if (bResetParams)
 	{
-		if (bResetParams)
+		TGuardValue ParamsGuard(bPauseParamUpdates, true);
+
+		DipRequests->Clear(true);
+		Parameters.Empty();
+
+		for (const TPair<FGameplayTag, float>& Param : GetConfig().BaseParameters)
 		{
-			DipRequests->GetInnerSet().Empty();
-			Pressure->GetInnerMap().Empty();
-			Tension->GetInnerMap().Empty();
-
-			if (GetConfig().BasePressure.IsSet())
-			{
-				Pressure->GetInnerMap().Add(WorldSettings.Get(), {
-					EWorldMusicModType::Additive, GetConfig().BasePressure.Get(0.0f)
-				});
-			}
-
-			if (GetConfig().BaseTension.IsSet())
-			{
-				Tension->GetInnerMap().Add(WorldSettings.Get(), {
-					EWorldMusicModType::Additive, GetConfig().BaseTension.Get(0.0f)
-				});
-			}
+			AddParameter(WorldSettings.Get(), Param.Key, Param.Value);
 		}
-
-		return StartTrackInternal(InTrack, FadeTime);
 	}
 
-	return true;
+	if (Sources[0].IsValid() && Sources[0]->Sound == InTrack)
+	{
+		// Already playing, no change needed
+		OnParamsChanged();
+		return true;
+	}
+
+	return StartTrackInternal(InTrack, FadeTime);
 }
 
 void UWorldMusicSubsystem::SetTracksPaused(bool bPaused)
 {
-	for (FWorldMusicSourceRef& Source : AudioSources)
+	for (const FWorldMusicSource& Source : Sources)
 	{
-		Source.SetPaused(bPaused);
+		Source.SetPause(bPaused);
 	}
 }
 
-void UWorldMusicSubsystem::RequestDip(const UObject* Source) const
+bool UWorldMusicSubsystem::RequestDip(const UObject* Requester) const
 {
-	if (DipRequests)
+	return DipRequests->Add(Requester);
+}
+
+bool UWorldMusicSubsystem::RemoveDip(const UObject* Requester) const
+{
+	return DipRequests->Remove(Requester);
+}
+
+bool UWorldMusicSubsystem::AddParameter(const UObject* Source,
+	FGameplayTag Tag, float Value, EToroValueModifierType Type)
+{
+	if (Tag.IsValid()
+		&& Tag != WorldMusicTags::Base.GetTag()
+		&& Tag.MatchesTag(WorldMusicTags::Base.GetTag()))
 	{
-		DipRequests->Add(Source);
+		if (FWorldMusicParam* FoundParam = Parameters.Find(Tag))
+		{
+			return (*FoundParam)->Add(Source, {Type, Value});
+		}
+
+		FWorldMusicParam& Param = Parameters.Add(Tag);
+		Param->OnChanged().AddUObject(this, &UWorldMusicSubsystem::OnParamsChanged);
+		return Param->Add(Source, {Type, Value});
+	}
+	return false;
+}
+
+bool UWorldMusicSubsystem::RemoveParameter(const UObject* Source, FGameplayTag Tag)
+{
+	if (FWorldMusicParam* Param = Parameters.Find(Tag))
+	{
+		return (*Param)->Remove(Source);
+	}
+	return false;
+}
+
+void UWorldMusicSubsystem::OnParamsChanged()
+{
+	if (IsSystemValid()
+		&& !bPauseParamUpdates
+		&& !Sources.IsEmpty()
+		&& Sources[0].IsValid())
+	{
+		Sources[0]->SetBoolParameter(TEXT("Dipped"), !DipRequests->IsEmpty());
+		for (const TPair<FGameplayTag, FWorldMusicParam>& Param : Parameters)
+		{
+			FString ParamName; // Name after the root tag
+			FString TagString = Param.Key.ToString();
+			if (!TagString.Split(TEXT("."), nullptr, &ParamName))
+			{
+				ParamName = TagString;
+			}
+
+			Sources[0]->SetFloatParameter(*ParamName, Param.Value.GetResult());
+		}
 	}
 }
 
-void UWorldMusicSubsystem::RemoveDip(const UObject* Source) const
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
+void UWorldMusicSubsystem::OnAudioFinished(UAudioComponent* Component)
 {
-	if (DipRequests)
+	if (!Sources.IsEmpty() && *Sources[0] == Component)
 	{
-		DipRequests->Remove(Source);
+		Sources[0].Destroy();
+		return;
 	}
-}
 
-void UWorldMusicSubsystem::AddPressure(const UObject* Source, float Value, EWorldMusicModType Type) const
-{
-	if (Pressure)
+	for (auto It = Sources.CreateIterator(); It; ++It)
 	{
-		Pressure->Add(Source, {Type, Value});
-	}
-}
-
-void UWorldMusicSubsystem::RemovePressure(const UObject* Source) const
-{
-	if (Pressure)
-	{
-		Pressure->Remove(Source);
-	}
-}
-
-void UWorldMusicSubsystem::AddTension(const UObject* Source, float Value, EWorldMusicModType Type) const
-{
-	if (Tension)
-	{
-		Tension->Add(Source, {Type, Value});
-	}
-}
-
-void UWorldMusicSubsystem::RemoveTension(const UObject* Source) const
-{
-	if (Tension)
-	{
-		Tension->Remove(Source);
+		if (It.GetIndex() != 0 && **It == Component)
+		{
+			It->Destroy();
+			It.RemoveCurrentSwap();
+			return;
+		}
 	}
 }
 
 bool UWorldMusicSubsystem::IsSystemValid() const
 {
-	return WorldSettings.IsValid()
-		&& DipRequests.IsValid()
-		&& Pressure.IsValid()
-		&& Tension.IsValid();
+	return WorldSettings.IsValid();
 }
 
 const FWorldMusicSystemConfig& UWorldMusicSubsystem::GetConfig() const
@@ -250,168 +248,68 @@ const FWorldMusicSystemConfig& UWorldMusicSubsystem::GetConfig() const
 	return WorldSettings->GetWorldMusicConfig();
 }
 
-void UWorldMusicSubsystem::SetAudioParameters(float FinalPressure, float FinalTension)
-{
-	if (IsSystemValid())
-	{
-		static const FName PARAM_Dipped(TEXT("Dipped"));
-		static const FName PARAM_Pressure(TEXT("Pressure"));
-		static const FName PARAM_Tension(TEXT("Tension"));
-		static const FName PARAM_MoodDelta(TEXT("MoodDelta"));
-
-		// Keep weights nonnegative and summing to one for a normalized mood intensity.
-		constexpr float PressureWeight = 0.7f;
-		constexpr float TensionWeight = 1.0f - PressureWeight;
-
-		FinalPressure = FMath::Clamp(FinalPressure, 0.0f, 1.0f);
-		FinalTension = FMath::Clamp(FinalTension, 0.0f, 1.0f);
-
-		const float CurrentMood = FinalPressure * PressureWeight + FinalTension * TensionWeight;
-		const float MoodDelta = CurrentMood - LastMoodIntensity;
-		LastMoodIntensity = CurrentMood;
-
-		for (int32 i = 0; i < AudioSources.Num(); i++)
-		{
-			if (AudioSources[i].IsValid())
-			{
-				const bool bIsCurrent = i == 0;
-				AudioSources[i].Source->SetBoolParameter(
-					PARAM_Dipped,
-					!DipRequests->IsEmpty()
-				);
-
-				AudioSources[i].Source->SetFloatParameter(
-					PARAM_Pressure,
-					bIsCurrent ? FinalPressure : 0.0f
-				);
-
-				AudioSources[i].Source->SetFloatParameter(
-					PARAM_Tension,
-					bIsCurrent ? FinalTension : 0.0f
-				);
-
-				AudioSources[i].Source->SetFloatParameter(
-					PARAM_MoodDelta,
-					bIsCurrent ? MoodDelta : 0.0f
-				);
-			}
-		}
-	}
-}
-
 bool UWorldMusicSubsystem::StartTrackInternal(USoundBase* InTrack, float InFadeTime)
 {
-	if (!FMath::IsFinite(InFadeTime) || InFadeTime < 0.0f)
+	if (InFadeTime < 0.0f)
 	{
-		TORO_LOG_WARNING(TEXT("[%s] Music track %s has invalid fade duration %g; using zero seconds."),
+		InFadeTime = 0.0f;
+		TORO_LOG_WARNING(
+			TEXT("[%s] Music track %s has invalid fade duration %g; using zero seconds."),
 			*GetName(), *GetNameSafe(InTrack), InFadeTime
 		);
-		InFadeTime = 0.0f;
 	}
 
 	UAudioComponent* NewSource = UGameplayStatics::CreateSound2D(this, InTrack);
 	if (!IsValid(NewSource))
 	{
-		TORO_LOG_ERROR(TEXT("[%s] Cannot start music track %s: audio component creation failed."),
-			*GetName(), *GetNameSafe(InTrack));
+		TORO_LOG_ERROR(
+			TEXT("[%s] Cannot start music track %s: audio component creation failed."),
+			*GetName(), *GetNameSafe(InTrack)
+		);
 		return false;
 	}
 
-	NewSource->SetPaused(true);
+	NewSource->bAutoDestroy = false;
 	NewSource->OnAudioFinishedNative.AddUObject(this, &UWorldMusicSubsystem::OnAudioFinished);
+	NewSource->SetPaused(true);
 
-	CleanupAudioSources();
-	const FWorldMusicSourceRef OutgoingRef = AudioSources[0];
-	AudioSources[0] = FWorldMusicSourceRef(NewSource, InFadeTime);
-	if (OutgoingRef.IsValid())
+	if (Sources.IsEmpty())
 	{
-		AudioSources.Add(OutgoingRef);
-		OutgoingRef.Stop();
+		Sources.Emplace();
 	}
 
-	OnUpdateParameters();
-	AudioSources[0].Start();
+	const FWorldMusicSource OutgoingSource = Sources[0];
+	Sources[0] = FWorldMusicSource(NewSource, InFadeTime);
+	if (OutgoingSource.IsValid())
+	{
+		Sources.Add(OutgoingSource);
+		OutgoingSource.Stop();
+	}
+
+	Sources[0].Start();
+	OnParamsChanged();
+
 	return true;
 }
 
-void UWorldMusicSubsystem::CleanupAudioSources()
+void UWorldMusicSubsystem::CleanupSources()
 {
-	if (AudioSources.IsEmpty())
+	if (Sources.IsEmpty())
 	{
-		AudioSources.Emplace();
-	}
-	else if (!AudioSources[0].IsValid())
-	{
-		AudioSources[0] = FWorldMusicSourceRef();
+		Sources.Emplace();
+		return;
 	}
 
-	for (int32 i = AudioSources.Num() - 1; i > 0; i--)
+	for (auto It = Sources.CreateIterator(); It; ++It)
 	{
-		if (!AudioSources[i].IsValid())
+		if (!It->IsValid() || (*It)->GetPlayState() == EAudioComponentPlayState::Stopped)
 		{
-			AudioSources.RemoveAtSwap(i);
+			It->Destroy();
+			if (It.GetIndex() != 0)
+			{
+				It.RemoveCurrentSwap();
+			}
 		}
-	}
-}
-
-void UWorldMusicSubsystem::OnPostGarbageCollect() const
-{
-	if (DipRequests.IsValid())
-	{
-		DipRequests->Cleanup();
-	}
-	if (Pressure.IsValid())
-	{
-		Pressure->Cleanup();
-	}
-	if (Tension.IsValid())
-	{
-		Tension->Cleanup();
-	}
-}
-
-void UWorldMusicSubsystem::OnAudioFinished(UAudioComponent* Component)
-{
-	if (!AudioSources.IsEmpty() && AudioSources[0].Source == Component)
-	{
-		AudioSources[0] = FWorldMusicSourceRef();
-	}
-
-	for (int32 i = AudioSources.Num() - 1; i > 0; i--)
-	{
-		if (AudioSources[i].Source == Component || !AudioSources[i].IsValid())
-		{
-			AudioSources.RemoveAtSwap(i);
-		}
-	}
-
-	if (IsValid(Component))
-	{
-		Component->OnAudioFinishedNative.RemoveAll(this);
-	}
-}
-
-void UWorldMusicSubsystem::OnUpdateParameters()
-{
-	if (IsSystemValid())
-	{
-		float FinalPressure = 0.0f;
-		if (Pressure.IsValid())
-		{
-			TArray<TPair<EWorldMusicModType, float>> Modifiers;
-			Pressure->GetInnerMap().GenerateValueArray(Modifiers);
-			FinalPressure = ProcessModifiers(Modifiers);
-		}
-
-		float FinalTension = 0.0f;
-		if (Tension.IsValid())
-		{
-			TArray<TPair<EWorldMusicModType, float>> Modifiers;
-			Tension->GetInnerMap().GenerateValueArray(Modifiers);
-			FinalTension = ProcessModifiers(Modifiers);
-		}
-
-		SetAudioParameters(FinalPressure, FinalTension);
 	}
 }
 
@@ -424,8 +322,6 @@ bool UWorldMusicSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType
 void UWorldMusicSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	FCoreUObjectDelegates::GetPostGarbageCollect().AddUObject(this, &UWorldMusicSubsystem::OnPostGarbageCollect);
-
 	const UWorld* World = GetWorld();
 	if (!ensureMsgf(IsValid(World), TEXT("[%s] Cannot initialize World Music due to an invalid world."), *GetName()))
 	{
@@ -440,56 +336,37 @@ void UWorldMusicSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 		return;
 	}
 
-	if (!ensureMsgf(DipRequests.IsValid() && Pressure.IsValid() && Tension.IsValid(),
-		TEXT("[%s] Cannot initialize World Music due to DipRequests, Pressure, and Tension accumulators being null."),
-		*GetName()))
+	TGuardValue ParamsGuard(bPauseParamUpdates, true);
+	for (const TPair<FGameplayTag, float>& Param : GetConfig().BaseParameters)
 	{
-		return;
+		AddParameter(WorldSettings.Get(), Param.Key, Param.Value);
 	}
-
-	if (GetConfig().BasePressure.IsSet())
-	{
-		Pressure->Add(WorldSettings.Get(), {
-			EWorldMusicModType::Additive, GetConfig().BasePressure.Get(0.0f)
-		});
-	}
-
-	if (GetConfig().BaseTension.IsSet())
-	{
-		Tension->Add(WorldSettings.Get(), {
-			EWorldMusicModType::Additive, GetConfig().BaseTension.Get(0.0f)
-		});
-	}
-
-	DefaultTrack = GetConfig().DefaultTrack.LoadSynchronous();
-	DefaultFadeTime = GetConfig().DefaultFadeTime;
 }
 
 void UWorldMusicSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
-	if (IsSystemValid() && IsValid(DefaultTrack))
+	if (IsSystemValid())
 	{
-		StartTrackInternal(DefaultTrack, DefaultFadeTime);
+		if (UMetaSoundSource* Track = GetConfig().DefaultTrack.LoadSynchronous())
+		{
+			StartTrackInternal(Track, GetConfig().DefaultFadeTime);
+		}
 	}
 }
 
 void UWorldMusicSubsystem::Deinitialize()
 {
-	FCoreUObjectDelegates::GetPostGarbageCollect().RemoveAll(this);
+	WorldSettings.Reset();
 
-	for (auto It = AudioSources.CreateIterator(); It; ++It)
+	Parameters.Empty();
+	DipRequests->OnChanged().Clear();
+
+	for (auto It = Sources.CreateIterator(); It; ++It)
 	{
 		It->Destroy();
 		It.RemoveCurrentSwap();
 	}
-
-	LastMoodIntensity = 0.0f;
-	DefaultTrack = nullptr;
-	WorldSettings.Reset();
-	DipRequests.Reset();
-	Pressure.Reset();
-	Tension.Reset();
 
 	Super::Deinitialize();
 }
