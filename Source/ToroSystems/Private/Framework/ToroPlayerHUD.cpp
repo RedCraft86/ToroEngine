@@ -20,3 +20,13 @@ void AToroPlayerHUD::BeginPlay()
 		MasterWidget->AddToPlayerScreen();
 	}
 }
+
+void AToroPlayerHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (MasterWidget)
+	{
+		MasterWidget->RemoveFromParent();
+		MasterWidget = nullptr;
+	}
+	Super::EndPlay(EndPlayReason);
+}
