@@ -32,6 +32,9 @@ public:
 	FWorldMusicParam(const FWorldMusicParam&) = delete;
 	FWorldMusicParam& operator=(const FWorldMusicParam&) = delete;
 
+	FWorldMusicParam(FWorldMusicParam&&) = default;
+	FWorldMusicParam& operator=(FWorldMusicParam&&) = default;
+
 	[[nodiscard]] FORCEINLINE auto& operator->() { return Entries; }
 	[[nodiscard]] float GetResult() const;
 };
