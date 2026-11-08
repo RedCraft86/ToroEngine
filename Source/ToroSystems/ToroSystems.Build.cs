@@ -21,8 +21,16 @@ public class ToroSystems : ModuleRules
 			"AsyncMessageSystem",
 			"DeveloperSettings",
 			"LevelSequence",
+			"GameplayTags",
 			"CommonUI",
 			"ToroEngine",
 		]);
+
+		if (Target.Type == TargetType.Editor)
+		{
+			PrivateDependencyModuleNames.AddRange([
+				"UnrealEd"
+			]);
+		}
 	}
 }

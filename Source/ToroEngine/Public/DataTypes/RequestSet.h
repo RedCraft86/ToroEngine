@@ -17,7 +17,7 @@
  * Changes notify listeners synchronously unless suppressed by bDiscrete; suppressed notifications are not deferred.
  * Remove requests explicitly when they end, even if their requester remains alive, such as a pooled widget.
  */
-class TOROENGINE_API FRequestSet final : public TSharedFromThis<FRequestSet>
+class FRequestSet final : public TSharedFromThis<FRequestSet>
 {
 	TSet<TWeakObjectPtr<const UObject>> InnerSet;
 	FSimpleMulticastDelegate OnChangedEvent;

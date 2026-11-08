@@ -21,7 +21,7 @@
  * @tparam T Copy-constructible and copy-assignable value type; equality comparison is not required.
  */
 template<typename T>
-class TOROENGINE_API TAccumulatorBase : public TSharedFromThis<TAccumulatorBase<T>>
+class TAccumulatorBase : public TSharedFromThis<TAccumulatorBase<T>>
 {
 	FSimpleMulticastDelegate OnChangedEvent;
 	FDelegateHandle GCHandle;
@@ -202,7 +202,7 @@ public:
  * @tparam T Copy-constructible and copy-assignable contribution type.
  */
 template<typename T>
-class TOROENGINE_API TOrderedAccumulator final : public TAccumulatorBase<T>
+class TOrderedAccumulator final : public TAccumulatorBase<T>
 {
 	TArray<TPair<TWeakObjectPtr<const UObject>, T>> InnerArray;
 
@@ -329,7 +329,7 @@ public:
  * @tparam T Copy-constructible and copy-assignable contribution type.
  */
 template<typename T>
-class TOROENGINE_API TUnorderedAccumulator final : public TAccumulatorBase<T>
+class TUnorderedAccumulator final : public TAccumulatorBase<T>
 {
 	TMap<TWeakObjectPtr<const UObject>, T> InnerMap;
 
