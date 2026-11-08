@@ -299,6 +299,36 @@ public:
 			}
 		}
 	}
+
+	/**
+	 * If this accumulator is non-empty, get the first entry of it.
+	 * @return Pointer to the first entry or nullptr if the accumulator is empty.
+	 */
+	const T* GetFirst() const
+	{
+		ACCUMULATORS_CHECK_GAME_THREAD();
+		if (!IsEmpty())
+		{
+			return &InnerArray[0];
+		}
+
+		return nullptr;
+	}
+
+	/**
+	 * If this accumulator is non-empty, get the last entry of it.
+	 * @return Pointer to the last entry or nullptr if the accumulator is empty.
+	 */
+	const T* GetLast() const
+	{
+		ACCUMULATORS_CHECK_GAME_THREAD();
+		if (!IsEmpty())
+		{
+			return &InnerArray[Num() - 1];
+		}
+
+		return nullptr;
+	}
 };
 
 /**
