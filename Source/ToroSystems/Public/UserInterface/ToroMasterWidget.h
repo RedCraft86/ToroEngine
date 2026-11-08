@@ -59,6 +59,24 @@ public:
 	void RemoveMenuWidget(UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UCommonActivatableWidget> InClass) const;
 
 	/**
+	 * Pushes an existing menu instance, allowing distinct entries of the same class.
+	 * Does nothing if the layer is unbuilt, the widget is invalid, or this instance is already in the stack.
+	 * Repeated adds do not reorder or reactivate the instance.
+	 * @param Widget Instance created for the appropriate owning player and configured before adding.
+	 *        Supplied instances are not pooled; the caller remains responsible for their lifetime.
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = UserInterface)
+	void AddMenuWidgetInstance(UCommonActivatableWidget* Widget) const;
+
+	/**
+	 * Removes a specific menu instance using the stack's normal removal and transition behavior.
+	 * Does nothing if the layer is unbuilt, the widget is invalid, or it is absent from this stack.
+	 * @param Widget Instance to remove, leaving other entries of the same class untouched.
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = UserInterface)
+	void RemoveMenuWidgetInstance(UCommonActivatableWidget* Widget) const;
+
+	/**
 	 * Adds an exact-class top overlay entry, or returns and reactivates an existing outgoing entry.
 	 * Requires the layers to have been constructed; repeated adds do not change overlay order.
 	 * @param InClass Concrete activatable widget class to display.

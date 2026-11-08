@@ -59,6 +59,22 @@ void UToroMasterWidget::RemoveMenuWidget(TSubclassOf<UCommonActivatableWidget> I
 	}
 }
 
+void UToroMasterWidget::AddMenuWidgetInstance(UCommonActivatableWidget* Widget) const
+{
+	if (MenuLayer && IsValid(Widget) && !MenuLayer->GetWidgetList().Contains(Widget))
+	{
+		MenuLayer->AddWidgetInstance(*Widget);
+	}
+}
+
+void UToroMasterWidget::RemoveMenuWidgetInstance(UCommonActivatableWidget* Widget) const
+{
+	if (MenuLayer && IsValid(Widget) && MenuLayer->GetWidgetList().Contains(Widget))
+	{
+		MenuLayer->RemoveWidget(*Widget);
+	}
+}
+
 UCommonActivatableWidget* UToroMasterWidget::AddOverlayWidget(TSubclassOf<UCommonActivatableWidget> InClass) const
 {
 	if (OverlayLayer && IsValid(InClass) && !InClass->HasAnyClassFlags(CLASS_Abstract))
