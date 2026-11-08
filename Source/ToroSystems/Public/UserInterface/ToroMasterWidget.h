@@ -48,7 +48,7 @@ public:
 	 * @return The entry, or nullptr if the layer is unbuilt, the class is invalid, or creation fails.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = UserInterface, meta = (DeterminesOutputType = InClass))
-	UCommonActivatableWidget* AddMenuWidget(UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UCommonActivatableWidget> InClass) const;
+	UCommonActivatableWidget* AddMenuWidget(UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UToroMenuWidgetBase> InClass) const;
 
 	/**
 	 * Removes the exact-class menu entry using the stack's normal removal and transition behavior.
@@ -56,7 +56,7 @@ public:
 	 * @param InClass Class of the menu to remove.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = UserInterface)
-	void RemoveMenuWidget(UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UCommonActivatableWidget> InClass) const;
+	void RemoveMenuWidget(UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UToroMenuWidgetBase> InClass) const;
 
 	/**
 	 * Pushes an existing menu instance, allowing distinct entries of the same class.
@@ -66,7 +66,7 @@ public:
 	 *        Supplied instances are not pooled; the caller remains responsible for their lifetime.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = UserInterface)
-	void AddMenuWidgetInstance(UCommonActivatableWidget* Widget) const;
+	void AddMenuWidgetInstance(UToroMenuWidgetBase* Widget) const;
 
 	/**
 	 * Removes a specific menu instance using the stack's normal removal and transition behavior.
@@ -74,7 +74,7 @@ public:
 	 * @param Widget Instance to remove, leaving other entries of the same class untouched.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = UserInterface)
-	void RemoveMenuWidgetInstance(UCommonActivatableWidget* Widget) const;
+	void RemoveMenuWidgetInstance(UToroMenuWidgetBase* Widget) const;
 
 	/**
 	 * Adds an exact-class top overlay entry, or returns and reactivates an existing outgoing entry.

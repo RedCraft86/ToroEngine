@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "UserInterface/ToroMasterWidget.h"
+#include "UserInterface/ToroMenuWidgetBase.h"
 #include "UserInterface/ActivatableWidgetOverlay.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
 #include "CommonActivatableWidget.h"
@@ -26,7 +27,7 @@ void UToroMasterWidget::RemoveGameplayWidget(TSubclassOf<UCommonActivatableWidge
 	}
 }
 
-UCommonActivatableWidget* UToroMasterWidget::AddMenuWidget(TSubclassOf<UCommonActivatableWidget> InClass) const
+UCommonActivatableWidget* UToroMasterWidget::AddMenuWidget(TSubclassOf<UToroMenuWidgetBase> InClass) const
 {
 	if (MenuLayer && IsValid(InClass) && !InClass->HasAnyClassFlags(CLASS_Abstract))
 	{
@@ -44,7 +45,7 @@ UCommonActivatableWidget* UToroMasterWidget::AddMenuWidget(TSubclassOf<UCommonAc
 	return nullptr;
 }
 
-void UToroMasterWidget::RemoveMenuWidget(TSubclassOf<UCommonActivatableWidget> InClass) const
+void UToroMasterWidget::RemoveMenuWidget(TSubclassOf<UToroMenuWidgetBase> InClass) const
 {
 	if (MenuLayer && IsValid(InClass) && !InClass->HasAnyClassFlags(CLASS_Abstract))
 	{
@@ -59,7 +60,7 @@ void UToroMasterWidget::RemoveMenuWidget(TSubclassOf<UCommonActivatableWidget> I
 	}
 }
 
-void UToroMasterWidget::AddMenuWidgetInstance(UCommonActivatableWidget* Widget) const
+void UToroMasterWidget::AddMenuWidgetInstance(UToroMenuWidgetBase* Widget) const
 {
 	if (MenuLayer && IsValid(Widget) && !MenuLayer->GetWidgetList().Contains(Widget))
 	{
@@ -67,7 +68,7 @@ void UToroMasterWidget::AddMenuWidgetInstance(UCommonActivatableWidget* Widget) 
 	}
 }
 
-void UToroMasterWidget::RemoveMenuWidgetInstance(UCommonActivatableWidget* Widget) const
+void UToroMasterWidget::RemoveMenuWidgetInstance(UToroMenuWidgetBase* Widget) const
 {
 	if (MenuLayer && IsValid(Widget) && MenuLayer->GetWidgetList().Contains(Widget))
 	{
