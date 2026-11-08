@@ -4,7 +4,10 @@
 #include "Framework/ToroGameInstance.h"
 #include "PostProcess/WorldPostProcessComponent.h"
 #include "Utilities/ToroUtilities.h"
+#include "Sound/AudioSettings.h"
+#include "Sound/SoundMix.h"
 #include "Engine/World.h"
+#include "AudioDevice.h"
 
 AToroWorldSettings::AToroWorldSettings(): bIsMainLevelSettings(false)
 {
@@ -41,6 +44,17 @@ AWorldSettings* AToroWorldSettings::Get(const UObject* ContextObject, TSubclassO
 	return IsValid(WS) && (!IsValid(Class) || WS->IsA(Class)) ? WS : nullptr;
 }
 
+void AToroWorldSettings::SetSoundClassVolume(USoundClass* InClass, float InVolume) const
+{
+	if (DefaultBaseSoundMix && InClass && GEngine && GEngine->UseSound() && GetWorld()->bAllowAudioPlayback)
+	{
+		if (FAudioDeviceHandle AudioDevice = GetWorld()->GetAudioDevice())
+		{
+			AudioDevice->SetSoundMixClassOverride(DefaultBaseSoundMix, InClass, InVolume, 1.0f, 0.0f, true);
+		}
+	}
+}
+
 void AToroWorldSettings::BeginPlay()
 {
 	Super::BeginPlay();
@@ -73,3 +87,17 @@ void AToroWorldSettings::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		GameInstance.Reset();
 	}
 }
+
+#if WITH_EDITOR
+void AToroWorldSettings::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+	if (!DefaultBaseSoundMix)
+	{
+		if (const UAudioSettings* Settings = GetDefault<UAudioSettings>())
+		{
+			DefaultBaseSoundMix = Cast<USoundMix>(Settings->DefaultBaseSoundMix.TryLoad());
+		}
+	}
+}
+#endif
