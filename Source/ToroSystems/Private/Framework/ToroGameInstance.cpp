@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Framework/ToroGameInstance.h"
+#include "UserSettings/ToroGameUserSettings.h"
 #include "Kismet/GameplayStatics.h"
 #if !WITH_EDITOR
 #include "HAL/FileManager.h"
@@ -113,6 +114,11 @@ void UToroGameInstance::Init()
 #endif
 
 	Super::Init();
+
+	if (UToroGameUserSettings* GUS = UToroGameUserSettings::Get())
+	{
+		// TODO: GUS->Initialize();
+	}
 }
 
 void UToroGameInstance::Shutdown()
