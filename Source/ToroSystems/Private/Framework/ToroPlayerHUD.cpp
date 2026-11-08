@@ -2,13 +2,15 @@
 
 #include "Framework/ToroPlayerHUD.h"
 #include "GameFramework/PlayerController.h"
+#include "Camera/PlayerCameraManager.h"
 #include "Kismet/GameplayStatics.h"
 
 AToroPlayerHUD::AToroPlayerHUD()
 {
-	PrimaryActorTick.bCanEverTick = false;
-	PrimaryActorTick.bStartWithTickEnabled = false;
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.TickGroup = TG_DuringPhysics;
+	PrimaryActorTick.TickInterval = 0.033f; // 30 FPS
 
 #if WITH_EDITORONLY_DATA
 	bIsSpatiallyLoaded = false; // Stop World Partition from unloading this
@@ -28,10 +30,14 @@ AHUD* AToroPlayerHUD::Get(const UObject* ContextObject, TSubclassOf<AHUD> Class,
 void AToroPlayerHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	MasterWidget = CreateWidget<UToroMasterWidget>(GetOwningPlayerController());
-	if (MasterWidget)
+	if (APlayerController* PC = GetOwningPlayerController())
 	{
-		MasterWidget->AddToPlayerScreen();
+		CameraManager = PC->PlayerCameraManager;
+		MasterWidget = CreateWidget<UToroMasterWidget>(PC);
+		if (MasterWidget)
+		{
+			MasterWidget->AddToPlayerScreen();
+		}
 	}
 }
 
@@ -43,4 +49,17 @@ void AToroPlayerHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		MasterWidget = nullptr;
 	}
 	Super::EndPlay(EndPlayReason);
+}
+
+void AToroPlayerHUD::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if (CameraManager.IsValid() && CameraManager->bEnableFading)
+	{
+		MasterWidget->SetScreenFade(CameraManager->FadeAmount);
+	}
+	else
+	{
+		MasterWidget->SetScreenFade(0.0f);
+	}
 }

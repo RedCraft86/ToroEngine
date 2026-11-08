@@ -86,6 +86,15 @@ void UToroMasterWidget::SetFadeDuration(float InDuration)
 	}
 }
 
+void UToroMasterWidget::SetScreenFade(float InAmount)
+{
+	ScreenFade = FMath::Clamp(InAmount, 0.0f, 1.0f);
+	if (ScreenFadeLayer)
+	{
+		ScreenFadeLayer->SetRenderOpacity(1.0f - ScreenFade);
+	}
+}
+
 void UToroMasterWidget::ApplyFadeDuration() const
 {
 	if (GameplayLayer)
@@ -138,6 +147,7 @@ void UToroMasterWidget::NativeDestruct()
 void UToroMasterWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	SetScreenFade(ScreenFade);
 	ApplyFadeDuration();
 	BindMenuLayer();
 }
@@ -152,31 +162,38 @@ TSharedRef<SWidget> UToroMasterWidget::RebuildWidget()
 {
 	if (!WidgetTree->RootWidget)
 	{
+		auto AddChild = [](UOverlay* Parent, UWidget* Child)
+		{
+			UOverlaySlot* ChildSlot = Parent->AddChildToOverlay(Child);
+			ChildSlot->SetHorizontalAlignment(HAlign_Fill);
+			ChildSlot->SetVerticalAlignment(VAlign_Fill);
+			ChildSlot->SetPadding(FMargin(0.0f));
+		};
+
 		UOverlay* Root = WidgetTree->ConstructWidget<UOverlay>(UOverlay::StaticClass(), TEXT("Root"));
 		Root->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		WidgetTree->RootWidget = Root;
 
+		ScreenFadeLayer = WidgetTree->ConstructWidget<UOverlay>(UOverlay::StaticClass(), TEXT("ScreenFadeLayer"));
+		ScreenFadeLayer->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		AddChild(Root, ScreenFadeLayer);
+
 		GameplayLayer = WidgetTree->ConstructWidget<UActivatableWidgetOverlay>(
 			UActivatableWidgetOverlay::StaticClass(), TEXT("GameplayLayer"));
 		GameplayLayer->SetVisibility(ESlateVisibility::HitTestInvisible);
+		AddChild(ScreenFadeLayer, GameplayLayer);
 
 		MenuLayer = WidgetTree->ConstructWidget<UCommonActivatableWidgetStack>(
 			UCommonActivatableWidgetStack::StaticClass(), TEXT("MenuLayer"));
+		AddChild(ScreenFadeLayer, MenuLayer);
 
 		OverlayLayer = WidgetTree->ConstructWidget<UActivatableWidgetOverlay>(
 			UActivatableWidgetOverlay::StaticClass(), TEXT("OverlayLayer"));
 		OverlayLayer->SetVisibility(ESlateVisibility::HitTestInvisible);
-
-		UWidget* const Layers[] = {GameplayLayer.Get(), MenuLayer.Get(), OverlayLayer.Get()};
-		for (UWidget* Layer : Layers)
-		{
-			UOverlaySlot* LayerSlot = Root->AddChildToOverlay(Layer);
-			LayerSlot->SetHorizontalAlignment(HAlign_Fill);
-			LayerSlot->SetVerticalAlignment(VAlign_Fill);
-			LayerSlot->SetPadding(FMargin(0.0f));
-		}
+		AddChild(Root, OverlayLayer);
 
 		ApplyFadeDuration();
+		SetScreenFade(ScreenFade);
 	}
 
 	return Super::RebuildWidget();

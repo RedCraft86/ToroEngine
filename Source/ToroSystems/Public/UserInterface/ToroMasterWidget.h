@@ -5,6 +5,7 @@
 #include "Blueprint/UserWidget.h"
 #include "ToroMasterWidget.generated.h"
 
+class UOverlay;
 class UActivatableWidgetOverlay;
 class UCommonActivatableWidgetStack;
 class UCommonActivatableWidget;
@@ -12,7 +13,8 @@ class UCommonActivatableWidget;
 /**
  * Native root UI with gameplay HUD, interactive menus, and important overlays, in that draw order.
  * Gameplay HUD fades out while the menu stack displays an entry and fades back in when it empties.
- * The top overlay layer remains independent of menu display state. Layers are created when rebuilt.
+ * Screen fading independently multiplies gameplay and menu opacity through a shared wrapper.
+ * The top overlay layer remains independent of both fades. Layers are created when rebuilt.
  */
 UCLASS(NotBlueprintable, BlueprintType)
 class TOROSYSTEMS_API UToroMasterWidget : public UUserWidget
@@ -88,7 +90,28 @@ public:
 		return FadeDuration;
 	}
 
+	/**
+	 * Immediately adjusts the shared opacity of gameplay and menu layers without animating a transition.
+	 * Combines with the menu-driven gameplay fade; the top overlay remains unaffected.
+	 * Input and hit testing are unchanged, including when the layers are fully transparent.
+	 * May be called before construction; the stored amount is applied when layers are built.
+	 * @param InAmount Fade amount clamped to [0, 1]: zero adds no fading, one makes the wrapped layers transparent.
+	 */
+	UFUNCTION(BlueprintCallable, Category = UserInterface)
+	void SetScreenFade(float InAmount);
+
+	/** Returns the stored screen fade amount in [0, 1], including before construction. */
+	UFUNCTION(BlueprintPure, Category = UserInterface)
+	[[nodiscard]] FORCEINLINE float GetScreenFade() const
+	{
+		return ScreenFade;
+	}
+
 protected:
+
+	/** Wraps gameplay and menu layers to apply screen fading without affecting the top overlay layer. */
+	UPROPERTY(Transient)
+	TObjectPtr<UOverlay> ScreenFadeLayer;
 
 	/** Bottom, noninteractive gameplay HUD layer, faded and then collapsed while a menu is displayed. */
 	UPROPERTY(Transient)
@@ -104,6 +127,7 @@ protected:
 
 	bool bShowGameplay = true;
 	float FadeDuration = 0.5f;
+	float ScreenFade = 0.0f;
 
 	void ApplyFadeDuration() const;
 
