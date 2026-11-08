@@ -80,7 +80,7 @@ public:
 		const EToroInputMode InInputMode,
 		const bool bInShowMouseCursor,
 		const EMouseLockMode InMouseLock = EMouseLockMode::LockAlways,
-		const bool bInHideCursorOnCapture = true,
+		const bool bInHideCursorOnCapture = false,
 		const bool bInConsumeCaptureMouseDown = true,
 		UUserWidget* InFocusWidget = nullptr
 	);
