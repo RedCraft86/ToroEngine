@@ -32,7 +32,7 @@ namespace ToroEngine::Logging::Private
 		if (GIsEditor)
 		{
 			LogError(Message);
-			if (GEditor)
+			if (GEditor && GIsPlayInEditorWorld)
 			{
 				GEditor->RequestEndPlayMap();
 			}
@@ -72,7 +72,7 @@ namespace ToroEngine::Logging::Private
 		if (GIsEditor)
 		{
 			ReportError(Message);
-			if (GEditor)
+			if (GEditor && GIsPlayInEditorWorld)
 			{
 				GEditor->RequestEndPlayMap();
 			}
