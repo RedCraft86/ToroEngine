@@ -5,7 +5,7 @@
 #include "Camera/PlayerCameraManager.h"
 #include "ToroPlayerCameraManager.generated.h"
 
-UCLASS(Blueprintable, BlueprintType)
+UCLASS(Blueprintable, BlueprintType, meta = (ChildCanTick = true))
 class TOROSYSTEMS_API AToroPlayerCameraManager : public APlayerCameraManager
 {
 	GENERATED_BODY()

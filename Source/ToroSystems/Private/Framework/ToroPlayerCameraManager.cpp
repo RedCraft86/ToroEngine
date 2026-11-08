@@ -5,10 +5,9 @@
 
 AToroPlayerCameraManager::AToroPlayerCameraManager()
 {
-	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bTickEvenWhenPaused = true;
-	PrimaryActorTick.bStartWithTickEnabled = true;
-	PrimaryActorTick.TickGroup = TG_PrePhysics;
+	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bStartWithTickEnabled = false;
+	PrimaryActorTick.TickGroup = TG_DuringPhysics;
 
 #if WITH_EDITORONLY_DATA
 	bIsSpatiallyLoaded = false; // Stop World Partition from unloading this

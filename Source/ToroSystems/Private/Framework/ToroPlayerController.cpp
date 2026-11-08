@@ -9,8 +9,10 @@ AToroPlayerController::AToroPlayerController()
 	, InputConfigs(TOrderedAccumulator<FToroInputConfig>::Make())
 {
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bTickEvenWhenPaused = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.TickGroup = TG_PrePhysics;
+	bShouldPerformFullTickWhenPaused = true;
 
 	PlayerCameraManagerClass = AToroPlayerCameraManager::StaticClass();
 
@@ -63,5 +65,11 @@ void AToroPlayerController::OnInputConfigsChanged()
 void AToroPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (UWorld* World = GetWorld())
+	{
+		World->bIsCameraMoveableWhenPaused = true;
+	}
+
 	OnInputConfigsChanged();
 }
