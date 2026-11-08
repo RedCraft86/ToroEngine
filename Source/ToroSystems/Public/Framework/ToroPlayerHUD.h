@@ -32,7 +32,7 @@ public:
 	 * @param PlayerIdx Index in the player controller list, with local players first, then available remote players.
 	 * @return The matching object cast to T, or nullptr if unavailable, invalid, or of a different type.
 	 */
-	template<typename T>
+	template<typename T = AToroPlayerHUD>
 	[[nodiscard]] static T* Get(const UObject* ContextObject, int32 PlayerIdx = 0)
 	{
 		static_assert(TIsDerivedFrom<T, AHUD>::Value,

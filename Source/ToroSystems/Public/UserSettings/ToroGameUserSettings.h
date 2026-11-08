@@ -27,7 +27,7 @@ public:
 	 * @tparam T Type derived from UGameUserSettings.
 	 * @return The matching object cast to T, or nullptr if unavailable, invalid, or of a different type.
 	 */
-	template<typename T>
+	template<typename T = UToroGameUserSettings>
 	[[nodiscard]] static T* Get()
 	{
 		static_assert(TIsDerivedFrom<T, UGameUserSettings>::Value,

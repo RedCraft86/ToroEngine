@@ -53,7 +53,7 @@ namespace ToroEngineEd::ActorUtils
 	using namespace ToroEngine::Logging;
 	namespace
 	{
-		template <typename T>
+		template<typename T = AStaticMeshActor>
 		T* SpawnMeshActor(const FTransform& Transform, const AActor* Owner, const FString& Label)
 		{
 			if (AActor* Actor = CreateActor(T::StaticClass(), Transform))

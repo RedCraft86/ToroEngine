@@ -33,7 +33,7 @@ public:
 	 * @tparam T Type derived from AWorldSettings.
 	 * @return The matching object cast to T, or nullptr if unavailable, invalid, or of a different type.
 	 */
-	template<typename T>
+	template<typename T = AToroWorldSettings>
 	[[nodiscard]] static T* Get(const UObject* ContextObject)
 	{
 		static_assert(TIsDerivedFrom<T, AWorldSettings>::Value,

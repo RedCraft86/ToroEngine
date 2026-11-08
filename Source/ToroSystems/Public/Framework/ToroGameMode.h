@@ -30,7 +30,7 @@ public:
 	 * @tparam T Type derived from AGameModeBase.
 	 * @return The matching object cast to T, or nullptr if unavailable, invalid, or of a different type.
 	 */
-	template<typename T>
+	template<typename T = AToroGameMode>
 	[[nodiscard]] static T* Get(const UObject* ContextObject)
 	{
 		static_assert(TIsDerivedFrom<T, AGameModeBase>::Value,

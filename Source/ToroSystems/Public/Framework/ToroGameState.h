@@ -29,7 +29,7 @@ public:
 	 * @tparam T Type derived from AGameStateBase.
 	 * @return The matching object cast to T, or nullptr if unavailable, invalid, or of a different type.
 	 */
-	template<typename T>
+	template<typename T = AToroGameState>
 	[[nodiscard]] static T* Get(const UObject* ContextObject)
 	{
 		static_assert(TIsDerivedFrom<T, AGameStateBase>::Value,
