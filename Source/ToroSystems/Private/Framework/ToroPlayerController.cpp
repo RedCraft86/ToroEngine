@@ -5,8 +5,6 @@
 #include "Kismet/GameplayStatics.h"
 
 AToroPlayerController::AToroPlayerController()
-	: PauseRequests(FRequestSet::Make())
-	, InputConfigs(TOrderedAccumulator<FToroInputConfig>::Make())
 {
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bTickEvenWhenPaused = true;

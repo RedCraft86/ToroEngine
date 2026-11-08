@@ -59,8 +59,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = PlayerController)
 	FToroInputConfig DefaultInputConfig;
 
-	TSharedRef<FRequestSet> PauseRequests;
-	TSharedRef<TOrderedAccumulator<FToroInputConfig>> InputConfigs;
+	TSharedRef<FRequestSet> PauseRequests = FRequestSet::Make();
+	TSharedRef<TOrderedAccumulator<FToroInputConfig>> InputConfigs = TOrderedAccumulator<FToroInputConfig>::Make();
 
 	void OnPauseRequestsChanged();
 	void OnInputConfigsChanged();
