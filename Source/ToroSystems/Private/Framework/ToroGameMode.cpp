@@ -6,12 +6,11 @@
 #include "Framework/ToroPlayerCharacter.h"
 #include "Framework/ToroPlayerState.h"
 #include "Framework/ToroPlayerHUD.h"
-#include "Framework/ToroGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 AToroGameMode::AToroGameMode()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 	PrimaryActorTick.TickGroup = TG_DuringPhysics;
 
@@ -33,32 +32,4 @@ AGameModeBase* AToroGameMode::Get(const UObject* ContextObject, TSubclassOf<AGam
 {
 	AGameModeBase* GM = UGameplayStatics::GetGameMode(ContextObject);
 	return IsValid(GM) && (!IsValid(Class) || GM->IsA(Class)) ? GM : nullptr;
-}
-
-void AToroGameMode::BeginPlay()
-{
-	Super::BeginPlay();
-	GameInstance = GetGameInstance<UToroGameInstance>();
-	if (GameInstance.IsValid())
-	{
-		GameInstance->WorldBeginPlay();
-	}
-}
-
-void AToroGameMode::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-	if (GameInstance.IsValid())
-	{
-		GameInstance->WorldTick(DeltaSeconds, IsPaused());
-	}
-}
-
-void AToroGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-	if (GameInstance.IsValid())
-	{
-		GameInstance->WorldEndPlay();
-	}
 }

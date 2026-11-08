@@ -10,7 +10,7 @@ class TOROSYSTEMS_API UToroGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
-	friend class AToroGameMode;
+	friend class AToroWorldSettings;
 
 public:
 
@@ -40,12 +40,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = GameInstance)
 	void RestartGame();
 
+	/** Called by the active world settings when its world begins play, including client worlds. */
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "World Begin Play")
 	void ReceiveWorldBeginPlay();
 
+	/** Called by the active world settings when its world ends play. */
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "World End Play")
 	void ReceiveWorldEndPlay();
 
+	/**
+	 * Called by world settings on the game thread during physics, including while paused.
+	 * Must not prepare the current physics step or depend on its completed results.
+	 * @param DeltaTime Delta time supplied to the world settings actor tick.
+	 * @param bGamePaused Whether the world is paused.
+	 */
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "World Tick")
 	void ReceiveWorldTick(float DeltaTime, bool bGamePaused);
 

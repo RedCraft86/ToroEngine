@@ -8,6 +8,7 @@
 #include "ToroWorldSettings.generated.h"
 
 class UWorldPostProcessComponent;
+class UToroGameInstance;
 
 UCLASS(Blueprintable, BlueprintType, PrioritizeCategories = (Systems))
 class TOROSYSTEMS_API AToroWorldSettings : public AWorldSettings
@@ -41,6 +42,9 @@ public:
 		return Cast<T>(Get(ContextObject, T::StaticClass()));
 	}
 
+	UFUNCTION(BlueprintPure, Category = WorldSettings)
+	[[nodiscard]] FORCEINLINE bool IsMainLevelSettings() const { return bIsMainLevelSettings; }
+
 	[[nodiscard]] UWorldPostProcessComponent* GetPostProcess() const { return PostProcess; }
 	[[nodiscard]] const FLightProbeSystemConfig& GetLightProbeConfig() const { return LightProbes; }
 	[[nodiscard]] const FWorldMusicSystemConfig& GetWorldMusicConfig() const { return WorldMusic; }
@@ -55,4 +59,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Systems)
 	FWorldMusicSystemConfig WorldMusic;
+
+	bool bIsMainLevelSettings;
+	TWeakObjectPtr<UToroGameInstance> GameInstance;
+
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };
