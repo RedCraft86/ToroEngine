@@ -163,7 +163,7 @@ bool UWorldMusicSubsystem::RequestDip(const UObject* Requester) const
 	return DipRequests->Add(Requester);
 }
 
-bool UWorldMusicSubsystem::RemoveDip(const UObject* Requester) const
+bool UWorldMusicSubsystem::ReleaseDip(const UObject* Requester) const
 {
 	return DipRequests->Remove(Requester);
 }

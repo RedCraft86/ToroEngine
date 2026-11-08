@@ -119,12 +119,12 @@ public:
 	TOROSYSTEMS_API bool RequestDip(const UObject* Requester) const;
 
 	/**
-	 * Removes one object's dip request; other outstanding requests keep dipping enabled.
+	 * Releases one object's dip request; other outstanding requests keep dipping enabled.
 	 * @param Requester Object whose request should end.
 	 * @return True if removed; false for invalid requesters or absent requests.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = WorldMusic, meta = (DefaultToSelf = Requester))
-	TOROSYSTEMS_API bool RemoveDip(const UObject* Requester) const;
+	TOROSYSTEMS_API bool ReleaseDip(const UObject* Requester) const;
 
 	/**
 	 * Adds or replaces one source's contribution to a parameter, notifying the current track immediately.
