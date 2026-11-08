@@ -4,13 +4,6 @@
 #include "PostProcess/WorldPostProcessComponent.h"
 #include "Utilities/ToroUtilities.h"
 
-AWorldSettings* AToroWorldSettings::Get(const UObject* ContextObject, TSubclassOf<AWorldSettings> Class)
-{
-	const UWorld* World = ToroEngine::GetWorld(ContextObject);
-	AWorldSettings* WS = IsValid(World) ? World->GetWorldSettings() : nullptr;
-	return IsValid(WS) && (!IsValid(Class) || WS->IsA(Class)) ? WS : nullptr;
-}
-
 AToroWorldSettings::AToroWorldSettings()
 {
 	PostProcess = CreateDefaultSubobject<UWorldPostProcessComponent>(TEXT("PostProcess"));
@@ -25,4 +18,11 @@ AToroWorldSettings::AToroWorldSettings()
 			TEXT("/ToroEngine/LightProbes/MPC_LightProbes.MPC_LightProbes"));
 		if (MPC.Succeeded()) LightProbes.ParameterCollection = MPC.Object;
 	}
+}
+
+AWorldSettings* AToroWorldSettings::Get(const UObject* ContextObject, TSubclassOf<AWorldSettings> Class)
+{
+	const UWorld* World = ToroEngine::GetWorld(ContextObject);
+	AWorldSettings* WS = IsValid(World) ? World->GetWorldSettings() : nullptr;
+	return IsValid(WS) && (!IsValid(Class) || WS->IsA(Class)) ? WS : nullptr;
 }
