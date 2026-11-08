@@ -210,17 +210,8 @@ class TOROENGINE_API TOrderedAccumulator final : public TAccumulatorBase<T>
 
 	virtual void AddInternal(const UObject* Source, const T& Value) override
 	{
-		if (TPair<TWeakObjectPtr<const UObject>, T>* Found = InnerArray.FindByPredicate([Source](const auto& Pair)
-		{
-			return Pair.Key == Source;
-		}))
-		{
-			Found->Value = Value;
-		}
-		else
-		{
-			InnerArray.Emplace(Source, Value);
-		}
+		RemoveInternal(Source);
+		InnerArray.Emplace(Source, Value);
 	}
 
 	virtual bool RemoveInternal(const UObject* Source) override
