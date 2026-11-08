@@ -94,7 +94,7 @@ void FWorldMusicSource::Destroy()
 }
 
 UWorldMusicSubsystem::UWorldMusicSubsystem()
-	: bPauseParamUpdates(false), DipRequests(FRequestSet::Make())
+	: bPauseParamUpdates(false)
 {
 	DipRequests->OnChanged().AddUObject(this, &UWorldMusicSubsystem::OnParamsChanged);
 }

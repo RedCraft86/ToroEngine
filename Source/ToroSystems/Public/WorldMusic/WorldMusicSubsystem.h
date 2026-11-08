@@ -158,9 +158,9 @@ private:
 	TArray<FWorldMusicSource> Sources;
 
 	bool bPauseParamUpdates;
-	TSharedRef<FRequestSet> DipRequests;
-	TMap<FGameplayTag, FWorldMusicParam> Parameters;
 	TWeakObjectPtr<AToroWorldSettings> WorldSettings;
+	TMap<FGameplayTag, FWorldMusicParam> Parameters;
+	TSharedRef<FRequestSet> DipRequests = FRequestSet::Make();
 
 	void OnParamsChanged();
 	void OnAudioFinished(UAudioComponent* Component);
