@@ -12,6 +12,8 @@ class TOROSYSTEMS_API AToroGameMode : public AGameModeBase
 
 public:
 
+	AToroGameMode();
+
 	/**
 	 * Retrieves the active game mode if it matches the requested class.
 	 * Only available on authority.

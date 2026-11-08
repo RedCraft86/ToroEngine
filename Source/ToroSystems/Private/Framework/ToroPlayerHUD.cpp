@@ -4,6 +4,20 @@
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
+AToroPlayerHUD::AToroPlayerHUD()
+{
+	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bStartWithTickEnabled = false;
+	PrimaryActorTick.TickGroup = TG_DuringPhysics;
+
+#if WITH_EDITORONLY_DATA
+	bIsSpatiallyLoaded = false; // Stop World Partition from unloading this
+#endif
+
+	bEnableAutoLODGeneration = false; // Exclude from HLOD
+	SetCanBeDamaged(false);
+}
+
 AHUD* AToroPlayerHUD::Get(const UObject* ContextObject, TSubclassOf<AHUD> Class, int32 PlayerIdx)
 {
 	const APlayerController* PC = UGameplayStatics::GetPlayerController(ContextObject, PlayerIdx);

@@ -12,6 +12,8 @@ class TOROSYSTEMS_API AToroPlayerCharacter : public AToroCharacter
 
 public:
 
+	AToroPlayerCharacter();
+
 	/**
 	 * Retrieves the active player character if it matches the requested class.
 	 * @param Class Optional class filter; a null or invalid class disables type filtering.

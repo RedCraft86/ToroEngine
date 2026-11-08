@@ -3,6 +3,21 @@
 #include "Framework/ToroPlayerCameraManager.h"
 #include "Kismet/GameplayStatics.h"
 
+AToroPlayerCameraManager::AToroPlayerCameraManager()
+{
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bTickEvenWhenPaused = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.TickGroup = TG_PrePhysics;
+
+#if WITH_EDITORONLY_DATA
+	bIsSpatiallyLoaded = false; // Stop World Partition from unloading this
+#endif
+
+	bEnableAutoLODGeneration = false; // Exclude from HLOD
+	SetCanBeDamaged(false);
+}
+
 APlayerCameraManager* AToroPlayerCameraManager::Get(const UObject* ContextObject,
 	TSubclassOf<APlayerCameraManager> Class, int32 PlayerIdx)
 {

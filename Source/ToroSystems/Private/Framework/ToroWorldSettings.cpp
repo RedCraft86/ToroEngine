@@ -6,6 +6,11 @@
 
 AToroWorldSettings::AToroWorldSettings()
 {
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bTickEvenWhenPaused = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.TickGroup = TG_PrePhysics;
+
 	PostProcess = CreateDefaultSubobject<UWorldPostProcessComponent>(TEXT("PostProcess"));
 
 	// Light Probes Config
@@ -18,6 +23,13 @@ AToroWorldSettings::AToroWorldSettings()
 			TEXT("/ToroEngine/LightProbes/MPC_LightProbes.MPC_LightProbes"));
 		if (MPC.Succeeded()) LightProbes.ParameterCollection = MPC.Object;
 	}
+
+#if WITH_EDITORONLY_DATA
+	bIsSpatiallyLoaded = false; // Stop World Partition from unloading this
+#endif
+
+	bEnableAutoLODGeneration = false; // Exclude from HLOD
+	SetCanBeDamaged(false);
 }
 
 AWorldSettings* AToroWorldSettings::Get(const UObject* ContextObject, TSubclassOf<AWorldSettings> Class)

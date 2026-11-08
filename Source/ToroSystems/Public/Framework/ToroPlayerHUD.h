@@ -6,12 +6,14 @@
 #include "UserInterface/ToroMasterWidget.h"
 #include "ToroPlayerHUD.generated.h"
 
-UCLASS(Blueprintable, BlueprintType)
+UCLASS(Blueprintable, BlueprintType, meta = (ChildCanTick = true))
 class TOROSYSTEMS_API AToroPlayerHUD : public AHUD
 {
 	GENERATED_BODY()
 
 public:
+
+	AToroPlayerHUD();
 
 	/**
 	 * Retrieves the active player HUD if it matches the requested class.

@@ -5,12 +5,14 @@
 #include "GameFramework/PlayerState.h"
 #include "ToroPlayerState.generated.h"
 
-UCLASS(Blueprintable, BlueprintType)
+UCLASS(Blueprintable, BlueprintType, meta = (ChildCanTick = true))
 class TOROSYSTEMS_API AToroPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 
 public:
+
+	AToroPlayerState();
 
 	/**
 	 * Retrieves the active player state if it matches the requested class.

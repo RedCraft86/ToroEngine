@@ -12,6 +12,8 @@ class TOROSYSTEMS_API AToroPlayerController : public APlayerController
 
 public:
 
+	AToroPlayerController();
+
 	/**
 	 * Retrieves the active player controller if it matches the requested class.
 	 * @param Class Optional class filter; a null or invalid class disables type filtering.

@@ -12,6 +12,8 @@ class TOROSYSTEMS_API AToroPlayerCameraManager : public APlayerCameraManager
 
 public:
 
+	AToroPlayerCameraManager();
+
 	/**
 	 * Retrieves the active player camera manager if it matches the requested class.
 	 * @param Class Optional class filter; a null or invalid class disables type filtering.
