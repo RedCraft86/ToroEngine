@@ -37,6 +37,9 @@ public:
 		return Cast<T>(Get(ContextObject, T::StaticClass()));
 	}
 
+	UFUNCTION(BlueprintCallable, Category = GameInstance)
+	void RestartGame();
+
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "World Begin Play")
 	void ReceiveWorldBeginPlay();
 
@@ -51,4 +54,14 @@ protected:
 	virtual void WorldBeginPlay();
 	virtual void WorldEndPlay();
 	virtual void WorldTick(float DeltaTime, bool bGamePaused);
+
+	virtual void Init() override;
+	virtual void Shutdown() override;
+
+#if !WITH_EDITOR
+private:
+	class FArchive* InstanceLock;
+	bool CreateInstanceLock();
+	void ClearInstanceLock();
+#endif
 };
