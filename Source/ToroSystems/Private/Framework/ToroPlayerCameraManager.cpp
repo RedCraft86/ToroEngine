@@ -23,3 +23,11 @@ APlayerCameraManager* AToroPlayerCameraManager::Get(const UObject* ContextObject
 	APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(ContextObject, PlayerIdx);
 	return IsValid(PCM) && (!IsValid(Class) || PCM->IsA(Class)) ? PCM : nullptr;
 }
+
+void AToroPlayerCameraManager::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// Start on a black screen
+	SetManualCameraFade(1.0f, FLinearColor::Black, true);
+}

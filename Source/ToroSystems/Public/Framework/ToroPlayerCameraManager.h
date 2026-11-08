@@ -38,4 +38,8 @@ public:
 			"T must derive from APlayerCameraManager");
 		return Cast<T>(Get(ContextObject, T::StaticClass(), PlayerIdx));
 	}
+
+protected:
+
+	virtual void BeginPlay() override;
 };
