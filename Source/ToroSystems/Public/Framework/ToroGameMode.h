@@ -37,4 +37,12 @@ public:
 			"T must derive from AGameModeBase");
 		return Cast<T>(Get(ContextObject, T::StaticClass()));
 	}
+
+protected:
+
+	TWeakObjectPtr<class UToroGameInstance> GameInstance;
+
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };

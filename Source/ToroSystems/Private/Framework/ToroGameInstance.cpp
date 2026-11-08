@@ -8,3 +8,19 @@ UGameInstance* UToroGameInstance::Get(const UObject* ContextObject, TSubclassOf<
 	UGameInstance* GI = UGameplayStatics::GetGameInstance(ContextObject);
 	return IsValid(GI) && (!IsValid(Class) || GI->IsA(Class)) ? GI : nullptr;
 }
+
+void UToroGameInstance::WorldBeginPlay()
+{
+	ReceiveWorldBeginPlay();
+}
+
+void UToroGameInstance::WorldEndPlay()
+{
+	ReceiveWorldEndPlay();
+}
+
+void UToroGameInstance::WorldTick(float DeltaTime, bool bGamePaused)
+{
+	ReceiveWorldTick(DeltaTime, bGamePaused);
+}
+

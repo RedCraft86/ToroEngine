@@ -10,6 +10,8 @@ class TOROSYSTEMS_API UToroGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
+	friend class AToroGameMode;
+
 public:
 
 	/**
@@ -34,4 +36,19 @@ public:
 			"T must derive from UGameInstance");
 		return Cast<T>(Get(ContextObject, T::StaticClass()));
 	}
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "World Begin Play")
+	void ReceiveWorldBeginPlay();
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "World End Play")
+	void ReceiveWorldEndPlay();
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "World Tick")
+	void ReceiveWorldTick(float DeltaTime, bool bGamePaused);
+
+protected:
+
+	virtual void WorldBeginPlay();
+	virtual void WorldEndPlay();
+	virtual void WorldTick(float DeltaTime, bool bGamePaused);
 };
