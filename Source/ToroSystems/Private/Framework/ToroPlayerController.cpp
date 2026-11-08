@@ -14,8 +14,8 @@ AToroPlayerController::AToroPlayerController()
 
 	PlayerCameraManagerClass = AToroPlayerCameraManager::StaticClass();
 
-	PauseRequests->OnChanged().AddUObject(this, &OnPauseRequestsChanged);
-	InputConfigs->OnChanged().AddUObject(this, &OnInputConfigsChanged);
+	PauseRequests->OnChanged().AddUObject(this, &AToroPlayerController::OnPauseRequestsChanged);
+	InputConfigs->OnChanged().AddUObject(this, &AToroPlayerController::OnInputConfigsChanged);
 
 #if WITH_EDITORONLY_DATA
 	bIsSpatiallyLoaded = false; // Stop World Partition from unloading this
