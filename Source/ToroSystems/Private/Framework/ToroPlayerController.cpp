@@ -34,6 +34,16 @@ APlayerController* AToroPlayerController::Get(const UObject* ContextObject,
 	return IsValid(PC) && (!IsValid(Class) || PC->IsA(Class)) ? PC : nullptr;
 }
 
+void AToroPlayerController::RequestPause(const UObject* Source)
+{
+	PauseRequests->Add(Source);
+}
+
+void AToroPlayerController::ReleasePause(const UObject* Source)
+{
+	PauseRequests->Remove(Source);
+}
+
 void AToroPlayerController::RequestInputConfig(const UObject* Source, const FToroInputConfig& InConfig)
 {
 	InputConfigs->Add(Source, InConfig);

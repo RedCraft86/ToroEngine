@@ -43,6 +43,12 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable, Category = PlayerController, meta = (DefaultToSelf = Source))
+	virtual void RequestPause(const UObject* Source);
+
+	UFUNCTION(BlueprintCallable, Category = PlayerController, meta = (DefaultToSelf = Source))
+	virtual void ReleasePause(const UObject* Source);
+
+	UFUNCTION(BlueprintCallable, Category = PlayerController, meta = (DefaultToSelf = Source))
 	virtual void RequestInputConfig(const UObject* Source, const FToroInputConfig& InConfig);
 
 	UFUNCTION(BlueprintCallable, Category = PlayerController, meta = (DefaultToSelf = Source))
