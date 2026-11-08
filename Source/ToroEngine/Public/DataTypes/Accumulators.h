@@ -300,7 +300,7 @@ public:
 		ACCUMULATORS_CHECK_GAME_THREAD();
 		if (!IsEmpty())
 		{
-			return &InnerArray[0];
+			return &InnerArray[0].Value;
 		}
 
 		return nullptr;
@@ -315,7 +315,7 @@ public:
 		ACCUMULATORS_CHECK_GAME_THREAD();
 		if (!IsEmpty())
 		{
-			return &InnerArray[Num() - 1];
+			return &InnerArray[Num() - 1].Value;
 		}
 
 		return nullptr;
