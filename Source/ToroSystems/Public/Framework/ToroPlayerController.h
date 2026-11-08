@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include "DataTypes/RequestSet.h"
+#include "DataTypes/Accumulators.h"
+#include "DataTypes/ToroInputConfig.h"
 #include "GameFramework/PlayerController.h"
 #include "ToroPlayerController.generated.h"
 
@@ -38,4 +41,23 @@ public:
 			"T must derive from APlayerController");
 		return Cast<T>(Get(ContextObject, T::StaticClass(), PlayerIdx));
 	}
+
+	UFUNCTION(BlueprintCallable, Category = PlayerController, meta = (DefaultToSelf = Source))
+	virtual void RequestInputConfig(const UObject* Source, const FToroInputConfig& InConfig);
+
+	UFUNCTION(BlueprintCallable, Category = PlayerController, meta = (DefaultToSelf = Source))
+	virtual void ReleaseInputConfig(const UObject* Source);
+
+protected:
+
+	UPROPERTY(EditAnywhere, Category = PlayerController)
+	FToroInputConfig DefaultInputConfig;
+
+	TSharedRef<FRequestSet> PauseRequests;
+	TSharedRef<TOrderedAccumulator<FToroInputConfig>> InputConfigs;
+
+	void OnPauseRequestsChanged();
+	void OnInputConfigsChanged();
+
+	virtual void BeginPlay() override;
 };

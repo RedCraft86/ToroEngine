@@ -5,6 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 
 AToroPlayerController::AToroPlayerController()
+	: PauseRequests(FRequestSet::Make())
+	, InputConfigs(TOrderedAccumulator<FToroInputConfig>::Make())
 {
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
@@ -28,4 +30,38 @@ APlayerController* AToroPlayerController::Get(const UObject* ContextObject,
 {
 	APlayerController* PC = UGameplayStatics::GetPlayerController(ContextObject, PlayerIdx);
 	return IsValid(PC) && (!IsValid(Class) || PC->IsA(Class)) ? PC : nullptr;
+}
+
+void AToroPlayerController::RequestInputConfig(const UObject* Source, const FToroInputConfig& InConfig)
+{
+	InputConfigs->Add(Source, InConfig);
+}
+
+void AToroPlayerController::ReleaseInputConfig(const UObject* Source)
+{
+	InputConfigs->Remove(Source);
+}
+
+void AToroPlayerController::OnPauseRequestsChanged()
+{
+	SetPause(!PauseRequests->IsEmpty());
+}
+
+void AToroPlayerController::OnInputConfigsChanged()
+{
+	FToroInputConfig Config = DefaultInputConfig;
+	if (const FToroInputConfig* Last = InputConfigs->GetLast())
+	{
+		Config = *Last;
+	}
+
+	FlushPressedKeys();
+	SetInputMode(Config.GetInputMode());
+	SetShowMouseCursor(Config.ShouldShowMouse());
+}
+
+void AToroPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	OnInputConfigsChanged();
 }
