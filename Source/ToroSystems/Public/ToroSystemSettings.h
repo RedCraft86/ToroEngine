@@ -5,7 +5,9 @@
 #include "Engine/DeveloperSettings.h"
 #include "ToroSystemSettings.generated.h"
 
-UCLASS(Config = Game, DefaultConfig, NotBlueprintable, BlueprintType, DisplayName = "Toro Systems")
+class UToroDialogWidgetBase;
+
+UCLASS(Config = Game, DefaultConfig, NotBlueprintable, BlueprintType, DisplayName = "ToroSystems")
 class TOROSYSTEMS_API UToroSystemSettings final : public UDeveloperSettings
 {
 	GENERATED_BODY()
