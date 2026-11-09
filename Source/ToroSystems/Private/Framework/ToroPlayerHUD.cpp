@@ -7,10 +7,9 @@
 
 AToroPlayerHUD::AToroPlayerHUD()
 {
-	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 	PrimaryActorTick.TickGroup = TG_DuringPhysics;
-	PrimaryActorTick.TickInterval = 0.033f; // 30 FPS
 
 #if WITH_EDITORONLY_DATA
 	bIsSpatiallyLoaded = false; // Stop World Partition from unloading this
@@ -32,34 +31,12 @@ void AToroPlayerHUD::BeginPlay()
 	Super::BeginPlay();
 	if (APlayerController* PC = GetOwningPlayerController())
 	{
-		CameraManager = PC->PlayerCameraManager;
-		// MasterWidget = CreateWidget<UToroMasterWidget>(PC);
-		// if (MasterWidget)
-		// {
-		// 	MasterWidget->AddToPlayerScreen();
-		// }
+		// TODO Add widget
 	}
 }
 
 void AToroPlayerHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	// if (MasterWidget)
-	// {
-	// 	MasterWidget->RemoveFromParent();
-	// 	MasterWidget = nullptr;
-	// }
+	// TODO Remove widget
 	Super::EndPlay(EndPlayReason);
-}
-
-void AToroPlayerHUD::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-	// if (CameraManager.IsValid() && CameraManager->bEnableFading)
-	// {
-	// 	MasterWidget->SetScreenFade(CameraManager->FadeAmount);
-	// }
-	// else
-	// {
-	// 	MasterWidget->SetScreenFade(0.0f);
-	// }
 }
