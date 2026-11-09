@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Engine/DeveloperSettings.h"
+#include "UserInterface/ToroUserInterfaceConfig.h"
 #include "ToroSystemSettings.generated.h"
 
 class UToroDialogWidgetBase;
@@ -22,4 +23,7 @@ public:
 	{
 		return GetDefault<UToroSystemSettings>();
 	}
+
+	UPROPERTY(Config, EditAnywhere, Category = UserInterface, meta = (ShowOnlyInnerProperties = true))
+	FToroUserInterfaceConfig UserInterface;
 };
