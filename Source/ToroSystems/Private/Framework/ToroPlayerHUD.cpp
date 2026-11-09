@@ -33,33 +33,33 @@ void AToroPlayerHUD::BeginPlay()
 	if (APlayerController* PC = GetOwningPlayerController())
 	{
 		CameraManager = PC->PlayerCameraManager;
-		MasterWidget = CreateWidget<UToroMasterWidget>(PC);
-		if (MasterWidget)
-		{
-			MasterWidget->AddToPlayerScreen();
-		}
+		// MasterWidget = CreateWidget<UToroMasterWidget>(PC);
+		// if (MasterWidget)
+		// {
+		// 	MasterWidget->AddToPlayerScreen();
+		// }
 	}
 }
 
 void AToroPlayerHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (MasterWidget)
-	{
-		MasterWidget->RemoveFromParent();
-		MasterWidget = nullptr;
-	}
+	// if (MasterWidget)
+	// {
+	// 	MasterWidget->RemoveFromParent();
+	// 	MasterWidget = nullptr;
+	// }
 	Super::EndPlay(EndPlayReason);
 }
 
 void AToroPlayerHUD::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if (CameraManager.IsValid() && CameraManager->bEnableFading)
-	{
-		MasterWidget->SetScreenFade(CameraManager->FadeAmount);
-	}
-	else
-	{
-		MasterWidget->SetScreenFade(0.0f);
-	}
+	// if (CameraManager.IsValid() && CameraManager->bEnableFading)
+	// {
+	// 	MasterWidget->SetScreenFade(CameraManager->FadeAmount);
+	// }
+	// else
+	// {
+	// 	MasterWidget->SetScreenFade(0.0f);
+	// }
 }

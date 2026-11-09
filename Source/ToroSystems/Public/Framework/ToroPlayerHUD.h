@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameFramework/HUD.h"
-#include "UserInterface/ToroMasterWidget.h"
+// #include "UserInterface/ToroMasterWidget.h"
 #include "ToroPlayerHUD.generated.h"
 
 UCLASS(Blueprintable, BlueprintType, meta = (ChildCanTick = true))
@@ -40,13 +40,13 @@ public:
 		return Cast<T>(Get(ContextObject, T::StaticClass(), PlayerIdx));
 	}
 
-	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = HUD, meta = (DeterminesOutputType = InClass))
-	UToroMasterWidget* GetMasterWidget() const { return MasterWidget; }
+	// UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = HUD, meta = (DeterminesOutputType = InClass))
+	// UToroMasterWidget* GetMasterWidget() const { return MasterWidget; }
 
 protected:
 
-	UPROPERTY(Transient)
-	TObjectPtr<UToroMasterWidget> MasterWidget;
+	// UPROPERTY(Transient)
+	// TObjectPtr<UToroMasterWidget> MasterWidget;
 
 	TWeakObjectPtr<APlayerCameraManager> CameraManager;
 
