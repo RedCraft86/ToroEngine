@@ -4,10 +4,12 @@
 #pragma once
 
 #include "Blueprint/WidgetTree.h"
-#include "Components/Overlay.h"
 #include "Components/OverlaySlot.h"
+#include "Components/Overlay.h"
+#include "CommonInputModeTypes.h"
 #include "CommonActivatableWidget.h"
 #include "Blueprint/UserWidgetPool.h"
+#include "Input/UIActionBindingHandle.h"
 #include "UserInterface/Widgets/ToroUserWidget.h"
 #include "ToroMasterWidgetOverlay.generated.h"
 
@@ -17,6 +19,7 @@
  * Explicit removal deactivates entries and waits for UToroUserWidget exit transitions when playing;
  * other activatable entries are removed immediately after deactivation.
  * Releasing Slate resources preserves remaining entries and immediately finishes pending removals.
+ * Passive by default; the menu stack configures its gameplay root to supply captured gameplay input.
  */
 UCLASS(MinimalAPI, NotBlueprintable, NotBlueprintType, NotPlaceable)
 class UToroMasterWidgetOverlay final : public UCommonActivatableWidget
@@ -30,6 +33,13 @@ public:
 	{
 		bAutoActivate = true;
 		bSupportsActivationFocus = false;
+	}
+
+	void ConfigureAsGameplayRoot()
+	{
+		bGameplayRoot = true;
+		bAutoActivate = false;
+		bSupportsActivationFocus = true;
 	}
 
 	TOROSYSTEMS_API UCommonActivatableWidget* AddByClass(TSubclassOf<UCommonActivatableWidget> Class)
@@ -97,6 +107,7 @@ private:
 	UPROPERTY(Transient)
 	FUserWidgetPool WidgetPool;
 
+	bool bGameplayRoot = false;
 	TSet<TWeakObjectPtr<UToroUserWidget>> PendingRemoval;
 	TMap<TSubclassOf<UCommonActivatableWidget>, TWeakObjectPtr<UCommonActivatableWidget>> ClassLayers;
 
@@ -181,5 +192,19 @@ private:
 
 		Super::ReleaseSlateResources(bReleaseChildren);
 		WidgetPool.ReleaseAllSlateResources();
+	}
+
+	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override
+	{
+		if (bGameplayRoot)
+		{
+			return FUIInputConfig(
+				ECommonInputMode::Game,
+				EMouseCaptureMode::CapturePermanently_IncludingInitialMouseDown,
+				EMouseLockMode::LockOnCapture, true
+			);
+		}
+
+		return Super::GetDesiredInputConfig();
 	}
 };

@@ -24,6 +24,7 @@ public class ToroSystems : ModuleRules
 			"EnhancedInput",
 			"GameplayTags",
 			"CommonUI",
+			"CommonInput",
 			"ToroEngine",
 		]);
 

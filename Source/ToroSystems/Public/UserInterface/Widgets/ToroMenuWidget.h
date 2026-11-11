@@ -3,13 +3,15 @@
 #pragma once
 
 #include "CommonActivatableWidget.h"
+#include "Input/UIActionBindingHandle.h"
 #include "ToroMenuWidget.generated.h"
 
 /**
  * Modal CommonUI menu base with activation focus, automatic focus restoration, and back handling enabled by default.
- * While active, requests GameAndUI input with a visible cursor, viewport mouse locking, and this menu as the focus target.
- * Input configuration and optional pause requests are owned by this menu and released on deactivation.
- * These controller requests require an owning AToroPlayerController; other controller types are left unchanged.
+ * CommonUI applies the desired input configuration while this menu owns input routing and restores the
+ * underlying layer's configuration when it closes. Defaults to menu-only input with no mouse capture or locking.
+ * Optional source-owned pause requests require an owning AToroPlayerController and end on deactivation.
+ * The menu stack owns activation and presentation; auto-activation and activation visibility changes are disabled.
  */
 UCLASS(Abstract, Blueprintable, BlueprintType)
 class TOROSYSTEMS_API UToroMenuWidget : public UCommonActivatableWidget
@@ -23,14 +25,22 @@ public:
 protected:
 
 	/**
+	 * CommonUI input routing and mouse behavior used when this menu is the active input layer.
+	 * An explicit Blueprint Get Desired Input Config implementation takes precedence.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Activation|Input")
+	FUIInputConfig InputConfig;
+
+	/**
 	 * Requests game pause when this menu activates with an owning AToroPlayerController; false by default.
 	 * Changing this setting while active does not immediately update pause. Deactivation releases any existing request.
 	 */
 	UPROPERTY(EditAnywhere, Category = Activation)
 	bool bPausesGame;
 
-	void UpdateControllerRequests();
+	void UpdatePauseRequest() const;
 
 	virtual void NativeOnActivated() override;
 	virtual void NativeOnDeactivated() override;
+	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
 };

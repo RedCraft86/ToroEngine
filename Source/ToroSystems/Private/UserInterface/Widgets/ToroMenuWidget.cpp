@@ -2,9 +2,11 @@
 
 #include "UserInterface/Widgets/ToroMenuWidget.h"
 #include "Framework/ToroPlayerController.h"
-#include "DataTypes/ToroInputConfig.h"
+#include "CommonInputModeTypes.h"
 
-UToroMenuWidget::UToroMenuWidget(): bPausesGame(false)
+UToroMenuWidget::UToroMenuWidget()
+	: InputConfig(ECommonInputMode::Menu, EMouseCaptureMode::NoCapture, EMouseLockMode::DoNotLock)
+	, bPausesGame(false)
 {
 	bAutoActivate = false;
 	bSetVisibilityOnActivated = false;
@@ -15,27 +17,16 @@ UToroMenuWidget::UToroMenuWidget(): bPausesGame(false)
 	bIsModal = true;
 }
 
-void UToroMenuWidget::UpdateControllerRequests()
+void UToroMenuWidget::UpdatePauseRequest() const
 {
 	if (AToroPlayerController* PC = GetOwningPlayer<AToroPlayerController>())
 	{
 		if (!IsActivated())
 		{
-			PC->ReleaseInputConfig(this);
 			PC->ReleasePause(this);
 			return;
 		}
 
-		const FToroInputConfig Config(
-			EToroInputMode::UI_Only,
-			true,
-			EMouseLockMode::LockAlways,
-			false,
-			true,
-			this
-		);
-
-		PC->RequestInputConfig(this, Config);
 		if (bPausesGame)
 		{
 			PC->RequestPause(this);
@@ -50,11 +41,22 @@ void UToroMenuWidget::UpdateControllerRequests()
 void UToroMenuWidget::NativeOnActivated()
 {
 	Super::NativeOnActivated();
-	UpdateControllerRequests();
+	UpdatePauseRequest();
 }
 
 void UToroMenuWidget::NativeOnDeactivated()
 {
-	UpdateControllerRequests();
+	UpdatePauseRequest();
 	Super::NativeOnDeactivated();
+}
+
+TOptional<FUIInputConfig> UToroMenuWidget::GetDesiredInputConfig() const
+{
+	const TOptional<FUIInputConfig> BlueprintConfig = Super::GetDesiredInputConfig();
+	if (BlueprintConfig.IsSet())
+	{
+		return BlueprintConfig;
+	}
+
+	return InputConfig;
 }

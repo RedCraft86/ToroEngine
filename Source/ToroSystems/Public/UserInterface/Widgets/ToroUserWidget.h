@@ -15,6 +15,8 @@ enum class ETransitionCurve : uint8;
  * CommonUI activation notifications remain immediate; presentation transitions block pointer
  * input and temporarily keep the widget drawable until its intended visibility can be restored.
  * Disable this widget's transitions when its container supplies the presentation animation.
+ * Passive presentation does not participate in activation focus by default; interactive subclasses
+ * can enable Supports Activation Focus and provide a CommonUI desired input configuration.
  */
 UCLASS(Abstract, Blueprintable, BlueprintType, PrioritizeCategories = (Activation))
 class TOROSYSTEMS_API UToroUserWidget : public UCommonActivatableWidget

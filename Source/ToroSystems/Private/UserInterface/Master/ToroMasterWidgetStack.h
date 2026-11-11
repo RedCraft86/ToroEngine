@@ -80,6 +80,7 @@ public:
 			RootContent = CreateWidget<UToroMasterWidgetOverlay>(this);
 			if (RootContent)
 			{
+				RootContent->ConfigureAsGameplayRoot();
 				RootContent->SetVisibility(ESlateVisibility::HitTestInvisible);
 			}
 		}

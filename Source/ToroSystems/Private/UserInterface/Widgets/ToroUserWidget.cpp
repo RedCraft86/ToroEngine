@@ -14,6 +14,8 @@ UToroUserWidget::UToroUserWidget()
 	, TransitionDuration(0.4f)
 	, bTransitionCompletionPending(false)
 {
+	bAutoActivate = true;
+	bSupportsActivationFocus = false;
 }
 
 void UToroUserWidget::SetEnableTransitions(bool bEnable)

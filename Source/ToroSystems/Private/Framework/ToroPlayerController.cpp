@@ -20,7 +20,6 @@ AToroPlayerController::AToroPlayerController()
 	PlayerCameraManagerClass = AToroPlayerCameraManager::StaticClass();
 
 	PauseRequests->OnChanged().AddUObject(this, &AToroPlayerController::OnPauseRequestsChanged);
-	InputConfigs->OnChanged().AddUObject(this, &AToroPlayerController::OnInputConfigsChanged);
 
 #if WITH_EDITORONLY_DATA
 	bIsSpatiallyLoaded = false; // Stop World Partition from unloading this
@@ -47,32 +46,9 @@ void AToroPlayerController::ReleasePause(const UObject* Source)
 	PauseRequests->Remove(Source);
 }
 
-void AToroPlayerController::RequestInputConfig(const UObject* Source, const FToroInputConfig& InConfig)
-{
-	InputConfigs->Add(Source, InConfig);
-}
-
-void AToroPlayerController::ReleaseInputConfig(const UObject* Source)
-{
-	InputConfigs->Remove(Source);
-}
-
 void AToroPlayerController::OnPauseRequestsChanged()
 {
 	SetPause(!PauseRequests->IsEmpty());
-}
-
-void AToroPlayerController::OnInputConfigsChanged()
-{
-	FToroInputConfig Config = DefaultInputConfig;
-	if (const FToroInputConfig* Last = InputConfigs->GetLast())
-	{
-		Config = *Last;
-	}
-
-	FlushPressedKeys();
-	SetInputMode(Config.GetInputMode());
-	SetShowMouseCursor(Config.ShouldShowMouse());
 }
 
 void AToroPlayerController::BeginPlay()
@@ -93,6 +69,4 @@ void AToroPlayerController::BeginPlay()
 	{
 		World->bIsCameraMoveableWhenPaused = true;
 	}
-
-	OnInputConfigsChanged();
 }

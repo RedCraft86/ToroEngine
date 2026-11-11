@@ -3,14 +3,12 @@
 #pragma once
 
 #include "DataTypes/RequestSet.h"
-#include "DataTypes/Accumulators.h"
-#include "DataTypes/ToroInputConfig.h"
 #include "GameFramework/PlayerController.h"
 #include "ToroPlayerController.generated.h"
 
 /**
- * Player controller with source-owned pause and input configuration requests.
- * Pause requests keep the game paused while any remain; the latest input request takes precedence.
+ * Player controller with source-owned pause requests; CommonUI widgets own input configuration and focus.
+ * Pause requests keep the game paused while any remain.
  * Sources are weakly tracked and invalid sources are pruned after garbage collection or successful request changes.
  * Release requests when their purpose ends, especially for pooled widgets that remain alive.
  * Request operations must run on the game thread.
@@ -66,38 +64,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = PlayerController, meta = (DefaultToSelf = Source))
 	virtual void ReleasePause(const UObject* Source);
 
-	/**
-	 * Applies an input configuration with precedence over all earlier requests.
-	 * Re-requesting from the same source replaces its configuration and makes it the latest request.
-	 * Applying a configuration flushes pressed keys and updates input mode and cursor visibility.
-	 * @param Source Valid object identifying the request, without being retained; invalid sources are ignored.
-	 * @param InConfig Configuration copied into the request and used until superseded or released.
-	 */
-	UFUNCTION(BlueprintCallable, Category = PlayerController, meta = (DefaultToSelf = Source))
-	virtual void RequestInputConfig(const UObject* Source, const FToroInputConfig& InConfig);
-
-	/**
-	 * Releases this source's input request and reapplies the latest remaining configuration.
-	 * Falls back to DefaultInputConfig when no requests remain.
-	 * @param Source Object identifying the request; invalid sources and sources without a request are ignored.
-	 */
-	UFUNCTION(BlueprintCallable, Category = PlayerController, meta = (DefaultToSelf = Source))
-	virtual void ReleaseInputConfig(const UObject* Source);
-
 protected:
 
-	/**
-	 * Input configuration applied at BeginPlay and whenever no source-owned input requests remain.
-	 * Controls input mode and mouse cursor behavior.
-	 */
-	UPROPERTY(EditAnywhere, Category = PlayerController)
-	FToroInputConfig DefaultInputConfig;
-
 	TSharedRef<FRequestSet> PauseRequests = FRequestSet::Make();
-	TSharedRef<TOrderedAccumulator<FToroInputConfig>> InputConfigs = TOrderedAccumulator<FToroInputConfig>::Make();
 
 	void OnPauseRequestsChanged();
-	void OnInputConfigsChanged();
 
 	virtual void BeginPlay() override;
 };
