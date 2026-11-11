@@ -111,7 +111,7 @@ class FActorBehaviorRefCustomization final : public FToroStructCustomization
 		StructHandle->AccessRawData(RawData);
 		if (RawData.Num() > 1)
 		{
-			SetValueText(LOCTEXT("BehaviorRefMultipleValues", "Multiple Values"));
+			SetValueText(NSLOCTEXT("PropertyEditor", "MultipleValues", "Multiple Values"));
 			return;
 		}
 
