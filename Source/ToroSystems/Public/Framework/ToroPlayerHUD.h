@@ -85,6 +85,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = HUD)
 	void RemoveByInstance(EToroMasterWidgetType Layer, UCommonActivatableWidget* Instance) const;
 
+	/** Checks to see if the MasterWidget is created and active. */
+	UFUNCTION(BlueprintPure, Category = HUD)
+	[[nodiscard]] bool HasMasterWidget() const;
+
 protected:
 
 	UPROPERTY(Transient)

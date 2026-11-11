@@ -58,6 +58,11 @@ void AToroPlayerHUD::RemoveByInstance(EToroMasterWidgetType Layer, UCommonActiva
 	}
 }
 
+bool AToroPlayerHUD::HasMasterWidget() const
+{
+	return IsValid(MasterWidget) && MasterWidget->IsInViewport();
+}
+
 void AToroPlayerHUD::BeginPlay()
 {
 	if (APlayerController* PC = GetOwningPlayerController())
