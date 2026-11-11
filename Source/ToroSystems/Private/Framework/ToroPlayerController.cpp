@@ -5,6 +5,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "DataTypes/ToroLevelInfo.h"
 #include "Kismet/GameplayStatics.h"
+#include "InputMappingContext.h"
+#include "Engine/LocalPlayer.h"
+#include "Engine/World.h"
 
 AToroPlayerController::AToroPlayerController()
 {
