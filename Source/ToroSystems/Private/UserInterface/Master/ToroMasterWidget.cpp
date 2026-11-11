@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "UserInterface/ToroMasterWidget.h"
+#include "UserInterface/Widgets/ToroDialogWidget.h"
 #include "Camera/PlayerCameraManager.h"
 #include "ToroMasterWidgetOverlay.h"
 #include "ToroMasterWidgetStack.h"
@@ -158,7 +159,9 @@ void UToroMasterWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 	if (MenuLayer)
 	{
 		const APlayerCameraManager* PCM = GetOwningPlayerCameraManager();
-		if (IsValid(PCM) && PCM->bEnableFading && PCM->FadeAmount > 0.0f)
+		const UCommonActivatableWidget* ActiveWidget = MenuLayer->GetActiveWidget();
+		if (IsValid(PCM) && PCM->bEnableFading && PCM->FadeAmount > 0.0f
+			&& IsValid(ActiveWidget) && !ActiveWidget->IsA<UToroDialogWidget>())
 		{
 			bUpdateMenuOpacity = true;
 			MenuLayer->SetRenderOpacity(1.0f - PCM->FadeAmount);
