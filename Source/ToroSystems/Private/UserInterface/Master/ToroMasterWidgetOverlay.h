@@ -19,7 +19,10 @@
  * Explicit removal deactivates entries and waits for UToroUserWidget exit transitions when playing;
  * other activatable entries are removed immediately after deactivation.
  * Releasing Slate resources preserves remaining entries and immediately finishes pending removals.
- * Passive by default; the menu stack configures its gameplay root to supply captured gameplay input.
+ * The independent overlay host remains inactive so it cannot displace menus as CommonUI's active input root.
+ * Child presentation and explicit activation are independent of the host's activation state; modal children
+ * can establish their own routing roots. The menu stack activates its configured gameplay root to supply
+ * captured gameplay input when no menu is displayed.
  */
 UCLASS(MinimalAPI, NotBlueprintable, NotBlueprintType, NotPlaceable)
 class UToroMasterWidgetOverlay final : public UCommonActivatableWidget
@@ -31,7 +34,7 @@ public:
 	UToroMasterWidgetOverlay()
 		: WidgetPool(*this)
 	{
-		bAutoActivate = true;
+		bAutoActivate = false;
 		bSupportsActivationFocus = false;
 	}
 
