@@ -27,7 +27,7 @@ void UToroMenuWidget::UpdateControllerRequests()
 		}
 
 		const FToroInputConfig Config(
-			EToroInputMode::GameAndUI,
+			EToroInputMode::UI_Only,
 			true,
 			EMouseLockMode::LockAlways,
 			false,

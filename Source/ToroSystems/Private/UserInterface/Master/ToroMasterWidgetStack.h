@@ -14,7 +14,7 @@
  * UToroUserWidget entries have their own transitions disabled so the stack alone supplies animation.
  * Releasing Slate resources clears menu membership and class lookup while retaining the gameplay root.
  */
-UCLASS(MinimalAPI, NotBlueprintable, NotBlueprintType)
+UCLASS(MinimalAPI, NotBlueprintable, NotBlueprintType, NotPlaceable)
 class UToroMasterMenuStack final : public UCommonActivatableWidgetContainerBase
 {
 	GENERATED_BODY()

@@ -18,7 +18,7 @@
  * other activatable entries are removed immediately after deactivation.
  * Releasing Slate resources preserves remaining entries and immediately finishes pending removals.
  */
-UCLASS(MinimalAPI, NotBlueprintable, NotBlueprintType)
+UCLASS(MinimalAPI, NotBlueprintable, NotBlueprintType, NotPlaceable)
 class UToroMasterWidgetOverlay final : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
@@ -27,7 +27,10 @@ public:
 
 	UToroMasterWidgetOverlay()
 		: WidgetPool(*this)
-	{}
+	{
+		bAutoActivate = true;
+		bSupportsActivationFocus = false;
+	}
 
 	TOROSYSTEMS_API UCommonActivatableWidget* AddByClass(TSubclassOf<UCommonActivatableWidget> Class)
 	{

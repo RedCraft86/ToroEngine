@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CommonUserWidget.h"
+#include "Blueprint/UserWidget.h"
 #include "ToroMasterWidget.generated.h"
 
 class UToroMasterMenuStack;
@@ -29,8 +29,8 @@ enum class EToroMasterWidgetType : uint8
  * stack opacity and blocks its pointer input without fading the forced-overlay layer.
  * Toro user widgets supply their own overlay transitions; menu-stack entries use the stack's transitions.
  */
-UCLASS(MinimalAPI, NotBlueprintable, NotBlueprintType)
-class UToroMasterWidget final : public UCommonUserWidget
+UCLASS(MinimalAPI, NotBlueprintable, NotBlueprintType, NotPlaceable)
+class UToroMasterWidget final : public UUserWidget
 {
 	GENERATED_BODY()
 
