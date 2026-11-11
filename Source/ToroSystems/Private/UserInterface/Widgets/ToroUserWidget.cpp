@@ -117,9 +117,9 @@ void UToroUserWidget::RestorePendingVisibility()
 {
 	if (RestoreVisibility.IsSet())
 	{
-		const ESlateVisibility Visibility = RestoreVisibility.GetValue();
+		const ESlateVisibility Vis = RestoreVisibility.GetValue();
 		RestoreVisibility.Reset();
-		SetVisibility(Visibility);
+		SetVisibility(Vis);
 	}
 }
 
