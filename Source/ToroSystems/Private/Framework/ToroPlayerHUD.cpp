@@ -27,13 +27,13 @@ AHUD* AToroPlayerHUD::Get(const UObject* ContextObject, TSubclassOf<AHUD> Class,
 	return IsValid(HUD) && (!IsValid(Class) || HUD->IsA(Class)) ? HUD : nullptr;
 }
 
-UCommonActivatableWidget* AToroPlayerHUD::AddByClass(EToroMasterWidgetType Layer,
+UCommonActivatableWidget* AToroPlayerHUD::AddWidgetByClass(EToroMasterWidgetType Layer,
 	TSubclassOf<UCommonActivatableWidget> Class) const
 {
 	return IsValid(MasterWidget) ? MasterWidget->AddByClass(Layer, Class) : nullptr;
 }
 
-void AToroPlayerHUD::RemoveByClass(EToroMasterWidgetType Layer,
+void AToroPlayerHUD::RemoveWidgetByClass(EToroMasterWidgetType Layer,
 	TSubclassOf<UCommonActivatableWidget> Class) const
 {
 	if (IsValid(MasterWidget))
@@ -42,7 +42,7 @@ void AToroPlayerHUD::RemoveByClass(EToroMasterWidgetType Layer,
 	}
 }
 
-void AToroPlayerHUD::AddByInstance(EToroMasterWidgetType Layer, UCommonActivatableWidget* Instance) const
+void AToroPlayerHUD::AddWidgetByInstance(EToroMasterWidgetType Layer, UCommonActivatableWidget* Instance) const
 {
 	if (IsValid(MasterWidget))
 	{
@@ -50,7 +50,7 @@ void AToroPlayerHUD::AddByInstance(EToroMasterWidgetType Layer, UCommonActivatab
 	}
 }
 
-void AToroPlayerHUD::RemoveByInstance(EToroMasterWidgetType Layer, UCommonActivatableWidget* Instance) const
+void AToroPlayerHUD::RemoveWidgetByInstance(EToroMasterWidgetType Layer, UCommonActivatableWidget* Instance) const
 {
 	if (IsValid(MasterWidget))
 	{

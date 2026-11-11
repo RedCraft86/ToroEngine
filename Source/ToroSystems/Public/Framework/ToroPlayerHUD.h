@@ -56,7 +56,7 @@ public:
 	 * @return Existing or newly added entry, or null if the master/layer is unavailable or addition fails.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = HUD, meta = (DeterminesOutputType = Class))
-	UCommonActivatableWidget* AddByClass(EToroMasterWidgetType Layer,
+	UCommonActivatableWidget* AddWidgetByClass(EToroMasterWidgetType Layer,
 		UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UCommonActivatableWidget> Class) const;
 
 	/**
@@ -65,7 +65,7 @@ public:
 	 * @param Class Concrete registered class to remove; invalid or unregistered classes are ignored.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = HUD)
-	void RemoveByClass(EToroMasterWidgetType Layer,
+	void RemoveWidgetByClass(EToroMasterWidgetType Layer,
 		UPARAM(meta = (AllowAbstract = false)) TSubclassOf<UCommonActivatableWidget> Class) const;
 
 	/**
@@ -75,7 +75,7 @@ public:
 	 * @param Instance Entry to add; invalid instances or existing members are ignored.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = HUD)
-	void AddByInstance(EToroMasterWidgetType Layer, UCommonActivatableWidget* Instance) const;
+	void AddWidgetByInstance(EToroMasterWidgetType Layer, UCommonActivatableWidget* Instance) const;
 
 	/**
 	 * Requests removal of a selected layer's instance, including class-created entries; removal may wait for a transition.
@@ -83,7 +83,7 @@ public:
 	 * @param Instance Entry to remove; invalid instances or nonmembers are ignored.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = HUD)
-	void RemoveByInstance(EToroMasterWidgetType Layer, UCommonActivatableWidget* Instance) const;
+	void RemoveWidgetByInstance(EToroMasterWidgetType Layer, UCommonActivatableWidget* Instance) const;
 
 	/** Checks to see if the MasterWidget is created and active. */
 	UFUNCTION(BlueprintPure, Category = HUD)

@@ -123,7 +123,7 @@ UToroDialogWidget* UToroDialogWidget::CreateInternal(
 		return nullptr;
 	}
 
-	HUD->AddByInstance(EToroMasterWidgetType::Menu, Dialog);
+	HUD->AddWidgetByInstance(EToroMasterWidgetType::Menu, Dialog);
 
 	return Dialog;
 }
