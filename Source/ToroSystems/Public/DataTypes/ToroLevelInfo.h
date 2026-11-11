@@ -23,6 +23,8 @@ namespace LevelTypeTags
 USTRUCT(BlueprintType)
 struct TOROSYSTEMS_API FToroLevelInfo final
 {
+	GENERATED_BODY()
+
 	UPROPERTY(EditAnywhere, Category = Preset, meta = (Categories = "LevelType"))
 	FGameplayTag LevelType;
 
