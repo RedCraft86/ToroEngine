@@ -6,6 +6,9 @@
 
 UToroMenuWidget::UToroMenuWidget(): bPausesGame(false)
 {
+	bAutoActivate = false;
+	bSetVisibilityOnActivated = false;
+	bSetVisibilityOnDeactivated = false;
 	bSupportsActivationFocus = true;
 	bAutoRestoreFocus = true;
 	bIsBackHandler = true;
