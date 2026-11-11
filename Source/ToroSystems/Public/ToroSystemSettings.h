@@ -3,10 +3,7 @@
 #pragma once
 
 #include "Engine/DeveloperSettings.h"
-#include "UserInterface/ToroUserInterfaceConfig.h"
 #include "ToroSystemSettings.generated.h"
-
-class UToroDialogWidgetBase;
 
 UCLASS(Config = Game, DefaultConfig, NotBlueprintable, BlueprintType, DisplayName = "ToroSystems")
 class TOROSYSTEMS_API UToroSystemSettings final : public UDeveloperSettings
@@ -23,7 +20,4 @@ public:
 	{
 		return GetDefault<UToroSystemSettings>();
 	}
-
-	UPROPERTY(Config, EditAnywhere, Category = UserInterface, meta = (ShowOnlyInnerProperties = true))
-	FToroUserInterfaceConfig UserInterface;
 };
