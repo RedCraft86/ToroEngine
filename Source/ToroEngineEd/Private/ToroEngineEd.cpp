@@ -22,6 +22,7 @@
 
 #include "DetailsPanels/ToroStructCustomization.h"
 #include "DetailsPanels/Struct/ToroInlineStructCustomization.h"
+#include "DetailsPanels/Struct/ToroPropertyButtonCustomization.h"
 
 #include "DetailsPanels/ToroClassCustomization.h"
 #include "DetailsPanels/Class/ToroActorCustomization.h"
@@ -64,8 +65,8 @@ void FToroEngineEdModule::StartupModule()
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FInlineColorCurve>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FTaggedIdentity>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FSimpleCooldown>();
-
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FAsyncMessageId>();
+	FToroStructCustomization::Register<FToroPropertyButtonCustomization, FToroPropertyButton>();
 
 	FToroClassCustomization::Register<FToroActorCustomization, AToroActor>();
 	FToroClassCustomization::Register<FToroActorCustomization, AToroVolume>();
