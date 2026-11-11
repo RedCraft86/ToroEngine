@@ -21,6 +21,7 @@ public class ToroSystems : ModuleRules
 			"AsyncMessageSystem",
 			"DeveloperSettings",
 			"LevelSequence",
+			"EnhancedInput",
 			"GameplayTags",
 			"CommonUI",
 			"ToroEngine",
