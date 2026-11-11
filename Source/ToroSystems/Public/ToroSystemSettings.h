@@ -2,8 +2,11 @@
 
 #pragma once
 
+#include "DataTypes/ToroLevelInfo.h"
 #include "Engine/DeveloperSettings.h"
 #include "ToroSystemSettings.generated.h"
+
+class UWorld;
 
 UCLASS(Config = Game, DefaultConfig, NotBlueprintable, BlueprintType, DisplayName = "ToroSystems")
 class TOROSYSTEMS_API UToroSystemSettings final : public UDeveloperSettings
@@ -20,4 +23,7 @@ public:
 	{
 		return GetDefault<UToroSystemSettings>();
 	}
+
+	UPROPERTY(Config, EditAnywhere, Category = Framework)
+	TMap<TSoftObjectPtr<UWorld>, FToroLevelInfo> Levels;
 };
