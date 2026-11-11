@@ -15,7 +15,9 @@ public class ToroSystemsEd : ModuleRules
 			"UnrealEd",
 			"Slate",
 			"SlateCore",
+			"Projects",
 			"MessageLog",
+			"DeveloperSettings",
 			"ToroEngine",
 			"ToroEngineEd",
 			"ToroSystems"
