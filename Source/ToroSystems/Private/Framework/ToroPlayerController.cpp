@@ -2,6 +2,8 @@
 
 #include "Framework/ToroPlayerController.h"
 #include "Framework/ToroPlayerCameraManager.h"
+#include "EnhancedInputSubsystems.h"
+#include "DataTypes/ToroLevelInfo.h"
 #include "Kismet/GameplayStatics.h"
 
 AToroPlayerController::AToroPlayerController()
@@ -73,6 +75,16 @@ void AToroPlayerController::OnInputConfigsChanged()
 void AToroPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	const FToroLevelInfo* LevelInfo = FToroLevelInfo::Get(this);
+	auto* InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	if (LevelInfo && InputSubsystem)
+	{
+		if (const UInputMappingContext* InputMappings = LevelInfo->InputMappings.LoadSynchronous())
+		{
+			InputSubsystem->AddMappingContext(InputMappings, 0);
+		}
+	}
 
 	if (UWorld* World = GetWorld())
 	{
