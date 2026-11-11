@@ -24,10 +24,13 @@ const FText& UCommonTextButton::GetButtonText() const
 	return ButtonText;
 }
 
-void UCommonTextButton::SetButtonText(const FText& InText)
+void UCommonTextButton::SetButtonText(const FText InText)
 {
 	ButtonText = InText;
-	ApplyTextProperties();
+	if (TextBlock)
+	{
+		TextBlock->SetText(InText);
+	}
 }
 
 ETextJustify::Type UCommonTextButton::GetTextJustification() const

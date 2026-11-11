@@ -32,7 +32,7 @@ public:
 
 	/** Updates the displayed text, including when called before initialization. */
 	UFUNCTION(BlueprintCallable, Category = Text)
-	void SetButtonText(const FText& InText);
+	void SetButtonText(const FText InText);
 
 	/** Returns the configured horizontal text alignment. */
 	ETextJustify::Type GetTextJustification() const;
