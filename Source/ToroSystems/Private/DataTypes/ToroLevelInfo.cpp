@@ -2,7 +2,7 @@
 
 #include "DataTypes/ToroLevelInfo.h"
 #include "Utilities/ToroUtilities.h"
-#include "ToroSystemSettings.h"
+#include "ToroDevSettings.h"
 #include "UObject/Package.h"
 #include "Engine/World.h"
 
@@ -16,13 +16,14 @@ namespace LevelTypeTags
 const FToroLevelInfo* FToroLevelInfo::Get(const UObject* Context)
 {
 	const UWorld* World = ToroEngine::GetWorld(Context);
-	if (!World)
+	const UToroDevSettings* Settings = GetDefault<UToroDevSettings>();
+	if (!::IsValid(World) || !::IsValid(Settings))
 	{
 		return nullptr;
 	}
 
 	const FString CurrentPackage = UWorld::RemovePIEPrefix(World->GetOutermost()->GetName());
-	for (const TPair<TSoftObjectPtr<UWorld>, FToroLevelInfo>& Entry : UToroSystemSettings::Get()->Levels)
+	for (const TPair<TSoftObjectPtr<UWorld>, FToroLevelInfo>& Entry : Settings->Levels)
 	{
 		if (!Entry.Key.IsNull()
 			&& Entry.Value.IsValid()

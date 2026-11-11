@@ -5,24 +5,24 @@
 #include "DataTypes/ToroLevelInfo.h"
 #include "Engine/DeveloperSettings.h"
 #include "UserInterface/ToroUserInterfaceConfig.h"
-#include "ToroSystemSettings.generated.h"
+#include "ToroDevSettings.generated.h"
 
 class UWorld;
 
-UCLASS(Config = Game, DefaultConfig, NotBlueprintable, BlueprintType, DisplayName = "ToroSystems")
-class TOROSYSTEMS_API UToroSystemSettings final : public UDeveloperSettings
+UCLASS(Config = Game, DefaultConfig, NotBlueprintable, BlueprintType, DisplayName = "ToroEngine (Runtime)")
+class TOROSYSTEMS_API UToroDevSettings final : public UDeveloperSettings
 {
 	GENERATED_BODY()
 
 public:
 
-	UToroSystemSettings();
+	UToroDevSettings();
 
 	UFUNCTION(BlueprintPure, Category = ToroEngine,
-		DisplayName = "Get ToroSystem Settings", meta = (CompactNodeTitle = "ToroSystems"))
-	static const UToroSystemSettings* Get()
+		DisplayName = "Get ToroEngine Settings", meta = (CompactNodeTitle = "ToroEngine"))
+	static const UToroDevSettings* Get()
 	{
-		return GetDefault<UToroSystemSettings>();
+		return GetDefault<UToroDevSettings>();
 	}
 
 	UPROPERTY(Config, EditAnywhere, Category = Framework)
