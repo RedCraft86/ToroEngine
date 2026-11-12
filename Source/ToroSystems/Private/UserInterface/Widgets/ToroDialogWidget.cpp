@@ -17,7 +17,7 @@ UToroDialogWidget::UToroDialogWidget()
 	ChoiceButtonPadding = FMargin(10.0f);
 }
 
-void UToroDialogWidget::Create(
+bool UToroDialogWidget::Create(
 	const UObject* ContextObject,
 	const FText TitleText,
 	const FText BodyText,
@@ -31,6 +31,7 @@ void UToroDialogWidget::Create(
 	if (!OnClosed.IsBound())
 	{
 		TORO_LOG_WARNING(TEXT("User Dialog has no influence. Make sure to bind OnClosed."));
+		return false;
 	}
 
 	if (UToroDialogWidget* NewDialog = CreateInternal(
@@ -44,10 +45,13 @@ void UToroDialogWidget::Create(
 		PlayerIdx))
 	{
 		NewDialog->BPDelegate = OnClosed;
+		return true;
 	}
+
+	return false;
 }
 
-FToroDialogReturnDelegateNative::RegistrationType& UToroDialogWidget::Create(
+FToroDialogReturnDelegateNative::RegistrationType* UToroDialogWidget::Create(
 	const UObject* ContextObject,
 	const FText& TitleText,
 	const FText& BodyText,
@@ -67,12 +71,10 @@ FToroDialogReturnDelegateNative::RegistrationType& UToroDialogWidget::Create(
 		AutoSelectTime,
 		PlayerIdx))
 	{
-		return NewDialog->NativeDelegate;
+		return &NewDialog->NativeDelegate;
 	}
 
-	static FToroDialogReturnDelegateNative Dummy;
-	Dummy.Unbind();
-	return Dummy;
+	return nullptr;
 }
 
 UToroDialogWidget* UToroDialogWidget::CreateInternal(

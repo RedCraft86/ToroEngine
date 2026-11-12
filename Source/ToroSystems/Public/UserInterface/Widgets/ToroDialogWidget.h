@@ -44,10 +44,11 @@ public:
 	 * @param AutoSelectTime Active ticking seconds before automatic selection; values below 3 disable it.
 	 *        The countdown displays remaining seconds rounded up to an integer.
 	 * @param PlayerIdx Player controller index, with local players first, then available remote players.
+	 * @return On logged creation failure, returns false; otherwise, true.
 	 */
 	UFUNCTION(BlueprintCallable, Category = UserInterface, DisplayName = "Prompt User Dialog",
 		meta = (WorldContext = ContextObject, AutoCreateRefTerm = Choices, AdvancedDisplay = 6))
-	static TOROSYSTEMS_API void Create(
+	static TOROSYSTEMS_API bool Create(
 		const UObject* ContextObject,
 		const FText TitleText,
 		const FText BodyText,
@@ -72,10 +73,9 @@ public:
 	 *        The countdown displays remaining seconds rounded up to an integer.
 	 * @param PlayerIdx Player controller index, with local players first, then available remote players.
 	 * @return Registration access for a callback receiving the original choice index or INDEX_NONE on Back,
-	 *         after deactivation. On logged creation failure, returns a shared dummy delegate that never fires
-	 *         and is unbound again on the next failed creation.
+	 *         after deactivation. On logged creation failure, returns a nullptr.
 	 */
-	[[nodiscard]] static TOROSYSTEMS_API FToroDialogReturnDelegateNative::RegistrationType& Create(
+	[[nodiscard]] static TOROSYSTEMS_API FToroDialogReturnDelegateNative::RegistrationType* Create(
 		const UObject* ContextObject,
 		const FText& TitleText,
 		const FText& BodyText,
