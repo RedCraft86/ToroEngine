@@ -7,6 +7,7 @@
 #include "WorldMusic/WorldMusicSystemConfig.h"
 #include "ToroWorldSettings.generated.h"
 
+class USoundClass;
 class UWorldPostProcessComponent;
 class UToroGameInstance;
 
