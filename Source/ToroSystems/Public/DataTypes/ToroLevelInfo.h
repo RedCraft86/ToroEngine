@@ -13,6 +13,11 @@ namespace LevelTypeTags
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Base);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MainMenu);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Gameplay);
+
+	[[nodiscard]] inline bool IsValid(const FGameplayTag& InTag)
+	{
+		return InTag.IsValid() && InTag != Base.GetTag() && InTag.MatchesTag(Base.GetTag());
+	}
 }
 
 /**
@@ -34,9 +39,7 @@ struct TOROSYSTEMS_API FToroLevelInfo final
 	/** Whether LevelType is valid; mappings are optional. */
 	[[nodiscard]] FORCEINLINE bool IsValid() const
 	{
-		return LevelType.IsValid()
-			&& LevelType != LevelTypeTags::Base.GetTag()
-			&& LevelType.MatchesTag(LevelTypeTags::Base);
+		return LevelTypeTags::IsValid(LevelType);
 	}
 
 	/**

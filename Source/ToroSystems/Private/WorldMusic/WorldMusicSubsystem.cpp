@@ -171,9 +171,7 @@ bool UWorldMusicSubsystem::ReleaseDip(const UObject* Requester) const
 bool UWorldMusicSubsystem::AddParameter(const UObject* Source,
 	FGameplayTag Tag, float Value, EToroValueModifierType Type)
 {
-	if (Tag.IsValid()
-		&& Tag != WorldMusicTags::Base.GetTag()
-		&& Tag.MatchesTag(WorldMusicTags::Base.GetTag()))
+	if (WorldMusicTags::IsValid(Tag))
 	{
 		if (FWorldMusicParam* FoundParam = Parameters.Find(Tag))
 		{

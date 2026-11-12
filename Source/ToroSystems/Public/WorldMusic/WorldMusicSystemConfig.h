@@ -14,6 +14,11 @@ namespace WorldMusicTags
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Base);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Pressure);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Tension);
+
+	[[nodiscard]] inline bool IsValid(const FGameplayTag& InTag)
+	{
+		return InTag.IsValid() && InTag != Base.GetTag() && InTag.MatchesTag(Base.GetTag());
+	}
 }
 
 /**
