@@ -2,17 +2,17 @@
 
 #pragma once
 
-#include "ToroUserInterfaceConfig.generated.h"
+#include "UserInterfaceConfig.generated.h"
 
 class UToroDialogWidget;
 
 USTRUCT(BlueprintType)
-struct TOROSYSTEMS_API FToroUserInterfaceConfig final
+struct TOROSYSTEMS_API FUserInterfaceConfig final
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, Category = UserInterface, NoClear, meta = (AllowAbstract = false))
 	TSoftClassPtr<UToroDialogWidget> DialogWidgetClass;
 
-	[[nodiscard]] static const FToroUserInterfaceConfig* Get();
+	[[nodiscard]] static const FUserInterfaceConfig* Get();
 };

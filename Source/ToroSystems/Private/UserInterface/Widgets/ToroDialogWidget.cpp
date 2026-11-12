@@ -2,7 +2,7 @@
 
 #include "UserInterface/Widgets/ToroDialogWidget.h"
 #include "UserInterface/Elements/CommonTextButton.h"
-#include "UserInterface/ToroUserInterfaceConfig.h"
+#include "UserInterface/UserInterfaceConfig.h"
 #include "UserInterface/ToroMasterWidget.h"
 #include "Framework/ToroPlayerHUD.h"
 #include "Kismet/GameplayStatics.h"
@@ -92,7 +92,7 @@ UToroDialogWidget* UToroDialogWidget::CreateInternal(
 		return nullptr;
 	}
 
-	const FToroUserInterfaceConfig* Config = FToroUserInterfaceConfig::Get();
+	const FUserInterfaceConfig* Config = FUserInterfaceConfig::Get();
 	const TSubclassOf<UToroDialogWidget> Class = Config ? Config->DialogWidgetClass.LoadSynchronous() : nullptr;
 	if (!IsValid(Class) || Class->HasAnyClassFlags(CLASS_Abstract))
 	{
