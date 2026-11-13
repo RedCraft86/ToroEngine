@@ -59,6 +59,10 @@
 			"Enabled": true
 		},
 		{
+			"Name": "AudioModulation",
+			"Enabled": true
+		},
+		{
 			"Name": "AsyncMessageSystem",
 			"Enabled": true
 		},

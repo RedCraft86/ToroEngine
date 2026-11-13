@@ -7,7 +7,6 @@
 #include "WorldMusic/WorldMusicSystemConfig.h"
 #include "ToroWorldSettings.generated.h"
 
-class USoundClass;
 class UWorldPostProcessComponent;
 class UToroGameInstance;
 
@@ -46,9 +45,6 @@ public:
 	UFUNCTION(BlueprintPure, Category = WorldSettings)
 	[[nodiscard]] FORCEINLINE bool IsMainLevelSettings() const { return bIsMainLevelSettings; }
 
-	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = Audio)
-	void SetSoundClassVolume(USoundClass* InClass, float InVolume) const;
-
 	[[nodiscard]] UWorldPostProcessComponent* GetPostProcess() const { return PostProcess; }
 	[[nodiscard]] const FLightProbeSystemConfig& GetLightProbeConfig() const { return LightProbes; }
 	[[nodiscard]] const FWorldMusicSystemConfig& GetWorldMusicConfig() const { return WorldMusic; }
@@ -70,8 +66,4 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-#if WITH_EDITOR
-	virtual void OnConstruction(const FTransform& Transform) override;
-#endif
 };

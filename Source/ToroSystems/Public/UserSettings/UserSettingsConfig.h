@@ -5,7 +5,8 @@
 #include "GameplayTagContainer.h"
 #include "UserSettingsConfig.generated.h"
 
-class USoundClass;
+class USoundControlBus;
+class USoundControlBusMix;
 class UUserSettingsExtension;
 
 USTRUCT(BlueprintType)
@@ -13,13 +14,18 @@ struct TOROSYSTEMS_API FUserSettingsConfig final
 {
 	GENERATED_BODY()
 
+	FUserSettingsConfig();
+
 	UPROPERTY(EditAnywhere, Category = Settings)
 	TSoftClassPtr<UUserSettingsExtension> SettingsExtension;
 
-	UPROPERTY(EditAnywhere, Category = Audio, meta = (Categories = "UserSettings.Audio", ShowOnlyLeafTag))
-	TMap<FGameplayTag, TSoftObjectPtr<USoundClass>> AudioChannels;
+	UPROPERTY(EditAnywhere, Category = Audio)
+	TSoftObjectPtr<USoundControlBusMix> AudioMix;
 
-	[[nodiscard]] USoundClass* GetAudioChannel(const FGameplayTag& InChannel) const;
+	UPROPERTY(EditAnywhere, Category = Audio, meta = (Categories = "UserSettings.Audio", ShowOnlyLeafTag))
+	TMap<FGameplayTag, TSoftObjectPtr<USoundControlBus>> AudioChannels;
+
+	[[nodiscard]] USoundControlBus* GetAudioChannel(const FGameplayTag& InChannel) const;
 
 	[[nodiscard]] static const FUserSettingsConfig* Get();
 };

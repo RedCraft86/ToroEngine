@@ -18,6 +18,7 @@ public class ToroSystems : ModuleRules
 			"Json",
 			"RenderCore",
 			"MetasoundEngine",
+			"AudioModulation",
 			"AsyncMessageSystem",
 			"DeveloperSettings",
 			"LevelSequence",

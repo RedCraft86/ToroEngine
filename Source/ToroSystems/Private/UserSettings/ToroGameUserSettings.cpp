@@ -7,6 +7,9 @@
 #include "Framework/ToroWorldSettings.h"
 #include "Libraries/ToroCVarLibrary.h"
 #include "Utilities/RobAccess.h"
+#include "AudioModulationStatics.h"
+#include "SoundControlBusMix.h"
+#include "SoundControlBus.h"
 #include "Engine/Engine.h"
 
 namespace 
@@ -179,7 +182,7 @@ void UToroGameUserSettings::SetAudioVolume(FGameplayTag Channel, float Value)
 		return;
 	}
 
-	const float SanitizedValue = FixupFloatValue(Value, 0.0f, 200.0f, 100.0f);
+	const float SanitizedValue = FixupFloatValue(Value, 0.0f, 100.0f, 100.0f);
 	if (FUserAudioVolume* FoundVolume = AudioVolumes.FindByPredicate(
 		[Channel](const FUserAudioVolume& Flag)
 		{
@@ -297,6 +300,16 @@ void UToroGameUserSettings::Initialize(UGameInstance& GameInst)
 	}
 
 	WorldSettings = AToroWorldSettings::Get(&GameInst);
+
+	if (const FUserSettingsConfig* Config = FUserSettingsConfig::Get())
+	{
+		USoundControlBusMix* Mix = Config->AudioMix.LoadSynchronous();
+		if (IsValid(Mix) && !UAudioModulationStatics::IsControlBusMixActive(&GameInst, Mix))
+		{
+			UAudioModulationStatics::ActivateBusMix(&GameInst, Mix);
+		}
+	}
+
 	ApplySettings(false);
 }
 
@@ -369,7 +382,7 @@ void UToroGameUserSettings::ValidateSettings()
 		}
 		else
 		{
-			It->Volume = FixupFloatValue(It->Volume, 0.0f, 200.0f, 100.0f);
+			It->Volume = FixupFloatValue(It->Volume, 0.0f, 100.0f, 100.0f);
 		}
 	}
 
@@ -391,9 +404,12 @@ void UToroGameUserSettings::ApplyNonResolutionSettings()
 	ApplyLumenSettings();
 	ApplyFidelitySettings();
 
-	for (const FUserAudioVolume& Volume : AudioVolumes)
+	if (const FUserSettingsConfig* Config = FUserSettingsConfig::Get())
 	{
-		ApplyAudioVolume(Volume.Channel);
+		for (const auto& Channel : Config->AudioChannels)
+		{
+			ApplyAudioVolume(Channel.Key);
+		}
 	}
 
 	for (const FUserDebugFlag& Flag : DebugFlags)
@@ -496,13 +512,14 @@ void UToroGameUserSettings::ApplyFidelitySettings() const
 
 void UToroGameUserSettings::ApplyAudioVolume(const FGameplayTag& Channel) const
 {
-	if (!WorldSettings.IsValid() || !UserSettingsTags::IsCategory(Channel, UserSettingsTags::Audio))
+	if (!GetWorld() || !UserSettingsTags::IsCategory(Channel, UserSettingsTags::Audio))
 	{
 		return;
 	}
 
 	const FUserSettingsConfig* Config = FUserSettingsConfig::Get();
-	if (!Config)
+	USoundControlBusMix* Mix = Config ? Config->AudioMix.LoadSynchronous() : nullptr;
+	if (!Config || !IsValid(Mix))
 	{
 		return;
 	}
@@ -511,12 +528,15 @@ void UToroGameUserSettings::ApplyAudioVolume(const FGameplayTag& Channel) const
 		[Channel](const FUserAudioVolume& Flag)
 		{
 			return Flag.Channel == Channel;
-		});
+		}
+	);
 
 	const float Volume = FoundVolume ? FoundVolume->Volume : 100.0f;
-	if (USoundClass* SoundClass = Config->GetAudioChannel(Channel))
+	if (USoundControlBus* Bus = Config->GetAudioChannel(Channel))
 	{
-		WorldSettings->SetSoundClassVolume(SoundClass, Volume * 0.01f);
+		TArray<FSoundControlBusMixStage> Stages;
+		Stages.Emplace(Bus, FMath::Clamp(Volume * 0.01f, 0.0f, 1.0f));
+		UAudioModulationStatics::UpdateMix(this, Mix, MoveTemp(Stages), 0.0f);
 	}
 }
 

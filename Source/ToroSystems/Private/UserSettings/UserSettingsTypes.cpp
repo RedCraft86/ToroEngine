@@ -46,6 +46,7 @@ namespace UserSettingsTags
 	// Audio
 	UE_DEFINE_GAMEPLAY_TAG(Audio, "UserSettings.Audio");
 	UE_DEFINE_GAMEPLAY_TAG(Audio_MasterVolume, "UserSettings.Audio.MasterVolume");
+	UE_DEFINE_GAMEPLAY_TAG(Audio_UIVolume, "UserSettings.Audio.UIVolume");
 	UE_DEFINE_GAMEPLAY_TAG(Audio_MusicVolume, "UserSettings.Audio.MusicVolume");
 	UE_DEFINE_GAMEPLAY_TAG(Audio_EffectsVolume, "UserSettings.Audio.EffectsVolume");
 	UE_DEFINE_GAMEPLAY_TAG(Audio_DialogueVolume, "UserSettings.Audio.DialogueVolume");
