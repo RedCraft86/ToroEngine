@@ -48,6 +48,12 @@ UGameUserSettings* UToroGameUserSettings::Get(TSubclassOf<UGameUserSettings> Cla
 	return IsValid(GUS) && (!IsValid(Class) || GUS->IsA(Class)) ? GUS : nullptr;
 }
 
+void UToroGameUserSettings::RevertAllScalabilitySettings()
+{
+	ScalabilityBaseline.Restore(ScalabilityQuality);
+	RequestUIUpdate();
+}
+
 void UToroGameUserSettings::Initialize(UGameInstance& GameInst)
 {
 	if (!GameInstance.IsValid())
@@ -77,5 +83,13 @@ UWorld* UToroGameUserSettings::GetWorld() const
 	return GameInstance.IsValid()
 		? GameInstance->GetWorld()
 		: Super::GetWorld();
+}
+
+void UToroGameUserSettings::RunHardwareBenchmark(int32 WorkScale, float CPUMultiplier, float GPUMultiplier)
+{
+	Super::RunHardwareBenchmark(WorkScale, CPUMultiplier, GPUMultiplier);
+	// Capture any subsequent benchmark runs, they always act as a baseline
+	ScalabilityBaseline.Capture(ScalabilityQuality);
+	RequestUIUpdate();
 }
 

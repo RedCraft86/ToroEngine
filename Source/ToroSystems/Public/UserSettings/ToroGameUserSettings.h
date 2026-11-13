@@ -58,7 +58,13 @@ public:
 		return Cast<T>(Get(T::StaticClass()));
 	}
 
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void RevertAllScalabilitySettings();
+
 	void Initialize(UGameInstance& GameInst);
+	virtual UWorld* GetWorld() const override;
+	virtual void RunHardwareBenchmark(int32 WorkScale = 10,
+		float CPUMultiplier = 1.0f, float GPUMultiplier = 1.0f) override;
 
 private:
 
