@@ -1,0 +1,51 @@
+// Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
+
+#include "UserSettings/UserSettingsTypes.h"
+
+namespace UserSettingsTags
+{
+	UE_DEFINE_GAMEPLAY_TAG(Base, "UserSettings");
+
+	// Camera
+	UE_DEFINE_GAMEPLAY_TAG(Camera, "UserSettings.Camera");
+	UE_DEFINE_GAMEPLAY_TAG(Camera_SensitivityX, "UserSettings.Camera.SensitivityX");
+	UE_DEFINE_GAMEPLAY_TAG(Camera_SensitivityY, "UserSettings.Camera.SensitivityY");
+	UE_DEFINE_GAMEPLAY_TAG(Camera_Smoothing, "UserSettings.Camera.Smoothing");
+
+	// Display
+	UE_DEFINE_GAMEPLAY_TAG(Display, "UserSettings.Display");
+	UE_DEFINE_GAMEPLAY_TAG(Display_WindowMode, "UserSettings.Display.WindowMode");
+	UE_DEFINE_GAMEPLAY_TAG(Display_Resolution, "UserSettings.Display.Resolution");
+	UE_DEFINE_GAMEPLAY_TAG(Display_Brightness, "UserSettings.Display.Brightness");
+	UE_DEFINE_GAMEPLAY_TAG(Display_VSync, "UserSettings.Display.VSync");
+	UE_DEFINE_GAMEPLAY_TAG(Display_FrameRateLimit, "UserSettings.Display.FrameRateLimit");
+	UE_DEFINE_GAMEPLAY_TAG(Display_ShowFPS, "UserSettings.Display.ShowFPS");
+
+	// Graphics
+	UE_DEFINE_GAMEPLAY_TAG(Graphics, "UserSettings.Graphics");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_ImageFidelityMode, "UserSettings.Graphics.ImageFidelityMode");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_ResolutionScale, "UserSettings.Graphics.ResolutionScale");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_TSRScreenPercentage, "UserSettings.Graphics.TSRScreenPercentage");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_LumenMode, "UserSettings.Graphics.LumenMode");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_MotionBlurQuality, "UserSettings.Graphics.MotionBlurQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_AutoDetect, "UserSettings.Graphics.AutoDetect");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_OverallQuality, "UserSettings.Graphics.OverallQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_ViewDistanceQuality, "UserSettings.Graphics.ViewDistanceQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_AntiAliasingQuality, "UserSettings.Graphics.AntiAliasingQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_ShadowQuality, "UserSettings.Graphics.ShadowQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_GlobalIlluminationQuality, "UserSettings.Graphics.GlobalIlluminationQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_ReflectionQuality, "UserSettings.Graphics.ReflectionQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_PostProcessQuality, "UserSettings.Graphics.PostProcessQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_TextureQuality, "UserSettings.Graphics.TextureQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_EffectsQuality, "UserSettings.Graphics.EffectsQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_FoliageQuality, "UserSettings.Graphics.FoliageQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_ShadingQuality, "UserSettings.Graphics.ShadingQuality");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_LandscapeQuality, "UserSettings.Graphics.LandscapeQuality");
+
+	// Audio
+	UE_DEFINE_GAMEPLAY_TAG(Audio, "UserSettings.Audio");
+	UE_DEFINE_GAMEPLAY_TAG(Audio_MasterVolume, "UserSettings.Audio.MasterVolume");
+	UE_DEFINE_GAMEPLAY_TAG(Audio_MusicVolume, "UserSettings.Audio.MusicVolume");
+	UE_DEFINE_GAMEPLAY_TAG(Audio_EffectsVolume, "UserSettings.Audio.EffectsVolume");
+	UE_DEFINE_GAMEPLAY_TAG(Audio_DialogueVolume, "UserSettings.Audio.DialogueVolume");
+}

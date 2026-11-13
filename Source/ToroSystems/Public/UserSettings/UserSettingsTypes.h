@@ -1,0 +1,72 @@
+// Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
+
+#pragma once
+
+#include "NativeGameplayTags.h"
+#include "UserSettingsTypes.generated.h"
+
+namespace UserSettingsTags
+{
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Base);
+
+	// Camera
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Camera);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Camera_SensitivityX);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Camera_SensitivityY);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Camera_Smoothing);
+
+	// Display
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_WindowMode);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_Resolution);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_Brightness);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_VSync);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_FrameRateLimit);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_ShowFPS);
+
+	// Graphics
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_ImageFidelityMode);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_ResolutionScale);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_TSRScreenPercentage);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_LumenMode);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_MotionBlurQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_AutoDetect);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_OverallQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_ViewDistanceQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_AntiAliasingQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_ShadowQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_GlobalIlluminationQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_ReflectionQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_PostProcessQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_TextureQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_EffectsQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_FoliageQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_ShadingQuality);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_LandscapeQuality);
+
+	// Audio
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Audio);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Audio_MasterVolume);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Audio_MusicVolume);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Audio_EffectsVolume);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Audio_DialogueVolume);
+
+	inline bool IsValid(const FGameplayTag& InTag)
+	{
+		return InTag.IsValid()
+			&& InTag.MatchesTag(Base.GetTag())
+			&& InTag != Base.GetTag()
+			&& InTag != Camera.GetTag()
+			&& InTag != Display.GetTag()
+			&& InTag != Graphics.GetTag()
+			&& InTag != Audio.GetTag();
+	}
+
+	inline bool IsCategory(const FGameplayTag& InTag, const FNativeGameplayTag& Category)
+	{
+		return InTag.IsValid()
+			&& InTag != Category.GetTag()
+			&& InTag.MatchesTag(Category.GetTag());
+	}
+}

@@ -5,6 +5,7 @@
 #include "DataTypes/ToroLevelInfo.h"
 #include "Engine/DeveloperSettings.h"
 #include "UserInterface/UserInterfaceConfig.h"
+#include "UserSettings/UserSettingsConfig.h"
 #include "ToroDevSettings.generated.h"
 
 class UWorld;
@@ -27,6 +28,9 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category = Framework)
 	FUserInterfaceConfig UserInterface;
+
+	UPROPERTY(Config, EditAnywhere, Category = Framework)
+	FUserSettingsConfig UserSettings;
 
 	UPROPERTY(Config, EditAnywhere, Category = Framework)
 	TMap<TSoftObjectPtr<UWorld>, FToroLevelInfo> Levels;
