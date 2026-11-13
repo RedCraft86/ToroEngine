@@ -6,15 +6,15 @@
 #include "UserSettingsConfig.generated.h"
 
 class USoundClass;
+class UUserSettingsExtension;
 
 USTRUCT(BlueprintType)
 struct TOROSYSTEMS_API FUserSettingsConfig final
 {
 	GENERATED_BODY()
 
-	// TODO: Setup proper type
 	UPROPERTY(EditAnywhere, Category = Settings)
-	TSoftClassPtr<UObject> SettingsExtension;
+	TSoftClassPtr<UUserSettingsExtension> SettingsExtension;
 
 	UPROPERTY(EditAnywhere, Category = Audio, meta = (Categories = "UserSettings.Audio", ShowOnlyLeafTag))
 	TMap<FGameplayTag, TSoftObjectPtr<USoundClass>> AudioChannels;
