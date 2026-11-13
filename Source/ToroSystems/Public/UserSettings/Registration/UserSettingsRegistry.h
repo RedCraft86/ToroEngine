@@ -9,8 +9,42 @@
 #include "EntryTypes/UserSettingSelection.h"
 #include "UserSettings/UserSettingsTypes.h"
 
-struct FUserSettingsSection
+class FUserSettingsSection
 {
+	friend class FUserSettingsPage;
+
+	FText DisplayName;
+    TArray<TUniquePtr<FUserSettingEntry>> Entries;
+
+	template<typename EntryType>
+	EntryType& AddEntry(FGameplayTag Key)
+	{
+		checkf(UserSettingsTags::IsValid(Key),
+			TEXT("Provided key %s is not a derivative of UserSetting tags"),
+			*Key.ToString()
+		);
+
+		checkf(!Entries.ContainsByPredicate([Key](const TUniquePtr<FUserSettingEntry>& Entry)
+		{
+			return Entry->GetKey() == Key;
+		}), TEXT("An entry is already defined for key %s"), *Key.ToString());
+
+		TUniquePtr<EntryType> Entry = MakeUnique<EntryType>(Key);
+		EntryType& Result = *Entry;
+		Entries.Add(MoveTemp(Entry));
+		return Result;
+	}
+
+public:
+
+	FUserSettingsSection() = delete;
+	FUserSettingsSection(const FUserSettingsSection&) = delete;
+	FUserSettingsSection& operator=(const FUserSettingsSection&) = delete;
+
+	explicit FUserSettingsSection(const FText& InDisplayName)
+		: DisplayName(InDisplayName)
+	{}
+
 	[[nodiscard]] const FUserSettingEntry* operator[](int32 Index)
 	{
 		if (!Entries.IsValidIndex(Index)
@@ -52,34 +86,25 @@ struct FUserSettingsSection
 	{
 		return AddEntry<FUserSettingAction>(Key);
 	}
-
-private:
-
-	FText DisplayName;
-    TArray<TUniquePtr<FUserSettingEntry>> Entries;
-
-	template<typename EntryType>
-	EntryType& AddEntry(FGameplayTag Key)
-	{
-		checkf(UserSettingsTags::IsValid(Key),
-			TEXT("Provided key %s is not a derivative of UserSetting tags"),
-			*Key.ToString()
-		);
-
-		checkf(!Entries.ContainsByPredicate([Key](const TUniquePtr<FUserSettingEntry>& Entry)
-		{
-			return Entry->GetKey() == Key;
-		}), TEXT("An entry is already defined for key %s"), *Key.ToString());
-
-		TUniquePtr<EntryType> Entry = MakeUnique<EntryType>(Key);
-		EntryType& Result = *Entry;
-		Entries.Add(MoveTemp(Entry));
-		return Result;
-	}
 };
 
-struct FUserSettingsPage
+class FUserSettingsPage
 {
+	friend class FUserSettingsRegistry;
+
+	FText DisplayName;
+	TArray<TPair<FName, TUniquePtr<FUserSettingsSection>>> Sections;
+
+public:
+
+	FUserSettingsPage() = delete;
+	FUserSettingsPage(const FUserSettingsPage&) = delete;
+	FUserSettingsPage& operator=(const FUserSettingsPage&) = delete;
+
+	explicit FUserSettingsPage(const FText& InDisplayName)
+		: DisplayName(InDisplayName)
+	{}
+
 	[[nodiscard]] const FUserSettingsSection* operator[](int32 Index)
 	{
 		if (!Sections.IsValidIndex(Index)
@@ -101,16 +126,19 @@ struct FUserSettingsPage
 		return DisplayName;
 	}
 
-	[[nodiscard]] FUserSettingsSection& FindOrAddSection(FName Key);
-
-private:
-
-	FText DisplayName;
-	TArray<TPair<FName, TUniquePtr<FUserSettingsSection>>> Sections;
+	[[nodiscard]] FUserSettingsSection& FindOrAddSection(FName Key, const FText& InDisplayName);
 };
 
-struct FUserSettingsRegistry
+class FUserSettingsRegistry
 {
+	TArray<TPair<FName, TUniquePtr<FUserSettingsPage>>> Pages;
+
+public:
+
+	FUserSettingsRegistry() {}
+	FUserSettingsRegistry(const FUserSettingsRegistry&) = delete;
+	FUserSettingsRegistry& operator=(const FUserSettingsRegistry&) = delete;
+
 	[[nodiscard]] const FUserSettingsPage* operator[](int32 Index)
 	{
 		if (!Pages.IsValidIndex(Index)
@@ -127,10 +155,8 @@ struct FUserSettingsRegistry
 		return Pages.Num();
 	}
 
-	[[nodiscard]] FUserSettingsPage& FindOrAddPage(FName Key);
-	void RegisterExtension(UToroGameUserSettings* UserSettings);
+	[[nodiscard]] FUserSettingsPage& FindOrAddPage(FName Key, const FText& InDisplayName);
 
-private:
-
-	TArray<TPair<FName, TUniquePtr<FUserSettingsPage>>> Pages;
+	void RegisterExtension(UToroGameUserSettings& UserSettings);
+	void BuildStandardRegistry(UToroGameUserSettings& Settings);
 };

@@ -4,7 +4,7 @@
 #include "UserSettings/Registration/UserSettingsExtension.h"
 #include "UserSettings/UserSettingsConfig.h"
 
-FUserSettingsSection& FUserSettingsPage::FindOrAddSection(FName Key)
+FUserSettingsSection& FUserSettingsPage::FindOrAddSection(FName Key, const FText& InDisplayName)
 {
 	checkf(!Key.IsNone(), TEXT("Section key cannot be none"));
 
@@ -14,16 +14,17 @@ FUserSettingsSection& FUserSettingsPage::FindOrAddSection(FName Key)
 			return Page.Key == Key;
 		}))
 	{
+		FoundPage->Value->DisplayName = InDisplayName;
 		return *FoundPage->Value;
 	}
 
-	TUniquePtr<FUserSettingsSection> Section = MakeUnique<FUserSettingsSection>();
+	TUniquePtr<FUserSettingsSection> Section = MakeUnique<FUserSettingsSection>(InDisplayName);
 	FUserSettingsSection& Result = *Section;
 	Sections.Add({Key, MoveTemp(Section)});
 	return Result;
 }
 
-FUserSettingsPage& FUserSettingsRegistry::FindOrAddPage(FName Key)
+FUserSettingsPage& FUserSettingsRegistry::FindOrAddPage(FName Key, const FText& InDisplayName)
 {
 	checkf(!Key.IsNone(), TEXT("Page key cannot be none"));
 
@@ -33,21 +34,32 @@ FUserSettingsPage& FUserSettingsRegistry::FindOrAddPage(FName Key)
 			return Page.Key == Key;
 		}))
 	{
+		FoundPage->Value->DisplayName = InDisplayName;
 		return *FoundPage->Value;
 	}
 
-	TUniquePtr<FUserSettingsPage> Page = MakeUnique<FUserSettingsPage>();
+	TUniquePtr<FUserSettingsPage> Page = MakeUnique<FUserSettingsPage>(InDisplayName);
 	FUserSettingsPage& Result = *Page;
 	Pages.Add({Key, MoveTemp(Page)});
 	return Result;
 }
 
-void FUserSettingsRegistry::RegisterExtension(UToroGameUserSettings* UserSettings)
+void FUserSettingsRegistry::RegisterExtension(UToroGameUserSettings& UserSettings)
 {
 	const FUserSettingsConfig* Cfg = FUserSettingsConfig::Get();
 	const TSubclassOf<UUserSettingsExtension> Class = Cfg ? Cfg->SettingsExtension.LoadSynchronous() : nullptr;
 	if (const UUserSettingsExtension* Extension = Class->GetDefaultObject<UUserSettingsExtension>())
 	{
-		Extension->RegisterSettings(*this, UserSettings);
+		Extension->RegisterSettings(*this, &UserSettings);
 	}
 }
+
+#define LOCTEXT_NAMESPACE "ToroEngine"
+void FUserSettingsRegistry::BuildStandardRegistry(UToroGameUserSettings& Settings)
+{
+	// Register the core stuff
+
+
+	RegisterExtension(Settings);
+}
+#undef

@@ -6,7 +6,7 @@
 #include "UserSettingsExtension.generated.h"
 
 class UToroGameUserSettings;
-struct FUserSettingsRegistry;
+class FUserSettingsRegistry;
 
 UCLASS(Abstract, NotBlueprintable, BlueprintType)
 class TOROSYSTEMS_API UUserSettingsExtension : public UObject
