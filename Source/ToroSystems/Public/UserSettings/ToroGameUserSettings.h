@@ -137,6 +137,11 @@ public:
 	UFUNCTION(BlueprintPure, Category = Settings)
 	bool IsUserFlagEnabled(const FString Key) const;
 
+	[[nodiscard]] const FScalabilityBaseline& GetScalabilityBaseline() const
+	{
+		return ScalabilityBaseline;
+	}
+
 	void Initialize(UGameInstance& GameInst);
 	void TryApplyResolutionSettings();
 

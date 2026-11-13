@@ -10,7 +10,9 @@ namespace UserSettingsTags
 	// Camera
 	UE_DEFINE_GAMEPLAY_TAG(Camera, "UserSettings.Camera");
 	UE_DEFINE_GAMEPLAY_TAG(Camera_SensitivityX, "UserSettings.Camera.SensitivityX");
+	UE_DEFINE_GAMEPLAY_TAG(Camera_InvertMouseX, "UserSettings.Camera.InvertMouseX");
 	UE_DEFINE_GAMEPLAY_TAG(Camera_SensitivityY, "UserSettings.Camera.SensitivityY");
+	UE_DEFINE_GAMEPLAY_TAG(Camera_InvertMouseY, "UserSettings.Camera.InvertMouseY");
 	UE_DEFINE_GAMEPLAY_TAG(Camera_Smoothing, "UserSettings.Camera.Smoothing");
 
 	// Display

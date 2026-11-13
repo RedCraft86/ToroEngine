@@ -126,7 +126,7 @@ public:
 		return DisplayName;
 	}
 
-	[[nodiscard]] FUserSettingsSection& FindOrAddSection(FName Key, const FText& InDisplayName);
+	[[nodiscard]] FUserSettingsSection& EditSection(FName Key, const FText& InDisplayName);
 };
 
 class FUserSettingsRegistry
@@ -155,8 +155,9 @@ public:
 		return Pages.Num();
 	}
 
-	[[nodiscard]] FUserSettingsPage& FindOrAddPage(FName Key, const FText& InDisplayName);
+	[[nodiscard]] FUserSettingsPage& EditPage(FName Key, const FText& InDisplayName);
 
 	void RegisterExtension(UToroGameUserSettings& UserSettings);
+
 	void BuildStandardRegistry(UToroGameUserSettings& Settings);
 };

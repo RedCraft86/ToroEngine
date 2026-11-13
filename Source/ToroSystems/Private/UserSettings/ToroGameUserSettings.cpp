@@ -349,6 +349,10 @@ UWorld* UToroGameUserSettings::GetWorld() const
 void UToroGameUserSettings::SetToDefaults()
 {
 	Super::SetToDefaults();
+
+	bUseVSync = true;
+	FrameRateLimit = 60.0f;
+
 	SensitivityX = 1.0f;
 	bInvertMouseX = false;
 	SensitivityY = 1.0f;
@@ -430,6 +434,11 @@ void UToroGameUserSettings::RunHardwareBenchmark(int32 WorkScale, float CPUScale
 
 void UToroGameUserSettings::SetOverallScalabilityLevel(int32 Value)
 {
+	if (Value == -1)
+	{
+		return;
+	}
+
 	Super::SetOverallScalabilityLevel(Value);
 	RequestUIUpdate();
 }
