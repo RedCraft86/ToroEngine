@@ -8,7 +8,7 @@
 class UToroGameUserSettings;
 struct FUserSettingsRegistry;
 
-UCLASS(Abstract, Blueprintable, BlueprintType)
+UCLASS(Abstract, NotBlueprintable, BlueprintType)
 class TOROSYSTEMS_API UUserSettingsExtension : public UObject
 {
 	GENERATED_BODY()
