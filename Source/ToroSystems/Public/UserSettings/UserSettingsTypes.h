@@ -3,6 +3,7 @@
 #pragma once
 
 #include "NativeGameplayTags.h"
+#include "Engine/EngineTypes.h"
 #include "UserSettingsTypes.generated.h"
 
 namespace UserSettingsTags
@@ -70,3 +71,153 @@ namespace UserSettingsTags
 			&& InTag.MatchesTag(Category.GetTag());
 	}
 }
+
+UENUM(BlueprintType)
+namespace ELumenUserSetting
+{
+	enum Type : uint8
+	{
+		Disabled		= 0,
+		ReflectionOnly	= 1,
+		LightingOnly	= 2,
+		Enabled			= 3
+	};
+}
+namespace ELumenUserSetting
+{
+	inline Type FixupValue(Type InType)
+	{
+		if (static_cast<uint8>(InType) <= ELumenUserSetting::Enabled)
+		{
+			return InType;
+		}
+
+		return ELumenUserSetting::Enabled;
+	}
+
+	inline bool SupportsGI(Type InMode)
+	{
+		return InMode == ELumenUserSetting::LightingOnly
+			|| InMode == ELumenUserSetting::Enabled;
+	}
+
+	inline bool SupportsReflections(Type InMode)
+	{
+		return InMode == ELumenUserSetting::ReflectionOnly
+			|| InMode == ELumenUserSetting::Enabled;
+	}
+}
+
+UENUM(BlueprintType)
+namespace EImageFidelityMode
+{
+	enum Type : uint8
+	{
+		None = 0,
+		FXAA = 1,
+		TAA  = 2,
+		TSR  = 3,
+		SMAA = 4
+	};
+}
+namespace EImageFidelityMode
+{
+	inline Type FixupValue(Type InType)
+	{
+		if (static_cast<uint8>(InType) <= EImageFidelityMode::SMAA)
+		{
+			return InType;
+		}
+
+		return EImageFidelityMode::TAA;
+	}
+
+	inline EAntiAliasingMethod ToNative(Type InMode)
+	{
+		switch (InMode)
+		{
+		case EImageFidelityMode::None:
+			return AAM_None;
+
+		case EImageFidelityMode::FXAA:
+			return AAM_FXAA;
+
+		case EImageFidelityMode::TAA:
+			return AAM_TemporalAA;
+
+		case EImageFidelityMode::TSR:
+			return AAM_TSR;
+
+		case EImageFidelityMode::SMAA:
+			return AAM_SMAA;
+
+		default: // Third party ones like DLSS typically want TSR active
+			return AAM_TSR;
+		}
+	}
+
+	inline Type FromNative(EAntiAliasingMethod InMethod)
+	{
+		switch (InMethod)
+		{
+		case AAM_None:
+			return EImageFidelityMode::None;
+
+		case AAM_FXAA:
+			return EImageFidelityMode::FXAA;
+
+		case AAM_TemporalAA:
+			return EImageFidelityMode::TAA;
+
+		case AAM_TSR:
+			return EImageFidelityMode::TSR;
+
+		case AAM_SMAA:
+			return EImageFidelityMode::SMAA;
+
+		default: // This is a weird case, it won't be able to recover from an invalid
+			return EImageFidelityMode::None;
+		}
+	}
+}
+
+USTRUCT(BlueprintInternalUseOnly)
+struct TOROSYSTEMS_API FUserAudioVolume final
+{
+	GENERATED_BODY()
+
+	UPROPERTY() FGameplayTag Channel;
+	UPROPERTY() float Volume;
+
+	FUserAudioVolume()
+		: Channel(FGameplayTag::EmptyTag)
+		, Volume(0.0f)
+	{}
+
+	FUserAudioVolume(const FGameplayTag& InChannel, float InVolume)
+		: Channel(InChannel)
+		, Volume(InVolume)
+	{}
+};
+
+USTRUCT(BlueprintInternalUseOnly)
+struct TOROSYSTEMS_API FUserDebugFlag final
+{
+	GENERATED_BODY()
+
+	UPROPERTY() FString Key;
+	UPROPERTY() bool bEnabled;
+
+	FUserDebugFlag()
+		: Key(FString())
+		, bEnabled(false)
+	{}
+
+	FUserDebugFlag(const FString& InKey);
+	FUserDebugFlag(const FString& InKey, bool bInEnabled);
+
+	[[nodiscard]] bool IsValid() const;
+	void ApplyCVar() const;
+
+	static void SanitizeString(const FString& InString, FString& OutString);
+};

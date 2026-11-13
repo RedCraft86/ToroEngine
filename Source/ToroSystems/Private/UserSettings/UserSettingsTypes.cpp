@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "UserSettings/UserSettingsTypes.h"
+#include "Libraries/ToroCVarLibrary.h"
 
 namespace UserSettingsTags
 {
@@ -48,4 +49,45 @@ namespace UserSettingsTags
 	UE_DEFINE_GAMEPLAY_TAG(Audio_MusicVolume, "UserSettings.Audio.MusicVolume");
 	UE_DEFINE_GAMEPLAY_TAG(Audio_EffectsVolume, "UserSettings.Audio.EffectsVolume");
 	UE_DEFINE_GAMEPLAY_TAG(Audio_DialogueVolume, "UserSettings.Audio.DialogueVolume");
+}
+
+FUserDebugFlag::FUserDebugFlag(const FString& InKey)
+{
+	SanitizeString(InKey, Key);
+	if (const IConsoleVariable* CVar = UToroCVarLibrary::FindCVar(Key))
+	{
+		bEnabled = CVar->GetBool();
+	}
+}
+
+FUserDebugFlag::FUserDebugFlag(const FString& InKey, bool bInEnabled)
+	: bEnabled(bInEnabled)
+{
+	SanitizeString(InKey, Key);
+}
+
+bool FUserDebugFlag::IsValid() const
+{
+	return UToroCVarLibrary::FindCVar(Key) != nullptr;
+}
+
+void FUserDebugFlag::ApplyCVar() const
+{
+	if (IConsoleVariable* CVar = UToroCVarLibrary::FindCVar(Key))
+	{
+		CVar->Set(bEnabled);
+	}
+}
+
+void FUserDebugFlag::SanitizeString(const FString& InString, FString& OutString)
+{
+	OutString.Empty();
+	OutString.Reserve(InString.Len());
+	for (const TCHAR Character : InString)
+	{
+		if (!FChar::IsWhitespace(Character))
+		{
+			OutString.AppendChar(Character);
+		}
+	}
 }

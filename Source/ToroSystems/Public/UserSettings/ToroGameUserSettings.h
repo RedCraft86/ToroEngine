@@ -2,8 +2,13 @@
 
 #pragma once
 
+#include "UserSettingsTypes.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/GameUserSettings.h"
 #include "ToroGameUserSettings.generated.h"
+
+class UGameInstance;
+class AToroWorldSettings;
 
 USTRUCT()
 struct FScalabilityBaseline
@@ -35,6 +40,8 @@ class TOROSYSTEMS_API UToroGameUserSettings : public UGameUserSettings
 
 public:
 
+	UToroGameUserSettings();
+
 	/**
 	 * Retrieves the engine's active game user settings if they match the requested class.
 	 * @param Class Optional class filter; a null or invalid class disables type filtering.
@@ -61,23 +68,138 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Settings)
 	void RevertAllScalabilitySettings();
 
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetSensitivityX(float Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	float GetSensitivityX() const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetInvertMouseX(bool Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	bool GetInvertMouseX() const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetSensitivityY(float Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	float GetSensitivityY() const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetInvertMouseY(bool Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	bool GetInvertMouseY() const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetBrightness(float Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	float GetBrightness() const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetMotionBlurAmount(int32 Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	int32 GetMotionBlurAmount() const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetLumenMode(TEnumAsByte<ELumenUserSetting::Type> Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	TEnumAsByte<ELumenUserSetting::Type> GetLumenMode() const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetImageFidelityMode(TEnumAsByte<EImageFidelityMode::Type> Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	TEnumAsByte<EImageFidelityMode::Type> GetImageFidelityMode() const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetTSRScreenPercentage(float Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	float GetTSRScreenPercentage() const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetAudioVolume(UPARAM(meta = (Categories = "UserSettings.Audio")) FGameplayTag Channel, float Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	float GetAudioVolume(UPARAM(meta = (Categories = "UserSettings.Audio")) FGameplayTag Channel) const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void AddUserFlagEntry(const FString Key);
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetUserFlagEnabled(const FString Key, bool bEnabled);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	bool IsUserFlagEnabled(const FString Key) const;
+
 	void Initialize(UGameInstance& GameInst);
 	void TryApplyResolutionSettings();
 
 	virtual UWorld* GetWorld() const override;
-	virtual void RunHardwareBenchmark(int32 WorkScale = 10,
-		float CPUMultiplier = 1.0f, float GPUMultiplier = 1.0f) override;
 
-	[[nodiscard]] FOnGameUserSettingsUINeedsUpdate& GetUIUpdateDelegate();
+	virtual void SetToDefaults() override;
+	virtual void ValidateSettings() override;
+	virtual void ApplyNonResolutionSettings() override;
+	virtual void RunHardwareBenchmark(int32 WorkScale = 10, float CPUScale = 1.0f, float GPUScale = 1.0f) override;
+	virtual void SetOverallScalabilityLevel(int32 Value) override;
+
+	[[nodiscard]] FOnGameUserSettingsUINeedsUpdate& GetOnUIUpdate();
+	[[nodiscard]] FSimpleMulticastDelegate::RegistrationType& GetOnSettingsApplied();
 
 protected:
 
-	void ResolutionDialogClosed(int32 ButtonIndex);
+	FSimpleMulticastDelegate OnSettingsAppliedEvent;
+
+	void ApplyBrightness() const;
+	void ApplyMotionBlur() const;
+	void ApplyLumenSettings() const;
+	void ApplyFidelitySettings() const;
+	void ApplyAudioVolume(const FGameplayTag& Channel) const;
+	void OnResolutionDialogClosed(int32 ButtonIndex);
 
 private:
 
 	bool bIsFirstLoad = false;
 	TWeakObjectPtr<UGameInstance> GameInstance;
+	TWeakObjectPtr<AToroWorldSettings> WorldSettings;
+
+	UPROPERTY(Config)
+	float SensitivityX;
+
+	UPROPERTY(Config)
+	bool bInvertMouseX;
+
+	UPROPERTY(Config)
+	float SensitivityY;
+
+	UPROPERTY(Config)
+	bool bInvertMouseY;
+
+	UPROPERTY(Config)
+	float Brightness;
+
+	UPROPERTY(Config)
+	int32 MotionBlurAmount;
+
+	UPROPERTY(Config)
+	TEnumAsByte<ELumenUserSetting::Type> LumenMode;
+
+	UPROPERTY(Config)
+	TEnumAsByte<EImageFidelityMode::Type> ImageFidelityMode;
+
+	UPROPERTY(Config)
+	float TSRScreenPercentage;
+
+	UPROPERTY(Config)
+	TArray<FUserAudioVolume> AudioVolumes;
+
+	UPROPERTY(Config)
+	TArray<FUserDebugFlag> DebugFlags;
 
 	UPROPERTY(Config)
 	FScalabilityBaseline ScalabilityBaseline;
