@@ -2,7 +2,14 @@
 
 #include "UserSettings/ToroGameUserSettings.h"
 #include "UserInterface/Widgets/ToroDialogWidget.h"
+#include "Utilities/RobAccess.h"
 #include "Engine/Engine.h"
+
+ROB_DEFINE_VAR(
+	UGameUserSettings,
+	OnGameUserSettingsUINeedsUpdate,
+	FOnGameUserSettingsUINeedsUpdate
+);
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
 void FScalabilityBaseline::Capture(const Scalability::FQualityLevels& Quality)
@@ -118,6 +125,11 @@ void UToroGameUserSettings::RunHardwareBenchmark(int32 WorkScale, float CPUMulti
 	// Capture any subsequent benchmark runs, they always act as a baseline
 	ScalabilityBaseline.Capture(ScalabilityQuality);
 	RequestUIUpdate();
+}
+
+FOnGameUserSettingsUINeedsUpdate& UToroGameUserSettings::GetUIUpdateDelegate()
+{
+	return this->*RobAccess(UGameUserSettings, OnGameUserSettingsUINeedsUpdate);
 }
 
 void UToroGameUserSettings::ResolutionDialogClosed(int32 ButtonIndex)
