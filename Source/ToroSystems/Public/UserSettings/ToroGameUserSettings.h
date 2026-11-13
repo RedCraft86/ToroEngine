@@ -62,9 +62,15 @@ public:
 	void RevertAllScalabilitySettings();
 
 	void Initialize(UGameInstance& GameInst);
+	void TryApplyResolutionSettings();
+
 	virtual UWorld* GetWorld() const override;
 	virtual void RunHardwareBenchmark(int32 WorkScale = 10,
 		float CPUMultiplier = 1.0f, float GPUMultiplier = 1.0f) override;
+
+protected:
+
+	void ResolutionDialogClosed(int32 ButtonIndex);
 
 private:
 

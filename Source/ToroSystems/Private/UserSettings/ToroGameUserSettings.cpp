@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "UserSettings/ToroGameUserSettings.h"
+#include "UserInterface/Widgets/ToroDialogWidget.h"
 #include "Engine/Engine.h"
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
@@ -78,6 +79,32 @@ void UToroGameUserSettings::Initialize(UGameInstance& GameInst)
 	ApplySettings(false);
 }
 
+void UToroGameUserSettings::TryApplyResolutionSettings()
+{
+	ApplyResolutionSettings(false);
+	auto* Response = UToroDialogWidget::Create(this,
+		LOCTEXT("ResolutionConfirmTitle", "Accept Resolution Setting?"),
+		LOCTEXT("ResolutionConfirmDescription",
+			"Do you wish to accept the current settings?\t\t"
+			"This will automatically revert after 5 seconds."),
+		{
+			LOCTEXT("ResolutionRevert", "Revert"),
+			LOCTEXT("ResolutionAccept", "Accept")
+		},
+		true,
+		0
+	);
+	
+	if (Response)
+	{
+		Response->BindUObject(this, &UToroGameUserSettings::ResolutionDialogClosed);
+	}
+	else
+	{
+		ResolutionDialogClosed(INDEX_NONE);
+	}
+}
+
 UWorld* UToroGameUserSettings::GetWorld() const
 {
 	return GameInstance.IsValid()
@@ -93,3 +120,17 @@ void UToroGameUserSettings::RunHardwareBenchmark(int32 WorkScale, float CPUMulti
 	RequestUIUpdate();
 }
 
+void UToroGameUserSettings::ResolutionDialogClosed(int32 ButtonIndex)
+{
+	if (ButtonIndex == 1)
+	{
+		ConfirmVideoMode();
+	}
+	else
+	{
+		RevertVideoMode();
+		ApplyResolutionSettings(false);
+		RequestUIUpdate();
+	}
+}
+#undef LOCTEXT_NAMESPACE
