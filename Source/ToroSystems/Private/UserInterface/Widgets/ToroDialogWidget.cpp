@@ -87,10 +87,10 @@ UToroDialogWidget* UToroDialogWidget::CreateInternal(
 	float AutoSelectTime,
 	int32 PlayerIdx)
 {
-	APlayerController* PC = UGameplayStatics::GetPlayerController(ContextObject, PlayerIdx);
-	if (!IsValid(PC))
+	const AToroPlayerHUD* HUD = AToroPlayerHUD::Get(ContextObject, PlayerIdx);
+	if (!IsValid(HUD) || !HUD->HasMasterWidget())
 	{
-		TORO_REPORT_ERROR(TEXT("Failed to create User Dialog: The Player Controller could not be found."));
+		TORO_REPORT_ERROR(TEXT("Failed to create User Dialog: HUD or MasterWidget is unavailable."));
 		return nullptr;
 	}
 
@@ -102,7 +102,7 @@ UToroDialogWidget* UToroDialogWidget::CreateInternal(
 		return nullptr;
 	}
 
-	UToroDialogWidget* Dialog = CreateWidget<UToroDialogWidget>(PC, Class);
+	UToroDialogWidget* Dialog = CreateWidget<UToroDialogWidget>(HUD->GetOwningPlayerController(), Class);
 	if (!IsValid(Dialog))
 	{
 		TORO_REPORT_ERROR(TEXT("Failed to create User Dialog: Widget could not be created."));
@@ -116,13 +116,6 @@ UToroDialogWidget* UToroDialogWidget::CreateInternal(
 		&& IsValid(Dialog->Buttons[AutoSelectIdx]))
 	{
 		Dialog->SetupAutoSelection(AutoSelectIdx, AutoSelectTime, Choices);
-	}
-
-	const AToroPlayerHUD* HUD = AToroPlayerHUD::Get(ContextObject, PlayerIdx);
-	if (!IsValid(HUD) || !HUD->HasMasterWidget())
-	{
-		TORO_REPORT_ERROR(TEXT("Failed to create User Dialog: Widget could not be created."));
-		return nullptr;
 	}
 
 	HUD->AddWidgetByInstance(EToroMasterWidgetType::Menu, Dialog);
