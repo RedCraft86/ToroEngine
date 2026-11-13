@@ -38,10 +38,16 @@ static TAutoConsoleVariable<float> CVarLightProbesEditorUpdateInterval(
 );
 #endif
 
+FLightProbeSystemConfig::FLightProbeSystemConfig(): bEnableForWorld(true)
+{
+	PostProcessMaterial = FSoftObjectPath(TEXT("/ToroEngine/LightProbes/PPM_LightProbes.PPM_LightProbes"));
+	ParameterCollection = FSoftObjectPath(TEXT("/ToroEngine/LightProbes/MPC_LightProbes.MPC_LightProbes"));
+}
+
 bool FLightProbeSystemConfig::IsValid() const
 {
-	return ::IsValid(PostProcessMaterial)
-		&& ::IsValid(ParameterCollection);
+	return ::IsValid(GetPostProcessMaterial())
+		&& ::IsValid(GetParameterCollection());
 }
 
 bool FLightProbeSystemConfig::IsEnabled() const
@@ -50,6 +56,16 @@ bool FLightProbeSystemConfig::IsEnabled() const
 		&& CVarLightProbesEnabled.GetValueOnGameThread()
 		&& GetMaxProbeLimit() > 0
 		&& IsValid();
+}
+
+UMaterialInterface* FLightProbeSystemConfig::GetPostProcessMaterial() const
+{
+	return PostProcessMaterial.IsNull() ? nullptr : PostProcessMaterial.LoadSynchronous();
+}
+
+UMaterialParameterCollection* FLightProbeSystemConfig::GetParameterCollection() const
+{
+	return ParameterCollection.IsNull() ? nullptr : ParameterCollection.LoadSynchronous();
 }
 
 int32 FLightProbeSystemConfig::GetMaxProbeLimit()

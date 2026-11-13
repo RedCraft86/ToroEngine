@@ -6,6 +6,7 @@
 #include "PostProcess/WorldPostProcessComponent.h"
 #include "Materials/MaterialParameterCollectionInstance.h"
 #include "Materials/MaterialParameterCollection.h"
+#include "Materials/MaterialInterface.h"
 #include "Framework/ToroWorldSettings.h"
 #include "Libraries/ToroCameraLibrary.h"
 #include "Utilities/ToroUtilities.h"
@@ -78,11 +79,11 @@ void ULightProbeSubsystem::UpdatePostProcessBlendable(bool bRemoval) const
 	{
 		if (bRemoval || !GetConfig().IsEnabled())
 		{
-			PostProcess->Settings.RemoveBlendable(GetConfig().PostProcessMaterial);
+			PostProcess->Settings.RemoveBlendable(GetConfig().GetPostProcessMaterial());
 		}
 		else
 		{
-			PostProcess->Settings.AddBlendable(GetConfig().PostProcessMaterial, 1.0f);
+			PostProcess->Settings.AddBlendable(GetConfig().GetPostProcessMaterial(), 1.0f);
 		}
 	}
 }
@@ -152,10 +153,10 @@ void ULightProbeSubsystem::Tick(float DeltaTime)
 	CooldownTime = FLightProbeSystemConfig::GetUpdateInterval();
 
 	UMaterialParameterCollectionInstance* ParamCollection = GetWorld()
-		->GetParameterCollectionInstance(GetConfig().ParameterCollection);
+		->GetParameterCollectionInstance(GetConfig().GetParameterCollection());
 	if (!ensureMsgf(ParamCollection,
 		TEXT("Failed to get the world instance of Parameter Collection %s"),
-		*GetNameSafe(GetConfig().ParameterCollection)))
+		*GetNameSafe(GetConfig().GetParameterCollection())))
 	{
 		return;
 	}

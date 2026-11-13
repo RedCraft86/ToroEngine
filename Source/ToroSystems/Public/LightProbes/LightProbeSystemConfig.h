@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "UObject/SoftObjectPtr.h"
 #include "LightProbeSystemConfig.generated.h"
 
 class UMaterialInterface;
@@ -22,19 +23,18 @@ struct TOROSYSTEMS_API FLightProbeSystemConfig final
 
 	/** Post-process material used to render the light probe contribution. */
 	UPROPERTY(EditAnywhere, Category = Settings)
-	TObjectPtr<UMaterialInterface> PostProcessMaterial;
+	TSoftObjectPtr<UMaterialInterface> PostProcessMaterial;
 
 	/** Material parameter collection used to supply light probe data to materials. */
 	UPROPERTY(EditAnywhere, Category = Settings)
-	TObjectPtr<UMaterialParameterCollection> ParameterCollection;
+	TSoftObjectPtr<UMaterialParameterCollection> ParameterCollection;
 
-	FLightProbeSystemConfig()
-		: bEnableForWorld(true)
-		, PostProcessMaterial(nullptr)
-		, ParameterCollection(nullptr)
-	{}
+	FLightProbeSystemConfig();
 
-	/** Whether both required material assets are valid, independent of enablement settings. */
+	/**
+	 * Synchronously resolves the required material assets and checks their validity,
+	 * independent of enablement settings. May load assets; call on the game thread.
+	 */
 	[[nodiscard]] bool IsValid() const;
 
 	/**
@@ -43,6 +43,20 @@ struct TOROSYSTEMS_API FLightProbeSystemConfig final
 	 * Must be called on the game thread.
 	 */
 	[[nodiscard]] bool IsEnabled() const;
+
+	/**
+	 * Resolves the configured post-process material, loading it synchronously if needed.
+	 * May block while loading; call on the game thread. Does not check system enablement.
+	 * @return The resolved material, or nullptr if unassigned or loading fails.
+	 */
+	[[nodiscard]] UMaterialInterface* GetPostProcessMaterial() const;
+
+	/**
+	 * Resolves the configured material parameter collection, loading it synchronously if needed.
+	 * May block while loading; call on the game thread. Does not check system enablement.
+	 * @return The resolved collection, or nullptr if unassigned or loading fails.
+	 */
+	[[nodiscard]] UMaterialParameterCollection* GetParameterCollection() const;
 
 	/**
 	 * Returns r.LightProbes.MaxLimit without clamping to the system's supported capacity.

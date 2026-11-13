@@ -6,6 +6,4 @@ UToroDevSettings::UToroDevSettings()
 {
 	CategoryName = TEXT("Project");
 	SectionName = TEXT("ToroEngineRuntime");
-
-	UserInterface.DialogWidgetClass = FSoftClassPath(TEXT("/ToroEngine/UserInterface/WBP_ToroDialog.WBP_ToroDialog_C"));
 }

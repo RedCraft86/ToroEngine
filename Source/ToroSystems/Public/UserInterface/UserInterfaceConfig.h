@@ -4,12 +4,18 @@
 
 #include "UserInterfaceConfig.generated.h"
 
+class UToroSettingsWidget;
 class UToroDialogWidget;
 
 USTRUCT(BlueprintType)
 struct TOROSYSTEMS_API FUserInterfaceConfig final
 {
 	GENERATED_BODY()
+
+	FUserInterfaceConfig();
+
+	UPROPERTY(EditAnywhere, Category = UserInterface, NoClear, meta = (AllowAbstract = false))
+	TSoftClassPtr<UToroSettingsWidget> SettingsWidgetClass;
 
 	UPROPERTY(EditAnywhere, Category = UserInterface, NoClear, meta = (AllowAbstract = false))
 	TSoftClassPtr<UToroDialogWidget> DialogWidgetClass;
