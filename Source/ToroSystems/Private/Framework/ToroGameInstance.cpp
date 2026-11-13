@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Framework/ToroGameInstance.h"
+#include "UserSettings/ToroGameUserSettings.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/Paths.h"
 #if !WITH_EDITOR
@@ -75,6 +76,11 @@ void UToroGameInstance::RestartGame()
 
 void UToroGameInstance::WorldBeginPlay()
 {
+	if (UToroGameUserSettings* GUS = UToroGameUserSettings::Get())
+	{
+		GUS->Initialize(*this);
+	}
+
 	ReceiveWorldBeginPlay();
 }
 

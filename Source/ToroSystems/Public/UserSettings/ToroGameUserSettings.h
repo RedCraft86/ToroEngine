@@ -5,6 +5,29 @@
 #include "GameFramework/GameUserSettings.h"
 #include "ToroGameUserSettings.generated.h"
 
+USTRUCT()
+struct FScalabilityBaseline
+{
+	GENERATED_BODY()
+
+	UPROPERTY() bool bSaved						= false;
+	UPROPERTY() float ResolutionQuality			= 100.0f;
+	UPROPERTY() int32 ViewDistanceQuality		= 3;
+	UPROPERTY() int32 AntiAliasingQuality		= 3;
+	UPROPERTY() int32 ShadowQuality				= 3;
+	UPROPERTY() int32 GlobalIlluminationQuality	= 3;
+	UPROPERTY() int32 ReflectionQuality			= 3;
+	UPROPERTY() int32 PostProcessQuality		= 3;
+	UPROPERTY() int32 TextureQuality			= 3;
+	UPROPERTY() int32 EffectsQuality			= 3;
+	UPROPERTY() int32 FoliageQuality			= 3;
+	UPROPERTY() int32 ShadingQuality			= 3;
+	UPROPERTY() int32 LandscapeQuality			= 3;
+
+	void Capture(const Scalability::FQualityLevels& Quality);
+	void Restore(Scalability::FQualityLevels& Quality) const;
+};
+
 UCLASS(Blueprintable, BlueprintType)
 class TOROSYSTEMS_API UToroGameUserSettings : public UGameUserSettings
 {
@@ -34,4 +57,14 @@ public:
 			"T must derive from UGameUserSettings");
 		return Cast<T>(Get(T::StaticClass()));
 	}
+
+	void Initialize(UGameInstance& GameInst);
+
+private:
+
+	bool bIsFirstLoad = false;
+	TWeakObjectPtr<UGameInstance> GameInstance;
+
+	UPROPERTY(Config)
+	FScalabilityBaseline ScalabilityBaseline;
 };
