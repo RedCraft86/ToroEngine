@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "GameplayTagContainer.h"
 #include "Templates/Identity.h"
+#include "GameplayTagContainer.h"
+#include "UserSettings/Registration/UserSettingMetadata.h"
 
 class UToroGameUserSettings;
 
@@ -16,29 +17,6 @@ enum class EUserSettingControl : uint8
 	Selection,
 	Action
 };
-
-namespace EUserSettingImpact
-{
-	enum Type : uint8
-	{
-		None = 0,
-		Low = 1,
-		Medium = 2,
-		High = 3
-	};
-
-	inline FText ToText(Type InImpact)
-	{
-		switch (InImpact)
-		{
-		case EUserSettingImpact::None: return LOCTEXT("PerformanceImpactNone", "None");
-		case EUserSettingImpact::Low: return LOCTEXT("PerformanceImpactLow", "Low");
-		case EUserSettingImpact::Medium: return LOCTEXT("PerformanceImpactMedium", "Medium");
-		case EUserSettingImpact::High: return LOCTEXT("PerformanceImpactHigh", "High");
-		default: return LOCTEXT("PerformanceImpactUnknown", "Unknown");
-		}
-	}
-}
 
 class IUserSettingSelection;
 
@@ -69,16 +47,12 @@ public:
 	}
 
 	FGameplayTag GetKey() const { return Key; }
-	const FText& GetDisplayName() const { return DisplayNameValue; }
-	const FText& GetDescription() const { return DescriptionValue; }
-	EUserSettingImpact::Type GetImpact() const { return PerformanceImpact; }
+	const FUserSettingMetadata& GetMetadata() const { return Metadata; }
 
 protected:
 
 	FGameplayTag Key;
-	FText DisplayNameValue;
-	FText DescriptionValue;
-	EUserSettingImpact::Type PerformanceImpact = EUserSettingImpact::None;
+	FUserSettingMetadata Metadata;
 	TFunction<bool()> EnabledPredicate;
 };
 
@@ -93,19 +67,19 @@ public:
 
 	Derived& DisplayName(FText Text)
 	{
-		DisplayNameValue = MoveTemp(Text);
+		Metadata.DisplayName = MoveTemp(Text);
 		return Self();
 	}
 
 	Derived& Description(FText Text)
 	{
-		DescriptionValue = MoveTemp(Text);
+		Metadata.Description = MoveTemp(Text);
 		return Self();
 	}
 
 	Derived& Impact(EUserSettingImpact::Type Value)
 	{
-		PerformanceImpact = Value;
+		Metadata.Impact = Value;
 		return Self();
 	}
 

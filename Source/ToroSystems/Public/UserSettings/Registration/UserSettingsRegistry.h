@@ -13,7 +13,7 @@ class FUserSettingsSection
 {
 	friend class FUserSettingsPage;
 
-	FText DisplayName;
+	FUserSettingMetadata Metadata;
     TArray<TUniquePtr<FUserSettingEntry>> Entries;
 
 	template<typename EntryType>
@@ -42,8 +42,10 @@ public:
 	FUserSettingsSection& operator=(const FUserSettingsSection&) = delete;
 
 	explicit FUserSettingsSection(const FText& InDisplayName)
-		: DisplayName(InDisplayName)
-	{}
+	{
+		Metadata.DisplayName = InDisplayName;
+		Metadata.bIsCategory = true;
+	}
 
 	[[nodiscard]] const FUserSettingEntry* operator[](int32 Index) const
 	{
@@ -61,9 +63,14 @@ public:
 		return Entries.Num();
 	}
 
-	[[nodiscard]] FORCEINLINE const FText& GetDisplayName() const
+	[[nodiscard]] FORCEINLINE FUserSettingMetadata& GetMetadata()
 	{
-		return DisplayName;
+		return Metadata;
+	}
+
+	[[nodiscard]] FORCEINLINE const FUserSettingMetadata& GetMetadata() const
+	{
+		return Metadata;
 	}
 
 	FUserSettingSlider& AddSlider(FGameplayTag Key)
@@ -92,7 +99,7 @@ class FUserSettingsPage
 {
 	friend class FUserSettingsRegistry;
 
-	FText DisplayName;
+	FUserSettingMetadata Metadata;
 	TArray<TPair<FName, TUniquePtr<FUserSettingsSection>>> Sections;
 
 public:
@@ -102,8 +109,10 @@ public:
 	FUserSettingsPage& operator=(const FUserSettingsPage&) = delete;
 
 	explicit FUserSettingsPage(const FText& InDisplayName)
-		: DisplayName(InDisplayName)
-	{}
+	{
+		Metadata.DisplayName = InDisplayName;
+		Metadata.bIsCategory = true;
+	}
 
 	[[nodiscard]] const FUserSettingsSection* operator[](int32 Index) const
 	{
@@ -121,12 +130,17 @@ public:
 		return Sections.Num();
 	}
 
-	[[nodiscard]] FORCEINLINE const FText& GetDisplayName() const
+	[[nodiscard]] FORCEINLINE FUserSettingMetadata& GetMetadata()
 	{
-		return DisplayName;
+		return Metadata;
 	}
 
-	[[nodiscard]] FUserSettingsSection& EditSection(FName Key, const FText& InDisplayName);
+	[[nodiscard]] FORCEINLINE const FUserSettingMetadata& GetMetadata() const
+	{
+		return Metadata;
+	}
+
+	[[nodiscard]] FUserSettingsSection& EditSection(FName Key, const FText& DisplayName);
 };
 
 class FUserSettingsRegistry
@@ -155,9 +169,10 @@ public:
 		return Pages.Num();
 	}
 
-	[[nodiscard]] FUserSettingsPage& EditPage(FName Key, const FText& InDisplayName);
+	[[nodiscard]] FUserSettingsPage& EditPage(FName Key, const FText& DisplayName);
 
-	void RegisterExtension(UToroGameUserSettings& UserSettings);
-
-	void BuildStandardRegistry(UToroGameUserSettings& Settings);
+	void Reset()
+	{
+		Pages.Reset();
+	}
 };
