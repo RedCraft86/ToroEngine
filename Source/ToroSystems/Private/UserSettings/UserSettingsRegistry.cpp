@@ -145,6 +145,9 @@ void FUserSettingsRegistry::BuildStandardRegistry(UToroGameUserSettings& Setting
 			.Option(60.0f, LOCTEXT("FPS60", "60"))
 			.Option(120.0f, LOCTEXT("FPS120", "120"))
 			.Option(0.0f, LOCTEXT("Unlimited", "Unlimited"))
+			.Comparator([](const float& A, const float& B) -> bool {
+				return FMath::IsNearlyEqual(A, B, 0.1f);
+			})
 			.Bind(
 				&Settings,
 				&UToroGameUserSettings::GetFrameRateLimit,
