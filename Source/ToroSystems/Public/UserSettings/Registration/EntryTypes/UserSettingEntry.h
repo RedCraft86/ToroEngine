@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Misc/Optional.h"
 #include "Templates/Identity.h"
 #include "GameplayTagContainer.h"
 #include "UserSettings/Registration/UserSettingMetadata.h"
@@ -135,12 +136,6 @@ public:
 		return this->Self();
 	}
 
-	Derived& Resettable(bool bValue)
-	{
-		bResettable = bValue;
-		return this->Self();
-	}
-
 	template<typename ObjectType>
 	Derived& BindReset(ObjectType* Object, TIdentity_T<FHandler<ObjectType>> Handler)
 	{
@@ -235,7 +230,7 @@ public:
 
 	bool CanReset() const
 	{
-		return this->bResettable && IsAvailable() && (this->ResetHandler || WriteValue);
+		return IsAvailable() && (ResetHandler || (DefaultValue.IsSet() && WriteValue));
 	}
 
 	void ResetValue() const
@@ -249,7 +244,7 @@ public:
 			}
 			else
 			{
-				SetValue(DefaultValue);
+				SetValue(DefaultValue.GetValue());
 			}
 		}
 	}
@@ -266,7 +261,8 @@ public:
 			return !DefaultCheck();
 		}
 
-		return ReadValue && !AreValuesEqual(ReadValue(*this), DefaultValue);
+		return DefaultValue.IsSet() && ReadValue
+			&& !AreValuesEqual(ReadValue(*this), DefaultValue.GetValue());
 	}
 
 private:
@@ -297,8 +293,7 @@ private:
 		}
 	}
 
-	T DefaultValue{};
-	bool bResettable = true;
+	TOptional<T> DefaultValue;
 	FComparator CompareValues;
 	TFunction<bool()> DefaultCheck;
 	TFunction<bool()> BindingIsValid;

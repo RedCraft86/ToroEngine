@@ -100,7 +100,6 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 			.DisplayName(LOCTEXT("Resolution", "Resolution"))
 			.Description(LOCTEXT("ResolutionHelp", "Choose the display resolution and window mode. Higher resolutions provide a sharper image but may reduce performance."))
 			.Impact(EUserSettingImpact::Medium)
-			.Resettable(false)
 			.FromArray(
 				Settings.GenerateResolutionOptions(),
 				[](const UToroGameUserSettings::FResolutionOption& Option) -> FText
