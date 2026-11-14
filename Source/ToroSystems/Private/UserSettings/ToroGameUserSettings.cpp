@@ -397,6 +397,28 @@ void UToroGameUserSettings::ValidateSettings()
 			It.RemoveCurrentSwap();
 		}
 	}
+
+	// Limit frame rate values to 0 (unlimited), 30, 60, and 120
+	{
+		float SnappedLimit = 0.0f; // Invalid, so uncapped
+		const float RequestedLimit = GetFrameRateLimit();
+		if (FMath::IsFinite(RequestedLimit) && RequestedLimit >= 0.0f && RequestedLimit <= 150.0f)
+		{
+			if (RequestedLimit <= 45.0f)
+			{
+				SnappedLimit = 30.0f;
+			}
+			else if (RequestedLimit <= 90.0f)
+			{
+				SnappedLimit = 60.0f;
+			}
+			else
+			{
+				SnappedLimit = 120.0f;
+			}
+		}
+		SetFrameRateLimit(SnappedLimit);
+	}
 }
 
 void UToroGameUserSettings::ApplyNonResolutionSettings()
