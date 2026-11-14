@@ -23,6 +23,13 @@ struct FUserSettingSlider final : TUserValueSetting<FUserSettingSlider, float>
 		return *this;
 	}
 
+	FUserSettingSlider& NumDecimal(int32 Value)
+	{
+		check(Value >= 0);
+		DecimalCount = Value;
+		return *this;
+	}
+
 	FUserSettingSlider& Range(float Min, float Max)
 	{
 		check(FMath::IsFinite(Min) && FMath::IsFinite(Max) && Min <= Max);
@@ -44,6 +51,7 @@ struct FUserSettingSlider final : TUserValueSetting<FUserSettingSlider, float>
 	float GetStep() const { return Step; }
 	float GetMin() const { return MinValue; }
 	float GetMax() const { return MaxValue; }
+	int32 GetNumDecimals() const { return DecimalCount; }
 	EUserSettingSliderType GetSliderType() const
 	{
 		return SliderType;
@@ -51,8 +59,9 @@ struct FUserSettingSlider final : TUserValueSetting<FUserSettingSlider, float>
 
 private:
 
-	float Step = 0.0f;
+	float Step = 0.1f;
 	float MinValue = 0.0f;
 	float MaxValue = 1.0f;
+	int32 DecimalCount = 1;
 	EUserSettingSliderType SliderType = EUserSettingSliderType::Live;
 };

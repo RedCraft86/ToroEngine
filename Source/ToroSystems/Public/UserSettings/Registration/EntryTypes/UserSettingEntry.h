@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameplayTagContainer.h"
+#include "Templates/Identity.h"
 
 class UToroGameUserSettings;
 
@@ -121,6 +122,9 @@ protected:
 template <typename Derived, typename T>
 struct TUserValueSetting : TUserSettingEntry<Derived>
 {
+	template<typename ObjectType>
+	using FHandler = TFunction<void(ObjectType&, const FUserSettingEntry&)>;
+
 	template <typename ObjectType>
 	using FGetter = TFunction<T(const ObjectType&, const FUserSettingEntry&)>;
 
@@ -142,6 +146,32 @@ struct TUserValueSetting : TUserSettingEntry<Derived>
 	Derived& Comparator(FComparator Callback)
 	{
 		CompareValues = MoveTemp(Callback);
+		return this->Self();
+	}
+
+	Derived& IsDefault(TFunction<bool()> Check)
+	{
+		DefaultCheck = MoveTemp(Check);
+		return this->Self();
+	}
+
+	Derived& Resettable(bool bValue)
+	{
+		bResettable = bValue;
+		return this->Self();
+	}
+
+	template<typename ObjectType>
+	Derived& BindReset(ObjectType* Object, TIdentity_T<FHandler<ObjectType>> Handler)
+	{
+		ResetHandler = MakeHandler(Object, MoveTemp(Handler));
+		return this->Self();
+	}
+
+	template<typename ObjectType>
+	Derived& BindPostApply(ObjectType* Object, TIdentity_T<FHandler<ObjectType>> Handler)
+	{
+		PostApplyHandler = MakeHandler(Object, MoveTemp(Handler));
 		return this->Self();
 	}
 
@@ -219,26 +249,83 @@ struct TUserValueSetting : TUserSettingEntry<Derived>
 		if (IsAvailable() && WriteValue)
 		{
 			WriteValue(*this, NewValue);
+			this->RunPostApply();
 		}
+	}
+
+	bool CanReset() const
+	{
+		return this->bResettable && IsAvailable() && (this->ResetHandler || WriteValue);
 	}
 
 	void ResetValue()
 	{
-		SetValue(DefaultValue);
+		if (CanReset())
+		{
+			if (this->ResetHandler)
+			{
+				this->ResetHandler(*this);
+				this->RunPostApply();
+			}
+			else
+			{
+				SetValue(DefaultValue);
+			}
+		}
 	}
 
-	bool DiffersFromDefault()
+	bool DiffersFromDefault() const
 	{
-		return IsAvailable() && ReadValue && !AreValuesEqual(ReadValue(*this), DefaultValue);
+		if (!IsAvailable() || !ReadValue)
+		{
+			return false;
+		}
+
+		if (DefaultCheck)
+		{
+			return !DefaultCheck();
+		}
+
+		return !AreValuesEqual(ReadValue(*this), DefaultValue);
 	}
 
 private:
 
-	T DefaultValue;
+	template<typename ObjectType>
+	static TFunction<void(const FUserSettingEntry&)> MakeHandler(
+		ObjectType* Object, TIdentity_T<FHandler<ObjectType>> Handler)
+	{
+		static_assert(TIsDerivedFrom<ObjectType, UToroGameUserSettings>::Value,
+			"ObjectType must derive from UToroGameUserSettings");
+
+		const TWeakObjectPtr<ObjectType> WeakObject(Object);
+		return [WeakObject, Handler = MoveTemp(Handler)](const FUserSettingEntry& Entry)
+		{
+			ObjectType* Target = WeakObject.Get();
+			if (Target && Handler)
+			{
+				Handler(*Target, Entry);
+			}
+		};
+	}
+
+	void RunPostApply()
+	{
+		if (PostApplyHandler)
+		{
+			PostApplyHandler(*this);
+		}
+	}
+
+	T DefaultValue{};
+	bool bResettable = true;
 	FComparator CompareValues;
+	TFunction<bool()> DefaultCheck;
 	TFunction<bool()> BindingIsValid;
 	TFunction<T(const FUserSettingEntry&)> ReadValue;
 	TFunction<void(const FUserSettingEntry&, const T&)> WriteValue;
+	TFunction<void(const FUserSettingEntry&)> PostApplyHandler;
+	TFunction<void(const FUserSettingEntry&)> ResetHandler;
 };
 
 #undef LOCTEXT_NAMESPACE

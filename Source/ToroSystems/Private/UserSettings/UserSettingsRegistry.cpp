@@ -79,6 +79,7 @@ void FUserSettingsRegistry::BuildStandardRegistry(UToroGameUserSettings& Setting
 			.Default(1.0f)
 			.Range(0.2f, 2.0f)
 			.Delta(0.1f)
+			.NumDecimal(1)
 			.Bind(
 				&Settings,
 				&UToroGameUserSettings::GetSensitivityX,
@@ -102,6 +103,7 @@ void FUserSettingsRegistry::BuildStandardRegistry(UToroGameUserSettings& Setting
 			.Default(1.0f)
 			.Range(0.2f, 2.0f)
 			.Delta(0.1f)
+			.NumDecimal(1)
 			.Bind(
 				&Settings,
 				&UToroGameUserSettings::GetSensitivityY,
@@ -156,6 +158,7 @@ void FUserSettingsRegistry::BuildStandardRegistry(UToroGameUserSettings& Setting
 			.Default(50.0f)
 			.Range(20.0f, 80.0f)
 			.Delta(1.0f)
+			.NumDecimal(0)
 			.Bind(
 				&Settings,
 				&UToroGameUserSettings::GetBrightness,
@@ -191,10 +194,11 @@ void FUserSettingsRegistry::BuildStandardRegistry(UToroGameUserSettings& Setting
 			.DisplayName(LOCTEXT("TSRPercentage", "TSR Screen Percentage"))
 			.Description(LOCTEXT("TSRPercentageHelp", "Lower the internal rendering resolution used by TSR."))
 			.Impact(EUserSettingImpact::High)
+			.Type(EUserSettingSliderType::Commit)
 			.Default(100.0f)
 			.Range(10.0f, 100.0f)
 			.Delta(1.0f)
-			.Type(EUserSettingSliderType::Commit)
+			.NumDecimal(0)
 			.IsEnabled([WeakSettings]() {
 				return WeakSettings.IsValid() && WeakSettings->GetImageFidelityMode() == EImageFidelityMode::TSR;
 			})
@@ -210,10 +214,11 @@ void FUserSettingsRegistry::BuildStandardRegistry(UToroGameUserSettings& Setting
 			.DisplayName(LOCTEXT("ResolutionScale", "Resolution Scale"))
 			.Description(LOCTEXT("ResolutionScaleHelp", "Adjust internal rendering resolution. TSR uses its separate screen percentage."))
 			.Impact(EUserSettingImpact::High)
+			.Type(EUserSettingSliderType::Commit)
 			.Default(FMath::Clamp(Baseline.ResolutionQuality, ScaleMin, ScaleMax))
 			.Range(ScaleMin, ScaleMax)
 			.Delta(1.0f)
-			.Type(EUserSettingSliderType::Commit)
+			.NumDecimal(0)
 			.IsEnabled([WeakSettings](){
 				return WeakSettings.IsValid() && WeakSettings->GetImageFidelityMode() != EImageFidelityMode::TSR;
 			})
@@ -275,6 +280,35 @@ void FUserSettingsRegistry::BuildStandardRegistry(UToroGameUserSettings& Setting
 			.Description(LOCTEXT("OverallHelp", "Set all scalability groups to one quality level. Mixed values appear as Custom."))
 			.Impact(EUserSettingImpact::High)
 			.Default(BaselineQuality.GetSingleQualityLevel())
+			.BindReset(&Settings, [](UToroGameUserSettings& Target, const FUserSettingEntry&)
+			{
+				Target.RevertAllScalabilitySettings();
+			})
+			.IsDefault([WeakSettings]()
+			{
+				if (const UToroGameUserSettings* Target = WeakSettings.Get())
+				{
+					const FScalabilityBaseline& Saved = Target->GetScalabilityBaseline();
+
+					float Normalized, Current, Min, Max;
+					Target->GetResolutionScaleInformationEx(Normalized, Current, Min, Max);
+
+					return FMath::IsNearlyEqual(Current, Saved.ResolutionQuality)
+						&& Target->GetViewDistanceQuality() == Saved.ViewDistanceQuality
+						&& Target->GetAntiAliasingQuality() == Saved.AntiAliasingQuality
+						&& Target->GetShadowQuality() == Saved.ShadowQuality
+						&& Target->GetGlobalIlluminationQuality() == Saved.GlobalIlluminationQuality
+						&& Target->GetReflectionQuality() == Saved.ReflectionQuality
+						&& Target->GetPostProcessingQuality() == Saved.PostProcessQuality
+						&& Target->GetTextureQuality() == Saved.TextureQuality
+						&& Target->GetVisualEffectQuality() == Saved.EffectsQuality
+						&& Target->GetFoliageQuality() == Saved.FoliageQuality
+						&& Target->GetShadingQuality() == Saved.ShadingQuality
+						&& Target->GetLandscapeQuality() == Saved.LandscapeQuality;
+				}
+
+				return false;
+			})
 			.Option(-1, LOCTEXT("QualityCustom", "Custom"))
 			.Option(0, LOCTEXT("QualityLow", "Low"))
 			.Option(1, LOCTEXT("QualityMedium", "Medium"))
@@ -443,6 +477,7 @@ void FUserSettingsRegistry::BuildStandardRegistry(UToroGameUserSettings& Setting
 				.Default(100.0f)
 				.Range(0.0f, 100.0f)
 				.Delta(1.0f)
+				.NumDecimal(0)
 				.BindCallbacks(&Settings,
 					[](const UToroGameUserSettings& Target, const FUserSettingEntry& Entry)
 					{
