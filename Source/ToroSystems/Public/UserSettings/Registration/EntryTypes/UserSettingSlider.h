@@ -50,7 +50,7 @@ public:
 		return EUserSettingControl::Slider;
 	}
 
-	float GetStep() const { return Step; }
+	float GetDelta() const { return Step; }
 	float GetMin() const { return MinValue; }
 	float GetMax() const { return MaxValue; }
 	int32 GetNumDecimals() const { return DecimalCount; }
