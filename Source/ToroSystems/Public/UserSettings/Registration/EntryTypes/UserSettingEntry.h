@@ -256,7 +256,7 @@ public:
 
 	bool DiffersFromDefault() const
 	{
-		if (!IsAvailable() || !ReadValue)
+		if (!IsAvailable())
 		{
 			return false;
 		}
@@ -266,7 +266,7 @@ public:
 			return !DefaultCheck();
 		}
 
-		return !AreValuesEqual(ReadValue(*this), DefaultValue);
+		return ReadValue && !AreValuesEqual(ReadValue(*this), DefaultValue);
 	}
 
 private:
