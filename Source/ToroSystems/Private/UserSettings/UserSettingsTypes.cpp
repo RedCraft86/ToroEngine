@@ -10,14 +10,13 @@ namespace UserSettingsTags
 	// Camera
 	UE_DEFINE_GAMEPLAY_TAG(Camera, "UserSettings.Camera");
 	UE_DEFINE_GAMEPLAY_TAG(Camera_SensitivityX, "UserSettings.Camera.SensitivityX");
-	UE_DEFINE_GAMEPLAY_TAG(Camera_InvertMouseX, "UserSettings.Camera.InvertMouseX");
 	UE_DEFINE_GAMEPLAY_TAG(Camera_SensitivityY, "UserSettings.Camera.SensitivityY");
+	UE_DEFINE_GAMEPLAY_TAG(Camera_InvertMouseX, "UserSettings.Camera.InvertMouseX");
 	UE_DEFINE_GAMEPLAY_TAG(Camera_InvertMouseY, "UserSettings.Camera.InvertMouseY");
 	UE_DEFINE_GAMEPLAY_TAG(Camera_Smoothing, "UserSettings.Camera.Smoothing");
 
 	// Display
 	UE_DEFINE_GAMEPLAY_TAG(Display, "UserSettings.Display");
-	UE_DEFINE_GAMEPLAY_TAG(Display_WindowMode, "UserSettings.Display.WindowMode");
 	UE_DEFINE_GAMEPLAY_TAG(Display_Resolution, "UserSettings.Display.Resolution");
 	UE_DEFINE_GAMEPLAY_TAG(Display_Brightness, "UserSettings.Display.Brightness");
 	UE_DEFINE_GAMEPLAY_TAG(Display_VSync, "UserSettings.Display.VSync");

@@ -96,7 +96,48 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		DisplaySection.GetMetadata().Description = LOCTEXT("DisplaySectionDescription", "Adjust brightness, synchronization, and the frame rate limit.");
 		DisplaySection.GetMetadata().Impact = EUserSettingImpact::Medium;
 
-		// TODO: Handling for Resolution and WindowMode
+		DisplaySection.AddSelector<UToroGameUserSettings::FResolutionOption>(Display_Resolution)
+			.DisplayName(LOCTEXT("Resolution", "Resolution"))
+			.Description(LOCTEXT("ResolutionHelp", "Choose the display resolution and window mode. Higher resolutions provide a sharper image but may reduce performance."))
+			.Impact(EUserSettingImpact::Medium)
+			.Resettable(false)
+			.FromArray(
+				Settings.GenerateResolutionOptions(),
+				[](const UToroGameUserSettings::FResolutionOption& Option) -> FText
+				{
+					FText WindowType = LOCTEXT("Unknown", "Unknown");
+					switch (Option.Value)
+					{
+					case EWindowMode::Fullscreen:
+						WindowType = LOCTEXT("FullscreenMode", "Fullscreen");
+						break;
+
+					case EWindowMode::WindowedFullscreen:
+						WindowType = LOCTEXT("BorderlessMode", "Borderless");
+						break;
+
+					case EWindowMode::Windowed:
+						WindowType = LOCTEXT("WindowedMode", "Windowed");
+						break;
+
+					default:
+						break;
+					}
+
+					FNumberFormattingOptions ComponentFormat;
+					ComponentFormat.SetUseGrouping(false);
+					return FText::Format(LOCTEXT("ResolutionOption", "{0} x {1} ({2})"),
+						FText::AsNumber(Option.Key.X, &ComponentFormat),
+						FText::AsNumber(Option.Key.Y, &ComponentFormat),
+						WindowType
+					);
+				}
+			)
+			.Bind(
+				&Settings,
+				&UToroGameUserSettings::GetResolutionOption,
+				&UToroGameUserSettings::SetResolutionOption
+			);
 
 		DisplaySection.AddToggle(Display_VSync)
 			.DisplayName(LOCTEXT("VSync", "V-Sync"))

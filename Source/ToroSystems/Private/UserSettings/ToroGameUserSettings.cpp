@@ -5,6 +5,7 @@
 #include "PostProcess/WorldPostProcessComponent.h"
 #include "UserSettings/UserSettingsConfig.h"
 #include "Framework/ToroWorldSettings.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Libraries/ToroCVarLibrary.h"
 #include "Utilities/RobAccess.h"
 #include "AudioModulationStatics.h"
@@ -284,16 +285,20 @@ void UToroGameUserSettings::Initialize(UGameInstance& GameInst)
 {
 	if (!GameInstance.IsValid())
 	{
-		// Do full initialization
 		GameInstance = &GameInst;
+
+		// Generate these options here in case it lags
+		GenerateResolutionOptions();
+
 		LoadSettings(true);
 		ValidateSettings();
 		if (!ScalabilityBaseline.bSaved)
 		{
 			bIsFirstLoad = true;
 
-			SetScreenResolution(GetDesktopResolution());
-			SetFullscreenMode(EWindowMode::WindowedFullscreen);
+			const FResolutionOption& Option = GetDefaultResolutionOption();
+			SetScreenResolution(Option.Key);
+			SetFullscreenMode(Option.Value);
 			ConfirmVideoMode();
 
 			RunHardwareBenchmark(10, 0.7f, 0.7f);
@@ -315,13 +320,21 @@ void UToroGameUserSettings::Initialize(UGameInstance& GameInst)
 	ApplySettings(false);
 }
 
-void UToroGameUserSettings::TryApplyResolutionSettings()
+UToroGameUserSettings::FResolutionOption UToroGameUserSettings::GetResolutionOption() const
 {
+	return {GetScreenResolution(), GetFullscreenMode()};
+}
+
+void UToroGameUserSettings::SetResolutionOption(const FResolutionOption& InOption)
+{
+	SetScreenResolution(InOption.Key);
+	SetFullscreenMode(InOption.Value);
 	ApplyResolutionSettings(false);
+
 	auto* Response = UToroDialogWidget::Create(this,
 		LOCTEXT("ResolutionConfirmTitle", "Accept Resolution Setting?"),
 		LOCTEXT("ResolutionConfirmDescription",
-			"Do you wish to accept the current settings?\t\t"
+			"Do you wish to accept the current settings?\n"
 			"This will automatically revert after 5 seconds."),
 		{
 			LOCTEXT("ResolutionRevert", "Revert"),
@@ -339,6 +352,59 @@ void UToroGameUserSettings::TryApplyResolutionSettings()
 	{
 		OnResolutionDialogClosed(INDEX_NONE);
 	}
+}
+
+const UToroGameUserSettings::FResolutionOption& UToroGameUserSettings::GetDefaultResolutionOption() const
+{
+	static FResolutionOption Resolution {GetDesktopResolution(), EWindowMode::WindowedFullscreen};
+	return Resolution;
+}
+
+const UToroGameUserSettings::FResolutionOptions& UToroGameUserSettings::GenerateResolutionOptions() const
+{
+	static FResolutionOptions Resolutions;
+	if (Resolutions.IsEmpty())
+	{
+		TArray<FIntPoint> FullscreenResolutions;
+		UKismetSystemLibrary::GetSupportedFullscreenResolutions(FullscreenResolutions);
+		for (const FIntPoint& Res : FullscreenResolutions)
+		{
+			Resolutions.AddUnique({Res, EWindowMode::Fullscreen});
+		}
+
+		TArray<FIntPoint> WindowedResolutions;
+		UKismetSystemLibrary::GetConvenientWindowedResolutions(WindowedResolutions);
+		for (const FIntPoint& Res : FullscreenResolutions)
+		{
+			Resolutions.AddUnique({Res, EWindowMode::Windowed});
+		}
+
+		Resolutions.AddUnique(GetDefaultResolutionOption());
+
+		Resolutions.Sort([](const auto& A, const auto& B) -> bool
+		{
+			const int64 PixelsA = static_cast<int64>(A.Key.X) * static_cast<int64>(A.Key.Y);
+			const int64 PixelsB = static_cast<int64>(B.Key.X) * static_cast<int64>(B.Key.Y);
+			if (PixelsA != PixelsB)
+			{
+				return PixelsA > PixelsB;
+			}
+
+			if (A.Key.X != B.Key.X)
+			{
+				return A.Key.X > B.Key.X;
+			}
+
+			if (A.Key.Y != B.Key.Y)
+			{
+				return A.Key.Y > B.Key.Y;
+			}
+
+			return A.Value < B.Value;
+		});
+	}
+
+	return Resolutions;
 }
 
 UWorld* UToroGameUserSettings::GetWorld() const

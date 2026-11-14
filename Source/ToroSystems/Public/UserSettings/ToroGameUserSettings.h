@@ -40,6 +40,9 @@ class TOROSYSTEMS_API UToroGameUserSettings : public UGameUserSettings
 
 public:
 
+	using FResolutionOption = TPair<FIntPoint, EWindowMode::Type>;
+	using FResolutionOptions = TArray<FResolutionOption>;
+
 	UToroGameUserSettings();
 
 	/**
@@ -143,10 +146,13 @@ public:
 	}
 
 	void Initialize(UGameInstance& GameInst);
-	void TryApplyResolutionSettings();
+
+	FResolutionOption GetResolutionOption() const;
+	void SetResolutionOption(const FResolutionOption& InOption);
+	const FResolutionOption& GetDefaultResolutionOption() const;
+	const FResolutionOptions& GenerateResolutionOptions() const;
 
 	virtual UWorld* GetWorld() const override;
-
 	virtual void SetToDefaults() override;
 	virtual void ValidateSettings() override;
 	virtual void ApplyNonResolutionSettings() override;
