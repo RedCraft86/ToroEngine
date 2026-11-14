@@ -10,10 +10,13 @@ class IUserSettingSelection
 public:
 
 	virtual ~IUserSettingSelection() = default;
+
 	virtual int32 GetOptionCount() const = 0;
 	virtual FText GetOptionLabel(int32 Index) const = 0;
 	virtual int32 GetSelectedIndex() const = 0;
 	virtual void SelectIndex(int32 Index) const = 0;
+	virtual bool CanResetSelection() const = 0;
+	virtual void ResetSelection() const = 0;
 };
 
 template<typename T>
@@ -86,6 +89,16 @@ public:
 			const T Value = Options[Index].Value;
 			this->SetValue(Value);
 		}
+	}
+
+	virtual bool CanResetSelection() const override
+	{
+		return this->CanReset() && this->DiffersFromDefault();
+	}
+
+	virtual void ResetSelection() const override
+	{
+		this->ResetValue();
 	}
 
 	virtual EUserSettingControl GetControlType() const override
