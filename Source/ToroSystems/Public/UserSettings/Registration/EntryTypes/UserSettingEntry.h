@@ -77,7 +77,7 @@ public:
 		return Self();
 	}
 
-	Derived& Impact(EUserSettingImpact::Type Value)
+	Derived& Impact(EUserSettingImpact Value)
 	{
 		Metadata.Impact = Value;
 		return Self();

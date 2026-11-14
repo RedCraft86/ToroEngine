@@ -313,7 +313,7 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 			int32 DefaultValue,
 			auto Getter,
 			auto Setter,
-			EUserSettingImpact::Type Impact
+			EUserSettingImpact Impact
 		)
 		{
 			QualitySection.AddSelector<int32>(Key)
