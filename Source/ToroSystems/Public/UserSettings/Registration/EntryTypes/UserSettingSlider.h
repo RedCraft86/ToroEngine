@@ -10,8 +10,10 @@ enum class EUserSettingSliderType : uint8
 	Commit
 };
 
-struct FUserSettingSlider final : TUserValueSetting<FUserSettingSlider, float>
+class FUserSettingSlider final : public TUserValueSetting<FUserSettingSlider, float>
 {
+public:
+
 	explicit FUserSettingSlider(FGameplayTag Key)
 		: TUserValueSetting(Key)
 	{}

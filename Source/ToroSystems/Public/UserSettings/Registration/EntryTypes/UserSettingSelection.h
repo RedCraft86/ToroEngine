@@ -5,8 +5,10 @@
 #include "UserSettingEntry.h"
 #include "Utilities/ToroLogging.h"
 
-struct IUserSettingSelection
+class IUserSettingSelection
 {
+public:
+
 	virtual ~IUserSettingSelection() = default;
 	virtual int32 GetOptionCount() const = 0;
 	virtual FText GetOptionLabel(int32 Index) const = 0;
@@ -15,9 +17,9 @@ struct IUserSettingSelection
 };
 
 template<typename T>
-struct TUserSettingSelection final : TUserValueSetting<TUserSettingSelection<T>, T>, IUserSettingSelection
+class TUserSettingSelection final : public TUserValueSetting<TUserSettingSelection<T>, T>, public IUserSettingSelection
 {
-	using Super = TUserValueSetting<TUserSettingSelection<T>, T>;
+public:
 
 	struct FOption
 	{
@@ -26,7 +28,7 @@ struct TUserSettingSelection final : TUserValueSetting<TUserSettingSelection<T>,
 	};
 
 	explicit TUserSettingSelection(FGameplayTag Key)
-		: Super(Key)
+		: TUserValueSetting<TUserSettingSelection<T>, T>(Key)
 	{}
 
 	TUserSettingSelection& Option(T Value, FText Label)

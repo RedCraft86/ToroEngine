@@ -4,8 +4,10 @@
 
 #include "UserSettingEntry.h"
 
-struct FUserSettingToggle final : TUserValueSetting<FUserSettingToggle, bool>
+class FUserSettingToggle final : public TUserValueSetting<FUserSettingToggle, bool>
 {
+public:
+
 	explicit FUserSettingToggle(FGameplayTag Key)
 		: TUserValueSetting(Key)
 	{}

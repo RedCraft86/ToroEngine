@@ -40,10 +40,12 @@ namespace EUserSettingImpact
 	}
 }
 
-struct IUserSettingSelection;
+class IUserSettingSelection;
 
-struct FUserSettingEntry
+class FUserSettingEntry
 {
+public:
+
 	FUserSettingEntry() = delete;
 	FUserSettingEntry(const FUserSettingEntry&) = delete;
 	FUserSettingEntry& operator=(const FUserSettingEntry&) = delete;
@@ -81,8 +83,10 @@ protected:
 };
 
 template <typename Derived>
-struct TUserSettingEntry : FUserSettingEntry
+class TUserSettingEntry : public FUserSettingEntry
 {
+public:
+
 	explicit TUserSettingEntry(const FGameplayTag& InKey)
 		: FUserSettingEntry(InKey)
 	{}
@@ -120,8 +124,10 @@ protected:
 };
 
 template <typename Derived, typename T>
-struct TUserValueSetting : TUserSettingEntry<Derived>
+class TUserValueSetting : public TUserSettingEntry<Derived>
 {
+public:
+
 	template<typename ObjectType>
 	using FHandler = TFunction<void(ObjectType&, const FUserSettingEntry&)>;
 

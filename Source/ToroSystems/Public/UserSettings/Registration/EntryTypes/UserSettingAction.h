@@ -4,8 +4,10 @@
 
 #include "UserSettingEntry.h"
 
-struct FUserSettingAction final : TUserSettingEntry<FUserSettingAction>
+class FUserSettingAction final : public TUserSettingEntry<FUserSettingAction>
 {
+public:
+
 	template <typename ObjectType>
 	using FExecuter = TFunction<void(ObjectType&, const FUserSettingEntry&)>;
 
