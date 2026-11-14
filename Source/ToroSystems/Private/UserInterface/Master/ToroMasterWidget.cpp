@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "UserInterface/ToroMasterWidget.h"
+#include "UserInterface/UserInterfaceConfig.h"
 #include "UserInterface/Widgets/ToroDialogWidget.h"
 #include "Camera/PlayerCameraManager.h"
 #include "ToroMasterWidgetOverlay.h"
