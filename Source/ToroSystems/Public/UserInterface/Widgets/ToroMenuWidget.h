@@ -13,7 +13,7 @@
  * Optional source-owned pause requests require an owning AToroPlayerController and end on deactivation.
  * The menu stack owns activation and presentation; auto-activation and activation visibility changes are disabled.
  */
-UCLASS(Abstract, Blueprintable, BlueprintType)
+UCLASS(Abstract, Blueprintable, BlueprintType, NotPlaceable)
 class TOROSYSTEMS_API UToroMenuWidget : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
