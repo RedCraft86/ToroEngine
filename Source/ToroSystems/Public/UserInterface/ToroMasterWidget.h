@@ -8,20 +8,7 @@
 class UToroMasterMenuStack;
 class UToroMasterWidgetOverlay;
 class UCommonActivatableWidget;
-
-/** Selects the master UI container used for an entry. */
-UENUM(BlueprintType)
-enum class EToroMasterWidgetType : uint8
-{
-	/** Gameplay information displayed beneath menus and hidden while a menu is displayed. */
-	Gameplay,
-
-	/** Menu stack whose transitions replace the gameplay presentation. */
-	Menu,
-
-	/** Independent forced overlays displayed above both gameplay content and menus. */
-	Overlay
-};
+enum class EToroMasterWidgetType : uint8;
 
 /**
  * Composes the gameplay/menu stack and an independent forced-overlay container for the player UI.
