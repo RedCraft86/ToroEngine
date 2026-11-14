@@ -15,7 +15,7 @@ class TOROSYSTEMS_API UUserSettingsBuilder : public UObject
 
 public:
 
-	static void Build(FUserSettingsRegistry& Registry);
+	static void Build(FUserSettingsRegistry& Registry, UToroGameUserSettings& Settings);
 
 protected:
 

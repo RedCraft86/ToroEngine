@@ -7,16 +7,15 @@
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
 
-void UUserSettingsBuilder::Build(FUserSettingsRegistry& Registry)
+void UUserSettingsBuilder::Build(FUserSettingsRegistry& Registry, UToroGameUserSettings& Settings)
 {
-	UToroGameUserSettings* UserSettings = UToroGameUserSettings::Get();
 	if (const FUserSettingsConfig* Cfg = FUserSettingsConfig::Get())
 	{
 		if (const TSubclassOf<UUserSettingsBuilder> BuilderClass = Cfg->SettingsBuilder.LoadSynchronous())
 		{
 			if (const UUserSettingsBuilder* Builder = BuilderClass->GetDefaultObject<UUserSettingsBuilder>())
 			{
-				Builder->BuildRegistry(Registry, *UserSettings);
+				Builder->BuildRegistry(Registry, Settings);
 				return;
 			}
 		}
@@ -24,7 +23,7 @@ void UUserSettingsBuilder::Build(FUserSettingsRegistry& Registry)
 
 	if (const UUserSettingsBuilder* Builder = GetDefault<UUserSettingsBuilder>())
 	{
-		Builder->BuildRegistry(Registry, *UserSettings);
+		Builder->BuildRegistry(Registry, Settings);
 	}
 }
 
