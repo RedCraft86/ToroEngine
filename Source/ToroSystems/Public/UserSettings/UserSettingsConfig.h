@@ -7,7 +7,7 @@
 
 class USoundControlBus;
 class USoundControlBusMix;
-class UUserSettingsExtension;
+class UUserSettingsBuilder;
 
 USTRUCT(BlueprintType)
 struct TOROSYSTEMS_API FUserSettingsConfig final
@@ -16,8 +16,8 @@ struct TOROSYSTEMS_API FUserSettingsConfig final
 
 	FUserSettingsConfig();
 
-	UPROPERTY(EditAnywhere, Category = Settings)
-	TSoftClassPtr<UUserSettingsExtension> SettingsExtension;
+	UPROPERTY(EditAnywhere, Category = Settings, NoClear, meta = (AllowAbstract = false))
+	TSoftClassPtr<UUserSettingsBuilder> SettingsBuilder;
 
 	UPROPERTY(EditAnywhere, Category = Audio)
 	TSoftObjectPtr<USoundControlBusMix> AudioMix;

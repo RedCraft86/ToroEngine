@@ -2,12 +2,14 @@
 
 #include "UserSettings/UserSettingsConfig.h"
 #include "UserSettings/UserSettingsTypes.h"
+#include "UserSettings/Registration/UserSettingsBuilder.h"
 #include "SoundControlBusMix.h"
 #include "SoundControlBus.h"
 #include "ToroDevSettings.h"
 
 FUserSettingsConfig::FUserSettingsConfig()
 {
+	SettingsBuilder = UUserSettingsBuilder::StaticClass();
 	AudioMix = FSoftObjectPath(TEXT("/ToroEngine/Audio/CBM_ToroEngine.CBM_ToroEngine"));
 	AudioChannels = {
 		{
