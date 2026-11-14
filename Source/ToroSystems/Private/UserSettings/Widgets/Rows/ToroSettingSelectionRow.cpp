@@ -20,7 +20,7 @@ void UToroSettingSelectionRow::OnItemSelected(FString, ESelectInfo::Type Type)
 	if (!bRefreshing && SelectionBox && Setting && Type != ESelectInfo::Direct)
 	{
 		Setting->SelectIndex(SelectionBox->GetSelectedIndex());
-		OnRefreshUI();
+		RefreshUI();
 	}
 }
 

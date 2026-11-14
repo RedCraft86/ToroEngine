@@ -32,16 +32,20 @@ public:
 
 	UToroSettingsWidget();
 
-	UFUNCTION(BlueprintCallable, Category = UserInterface, meta = (WorldContext = ContextObject))
+	UFUNCTION(BlueprintCallable, Category = UserInterface,
+		DisplayName = "Push Settings", meta = (WorldContext = ContextObject))
 	static bool Push(const UObject* ContextObject, int32 PlayerIdx = 0);
 
 private:
 
 	UPROPERTY(EditAnywhere, Category = Appearance)
-	TSubclassOf<UCommonButtonStyle> PageButtonStyle;
+	FExpandableAreaStyle SectionAreaStyle;
 
-	UPROPERTY(EditAnywhere, Category = Appearance)
-	FMargin PageButtonPadding;
+	UPROPERTY(EditAnywhere, Category = "Appearance|TabButton")
+	TSubclassOf<UCommonButtonStyle> TabStyle;
+
+	UPROPERTY(EditAnywhere, Category = "Appearance|TabButton")
+	FMargin TabPadding;
 
 	UPROPERTY(EditAnywhere, Category = Widget, meta = (AllowAbstract = false,
 		DisallowedClasses = "/Script/ToroSystems.ToroSettingToggleRow,/Script/ToroSystems.ToroSettingSliderRow,/Script/ToroSystems.ToroSettingSelectionRow,/Script/ToroSystems.ToroSettingActionRow"
@@ -81,9 +85,11 @@ private:
 	TUniquePtr<FUserSettingsRegistry> Registry;
 	TWeakObjectPtr<UToroGameUserSettings> UserSettings;
 	TArray<TWeakObjectPtr<UCommonTextButton>> TabButtons;
+	TArray<TWeakObjectPtr<UToroSettingWidgetRow>> SettingRows;
 	TSharedRef<TOrderedAccumulator<FUserSettingMetadata>> MetadataStack
 		= TOrderedAccumulator<FUserSettingMetadata>::Make();
 
+	void ClearRows();
 	void BuildMenu();
 	UWidget* AddPage(const FUserSettingsPage* Page);
 	UWidget* AddSection(const FUserSettingsSection* Section);
@@ -94,4 +100,5 @@ private:
 	void OnMetadataChanged() const;
 
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 };

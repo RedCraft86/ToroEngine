@@ -7,10 +7,11 @@
 #include "UserSettings/Registration/EntryTypes/UserSettingEntry.h"
 #include "ToroSettingWidgetRow.generated.h"
 
+class UTextBlock;
 class UCommonButtonBase;
 class UToroSettingsWidget;
 
-UCLASS(Blueprintable, BlueprintType, NotPlaceable)
+UCLASS(Abstract, Blueprintable, BlueprintType, NotPlaceable)
 class TOROSYSTEMS_API UToroSettingWidgetRow : public UCommonUserWidget
 {
 	GENERATED_BODY()
@@ -21,16 +22,22 @@ public:
 
 	virtual void InitSetting(const FUserSettingEntry* InEntry);
 	void InitMetadata(UToroSettingsWidget* Owner, const FUserSettingMetadata& InMetadata);
+	void ClearSetting();
 
 protected:
+
+	UPROPERTY(Transient, meta = (BindWidget))
+	TObjectPtr<UTextBlock> NameBlock;
 
 	UPROPERTY(Transient, meta = (BindWidgetOptional))
 	TObjectPtr<UCommonButtonBase> ResetButton;
 
 	bool bRefreshing;
 
-	UFUNCTION()
 	virtual void OnRefreshUI() {}
+
+	UFUNCTION()
+	void RefreshUI();
 	virtual void OnResetClicked();
 
 	virtual void NativeConstruct() override;
@@ -41,4 +48,5 @@ private:
 
 	FUserSettingMetadata Metadata;
 	TWeakObjectPtr<UToroSettingsWidget> OwnerWidget;
+	const FUserSettingEntry* Entry = nullptr;
 };

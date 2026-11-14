@@ -19,7 +19,7 @@ void UToroSettingSliderRow::OnSliderFinished(float InValue)
 	if (!bRefreshing && Setting)
 	{
 		Setting->SetValue(InValue);
-		OnRefreshUI();
+		RefreshUI();
 	}
 }
 
@@ -28,7 +28,7 @@ void UToroSettingSliderRow::OnValueEntered(float InValue, ETextCommit::Type)
 	if (!bRefreshing && Setting)
 	{
 		Setting->SetValue(InValue);
-		OnRefreshUI();
+		RefreshUI();
 	}
 }
 
@@ -61,6 +61,7 @@ void UToroSettingSliderRow::OnRefreshUI()
 	SliderBox->SetMinValue(Setting->GetMin());
 	SliderBox->SetMaxValue(Setting->GetMax());
 	SliderBox->SetDelta(Setting->GetDelta());
+	SliderBox->SetAlwaysUsesDeltaSnap(true);
 	SliderBox->SetValue(Setting->GetValue());
 }
 

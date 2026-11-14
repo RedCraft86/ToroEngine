@@ -30,7 +30,7 @@ void UToroSettingToggleRow::OnToggleClicked()
 			PlayAnimationReverse(ToggleAnimation);
 		}
 
-		OnRefreshUI();
+		RefreshUI();
 	}
 }
 
@@ -50,13 +50,15 @@ void UToroSettingToggleRow::OnRefreshUI()
 			? ESlateVisibility::Visible: ESlateVisibility::Hidden);
 	}
 
-	UToroWidgetLibrary::InitWidgetAnimation(this, ToggleAnimation);
-
 	const bool bWantsToEnd = Setting->GetValue();
 	if (!IsAnimationPlaying(ToggleAnimation) || bWantsToEnd != IsAnimationPlayingForward(ToggleAnimation))
 	{
+		UToroWidgetLibrary::InitWidgetAnimation(this, ToggleAnimation);
+
 		const float TargetTime = bWantsToEnd ? ToggleAnimation->GetEndTime() : ToggleAnimation->GetStartTime();
 		SetAnimationCurrentTime(ToggleAnimation, TargetTime);
+		PauseAnimation(ToggleAnimation);
+		FlushAnimations();
 	}
 }
 

@@ -125,6 +125,7 @@ bool UToroGameUserSettings::GetInvertMouseY() const
 void UToroGameUserSettings::SetBrightness(float Value)
 {
 	Brightness = FixupFloatValue(Value, 20.0f, 80.0f, 50.0f);
+	ApplyBrightness();
 }
 
 float UToroGameUserSettings::GetBrightness() const
@@ -157,6 +158,7 @@ void UToroGameUserSettings::SetImageFidelityMode(TEnumAsByte<EImageFidelityMode:
 {
 	ImageFidelityMode = Value;
 	ApplyFidelitySettings();
+	RequestUIUpdate();
 }
 
 TEnumAsByte<EImageFidelityMode::Type> UToroGameUserSettings::GetImageFidelityMode() const
@@ -478,7 +480,7 @@ FSimpleMulticastDelegate::RegistrationType& UToroGameUserSettings::GetOnSettings
 void UToroGameUserSettings::ApplyBrightness() const
 {
 	static IConsoleVariable* ColorMid = UToroCVarLibrary::FindCVar(TEXT("r.Color.Mid"));
-	ColorMid->Set(Brightness * 0.01f, ECVF_SetByGameSetting);
+	ColorMid->SetWithCurrentPriority(Brightness * 0.01f);
 }
 
 void UToroGameUserSettings::ApplyMotionBlur() const
@@ -490,11 +492,11 @@ void UToroGameUserSettings::ApplyMotionBlur() const
 	{
 		WPP->Settings.bOverride_MotionBlurAmount = true;
 		WPP->Settings.MotionBlurAmount = MotionBlurValue;
-		MBAmount->Set(-1.0f, ECVF_SetByGameSetting);
+		MBAmount->SetWithCurrentPriority(-1.0f);
 	}
 	else
 	{
-		MBAmount->Set(MotionBlurValue, ECVF_SetByGameSetting);
+		MBAmount->SetWithCurrentPriority(MotionBlurValue);
 	}
 }
 
@@ -513,17 +515,15 @@ void UToroGameUserSettings::ApplyLumenSettings() const
 	else
 	{
 		static IConsoleVariable* GIMethod = UToroCVarLibrary::FindCVar(TEXT("r.DynamicGlobalIlluminationMethod"));
-		GIMethod->Set(ELumenUserSetting::SupportsGI(LumenMode)
-				? static_cast<int32>(EDynamicGlobalIlluminationMethod::Lumen)
-				: static_cast<int32>(EDynamicGlobalIlluminationMethod::None),
-			ECVF_SetByGameSetting
+		GIMethod->SetWithCurrentPriority(ELumenUserSetting::SupportsGI(LumenMode)
+			? static_cast<int32>(EDynamicGlobalIlluminationMethod::Lumen)
+			: static_cast<int32>(EDynamicGlobalIlluminationMethod::None)
 		);
 
 		static IConsoleVariable* ReflectMethod = UToroCVarLibrary::FindCVar(TEXT("r.ReflectionMethod"));
-		ReflectMethod->Set(ELumenUserSetting::SupportsReflections(LumenMode)
-				? static_cast<int32>(EReflectionMethod::Lumen)
-				: static_cast<int32>(EReflectionMethod::ScreenSpace),
-			ECVF_SetByGameSetting
+		ReflectMethod->SetWithCurrentPriority(ELumenUserSetting::SupportsReflections(LumenMode)
+			? static_cast<int32>(EReflectionMethod::Lumen)
+			: static_cast<int32>(EReflectionMethod::ScreenSpace)
 		);
 	}
 }
@@ -531,13 +531,12 @@ void UToroGameUserSettings::ApplyLumenSettings() const
 void UToroGameUserSettings::ApplyFidelitySettings() const
 {
 	static IConsoleVariable* AAMethod = UToroCVarLibrary::FindCVar(TEXT("r.AntiAliasingMethod"));
-	AAMethod->Set(static_cast<int32>(EImageFidelityMode::ToNative(ImageFidelityMode)), ECVF_SetByGameSetting);
+	AAMethod->SetWithCurrentPriority(static_cast<int32>(EImageFidelityMode::ToNative(ImageFidelityMode)));
 
 	static IConsoleVariable* ScreenPercent = UToroCVarLibrary::FindCVar(TEXT("r.ScreenPercentage"));
-	ScreenPercent->Set(ImageFidelityMode == EImageFidelityMode::TSR
+	ScreenPercent->SetWithCurrentPriority(ImageFidelityMode == EImageFidelityMode::TSR
 			? TSRScreenPercentage
-			: ScalabilityQuality.ResolutionQuality,
-		ECVF_SetByGameSetting
+			: ScalabilityQuality.ResolutionQuality
 	);
 }
 

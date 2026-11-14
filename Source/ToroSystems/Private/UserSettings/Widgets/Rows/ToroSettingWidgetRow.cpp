@@ -2,6 +2,7 @@
 
 #include "UserSettings/Widgets/Rows/ToroSettingWidgetRow.h"
 #include "UserSettings/Widgets/ToroSettingsWidget.h"
+#include "Components/TextBlock.h"
 #include "CommonButtonBase.h"
 
 UToroSettingWidgetRow::UToroSettingWidgetRow(): bRefreshing(false)
@@ -11,9 +12,15 @@ UToroSettingWidgetRow::UToroSettingWidgetRow(): bRefreshing(false)
 
 void UToroSettingWidgetRow::InitSetting(const FUserSettingEntry* InEntry)
 {
-	if (InEntry)
+	Entry = InEntry;
+	RefreshUI();
+}
+
+void UToroSettingWidgetRow::RefreshUI()
+{
+	if (Entry)
 	{
-		SetVisibility(InEntry->IsAvailable() ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+		SetVisibility(Entry->IsAvailable() ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 	}
 
 	OnRefreshUI();
@@ -25,13 +32,29 @@ void UToroSettingWidgetRow::InitMetadata(UToroSettingsWidget* Owner, const FUser
 	{
 		OwnerWidget = Owner;
 		Metadata = InMetadata;
-		Owner->UserSettings->GetOnUIUpdate().AddDynamic(this, &UToroSettingWidgetRow::OnRefreshUI);
+		Owner->SettingRows.Add(this);
+		Owner->UserSettings->GetOnUIUpdate().AddUniqueDynamic(this, &UToroSettingWidgetRow::RefreshUI);
+		if (NameBlock)
+		{
+			NameBlock->SetText(Metadata.DisplayName);
+		}
 	}
+}
+
+void UToroSettingWidgetRow::ClearSetting()
+{
+	if (OwnerWidget.IsValid() && OwnerWidget->UserSettings.IsValid())
+	{
+		OwnerWidget->UserSettings->GetOnUIUpdate().RemoveDynamic(this, &UToroSettingWidgetRow::RefreshUI);
+	}
+
+	OwnerWidget.Reset();
+	InitSetting(nullptr);
 }
 
 void UToroSettingWidgetRow::OnResetClicked()
 {
-	OnRefreshUI();
+	RefreshUI();
 }
 
 void UToroSettingWidgetRow::NativeConstruct()
@@ -42,6 +65,8 @@ void UToroSettingWidgetRow::NativeConstruct()
 		ResetButton->OnClicked().RemoveAll(this);
 		ResetButton->OnClicked().AddUObject(this, &UToroSettingWidgetRow::OnResetClicked);
 	}
+
+	RefreshUI();
 }
 
 void UToroSettingWidgetRow::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

@@ -19,9 +19,10 @@
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
 UToroSettingsWidget::UToroSettingsWidget()
-	: PageButtonPadding(2.0f, 4.0f, 2.0f, 4.0f)
+	: TabPadding(2.0f, 4.0f, 2.0f, 4.0f)
 	, Registry(MakeUnique<FUserSettingsRegistry>())
 {
+	bPausesGame = true;
 	MetadataStack->OnChanged().AddUObject(this, &UToroSettingsWidget::OnMetadataChanged);
 }
 
@@ -49,6 +50,18 @@ bool UToroSettingsWidget::Push(const UObject* ContextObject, int32 PlayerIdx)
 
 	TORO_REPORT_ERROR(TEXT("Failed to push Settings Widget: Could not create or add widget."));
 	return false;
+}
+
+void UToroSettingsWidget::ClearRows()
+{
+	for (const TWeakObjectPtr<UToroSettingWidgetRow>& Row : SettingRows)
+	{
+		if (Row.IsValid())
+		{
+			Row->ClearSetting();
+		}
+	}
+	SettingRows.Reset();
 }
 
 void UToroSettingsWidget::BuildMenu()
@@ -80,8 +93,8 @@ void UToroSettingsWidget::BuildMenu()
 			TabButton->SetButtonText(Page->GetMetadata().DisplayName);
 			TabButton->SetIsInteractableWhenSelected(false);
 			TabButton->SetIsSelectable(true);
-			TabButton->SetStyle(PageButtonStyle);
-			TabButton->SetPadding(PageButtonPadding);
+			TabButton->SetStyle(TabStyle);
+			TabButton->SetPadding(TabPadding);
 			TabContainer->AddChild(TabButton);
 			TabButtons.Add(TabButton);
 
@@ -115,7 +128,14 @@ UWidget* UToroSettingsWidget::AddSection(const FUserSettingsSection* Section)
 {
 	if (Section && WidgetTree)
 	{
+		FSlateBrush EmptyBrush;
+		EmptyBrush.DrawAs = ESlateBrushDrawType::NoDrawType;
+
 		UExpandableArea* Area = WidgetTree->ConstructWidget<UExpandableArea>();
+		Area->SetClipping(EWidgetClipping::ClipToBounds);
+		Area->SetBorderBrush(EmptyBrush);
+		Area->SetStyle(SectionAreaStyle);
+
 		if (UToroSettingWidgetRow* Header = CreateWidget<UToroSettingWidgetRow>(this, SectionHeaderClass))
 		{
 			Header->InitMetadata(this, Section->GetMetadata());
@@ -269,11 +289,13 @@ void UToroSettingsWidget::NativeConstruct()
 	if (!WidgetTree || !IsValid(CloseButton) || !IsValid(TabContainer) || !IsValid(PageContainer))
 	{
 		DeactivateWidget();
+		return;
 	}
 
 	CloseButton->OnClicked().RemoveAll(this);
 	CloseButton->OnClicked().AddUObject(this, &UToroSettingsWidget::OnCloseClicked);
 
+	ClearRows();
 	Registry->Reset();
 	UserSettings = UToroGameUserSettings::Get();
 	if (UserSettings.IsValid())
@@ -288,5 +310,13 @@ void UToroSettingsWidget::NativeConstruct()
 		OnTabClicked(0);
 		PageContainer->SetDisableTransitionAnimation(false);
 	}
+
+	OnMetadataChanged();
+}
+
+void UToroSettingsWidget::NativeDestruct()
+{
+	ClearRows();
+	Super::NativeDestruct();
 }
 #undef LOCTEXT_NAMESPACE

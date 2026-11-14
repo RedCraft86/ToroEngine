@@ -44,7 +44,6 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		CameraSection.AddSlider(Camera_SensitivityX)
 			.DisplayName(LOCTEXT("SensitivityX", "Horizontal Sensitivity"))
 			.Description(LOCTEXT("SensitivityXHelp", "Adjust horizontal camera sensitivity."))
-			.Type(EUserSettingSliderType::Commit)
 			.Default(1.0f)
 			.Range(0.2f, 2.0f)
 			.Delta(0.1f)
@@ -55,20 +54,9 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				&UToroGameUserSettings::SetSensitivityX
 			);
 
-		CameraSection.AddToggle(Camera_InvertMouseX)
-			.DisplayName(LOCTEXT("InvertX", "Invert Horizontal Input"))
-			.Description(LOCTEXT("InvertXHelp", "Reverse horizontal mouse camera input."))
-			.Default(false)
-			.Bind(
-				&Settings,
-				&UToroGameUserSettings::GetInvertMouseX,
-				&UToroGameUserSettings::SetInvertMouseX
-			);
-
 		CameraSection.AddSlider(Camera_SensitivityY)
 			.DisplayName(LOCTEXT("SensitivityY", "Vertical Sensitivity"))
 			.Description(LOCTEXT("SensitivityYHelp", "Adjust vertical camera sensitivity."))
-			.Type(EUserSettingSliderType::Commit)
 			.Default(1.0f)
 			.Range(0.2f, 2.0f)
 			.Delta(0.1f)
@@ -77,6 +65,16 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				&Settings,
 				&UToroGameUserSettings::GetSensitivityY,
 				&UToroGameUserSettings::SetSensitivityY
+			);
+
+		CameraSection.AddToggle(Camera_InvertMouseX)
+			.DisplayName(LOCTEXT("InvertX", "Invert Horizontal Input"))
+			.Description(LOCTEXT("InvertXHelp", "Reverse horizontal mouse camera input."))
+			.Default(false)
+			.Bind(
+				&Settings,
+				&UToroGameUserSettings::GetInvertMouseX,
+				&UToroGameUserSettings::SetInvertMouseX
 			);
 
 		CameraSection.AddToggle(Camera_InvertMouseY)
@@ -174,7 +172,6 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 			.DisplayName(LOCTEXT("TSRPercentage", "TSR Screen Percentage"))
 			.Description(LOCTEXT("TSRPercentageHelp", "Lower the internal rendering resolution used by TSR."))
 			.Impact(EUserSettingImpact::High)
-			.Type(EUserSettingSliderType::Commit)
 			.Default(100.0f)
 			.Range(10.0f, 100.0f)
 			.Delta(1.0f)
@@ -194,13 +191,15 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 			.DisplayName(LOCTEXT("ResolutionScale", "Resolution Scale"))
 			.Description(LOCTEXT("ResolutionScaleHelp", "Adjust internal rendering resolution. TSR uses its separate screen percentage."))
 			.Impact(EUserSettingImpact::High)
-			.Type(EUserSettingSliderType::Commit)
 			.Default(FMath::Clamp(Baseline.ResolutionQuality, ScaleMin, ScaleMax))
 			.Range(ScaleMin, ScaleMax)
 			.Delta(1.0f)
 			.NumDecimal(0)
 			.IsEnabled([WeakSettings](){
 				return WeakSettings.IsValid() && WeakSettings->GetImageFidelityMode() != EImageFidelityMode::TSR;
+			})
+			.BindPostApply(&Settings, [](UToroGameUserSettings& Target, const FUserSettingEntry&) {
+				Target.RequestUIUpdate();
 			})
 			.BindCallbacks(&Settings,
 				[](const UToroGameUserSettings& Target, const FUserSettingEntry&)
@@ -264,8 +263,7 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 			.Description(LOCTEXT("OverallHelp", "Set all scalability groups to one quality level. Mixed values appear as Custom."))
 			.Impact(EUserSettingImpact::High)
 			.Default(BaselineQuality.GetSingleQualityLevel())
-			.BindReset(&Settings, [](UToroGameUserSettings& Target, const FUserSettingEntry&)
-			{
+			.BindReset(&Settings, [](UToroGameUserSettings& Target, const FUserSettingEntry&) {
 				Target.RevertAllScalabilitySettings();
 			})
 			.IsDefault([WeakSettings]()
@@ -325,6 +323,9 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				.Option(2, LOCTEXT("QualityHigh", "High"))
 				.Option(3, LOCTEXT("QualityEpic", "Epic"))
 				.Option(4, LOCTEXT("QualityCinematic", "Cinematic"))
+				.BindPostApply(&Settings, [](UToroGameUserSettings& Target, const FUserSettingEntry&) {
+					Target.RequestUIUpdate();
+				})
 				.BindCallbacks(
 					&Settings,
 					[Getter](const UToroGameUserSettings& Target, const FUserSettingEntry&)
