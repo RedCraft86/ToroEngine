@@ -28,6 +28,14 @@ namespace
 	}
 }
 
+void UToroWidgetLibrary::InitWidgetAnimation(UUserWidget* Target, UWidgetAnimation* Animation)
+{
+	if (IsValid(Target) && IsValid(Animation) && IsValid(Animation->GetMovieScene()))
+	{
+		(Target->*RobAccess(UUserWidget, GetOrAddAnimationState))(Animation);
+	}
+}
+
 void UToroWidgetLibrary::InitWidgetAnimations(UUserWidget* Target)
 {
 	if (!IsValid(Target))

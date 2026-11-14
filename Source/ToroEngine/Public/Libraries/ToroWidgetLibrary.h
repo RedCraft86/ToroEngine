@@ -26,6 +26,15 @@ class TOROENGINE_API UToroWidgetLibrary final : public UBlueprintFunctionLibrary
 public:
 
 	/**
+	 * Prepares animation state for the provided animation.
+	 * Does not start playback; invalid targets and animations without valid movie scenes are skipped.
+	 * @param Target User widget whose animation state will be initialized.
+	 * @param Animation Animation state to initialize.
+	 */
+	UFUNCTION(BlueprintCallable, Category = Widget, meta = (DefaultToSelf = Target))
+	static void InitWidgetAnimation(UUserWidget* Target, UWidgetAnimation* Animation);
+
+	/**
 	 * Prepares animation states declared by Blueprint-generated classes across the widget's class hierarchy.
 	 * Does not start playback; invalid targets and animations without valid movie scenes are skipped.
 	 * @param Target User widget whose animation states are initialized.
