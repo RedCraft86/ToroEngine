@@ -17,7 +17,7 @@ public:
 		return EUserSettingControl::Toggle;
 	}
 
-	void Toggle()
+	void Toggle() const
 	{
 		if (IsAvailable())
 		{

@@ -45,7 +45,7 @@ public:
 		: DisplayName(InDisplayName)
 	{}
 
-	[[nodiscard]] const FUserSettingEntry* operator[](int32 Index)
+	[[nodiscard]] const FUserSettingEntry* operator[](int32 Index) const
 	{
 		if (!Entries.IsValidIndex(Index)
 			|| !Entries[Index].IsValid())
@@ -105,7 +105,7 @@ public:
 		: DisplayName(InDisplayName)
 	{}
 
-	[[nodiscard]] const FUserSettingsSection* operator[](int32 Index)
+	[[nodiscard]] const FUserSettingsSection* operator[](int32 Index) const
 	{
 		if (!Sections.IsValidIndex(Index)
 			|| !Sections[Index].Value.IsValid())
@@ -139,7 +139,7 @@ public:
 	FUserSettingsRegistry(const FUserSettingsRegistry&) = delete;
 	FUserSettingsRegistry& operator=(const FUserSettingsRegistry&) = delete;
 
-	[[nodiscard]] const FUserSettingsPage* operator[](int32 Index)
+	[[nodiscard]] const FUserSettingsPage* operator[](int32 Index) const
 	{
 		if (!Pages.IsValidIndex(Index)
 			|| !Pages[Index].Value.IsValid())

@@ -13,7 +13,7 @@ public:
 	virtual int32 GetOptionCount() const = 0;
 	virtual FText GetOptionLabel(int32 Index) const = 0;
 	virtual int32 GetSelectedIndex() const = 0;
-	virtual void SelectIndex(int32 Index) = 0;
+	virtual void SelectIndex(int32 Index) const = 0;
 };
 
 template<typename T>
@@ -79,7 +79,7 @@ public:
 		});
 	}
 
-	virtual void SelectIndex(int32 Index) override
+	virtual void SelectIndex(int32 Index) const override
 	{
 		if (Options.IsValidIndex(Index) && this->IsAvailable())
 		{
@@ -93,7 +93,7 @@ public:
 		return EUserSettingControl::Selection;
 	}
 
-	virtual IUserSettingSelection* AsSelection() override
+	virtual const IUserSettingSelection* AsSelection() const override
 	{
 		return this;
 	}

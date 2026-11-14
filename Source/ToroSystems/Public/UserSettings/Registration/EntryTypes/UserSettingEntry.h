@@ -58,7 +58,7 @@ public:
 
 	virtual EUserSettingControl GetControlType() const = 0;
 
-	virtual IUserSettingSelection* AsSelection()
+	virtual const IUserSettingSelection* AsSelection() const
 	{
 		return nullptr;
 	}
@@ -250,7 +250,7 @@ public:
 		return (IsAvailable() && ReadValue) ? ReadValue(*this) : T{};
 	}
 
-	void SetValue(const T& NewValue)
+	void SetValue(const T& NewValue) const
 	{
 		if (IsAvailable() && WriteValue)
 		{
@@ -264,7 +264,7 @@ public:
 		return this->bResettable && IsAvailable() && (this->ResetHandler || WriteValue);
 	}
 
-	void ResetValue()
+	void ResetValue() const
 	{
 		if (CanReset())
 		{
@@ -315,7 +315,7 @@ private:
 		};
 	}
 
-	void RunPostApply()
+	void RunPostApply() const
 	{
 		if (PostApplyHandler)
 		{
