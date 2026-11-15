@@ -97,6 +97,7 @@ private:
 
 	void OnCloseClicked();
 	void OnTabClicked(int32 Index) const;
+	void OnPageChanged(UWidget* Page, int32 Index) const;
 	void OnMetadataChanged() const;
 
 	virtual void NativeConstruct() override;

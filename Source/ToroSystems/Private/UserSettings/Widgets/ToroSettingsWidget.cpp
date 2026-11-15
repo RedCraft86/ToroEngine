@@ -239,6 +239,11 @@ void UToroSettingsWidget::OnTabClicked(int32 Index) const
 	}
 }
 
+void UToroSettingsWidget::OnPageChanged(UWidget*, int32) const
+{
+	OnMetadataChanged();
+}
+
 void UToroSettingsWidget::OnMetadataChanged() const
 {
 	FUserSettingMetadata Metadata;
@@ -294,6 +299,9 @@ void UToroSettingsWidget::NativeConstruct()
 
 	CloseButton->OnClicked().RemoveAll(this);
 	CloseButton->OnClicked().AddUObject(this, &UToroSettingsWidget::OnCloseClicked);
+
+	PageContainer->OnActiveWidgetIndexChanged.RemoveAll(this);
+	PageContainer->OnActiveWidgetIndexChanged.AddUObject(this, &UToroSettingsWidget::OnPageChanged);
 
 	ClearRows();
 	Registry->Reset();
