@@ -9,6 +9,7 @@
 #include "ToroDevSettings.generated.h"
 
 class UWorld;
+class UToroDatabase;
 
 UCLASS(Config = Game, DefaultConfig, NotBlueprintable, BlueprintType, DisplayName = "ToroEngine (Runtime)")
 class TOROSYSTEMS_API UToroDevSettings final : public UDeveloperSettings
@@ -31,6 +32,9 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category = Framework)
 	FUserSettingsConfig UserSettings;
+
+	UPROPERTY(Config, EditAnywhere, Category = Data)
+	TSet<TSoftObjectPtr<UToroDatabase>> Databases;
 
 	UPROPERTY(Config, EditAnywhere, Category = Framework)
 	TMap<TSoftObjectPtr<UWorld>, FToroLevelInfo> Levels;
