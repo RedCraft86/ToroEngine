@@ -6,17 +6,17 @@
 #include "UObject/Class.h"
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
-bool UToroDatabase::IsValidKey(const FGameplayTag& Key) const
+bool UToroDatabase::IsValidKey(FGameplayTag Key) const
 {
 	return RootTag.IsValid() && Key.IsValid() && Key != RootTag && Key.MatchesTag(RootTag);
 }
 
-bool UToroDatabase::DoesKeyExist(const FGameplayTag& Key) const
+bool UToroDatabase::DoesKeyExist(FGameplayTag Key) const
 {
 	return IsValidKey(Key) && Entries.Contains(Key);
 }
 
-const FInstancedStruct& UToroDatabase::GetValue(const FGameplayTag& Key) const
+const FInstancedStruct& UToroDatabase::GetValue(FGameplayTag Key) const
 {
 	if (!ensureMsgf(RootTag.IsValid(), TEXT("RootTag for database %s is invalid."), *GetName())
 		|| !ensureMsgf(IsValid(RootStruct.Get()) && RootStruct->IsChildOf<FToroDatabaseEntry>(),

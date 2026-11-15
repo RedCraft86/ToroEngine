@@ -55,14 +55,14 @@ public:
 	static inline const FInstancedStruct EmptyValue = {};
 
 	/** Gets the filtering Root Tag used by this database. */
-	UFUNCTION(BlueprintType, Category = Database)
+	UFUNCTION(BlueprintPure, Category = Database)
 	[[nodiscard]] const FGameplayTag& GetRootTag() const
 	{
 		return RootTag;
 	}
 
 	/** Gets the filtering Root Struct used by this database. */
-	UFUNCTION(BlueprintType, Category = Database)
+	UFUNCTION(BlueprintPure, Category = Database)
 	[[nodiscard]] const UScriptStruct* GetRootStruct() const
 	{
 		return RootStruct;
@@ -92,14 +92,14 @@ public:
 	 * @return True if the key follows the database's tag hierarchy rules.
 	 */
 	UFUNCTION(BlueprintPure, Category = Database)
-	bool IsValidKey(const FGameplayTag& Key) const;
+	bool IsValidKey(FGameplayTag Key) const;
 
 	/**
 	 * Checks whether an eligible key has an entry, regardless of payload validity.
 	 * @param Key Gameplay tag to locate within the database hierarchy.
 	 */
 	UFUNCTION(BlueprintPure, Category = Database)
-	bool DoesKeyExist(const FGameplayTag& Key) const;
+	bool DoesKeyExist(FGameplayTag Key) const;
 
 	/**
 	 * Retrieves a populated payload compatible with the current root tag and struct configuration.
@@ -109,7 +109,7 @@ public:
 	 * @note Payload-specific IsValid() is checked during editor validation, not retrieval.
 	 */
 	UFUNCTION(BlueprintPure, Category = Database)
-	const FInstancedStruct& GetValue(const FGameplayTag& Key) const;
+	const FInstancedStruct& GetValue(FGameplayTag Key) const;
 
 	/**
 	 * Retrieves a payload as a compatible reflected entry type.
