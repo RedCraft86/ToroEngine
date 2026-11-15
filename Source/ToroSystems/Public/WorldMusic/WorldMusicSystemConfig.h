@@ -17,7 +17,9 @@ namespace WorldMusicTags
 
 	[[nodiscard]] inline bool IsValid(const FGameplayTag& InTag)
 	{
-		return InTag.IsValid() && InTag != Base.GetTag() && InTag.MatchesTag(Base.GetTag());
+		return InTag.IsValid()
+			&& InTag != Base.GetTag()
+			&& InTag.MatchesTag(Base.GetTag());
 	}
 }
 
