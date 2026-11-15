@@ -25,6 +25,6 @@ private:
 	const FUserSettingAction* Setting = nullptr;
 
 	void OnExecuteClicked() const;
-	void OnRefreshUI() override;
+	virtual void OnRefreshUI() override;
 	virtual void NativeConstruct() override;
 };

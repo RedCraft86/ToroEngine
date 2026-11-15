@@ -141,6 +141,7 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		DisplaySection.AddToggle(Display_VSync)
 			.DisplayName(LOCTEXT("VSync", "V-Sync"))
 			.Description(LOCTEXT("VSyncHelp", "Synchronize presentation with the display to reduce tearing."))
+			.Impact(EUserSettingImpact::Medium)
 			.Default(true)
 			.Bind(
 				&Settings,
@@ -151,11 +152,12 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		DisplaySection.AddSelector<float>(Display_FrameRateLimit)
 			.DisplayName(LOCTEXT("FrameLimit", "Frame Rate Limit"))
 			.Description(LOCTEXT("FrameLimitHelp", "Limit the frame rate. V-Sync may impose an additional limit."))
-			.Default(60.0f)
+			.Impact(EUserSettingImpact::Medium)
 			.Option(30.0f, LOCTEXT("FPS30", "30"))
 			.Option(60.0f, LOCTEXT("FPS60", "60"))
 			.Option(120.0f, LOCTEXT("FPS120", "120"))
 			.Option(0.0f, LOCTEXT("Unlimited", "Unlimited"))
+			.Default(60.0f)
 			.Comparator([](const float& A, const float& B) -> bool {
 				return FMath::IsNearlyEqual(A, B, 0.1f);
 			})
@@ -294,6 +296,7 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		QualitySection.AddAction(Graphics_AutoDetect)
 			.DisplayName(LOCTEXT("AutoDetect", "Auto Detect"))
 			.Description(LOCTEXT("AutoDetectHelp", "Run the hardware benchmark and update recommended quality levels."))
+			.Impact(EUserSettingImpact::Medium)
 			.BindCallback(&Settings, [](UToroGameUserSettings& Target, const FUserSettingEntry&) {
 				Target.RunHardwareBenchmark(10, 0.7f, 0.7f);
 			});
