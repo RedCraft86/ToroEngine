@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
 #include "UserInterfaceConfig.generated.h"
 
 class UToroSettingsWidget;
@@ -15,14 +16,22 @@ struct TOROSYSTEMS_API FUserInterfaceConfig final
 
 	FUserInterfaceConfig();
 
-	UPROPERTY(EditAnywhere, Category = UserInterface, NoClear, meta = (AllowAbstract = false))
+	UPROPERTY(EditAnywhere, Category = "UserInterface|TextTiming", meta = (ClampMin = 1.0f, UIMin = 1.0f))
+	float TextMinDuration = 2.0f;
+
+	UPROPERTY(EditAnywhere, Category = "UserInterface|TextTiming", meta = (ClampMin = 1.0f, UIMin = 1.0f))
+	float TextCharactersPerSecond = 15.0f;
+
+	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
 	TSoftClassPtr<UToroSettingsWidget> SettingsWidgetClass;
 
-	UPROPERTY(EditAnywhere, Category = UserInterface, NoClear, meta = (AllowAbstract = false))
+	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
 	TSoftClassPtr<UToroDialogWidget> DialogWidgetClass;
 
-	UPROPERTY(EditAnywhere, Category = UserInterface, NoClear, meta = (AllowAbstract = false))
+	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
 	TSet<TSoftClassPtr<UToroAutoWidget>> AutoWidgetClasses;
+
+	[[nodiscard]] float CalculateTimeForText(const FText& InText, float ExtraTime = 0.0f) const;
 
 	[[nodiscard]] static const FUserInterfaceConfig* Get();
 };
