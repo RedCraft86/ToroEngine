@@ -54,6 +54,20 @@ public:
 	/** Shared immutable empty result used when a lookup cannot return a compatible stored payload. */
 	static inline const FInstancedStruct EmptyValue = {};
 
+	/** Gets the filtering Root Tag used by this database. */
+	UFUNCTION(BlueprintType, Category = Database)
+	[[nodiscard]] const FGameplayTag& GetRootTag() const
+	{
+		return RootTag;
+	}
+
+	/** Gets the filtering Root Struct used by this database. */
+	UFUNCTION(BlueprintType, Category = Database)
+	[[nodiscard]] const UScriptStruct* GetRootStruct() const
+	{
+		return RootStruct;
+	}
+
 	/**
 	 * Exposes the stored entries without filtering or validating them.
 	 * C++ callers receive a borrowed reference that must not outlive the asset or data mutation.
@@ -138,7 +152,7 @@ protected:
 	/**
 	 * Creates an unconfigured database for validation testing.
 	 * Lookups return no eligible entries until valid roots are supplied.
-	 * Sub-classes should not call this super constructor.
+	 * Subclasses should not call this super constructor.
 	 */
 	UToroDatabase()
 		: RootTag(FGameplayTag::EmptyTag)
