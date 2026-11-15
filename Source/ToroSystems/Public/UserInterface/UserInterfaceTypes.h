@@ -2,7 +2,13 @@
 
 #pragma once
 
+#include "NativeGameplayTags.h"
 #include "UserInterfaceTypes.generated.h"
+
+namespace UserInterfaceTags
+{
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Flag_SuppressSubtitles);
+}
 
 /** Selects the master UI container used for an entry. */
 UENUM(BlueprintType)
