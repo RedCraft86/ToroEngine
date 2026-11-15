@@ -4,7 +4,7 @@
 #include "CommonActivatableWidget.h"
 #include "GameFramework/PlayerController.h"
 #include "UserInterface/UserInterfaceConfig.h"
-#include "UserInterface/Widgets/ToroAutoWidget.h"
+#include "UserInterface/Bases/ToroAutoWidget.h"
 #include "UserInterface/ToroMasterWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utilities/ToroLogging.h"

@@ -10,7 +10,7 @@
 #include "CommonActivatableWidget.h"
 #include "Blueprint/UserWidgetPool.h"
 #include "Input/UIActionBindingHandle.h"
-#include "UserInterface/Widgets/ToroUserWidget.h"
+#include "UserInterface/Bases/ToroUserWidget.h"
 #include "ToroMasterWidgetOverlay.generated.h"
 
 /**

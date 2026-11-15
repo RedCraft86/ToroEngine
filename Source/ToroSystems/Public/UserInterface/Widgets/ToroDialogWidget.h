@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ToroMenuWidget.h"
+#include "UserInterface/Bases/ToroMenuWidget.h"
 #include "ToroDialogWidget.generated.h"
 
 class UTextBlock;

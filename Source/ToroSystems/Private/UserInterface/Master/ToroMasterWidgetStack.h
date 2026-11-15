@@ -3,7 +3,7 @@
 #pragma once
 
 #include "ToroMasterWidgetOverlay.h"
-#include "UserInterface/Widgets/ToroUserWidget.h"
+#include "UserInterface/Bases/ToroUserWidget.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
 #include "ToroMasterWidgetStack.generated.h"
 

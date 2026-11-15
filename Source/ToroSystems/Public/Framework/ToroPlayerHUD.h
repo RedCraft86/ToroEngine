@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameFramework/HUD.h"
-#include "UserInterface/Widgets/ToroAutoWidget.h"
+#include "UserInterface/Bases/ToroAutoWidget.h"
 #include "ToroPlayerHUD.generated.h"
 
 class UToroMasterWidget;
