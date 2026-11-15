@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/HUD.h"
+#include "UserInterface/Widgets/ToroAutoWidget.h"
 #include "ToroPlayerHUD.generated.h"
 
 class UToroMasterWidget;
@@ -49,6 +50,10 @@ public:
 		return Cast<T>(Get(ContextObject, T::StaticClass(), PlayerIdx));
 	}
 
+	/** Checks to see if the MasterWidget is created and active. */
+	UFUNCTION(BlueprintPure, Category = HUD)
+	[[nodiscard]] bool HasMasterWidget() const;
+
 	/**
 	 * Adds a pooled activatable entry, or returns the selected layer's existing registered class entry.
 	 * @param Layer Destination gameplay, menu, or forced-overlay container.
@@ -85,14 +90,36 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = HUD)
 	void RemoveWidgetByInstance(EToroMasterWidgetType Layer, UCommonActivatableWidget* Instance) const;
 
-	/** Checks to see if the MasterWidget is created and active. */
-	UFUNCTION(BlueprintPure, Category = HUD)
-	[[nodiscard]] bool HasMasterWidget() const;
+	/**
+	 * Retrieves the first valid auto-created widget whose class matches or derives from the requested class.
+	 * @param Class Class to find; abstract base classes are supported. Invalid classes return nullptr.
+	 * @return The matching widget, or nullptr if unavailable. With multiple matches, selection is unspecified;
+	 *         exact class matches have no priority.
+	 */
+	UFUNCTION(BlueprintPure, Category = HUD, meta = (DeterminesOutputType = Class))
+	[[nodiscard]] UToroAutoWidget* GetAutoWidget(TSubclassOf<UToroAutoWidget> Class) const;
+
+	/**
+	 * Retrieves an auto-created widget as the requested type, including configured Blueprint subclasses.
+	 * @tparam T Type derived from UToroAutoWidget.
+	 * @return The first valid matching widget, or nullptr if unavailable. With multiple matches, selection is
+	 *         unspecified; exact class matches have no priority.
+	 */
+	template<typename T = UToroAutoWidget>
+	[[nodiscard]] T* GetAutoWidget() const
+	{
+		static_assert(TIsDerivedFrom<T, UToroAutoWidget>::Value,
+			"T must derive from UToroAutoWidget");
+		return Cast<T>(GetAutoWidget(T::StaticClass()));
+	}
 
 protected:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UToroMasterWidget> MasterWidget;
+
+	UPROPERTY(Transient)
+	TSet<TObjectPtr<UToroAutoWidget>> AutoWidgets;
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

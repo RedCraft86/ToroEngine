@@ -6,6 +6,7 @@
 
 class UToroSettingsWidget;
 class UToroDialogWidget;
+class UToroAutoWidget;
 
 USTRUCT(BlueprintType)
 struct TOROSYSTEMS_API FUserInterfaceConfig final
@@ -19,6 +20,9 @@ struct TOROSYSTEMS_API FUserInterfaceConfig final
 
 	UPROPERTY(EditAnywhere, Category = UserInterface, NoClear, meta = (AllowAbstract = false))
 	TSoftClassPtr<UToroDialogWidget> DialogWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = UserInterface, NoClear, meta = (AllowAbstract = false))
+	TSet<TSoftClassPtr<UToroAutoWidget>> AutoWidgetClasses;
 
 	[[nodiscard]] static const FUserInterfaceConfig* Get();
 };

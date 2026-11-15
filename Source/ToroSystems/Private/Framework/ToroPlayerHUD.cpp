@@ -3,8 +3,11 @@
 #include "Framework/ToroPlayerHUD.h"
 #include "CommonActivatableWidget.h"
 #include "GameFramework/PlayerController.h"
+#include "UserInterface/UserInterfaceConfig.h"
+#include "UserInterface/Widgets/ToroAutoWidget.h"
 #include "UserInterface/ToroMasterWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "Utilities/ToroLogging.h"
 
 AToroPlayerHUD::AToroPlayerHUD()
 {
@@ -25,6 +28,11 @@ AHUD* AToroPlayerHUD::Get(const UObject* ContextObject, TSubclassOf<AHUD> Class,
 	const APlayerController* PC = UGameplayStatics::GetPlayerController(ContextObject, PlayerIdx);
 	AHUD* HUD = IsValid(PC) ? PC->GetHUD() : nullptr;
 	return IsValid(HUD) && (!IsValid(Class) || HUD->IsA(Class)) ? HUD : nullptr;
+}
+
+bool AToroPlayerHUD::HasMasterWidget() const
+{
+	return IsValid(MasterWidget) && MasterWidget->IsInViewport();
 }
 
 UCommonActivatableWidget* AToroPlayerHUD::AddWidgetByClass(EToroMasterWidgetType Layer,
@@ -58,9 +66,22 @@ void AToroPlayerHUD::RemoveWidgetByInstance(EToroMasterWidgetType Layer, UCommon
 	}
 }
 
-bool AToroPlayerHUD::HasMasterWidget() const
+UToroAutoWidget* AToroPlayerHUD::GetAutoWidget(TSubclassOf<UToroAutoWidget> Class) const
 {
-	return IsValid(MasterWidget) && MasterWidget->IsInViewport();
+	if (!IsValid(Class))
+	{
+		return nullptr;
+	}
+
+	for (UToroAutoWidget* Widget : AutoWidgets)
+	{
+		if (IsValid(Widget) && Widget->IsA(Class))
+		{
+			return Widget;
+		}
+	}
+
+	return nullptr;
 }
 
 void AToroPlayerHUD::BeginPlay()
@@ -72,16 +93,51 @@ void AToroPlayerHUD::BeginPlay()
 		{
 			MasterWidget->AddToPlayerScreen();
 		}
+
+		const FUserInterfaceConfig* UIConfig = FUserInterfaceConfig::Get();
+		if (UIConfig && HasMasterWidget())
+		{
+			for (const TSoftClassPtr<UToroAutoWidget>& SoftClass : UIConfig->AutoWidgetClasses)
+			{
+				const TSubclassOf<UToroAutoWidget>& Class = SoftClass.LoadSynchronous();
+				if (!IsValid(Class) || Class->HasAnyClassFlags(CLASS_Abstract))
+				{
+					continue;
+				}
+
+				UToroAutoWidget* Widget = CreateWidget<UToroAutoWidget>(PC, Class);
+				if (!IsValid(Widget))
+				{
+					TORO_LOG_ERROR(TEXT("Failed to create widget for %s"), *Class->GetPathName());
+					continue;
+				}
+
+				MasterWidget->AddByInstance(Widget->GetMasterWidgetLayer(), Widget);
+				AutoWidgets.Add(Widget);
+			}
+		}
 	}
+
 	Super::BeginPlay();
 }
 
 void AToroPlayerHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	for (auto It = AutoWidgets.CreateIterator(); It; ++It)
+	{
+		if (IsValid(*It))
+		{
+			(*It)->RemoveFromParent();
+		}
+
+		It.RemoveCurrent();
+	}
+
 	if (MasterWidget)
 	{
 		MasterWidget->RemoveFromParent();
 		MasterWidget = nullptr;
 	}
+
 	Super::EndPlay(EndPlayReason);
 }
