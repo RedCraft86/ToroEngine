@@ -2,10 +2,14 @@
 
 #include "UserSettings/Widgets/Rows/ToroSettingWidgetRow.h"
 #include "UserSettings/Widgets/ToroSettingsWidget.h"
+#include "Framework/Application/SlateApplication.h"
 #include "Components/TextBlock.h"
 #include "CommonButtonBase.h"
 
-UToroSettingWidgetRow::UToroSettingWidgetRow(): bRefreshing(false)
+UToroSettingWidgetRow::UToroSettingWidgetRow()
+	: bRefreshing(false)
+	, bShowingMetadata(false)
+	, bDanglingMetadata(false)
 {
 	SetVisibilityInternal(ESlateVisibility::Visible);
 }
@@ -48,6 +52,9 @@ void UToroSettingWidgetRow::ClearSetting()
 		OwnerWidget->UserSettings->GetOnUIUpdate().RemoveDynamic(this, &UToroSettingWidgetRow::RefreshUI);
 	}
 
+	bDanglingMetadata = false;
+	SetShowMetadata(false);
+
 	OwnerWidget.Reset();
 	InitSetting(nullptr);
 }
@@ -69,20 +76,53 @@ void UToroSettingWidgetRow::NativeConstruct()
 	RefreshUI();
 }
 
+void UToroSettingWidgetRow::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+	if (bDanglingMetadata && !MyGeometry.IsUnderLocation(FSlateApplication::Get().GetCursorPos()))
+	{
+		SetShowMetadata(false);
+	}
+}
+
 void UToroSettingWidgetRow::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
-	if (OwnerWidget.IsValid())
-	{
-		OwnerWidget->MetadataStack->Add(this, Metadata);
-	}
+	bDanglingMetadata = false;
+	SetShowMetadata(true);
 }
 
 void UToroSettingWidgetRow::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseLeave(InMouseEvent);
+	if (!GetCachedGeometry().IsUnderLocation(InMouseEvent.GetScreenSpacePosition()))
+	{
+		SetShowMetadata(false);
+	}
+	else
+	{
+		bDanglingMetadata = true;
+	}
+}
+
+void UToroSettingWidgetRow::SetShowMetadata(bool bHovered)
+{
+	if (bShowingMetadata == bHovered)
+	{
+		return;
+	}
+
+	bShowingMetadata = bHovered;
 	if (OwnerWidget.IsValid())
 	{
-		OwnerWidget->MetadataStack->Remove(this);
+		if (bHovered)
+		{
+			OwnerWidget->MetadataStack->Add(this, Metadata);
+		}
+		else
+		{
+			bDanglingMetadata = false;
+			OwnerWidget->MetadataStack->Remove(this);
+		}
 	}
 }

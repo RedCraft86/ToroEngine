@@ -41,12 +41,17 @@ protected:
 	virtual void OnResetClicked();
 
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 
 private:
 
+	bool bShowingMetadata;
+	bool bDanglingMetadata;
 	FUserSettingMetadata Metadata;
 	TWeakObjectPtr<UToroSettingsWidget> OwnerWidget;
 	const FUserSettingEntry* Entry = nullptr;
+
+	void SetShowMetadata(bool bHovered);
 };
