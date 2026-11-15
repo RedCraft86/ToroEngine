@@ -8,6 +8,7 @@
 #include "UserSettings/Registration/UserSettingsBuilder.h"
 #include "UserInterface/Elements/CommonTextButton.h"
 #include "UserInterface/UserInterfaceConfig.h"
+#include "UserInterface/UserInterfaceTypes.h"
 #include "Framework/ToroPlayerHUD.h"
 #include "Components/ExpandableArea.h"
 #include "Components/PanelWidget.h"
