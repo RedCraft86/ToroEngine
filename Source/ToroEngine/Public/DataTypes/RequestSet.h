@@ -11,7 +11,9 @@
 
 /**
  * Tracks one request per UObject without retaining its requester.
- * Create through Make(); access and destruction must occur on the game thread.
+ * Make() and initial listener setup are safe during isolated UObject construction, including async loading.
+ * Data access requires the game thread. GC cleanup registers on the first valid addition;
+ * after registration, destruction also requires the game thread. Instances must not be accessed concurrently.
  * Invalid weak references are pruned after garbage collection and successful additions/removals.
  * Reads do not prune entries, so stored counts may include invalid requesters until cleanup.
  * Changes notify listeners synchronously unless suppressed by bDiscrete; suppressed notifications are not deferred.
@@ -28,6 +30,11 @@ class FRequestSet final : public TSharedFromThis<FRequestSet>
 	void Initialize()
 	{
 		REQUEST_SET_CHECK_GAME_THREAD();
+		if (GCHandle.IsValid())
+		{
+			return;
+		}
+
 		GCHandle = FCoreUObjectDelegates::GetPostGarbageCollect().AddSP(
 			AsShared(), &FRequestSet::Cleanup, false
 		);
@@ -54,17 +61,17 @@ public:
 
 	~FRequestSet()
 	{
-		REQUEST_SET_CHECK_GAME_THREAD();
-		FCoreUObjectDelegates::GetPostGarbageCollect().Remove(GCHandle);
-		OnChangedEvent.Clear();
-		GCHandle.Reset();
+		if (GCHandle.IsValid())
+		{
+			REQUEST_SET_CHECK_GAME_THREAD();
+			FCoreUObjectDelegates::GetPostGarbageCollect().Remove(GCHandle);
+		}
 	}
 
-	/** Creates an empty, shared-owned request set with automatic GC cleanup on the game thread. */
+	/** Creates an empty request set; automatic GC cleanup starts on its first valid addition. */
 	[[nodiscard]] static TSharedRef<FRequestSet> Make()
 	{
 		TSharedRef<FRequestSet> NewSet = MakeShareable(new FRequestSet());
-		NewSet->Initialize();
 		return NewSet;
 	}
 
@@ -78,11 +85,15 @@ public:
 	 * Provides subscription access to synchronous change notifications.
 	 * Successful additions/removals notify after pruning invalid requesters. Clear and Cleanup
 	 * notify only when entries are removed. Discrete operations suppress their notification.
-	 * Register and unregister listeners on the game thread.
+	 * Initial binding may occur during isolated construction; subsequent listener changes use the game thread.
 	 */
 	[[nodiscard]] FORCEINLINE FSimpleMulticastDelegate::RegistrationType& OnChanged()
 	{
-		REQUEST_SET_CHECK_GAME_THREAD();
+		if (GCHandle.IsValid())
+		{
+			REQUEST_SET_CHECK_GAME_THREAD();
+		}
+
 		return OnChangedEvent;
 	}
 
@@ -125,6 +136,7 @@ public:
 			return false;
 		}
 
+		Initialize();
 		InnerSet.Add(Requester);
 		CleanupInternal();
 		if (!bDiscrete)

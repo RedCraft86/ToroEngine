@@ -12,7 +12,9 @@
 
 /**
  * Shares lifecycle and change notifications for one stored contribution per weak UObject source.
- * Create concrete accumulators through their Make() factories; access and destruction require the game thread.
+ * Make() and initial listener setup are safe during isolated UObject construction, including async loading.
+ * Data access requires the game thread. GC cleanup registers on the first valid addition;
+ * after registration, destruction also requires the game thread. Instances must not be accessed concurrently.
  * Sources are not retained. Invalid sources are pruned after GC and successful additions/removals.
  * Reads do not prune entries and can include stale contributions until cleanup.
  * Notifications are synchronous; bDiscrete suppresses an operation's notification without deferring it.
@@ -33,6 +35,11 @@ protected:
 	void Initialize()
 	{
 		ACCUMULATORS_CHECK_GAME_THREAD();
+		if (GCHandle.IsValid())
+		{
+			return;
+		}
+
 		GCHandle = FCoreUObjectDelegates::GetPostGarbageCollect().AddSP(
 			this->AsShared(), &TAccumulatorBase::Cleanup, false
 		);
@@ -47,24 +54,30 @@ public:
 
 	virtual ~TAccumulatorBase()
 	{
-		ACCUMULATORS_CHECK_GAME_THREAD();
-		FCoreUObjectDelegates::GetPostGarbageCollect().Remove(GCHandle);
-		OnChangedEvent.Clear();
-		GCHandle.Reset();
+		if (GCHandle.IsValid())
+		{
+			ACCUMULATORS_CHECK_GAME_THREAD();
+			FCoreUObjectDelegates::GetPostGarbageCollect().Remove(GCHandle);
+		}
 	}
 
 	TAccumulatorBase(const TAccumulatorBase&) = delete;
 	TAccumulatorBase& operator=(const TAccumulatorBase&) = delete;
 
 	/**
-	 * Provides game-thread subscription access to synchronous change notifications.
+	 * Provides subscription access to synchronous change notifications.
+	 * Initial binding may occur during isolated construction; subsequent listener changes use the game thread.
 	 * Accepted additions, including replacements, notify after pruning without comparing values.
 	 * Successful removals notify after pruning; Clear and Cleanup notify only if entries were removed.
 	 * Discrete operations suppress their notification.
 	 */
 	[[nodiscard]] FORCEINLINE FSimpleMulticastDelegate::RegistrationType& OnChanged()
 	{
-		ACCUMULATORS_CHECK_GAME_THREAD();
+		if (GCHandle.IsValid())
+		{
+			ACCUMULATORS_CHECK_GAME_THREAD();
+		}
+
 		return OnChangedEvent;
 	}
 
@@ -122,6 +135,7 @@ public:
 			return false;
 		}
 
+		Initialize();
 		AddInternal(Source, Value);
 		CleanupInternal();
 		if (!bDiscrete)
@@ -198,7 +212,7 @@ public:
  * Stores one contribution per weak UObject source in insertion order.
  * Replacing a value preserves its position; removal and cleanup preserve surviving order.
  * Removing and re-adding a source places its contribution at the end.
- * Create through Make(); access and destruction require the game thread.
+ * Create through Make(); construction and lifetime rules follow TAccumulatorBase.
  * @tparam T Copy-constructible and copy-assignable contribution type.
  */
 template<typename T>
@@ -244,11 +258,10 @@ class TOrderedAccumulator final : public TAccumulatorBase<T>
 
 public:
 
-	/** Creates an empty, shared-owned ordered accumulator with automatic GC cleanup on the game thread. */
+	/** Creates an empty ordered accumulator; automatic GC cleanup starts on its first valid addition. */
 	[[nodiscard]] static TSharedRef<TOrderedAccumulator<T>> Make()
 	{
 		TSharedRef<TOrderedAccumulator<T>> NewAccumulator = MakeShareable(new TOrderedAccumulator<T>());
-		NewAccumulator->Initialize();
 		return NewAccumulator;
 	}
 
@@ -325,7 +338,7 @@ public:
 /**
  * Stores one contribution per weak UObject source without an iteration-order guarantee.
  * Adding an existing source replaces its value. Invalid sources are pruned automatically after GC.
- * Create through Make(); access and destruction require the game thread.
+ * Create through Make(); construction and lifetime rules follow TAccumulatorBase.
  * @tparam T Copy-constructible and copy-assignable contribution type.
  */
 template<typename T>
@@ -373,11 +386,10 @@ class TUnorderedAccumulator final : public TAccumulatorBase<T>
 
 public:
 
-	/** Creates an empty, shared-owned unordered accumulator with automatic GC cleanup on the game thread. */
+	/** Creates an empty unordered accumulator; automatic GC cleanup starts on its first valid addition. */
 	[[nodiscard]] static TSharedRef<TUnorderedAccumulator<T>> Make()
 	{
 		TSharedRef<TUnorderedAccumulator<T>> NewAccumulator = MakeShareable(new TUnorderedAccumulator<T>());
-		NewAccumulator->Initialize();
 		return NewAccumulator;
 	}
 
