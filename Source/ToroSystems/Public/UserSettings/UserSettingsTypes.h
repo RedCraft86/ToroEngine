@@ -64,11 +64,6 @@ namespace UserSettingsTags
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Audio_EffectsVolume);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Audio_DialogueVolume);
 
-	// Debug
-	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debug);
-	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debug_ShowFrameRate);
-	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debug_ShowInvisibleWalls);
-
 	inline bool IsValid(const FGameplayTag& InTag)
 	{
 		return InTag.IsValid()
@@ -77,8 +72,7 @@ namespace UserSettingsTags
 			&& InTag != Camera.GetTag()
 			&& InTag != Display.GetTag()
 			&& InTag != Graphics.GetTag()
-			&& InTag != Audio.GetTag()
-			&& InTag != Debug.GetTag();
+			&& InTag != Audio.GetTag();
 	}
 
 	inline bool IsCategory(const FGameplayTag& InTag, const FNativeGameplayTag& Category)

@@ -49,9 +49,4 @@ namespace UserSettingsTags
 	UE_DEFINE_GAMEPLAY_TAG(Audio_MusicVolume, "UserSettings.Audio.MusicVolume");
 	UE_DEFINE_GAMEPLAY_TAG(Audio_EffectsVolume, "UserSettings.Audio.EffectsVolume");
 	UE_DEFINE_GAMEPLAY_TAG(Audio_DialogueVolume, "UserSettings.Audio.DialogueVolume");
-
-	// Debug
-	UE_DEFINE_GAMEPLAY_TAG(Debug, "UserSettings.Debug");
-	UE_DEFINE_GAMEPLAY_TAG(Debug_ShowFrameRate, "UserSettings.Debug.ShowFrameRate");
-	UE_DEFINE_GAMEPLAY_TAG(Debug_ShowInvisibleWalls, "UserSettings.Debug.ShowInvisibleWalls");
 }
