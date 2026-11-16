@@ -4,7 +4,6 @@
 
 #include "Misc/Optional.h"
 #include "Templates/Identity.h"
-#include "GameplayTagContainer.h"
 #include "UserSettings/Registration/UserSettingMetadata.h"
 
 class UToroGameUserSettings;
@@ -29,7 +28,7 @@ public:
 	FUserSettingEntry(const FUserSettingEntry&) = delete;
 	FUserSettingEntry& operator=(const FUserSettingEntry&) = delete;
 
-	explicit FUserSettingEntry(const FGameplayTag& InKey)
+	explicit FUserSettingEntry(const FName& InKey)
 		: Key(InKey)
 	{}
 
@@ -47,12 +46,12 @@ public:
 		return !EnabledPredicate || EnabledPredicate();
 	}
 
-	FGameplayTag GetKey() const { return Key; }
+	FName GetKey() const { return Key; }
 	const FUserSettingMetadata& GetMetadata() const { return Metadata; }
 
 protected:
 
-	FGameplayTag Key;
+	FName Key;
 	FUserSettingMetadata Metadata;
 	TFunction<bool()> EnabledPredicate;
 };
@@ -62,7 +61,7 @@ class TUserSettingEntry : public FUserSettingEntry
 {
 public:
 
-	explicit TUserSettingEntry(const FGameplayTag& InKey)
+	explicit TUserSettingEntry(const FName& InKey)
 		: FUserSettingEntry(InKey)
 	{}
 
@@ -114,7 +113,7 @@ public:
 
 	using FComparator = TFunction<bool(const T&, const T&)>;
 
-	explicit TUserValueSetting(FGameplayTag Key)
+	explicit TUserValueSetting(FName Key)
 		: TUserSettingEntry<Derived>(Key)
 	{}
 

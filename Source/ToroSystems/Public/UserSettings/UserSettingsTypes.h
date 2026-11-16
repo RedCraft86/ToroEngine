@@ -10,6 +10,10 @@ namespace UserSettingFlags
 {
 	inline constexpr TCHAR ShowFrameRate[]		= TEXT("r.Debug.ShowFrameRate");
 	inline constexpr TCHAR ShowInvisibleWalls[]	= TEXT("r.Debug.ShowInvisibleWalls");
+
+	inline TArray<FString> AllToggleable = {
+		ShowFrameRate, ShowInvisibleWalls
+	};
 }
 
 namespace UserSettingsTags

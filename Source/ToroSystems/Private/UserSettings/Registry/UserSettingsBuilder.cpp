@@ -513,13 +513,13 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				.Delta(1.0f)
 				.NumDecimal(0)
 				.BindCallbacks(&Settings,
-					[](const UToroGameUserSettings& Target, const FUserSettingEntry& Entry)
+					[Key](const UToroGameUserSettings& Target, const FUserSettingEntry&)
 					{
-						return Target.GetAudioVolume(Entry.GetKey());
+						return Target.GetAudioVolume(Key);
 					},
-					[](UToroGameUserSettings& Target, const FUserSettingEntry& Entry, const float& Value)
+					[Key](UToroGameUserSettings& Target, const FUserSettingEntry&, const float& Value)
 					{
-						Target.SetAudioVolume(Entry.GetKey(), Value);
+						Target.SetAudioVolume(Key, Value);
 					}
 				);
 		};
@@ -563,9 +563,15 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		FlagSection.GetMetadata().Description = LOCTEXT("FlagsSectionDescription", "Adjust internal developer flags.");
 		FlagSection.GetMetadata().Impact = EUserSettingImpact::None;
 
-		const auto AddToggleFlag = [&Settings, &FlagSection](FGameplayTag Key, FText Desc, const FString& Flag)
+		for (const FString& Flag : UserSettingFlags::AllToggleable)
 		{
-			FlagSection.AddSelector<int32>(Key)
+			FText Desc = LOCTEXT("FlagSettingDefaultHelp", "Flag that toggles something... or nothing");
+			if (const IConsoleVariable* CVar = UToroCVarLibrary::FindCVar(Flag))
+			{
+				Desc = FText::FromString(CVar->GetHelp());
+			}
+
+			FlagSection.AddSelector<int32>(*Flag)
 				.DisplayName(FText::FromString(Flag))
 				.Description(MoveTemp(Desc))
 				.Default(0)
@@ -582,19 +588,7 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 						UToroCVarLibrary::SetCVarInt(Flag, Value != 0);
 					}
 				);
-		};
-
-		AddToggleFlag(
-			Debug_ShowFrameRate,
-			LOCTEXT("ShowFrameRateFlagHelp", "Shows the game's current frame rate and frame time."),
-			UserSettingFlags::ShowFrameRate
-		);
-
-		AddToggleFlag(
-			Debug_ShowInvisibleWalls,
-			LOCTEXT("ShowInvisibleWallsFlagHelp", "Shows the invisible wall primitives placed around the map."),
-			UserSettingFlags::ShowInvisibleWalls
-		);
+		}
 	}
 }
 #undef LOCTEXT_NAMESPACE

@@ -11,7 +11,7 @@ public:
 	template <typename ObjectType>
 	using FExecuter = TFunction<void(ObjectType&, const FUserSettingEntry&)>;
 
-	explicit FUserSettingAction(FGameplayTag Key)
+	explicit FUserSettingAction(FName Key)
 		: TUserSettingEntry(Key)
 	{}
 

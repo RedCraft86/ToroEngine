@@ -8,7 +8,7 @@ class FUserSettingToggle final : public TUserValueSetting<FUserSettingToggle, bo
 {
 public:
 
-	explicit FUserSettingToggle(FGameplayTag Key)
+	explicit FUserSettingToggle(FName Key)
 		: TUserValueSetting(Key)
 	{}
 

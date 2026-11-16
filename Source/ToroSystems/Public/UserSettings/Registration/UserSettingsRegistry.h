@@ -17,13 +17,8 @@ class FUserSettingsSection
     TArray<TUniquePtr<FUserSettingEntry>> Entries;
 
 	template<typename EntryType>
-	EntryType& AddEntry(FGameplayTag Key)
+	EntryType& AddEntry(FName Key)
 	{
-		checkf(UserSettingsTags::IsValid(Key),
-			TEXT("Provided key %s is not a derivative of UserSetting tags"),
-			*Key.ToString()
-		);
-
 		checkf(!Entries.ContainsByPredicate([Key](const TUniquePtr<FUserSettingEntry>& Entry)
 		{
 			return Entry->GetKey() == Key;
@@ -73,25 +68,46 @@ public:
 		return Metadata;
 	}
 
-	FUserSettingSlider& AddSlider(FGameplayTag Key)
+	FUserSettingToggle& AddToggle(FName Key)
 	{
-		return AddEntry<FUserSettingSlider>(Key);
+		return AddEntry<FUserSettingToggle>(Key);
 	}
 
 	FUserSettingToggle& AddToggle(FGameplayTag Key)
 	{
-		return AddEntry<FUserSettingToggle>(Key);
+		return AddToggle(Key.GetTagName());
+	}
+
+	FUserSettingSlider& AddSlider(FName Key)
+	{
+		return AddEntry<FUserSettingSlider>(Key);
+	}
+
+	FUserSettingSlider& AddSlider(FGameplayTag Key)
+	{
+		return AddSlider(Key.GetTagName());
+	}
+
+	template<typename T>
+	TUserSettingSelection<T>& AddSelector(FName Key)
+	{
+		return AddEntry<TUserSettingSelection<T>>(Key);
 	}
 
 	template<typename T>
 	TUserSettingSelection<T>& AddSelector(FGameplayTag Key)
 	{
-		return AddEntry<TUserSettingSelection<T>>(Key);
+		return AddSelector<T>(Key.GetTagName());
+	}
+
+	FUserSettingAction& AddAction(FName Key)
+	{
+		return AddEntry<FUserSettingAction>(Key);
 	}
 
 	FUserSettingAction& AddAction(FGameplayTag Key)
 	{
-		return AddEntry<FUserSettingAction>(Key);
+		return AddAction(Key.GetTagName());
 	}
 };
 

@@ -14,7 +14,7 @@ class FUserSettingSlider final : public TUserValueSetting<FUserSettingSlider, fl
 {
 public:
 
-	explicit FUserSettingSlider(FGameplayTag Key)
+	explicit FUserSettingSlider(FName Key)
 		: TUserValueSetting(Key)
 	{}
 

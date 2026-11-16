@@ -30,7 +30,7 @@ public:
 		FText Label;
 	};
 
-	explicit TUserSettingSelection(FGameplayTag Key)
+	explicit TUserSettingSelection(FName Key)
 		: TUserValueSetting<TUserSettingSelection<T>, T>(Key)
 	{}
 
