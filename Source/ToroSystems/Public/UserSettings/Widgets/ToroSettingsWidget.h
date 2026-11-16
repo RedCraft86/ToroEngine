@@ -100,6 +100,7 @@ private:
 	void OnPageChanged(UWidget* Page, int32 Index) const;
 	void OnMetadataChanged() const;
 
+	virtual bool NativeOnHandleBackAction() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 };

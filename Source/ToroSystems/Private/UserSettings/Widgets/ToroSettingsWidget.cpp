@@ -289,6 +289,16 @@ void UToroSettingsWidget::OnMetadataChanged() const
 	}
 }
 
+bool UToroSettingsWidget::NativeOnHandleBackAction()
+{
+	if (UserSettings.IsValid())
+	{
+		UserSettings->ApplySettings(false);
+	}
+
+	return Super::NativeOnHandleBackAction();
+}
+
 void UToroSettingsWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
