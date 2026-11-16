@@ -2,12 +2,11 @@
 
 #include "UserInterface/Widgets/ToroFrameRateWidget.h"
 #include "UserSettings/ToroGameUserSettings.h"
-#include "UserSettings/UserSettingsTypes.h"
 #include "Components/TextBlock.h"
 #include "HAL/IConsoleManager.h"
 
 static TAutoConsoleVariable<int32> CVarShowFrameRate(
-	UserSettingFlags::ShowFrameRate,
+	TEXT("r.Debug.ShowFrameRate"),
 	0,
 	TEXT("Show the frame-rate widget. 0: off, 1: on"),
 	ECVF_Default
