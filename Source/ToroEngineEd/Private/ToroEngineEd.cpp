@@ -35,7 +35,6 @@
 #include "DataTypes/WrappedTypes.h"
 #include "DataTypes/InlineCurves.h"
 #include "DataTypes/TaggedIdentity.h"
-#include "DataTypes/SimpleCooldown.h"
 #include "AsyncMessageId.h"
 
 void FToroEngineEdModule::StartupModule()
@@ -64,7 +63,6 @@ void FToroEngineEdModule::StartupModule()
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FInlineVectorCurve>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FInlineColorCurve>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FTaggedIdentity>();
-	FToroStructCustomization::Register<FToroInlineStructCustomization, FSimpleCooldown>();
 	FToroStructCustomization::Register<FToroInlineStructCustomization, FAsyncMessageId>();
 	FToroStructCustomization::Register<FToroPropertyButtonCustomization, FToroPropertyButton>();
 
