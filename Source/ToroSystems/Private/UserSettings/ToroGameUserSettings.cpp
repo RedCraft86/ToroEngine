@@ -221,66 +221,6 @@ float UToroGameUserSettings::GetAudioVolume(FGameplayTag Channel) const
 	return 100.0f;
 }
 
-void UToroGameUserSettings::AddUserFlagEntry(const FString Key)
-{
-	FUserDebugFlag DebugFlag(Key);
-	if (!DebugFlag.IsValid())
-	{
-		return;
-	}
-
-	if (!DebugFlags.ContainsByPredicate(
-		[DebugFlag](const FUserDebugFlag& Flag)
-		{
-			return Flag.Key == DebugFlag.Key;
-		}))
-	{
-		DebugFlags.Emplace(DebugFlag);
-	}
-}
-
-void UToroGameUserSettings::SetUserFlagEnabled(const FString Key, bool bEnabled)
-{
-	FUserDebugFlag DebugFlag(Key, bEnabled);
-	if (!DebugFlag.IsValid())
-	{
-		return;
-	}
-
-	if (FUserDebugFlag* FoundFlag = DebugFlags.FindByPredicate(
-		[DebugFlag](const FUserDebugFlag& Flag)
-		{
-			return Flag.Key == DebugFlag.Key;
-		}))
-	{
-		FoundFlag->bEnabled = bEnabled;
-		FoundFlag->ApplyCVar();
-		return;
-	}
-
-	DebugFlags.Emplace_GetRef(DebugFlag).ApplyCVar();
-}
-
-bool UToroGameUserSettings::IsUserFlagEnabled(const FString Key) const
-{
-	FUserDebugFlag DebugFlag(Key);
-	if (!DebugFlag.IsValid())
-	{
-		return false;
-	}
-
-	if (const FUserDebugFlag* FoundFlag = DebugFlags.FindByPredicate(
-		[DebugFlag](const FUserDebugFlag& Flag)
-		{
-			return Flag.Key == DebugFlag.Key;
-		}))
-	{
-		return FoundFlag->bEnabled;
-	}
-
-	return DebugFlag.bEnabled;
-}
-
 void UToroGameUserSettings::Initialize(UGameInstance& GameInst)
 {
 	if (!GameInstance.IsValid())
@@ -431,7 +371,6 @@ void UToroGameUserSettings::SetToDefaults()
 	ImageFidelityMode = EImageFidelityMode::TAA;
 	TSRScreenPercentage = 100.0f;
 	AudioVolumes.Reset();
-	DebugFlags.Reset();
 }
 
 void UToroGameUserSettings::ValidateSettings()
@@ -455,14 +394,6 @@ void UToroGameUserSettings::ValidateSettings()
 		else
 		{
 			It->Volume = FixupFloatValue(It->Volume, 0.0f, 100.0f, 100.0f);
-		}
-	}
-
-	for (auto It = DebugFlags.CreateIterator(); It; ++It)
-	{
-		if (!It->IsValid())
-		{
-			It.RemoveCurrentSwap();
 		}
 	}
 
@@ -504,11 +435,6 @@ void UToroGameUserSettings::ApplyNonResolutionSettings()
 		{
 			ApplyAudioVolume(Channel.Key);
 		}
-	}
-
-	for (const FUserDebugFlag& Flag : DebugFlags)
-	{
-		Flag.ApplyCVar();
 	}
 
 	OnSettingsAppliedEvent.Broadcast();

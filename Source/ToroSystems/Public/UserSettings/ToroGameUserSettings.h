@@ -131,15 +131,6 @@ public:
 	UFUNCTION(BlueprintPure, Category = Settings)
 	float GetAudioVolume(UPARAM(meta = (Categories = "UserSettings.Audio")) FGameplayTag Channel) const;
 
-	UFUNCTION(BlueprintCallable, Category = Settings)
-	void AddUserFlagEntry(const FString Key);
-
-	UFUNCTION(BlueprintCallable, Category = Settings)
-	void SetUserFlagEnabled(const FString Key, bool bEnabled);
-
-	UFUNCTION(BlueprintPure, Category = Settings)
-	bool IsUserFlagEnabled(const FString Key) const;
-
 	[[nodiscard]] const FScalabilityBaseline& GetScalabilityBaseline() const
 	{
 		return ScalabilityBaseline;
@@ -208,9 +199,6 @@ private:
 
 	UPROPERTY(Config)
 	TArray<FUserAudioVolume> AudioVolumes;
-
-	UPROPERTY(Config)
-	TArray<FUserDebugFlag> DebugFlags;
 
 	UPROPERTY(Config)
 	FScalabilityBaseline ScalabilityBaseline;
