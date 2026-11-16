@@ -10,6 +10,8 @@ FUserInterfaceConfig::FUserInterfaceConfig()
 
 	AutoWidgetClasses = {
 		TSoftClassPtr<UToroAutoWidget>(FSoftClassPath(
+			TEXT("/ToroEngine/UserInterface/WBP_ToroNotify.WBP_ToroNotify_C"))),
+		TSoftClassPtr<UToroAutoWidget>(FSoftClassPath(
 			TEXT("/ToroEngine/UserInterface/WBP_ToroSubtitle.WBP_ToroSubtitle_C"))),
 	};
 }
