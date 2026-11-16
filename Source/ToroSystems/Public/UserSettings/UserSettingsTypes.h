@@ -9,6 +9,7 @@
 namespace UserSettingFlags
 {
 	inline constexpr TCHAR ShowFrameRate[]		= TEXT("r.Debug.ShowFrameRate");
+	inline constexpr TCHAR ShowInvisibleWalls[]	= TEXT("r.Debug.ShowInvisibleWalls");
 }
 
 namespace UserSettingsTags
@@ -59,6 +60,11 @@ namespace UserSettingsTags
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Audio_EffectsVolume);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Audio_DialogueVolume);
 
+	// Debug
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debug);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debug_ShowFrameRate);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debug_ShowInvisibleWalls);
+
 	inline bool IsValid(const FGameplayTag& InTag)
 	{
 		return InTag.IsValid()
@@ -67,7 +73,8 @@ namespace UserSettingsTags
 			&& InTag != Camera.GetTag()
 			&& InTag != Display.GetTag()
 			&& InTag != Graphics.GetTag()
-			&& InTag != Audio.GetTag();
+			&& InTag != Audio.GetTag()
+			&& InTag != Debug.GetTag();
 	}
 
 	inline bool IsCategory(const FGameplayTag& InTag, const FNativeGameplayTag& Category)
@@ -204,26 +211,4 @@ struct TOROSYSTEMS_API FUserAudioVolume final
 		: Channel(InChannel)
 		, Volume(InVolume)
 	{}
-};
-
-USTRUCT(BlueprintInternalUseOnly)
-struct TOROSYSTEMS_API FUserDebugFlag final
-{
-	GENERATED_BODY()
-
-	UPROPERTY() FString Key;
-	UPROPERTY() bool bEnabled;
-
-	FUserDebugFlag()
-		: Key(FString())
-		, bEnabled(false)
-	{}
-
-	FUserDebugFlag(const FString& InKey);
-	FUserDebugFlag(const FString& InKey, bool bInEnabled);
-
-	[[nodiscard]] bool IsValid() const;
-	void ApplyCVar() const;
-
-	static void SanitizeString(const FString& InString, FString& OutString);
 };

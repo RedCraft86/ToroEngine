@@ -4,6 +4,7 @@
 #include "UserSettings/Registration/UserSettingsRegistry.h"
 #include "UserSettings/ToroGameUserSettings.h"
 #include "UserSettings/UserSettingsConfig.h"
+#include "Libraries/ToroCVarLibrary.h"
 
 #define LOCTEXT_NAMESPACE "ToroEngine"
 
@@ -554,5 +555,46 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		);
 	}
 
+	auto& DebugPage = Registry.EditPage(TEXT("Debug"), LOCTEXT("DebugPage", "Debug"));
+	DebugPage.GetMetadata().Description = LOCTEXT("DebugPageDescription", "Debugging options for developer.");
+	DebugPage.GetMetadata().Impact = EUserSettingImpact::None;
+	{
+		auto& FlagSection = DebugPage.EditSection(TEXT("Flags"), LOCTEXT("FlagsSection", "Flags"));
+		FlagSection.GetMetadata().Description = LOCTEXT("FlagsSectionDescription", "Adjust internal developer flags.");
+		FlagSection.GetMetadata().Impact = EUserSettingImpact::None;
+
+		const auto AddToggleFlag = [&Settings, &FlagSection](FGameplayTag Key, FText Desc, const FString& Flag)
+		{
+			FlagSection.AddSelector<int32>(Key)
+				.DisplayName(FText::FromString(Flag))
+				.Description(MoveTemp(Desc))
+				.Default(0)
+				.Option(0, LOCTEXT("FlagOff", "Off"))
+				.Option(1, LOCTEXT("FlagOn", "On"))
+				.BindCallbacks(
+					&Settings,
+					[Flag](const UToroGameUserSettings&, const FUserSettingEntry&)
+					{
+						return UToroCVarLibrary::GetCVarInt(Flag);
+					},
+					[Flag](UToroGameUserSettings&, const FUserSettingEntry&, const int32& Value)
+					{
+						UToroCVarLibrary::SetCVarInt(Flag, Value != 0);
+					}
+				);
+		};
+
+		AddToggleFlag(
+			Debug_ShowFrameRate,
+			LOCTEXT("ShowFrameRateFlagHelp", "Shows the game's current frame rate and frame time."),
+			UserSettingFlags::ShowFrameRate
+		);
+
+		AddToggleFlag(
+			Debug_ShowInvisibleWalls,
+			LOCTEXT("ShowInvisibleWallsFlagHelp", "Shows the invisible wall primitives placed around the map."),
+			UserSettingFlags::ShowInvisibleWalls
+		);
+	}
 }
 #undef LOCTEXT_NAMESPACE

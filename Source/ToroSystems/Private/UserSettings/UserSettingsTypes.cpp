@@ -50,23 +50,8 @@ namespace UserSettingsTags
 	UE_DEFINE_GAMEPLAY_TAG(Audio_EffectsVolume, "UserSettings.Audio.EffectsVolume");
 	UE_DEFINE_GAMEPLAY_TAG(Audio_DialogueVolume, "UserSettings.Audio.DialogueVolume");
 
-void FUserDebugFlag::ApplyCVar() const
-{
-	if (IConsoleVariable* CVar = UToroCVarLibrary::FindCVar(Key))
-	{
-		CVar->Set(bEnabled);
-	}
-}
-
-void FUserDebugFlag::SanitizeString(const FString& InString, FString& OutString)
-{
-	OutString.Empty();
-	OutString.Reserve(InString.Len());
-	for (const TCHAR Character : InString)
-	{
-		if (!FChar::IsWhitespace(Character))
-		{
-			OutString.AppendChar(Character);
-		}
-	}
+	// Debug
+	UE_DEFINE_GAMEPLAY_TAG(Debug, "UserSettings.Debug");
+	UE_DEFINE_GAMEPLAY_TAG(Debug_ShowFrameRate, "UserSettings.Debug.ShowFrameRate");
+	UE_DEFINE_GAMEPLAY_TAG(Debug_ShowInvisibleWalls, "UserSettings.Debug.ShowInvisibleWalls");
 }
