@@ -6,6 +6,11 @@
 #include "Engine/EngineTypes.h"
 #include "UserSettingsTypes.generated.h"
 
+namespace UserSettingFlags
+{
+	inline constexpr TCHAR ShowFrameRate[]		= TEXT("r.Debug.ShowFrameRate");
+}
+
 namespace UserSettingsTags
 {
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Base);
@@ -21,10 +26,9 @@ namespace UserSettingsTags
 	// Display
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_Resolution);
-	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_Brightness);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_VSync);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_FrameRateLimit);
-	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_ShowFrameRate);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Display_Brightness);
 
 	// Graphics
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics);

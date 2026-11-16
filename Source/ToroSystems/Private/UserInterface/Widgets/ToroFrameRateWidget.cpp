@@ -2,7 +2,16 @@
 
 #include "UserInterface/Widgets/ToroFrameRateWidget.h"
 #include "UserSettings/ToroGameUserSettings.h"
+#include "UserSettings/UserSettingsTypes.h"
 #include "Components/TextBlock.h"
+#include "HAL/IConsoleManager.h"
+
+static TAutoConsoleVariable<int32> CVarShowFrameRate(
+	UserSettingFlags::ShowFrameRate,
+	0,
+	TEXT("Show the frame-rate widget. 0: off, 1: on"),
+	ECVF_Default
+);
 
 extern ENGINE_API float GAverageFPS;
 extern ENGINE_API float GAverageMS;
@@ -14,13 +23,31 @@ UToroFrameRateWidget::UToroFrameRateWidget()
 	AutoLayer = EToroAutoWidgetType::Overlay;
 }
 
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
+void UToroFrameRateWidget::OnShowFrameRateChanged(IConsoleVariable* Variable) const
+{
+	InfoTextBlock->SetVisibility(Variable->GetInt() != 0
+		? ESlateVisibility::HitTestInvisible
+		: ESlateVisibility::Collapsed);
+}
+
+void UToroFrameRateWidget::NativeDestruct()
+{
+	CVarShowFrameRate->OnChangedDelegate().RemoveAll(this);
+	Super::NativeDestruct();
+}
+
 void UToroFrameRateWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	if (!InfoTextBlock)
 	{
 		RemoveFromParent();
+		return;
 	}
+
+	CVarShowFrameRate->OnChangedDelegate().AddUObject(this, &UToroFrameRateWidget::OnShowFrameRateChanged);
+	OnShowFrameRateChanged(CVarShowFrameRate.AsVariable());
 }
 
 void UToroFrameRateWidget::NativeOnInitialized()
@@ -32,21 +59,18 @@ void UToroFrameRateWidget::NativeOnInitialized()
 void UToroFrameRateWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
+	if (!Settings.IsValid() || !InfoTextBlock 
+		|| InfoTextBlock->GetVisibility() == ESlateVisibility::Collapsed)
+	{
+		TickTime = 0.0f;
+		return;
+	}
+
 	if ((TickTime -= InDeltaTime) > 0.0f)
 	{
 		return;
 	}
 	TickTime = 0.2f;
-
-	if (Settings.IsValid() && Settings->GetShowFrameRate())
-	{
-		InfoTextBlock->SetVisibility(ESlateVisibility::HitTestInvisible);
-	}
-	else
-	{
-		InfoTextBlock->SetVisibility(ESlateVisibility::Collapsed);
-		return;
-	}
 
 	float MaxFPS = Settings->GetFrameRateLimit();
 	if (MaxFPS <= 0.0f)

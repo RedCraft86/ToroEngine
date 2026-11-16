@@ -72,12 +72,6 @@ public:
 	void RevertAllScalabilitySettings();
 
 	UFUNCTION(BlueprintCallable, Category = Settings)
-	void SetShowFrameRate(bool Value);
-
-	UFUNCTION(BlueprintPure, Category = Settings)
-	bool GetShowFrameRate() const;
-
-	UFUNCTION(BlueprintCallable, Category = Settings)
 	void SetSensitivityX(float Value);
 
 	UFUNCTION(BlueprintPure, Category = Settings)
@@ -184,9 +178,6 @@ private:
 	bool bIsFirstLoad = false;
 	TWeakObjectPtr<UGameInstance> GameInstance;
 	TWeakObjectPtr<AToroWorldSettings> WorldSettings;
-
-	UPROPERTY(Config)
-	bool bShowFrameRate;
 
 	UPROPERTY(Config)
 	float SensitivityX;

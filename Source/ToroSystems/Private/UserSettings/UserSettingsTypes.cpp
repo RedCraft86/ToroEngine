@@ -18,10 +18,9 @@ namespace UserSettingsTags
 	// Display
 	UE_DEFINE_GAMEPLAY_TAG(Display, "UserSettings.Display");
 	UE_DEFINE_GAMEPLAY_TAG(Display_Resolution, "UserSettings.Display.Resolution");
-	UE_DEFINE_GAMEPLAY_TAG(Display_Brightness, "UserSettings.Display.Brightness");
 	UE_DEFINE_GAMEPLAY_TAG(Display_VSync, "UserSettings.Display.VSync");
 	UE_DEFINE_GAMEPLAY_TAG(Display_FrameRateLimit, "UserSettings.Display.FrameRateLimit");
-	UE_DEFINE_GAMEPLAY_TAG(Display_ShowFrameRate, "UserSettings.Display.ShowFrameRate");
+	UE_DEFINE_GAMEPLAY_TAG(Display_Brightness, "UserSettings.Display.Brightness");
 
 	// Graphics
 	UE_DEFINE_GAMEPLAY_TAG(Graphics, "UserSettings.Graphics");

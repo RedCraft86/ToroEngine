@@ -83,16 +83,6 @@ void UToroGameUserSettings::RevertAllScalabilitySettings()
 	RequestUIUpdate();
 }
 
-void UToroGameUserSettings::SetShowFrameRate(bool Value)
-{
-	bShowFrameRate = Value;
-}
-
-bool UToroGameUserSettings::GetShowFrameRate() const
-{
-	return bShowFrameRate;
-}
-
 void UToroGameUserSettings::SetSensitivityX(float Value)
 {
 	SensitivityX = FixupFloatValue(Value, 0.2f, 2.0f, 1.0f);
@@ -431,7 +421,6 @@ void UToroGameUserSettings::SetToDefaults()
 	bUseVSync = true;
 	FrameRateLimit = 60.0f;
 
-	bShowFrameRate = false;
 	SensitivityX = 1.0f;
 	bInvertMouseX = false;
 	SensitivityY = 1.0f;

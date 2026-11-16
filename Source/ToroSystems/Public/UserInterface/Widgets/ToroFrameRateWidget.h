@@ -31,6 +31,9 @@ private:
 	float TickTime = 0.0f;
 	TWeakObjectPtr<UToroGameUserSettings> Settings;
 
+	void OnShowFrameRateChanged(IConsoleVariable* Variable) const;
+
+	virtual void NativeDestruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeOnInitialized() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
