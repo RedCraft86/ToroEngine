@@ -138,15 +138,18 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				&UToroGameUserSettings::SetResolutionOption
 			);
 
-		DisplaySection.AddToggle(Display_VSync)
-			.DisplayName(LOCTEXT("VSync", "V-Sync"))
-			.Description(LOCTEXT("VSyncHelp", "Match frame presentation to your display's refresh cycle to reduce screen tearing. May increase input delay."))
-			.Impact(EUserSettingImpact::Medium)
-			.Default(true)
+		DisplaySection.AddSlider(Display_Brightness)
+			.DisplayName(LOCTEXT("Brightness", "Brightness"))
+			.Description(LOCTEXT("BrightnessHelp", "Make the image lighter or darker. 50 uses the default brightness."))
+			.Type(EUserSettingSliderType::Live)
+			.Default(50.0f)
+			.Range(20.0f, 80.0f)
+			.Delta(1.0f)
+			.NumDecimal(0)
 			.Bind(
 				&Settings,
-				&UToroGameUserSettings::IsVSyncEnabled,
-				&UToroGameUserSettings::SetVSyncEnabled
+				&UToroGameUserSettings::GetBrightness,
+				&UToroGameUserSettings::SetBrightness
 			);
 
 		DisplaySection.AddSelector<float>(Display_FrameRateLimit)
@@ -167,18 +170,25 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				&UToroGameUserSettings::SetFrameRateLimit
 			);
 
-		DisplaySection.AddSlider(Display_Brightness)
-			.DisplayName(LOCTEXT("Brightness", "Brightness"))
-			.Description(LOCTEXT("BrightnessHelp", "Make the image lighter or darker. 50 uses the default brightness."))
-			.Type(EUserSettingSliderType::Live)
-			.Default(50.0f)
-			.Range(20.0f, 80.0f)
-			.Delta(1.0f)
-			.NumDecimal(0)
+		DisplaySection.AddToggle(Display_VSync)
+			.DisplayName(LOCTEXT("VSync", "V-Sync"))
+			.Description(LOCTEXT("VSyncHelp", "Match frame presentation to your display's refresh cycle to reduce screen tearing. May increase input delay."))
+			.Impact(EUserSettingImpact::Medium)
+			.Default(true)
 			.Bind(
 				&Settings,
-				&UToroGameUserSettings::GetBrightness,
-				&UToroGameUserSettings::SetBrightness
+				&UToroGameUserSettings::IsVSyncEnabled,
+				&UToroGameUserSettings::SetVSyncEnabled
+			);
+
+		DisplaySection.AddToggle(Display_ShowFrameRate)
+			.DisplayName(LOCTEXT("ShowFrameRate", "Show Frame Rate"))
+			.Description(LOCTEXT("ShowFrameRateHelp", "Shows the current frame rate and frame time on screen."))
+			.Default(false)
+			.Bind(
+				&Settings,
+				&UToroGameUserSettings::GetShowFrameRate,
+				&UToroGameUserSettings::SetShowFrameRate
 			);
 	}
 

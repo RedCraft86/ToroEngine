@@ -83,6 +83,16 @@ void UToroGameUserSettings::RevertAllScalabilitySettings()
 	RequestUIUpdate();
 }
 
+void UToroGameUserSettings::SetShowFrameRate(bool Value)
+{
+	bShowFrameRate = Value;
+}
+
+bool UToroGameUserSettings::GetShowFrameRate() const
+{
+	return bShowFrameRate;
+}
+
 void UToroGameUserSettings::SetSensitivityX(float Value)
 {
 	SensitivityX = FixupFloatValue(Value, 0.2f, 2.0f, 1.0f);
@@ -421,6 +431,7 @@ void UToroGameUserSettings::SetToDefaults()
 	bUseVSync = true;
 	FrameRateLimit = 60.0f;
 
+	bShowFrameRate = false;
 	SensitivityX = 1.0f;
 	bInvertMouseX = false;
 	SensitivityY = 1.0f;
@@ -470,7 +481,7 @@ void UToroGameUserSettings::ValidateSettings()
 	{
 		float SnappedLimit = 0.0f; // Invalid, so uncapped
 		const float RequestedLimit = GetFrameRateLimit();
-		if (FMath::IsFinite(RequestedLimit) && RequestedLimit >= 0.0f && RequestedLimit <= 150.0f)
+		if (FMath::IsFinite(RequestedLimit) && RequestedLimit > 0.0f && RequestedLimit <= 150.0f)
 		{
 			if (RequestedLimit <= 45.0f)
 			{
