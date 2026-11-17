@@ -496,6 +496,9 @@ void UToroGameUserSettings::ApplyMotionBlur() const
 
 void UToroGameUserSettings::ApplyLumenSettings() const
 {
+	UToroCVarLibrary::SetCVarBool(TEXT("r.Lumen.DiffuseIndirect.Allow"), ELumenUserSetting::SupportsGI(LumenMode));
+	UToroCVarLibrary::SetCVarBool(TEXT("r.Lumen.Reflections.Allow"), ELumenUserSetting::SupportsReflections(LumenMode));
+
 	if (UWorldPostProcessComponent* WPP = WorldSettings.IsValid() ? WorldSettings->GetPostProcess() : nullptr)
 	{
 		WPP->Settings.bOverride_DynamicGlobalIlluminationMethod = true;
