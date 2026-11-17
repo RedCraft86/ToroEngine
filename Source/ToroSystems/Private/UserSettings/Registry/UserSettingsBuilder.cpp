@@ -226,26 +226,6 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				&UToroGameUserSettings::SetImageFidelityMode
 			);
 
-		ImageSection.AddSlider(Graphics_TSRScreenPercentage)
-			.DisplayName(LOCTEXT("TSRPercentage", "TSR Screen Percentage"))
-			.Description(LOCTEXT("TSRPercentageHelp",
-				"Set the rendering resolution used before TSR reconstructs the final image. Lower values can "
-				"improve performance but may reduce detail and image stability.\n\n"
-				"100 uses the full output resolution."))
-			.Impact(EUserSettingImpact::High)
-			.Default(100.0f)
-			.Range(10.0f, 100.0f)
-			.Delta(1.0f)
-			.NumDecimal(0)
-			.IsEnabled([WeakSettings]() {
-				return WeakSettings.IsValid() && WeakSettings->GetImageFidelityMode() == EImageFidelityMode::TSR;
-			})
-			.Bind(
-				&Settings,
-				&UToroGameUserSettings::GetTSRScreenPercentage,
-				&UToroGameUserSettings::SetTSRScreenPercentage
-			);
-
 		ImageSection.AddSlider(Graphics_ResolutionScale)
 			.DisplayName(LOCTEXT("ResolutionScale", "Resolution Scale"))
 			.Description(LOCTEXT("ResolutionScaleHelp",
@@ -258,7 +238,7 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				FVector2D(0.0f, 100.0f),
 				BaselineQuality.ResolutionQuality
 			))
-			.Range(1.0f, 100.0f)
+			.Range(10.0f, 100.0f)
 			.Delta(1.0f)
 			.NumDecimal(0)
 			.IsEnabled([WeakSettings](){
@@ -278,6 +258,27 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				{
 					Target.SetResolutionScaleNormalized(Value * 0.01f);
 				}
+			);
+
+		ImageSection.AddSlider(Graphics_TSRScreenPercentage)
+			.DisplayName(LOCTEXT("TSRPercentage", "TSR Screen Percentage"))
+			.Description(LOCTEXT("TSRPercentageHelp",
+				"Set the internal rendering resolution used by TSR. Lower values improve performance "
+				"but may reduce detail and image stability.\n\n"
+				"100% renders at the output resolution. Above 100% uses supersampling for improved "
+				"image quality at a significant GPU cost."))
+			.Impact(EUserSettingImpact::High)
+			.Default(100.0f)
+			.Range(10.0f, 150.0f)
+			.Delta(1.0f)
+			.NumDecimal(0)
+			.IsEnabled([WeakSettings]() {
+				return WeakSettings.IsValid() && WeakSettings->GetImageFidelityMode() == EImageFidelityMode::TSR;
+			})
+			.Bind(
+				&Settings,
+				&UToroGameUserSettings::GetTSRScreenPercentage,
+				&UToroGameUserSettings::SetTSRScreenPercentage
 			);
 
 		auto& EffectsSection = GraphicsPage.EditSection(TEXT("Effects"), LOCTEXT("EffectsSection", "Effects"));

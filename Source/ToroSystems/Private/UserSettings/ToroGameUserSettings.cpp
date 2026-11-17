@@ -180,7 +180,7 @@ TEnumAsByte<EImageFidelityMode::Type> UToroGameUserSettings::GetImageFidelityMod
 
 void UToroGameUserSettings::SetTSRScreenPercentage(float Value)
 {
-	TSRScreenPercentage = FixupFloatValue(Value, 10.0f, 100.0f, 100.0f);
+	TSRScreenPercentage = FixupFloatValue(Value, 10.0f, 200.0f, 100.0f);
 	ApplyFidelitySettings();
 }
 
