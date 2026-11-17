@@ -290,6 +290,21 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				&UToroGameUserSettings::SetLumenMode
 			);
 
+		EffectsSection.AddSelector<ELumenRayLightingSetting>(Graphics_LumenRayLightingMode)
+			.DisplayName(LOCTEXT("LumenRayLighting", "Lumen Ray Lighting Mode"))
+			.Description(LOCTEXT("LumenRayLightingHelp", "Requires supported Lumen hardware ray tracing. Surface Cache favors performance. Hit Lighting for Reflections evaluates lighting at reflection hits; Hit Lighting also evaluates it for global illumination at a much higher GPU cost. Unsupported configurations may fall back, and reflections-only Lumen uses hit lighting for reflections."))
+			.Impact(EUserSettingImpact::High)
+			.Default(ELumenRayLightingSetting::SurfaceCache)
+			.Option(ELumenRayLightingSetting::SurfaceCache, LOCTEXT("RaySurfaceCache", "Surface Cache"))
+			.Option(ELumenRayLightingSetting::HitLightingForReflections, LOCTEXT("RayHitReflections", "Hit Lighting for Reflections"))
+			.Option(ELumenRayLightingSetting::HitLighting, LOCTEXT("RayHitLighting", "Hit Lighting"))
+			.IsEnabled([WeakSettings]() {
+				return WeakSettings.IsValid() && WeakSettings->GetLumenMode() != ELumenUserSetting::Disabled;
+			})
+			.Bind(&Settings,
+				&UToroGameUserSettings::GetLumenRayLightingMode,
+				&UToroGameUserSettings::SetLumenRayLightingMode);
+
 		auto& QualitySection = GraphicsPage.EditSection(TEXT("Scalability"), LOCTEXT("ScalabilitySection", "Scalability"));
 		QualitySection.GetMetadata().Description = LOCTEXT("QualitySectionDescription", "Choose a graphics preset or adjust individual effects to balance visual detail and performance.");
 		QualitySection.GetMetadata().Impact = EUserSettingImpact::High;

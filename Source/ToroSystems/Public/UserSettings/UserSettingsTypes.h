@@ -41,6 +41,7 @@ namespace UserSettingsTags
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_ResolutionScale);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_TSRScreenPercentage);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_LumenMode);
+	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_LumenRayLightingMode);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_MotionBlurQuality);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_AutoDetect);
 	TOROSYSTEMS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Graphics_OverallQuality);
@@ -82,6 +83,14 @@ namespace UserSettingsTags
 			&& InTag.MatchesTag(Category.GetTag());
 	}
 }
+
+UENUM(BlueprintType)
+enum class ELumenRayLightingSetting : uint8
+{
+	SurfaceCache				= 0,
+	HitLighting					= 1,
+	HitLightingForReflections	= 2
+};
 
 UENUM(BlueprintType)
 namespace ELumenUserSetting

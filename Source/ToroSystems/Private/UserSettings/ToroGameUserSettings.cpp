@@ -155,6 +155,17 @@ TEnumAsByte<ELumenUserSetting::Type> UToroGameUserSettings::GetLumenMode() const
 	return LumenMode;
 }
 
+void UToroGameUserSettings::SetLumenRayLightingMode(ELumenRayLightingSetting Value)
+{
+	LumenRayLightingMode = Value;
+	ApplyLumenSettings();
+}
+
+ELumenRayLightingSetting UToroGameUserSettings::GetLumenRayLightingMode() const
+{
+	return LumenRayLightingMode;
+}
+
 void UToroGameUserSettings::SetImageFidelityMode(TEnumAsByte<EImageFidelityMode::Type> Value)
 {
 	ImageFidelityMode = Value;
@@ -373,6 +384,7 @@ void UToroGameUserSettings::SetToDefaults()
 	Brightness = 50.0f;
 	MotionBlurAmount = 2;
 	LumenMode = ELumenUserSetting::Enabled;
+	LumenRayLightingMode = ELumenRayLightingSetting::SurfaceCache;
 	ImageFidelityMode = EImageFidelityMode::TAA;
 	TSRScreenPercentage = 100.0f;
 	AudioVolumes.Reset();
@@ -387,6 +399,10 @@ void UToroGameUserSettings::ValidateSettings()
 	Brightness = FixupFloatValue(Brightness, 20.0f, 80.0f, 50.0f);
 	MotionBlurAmount = FMath::Clamp(MotionBlurAmount, 0, 3);
 	LumenMode = ELumenUserSetting::FixupValue(LumenMode);
+	if (LumenRayLightingMode > ELumenRayLightingSetting::HitLightingForReflections)
+	{
+		LumenRayLightingMode = ELumenRayLightingSetting::SurfaceCache;
+	}
 	ImageFidelityMode = EImageFidelityMode::FixupValue(ImageFidelityMode);
 	TSRScreenPercentage = FixupFloatValue(TSRScreenPercentage, 10.0f, 100.0f, 100.0f);
 
@@ -499,6 +515,23 @@ void UToroGameUserSettings::ApplyLumenSettings() const
 	UToroCVarLibrary::SetCVarBool(TEXT("r.Lumen.DiffuseIndirect.Allow"), ELumenUserSetting::SupportsGI(LumenMode));
 	UToroCVarLibrary::SetCVarBool(TEXT("r.Lumen.Reflections.Allow"), ELumenUserSetting::SupportsReflections(LumenMode));
 
+	UToroCVarLibrary::SetCVarInt(TEXT("r.DynamicGlobalIlluminationMethod"),
+		ELumenUserSetting::SupportsGI(LumenMode)
+		? static_cast<int32>(EDynamicGlobalIlluminationMethod::Lumen)
+		: static_cast<int32>(EDynamicGlobalIlluminationMethod::None)
+	);
+
+	UToroCVarLibrary::SetCVarInt(TEXT("r.ReflectionMethod"),
+		ELumenUserSetting::SupportsReflections(LumenMode)
+		? static_cast<int32>(EReflectionMethod::Lumen)
+		: static_cast<int32>(EReflectionMethod::ScreenSpace)
+	);
+
+	UToroCVarLibrary::SetCVarInt(
+		TEXT("r.Lumen.HardwareRayTracing.LightingMode"),
+		static_cast<int32>(LumenRayLightingMode)
+	);
+
 	if (UWorldPostProcessComponent* WPP = WorldSettings.IsValid() ? WorldSettings->GetPostProcess() : nullptr)
 	{
 		WPP->Settings.bOverride_DynamicGlobalIlluminationMethod = true;
@@ -508,20 +541,10 @@ void UToroGameUserSettings::ApplyLumenSettings() const
 		WPP->Settings.bOverride_ReflectionMethod = true;
 		WPP->Settings.ReflectionMethod = ELumenUserSetting::SupportsReflections(LumenMode)
 			? EReflectionMethod::Lumen : EReflectionMethod::ScreenSpace;
-	}
-	else
-	{
-		UToroCVarLibrary::SetCVarInt(TEXT("r.DynamicGlobalIlluminationMethod"),
-			ELumenUserSetting::SupportsGI(LumenMode)
-			? static_cast<int32>(EDynamicGlobalIlluminationMethod::Lumen)
-			: static_cast<int32>(EDynamicGlobalIlluminationMethod::None)
-		);
 
-		UToroCVarLibrary::SetCVarInt(TEXT("r.ReflectionMethod"),
-			ELumenUserSetting::SupportsReflections(LumenMode)
-			? static_cast<int32>(EReflectionMethod::Lumen)
-			: static_cast<int32>(EReflectionMethod::ScreenSpace)
-		);
+		// Let the CVar fall through
+		WPP->Settings.bOverride_LumenRayLightingMode = true;
+		WPP->Settings.LumenRayLightingMode = ELumenRayLightingModeOverride::Default;
 	}
 }
 

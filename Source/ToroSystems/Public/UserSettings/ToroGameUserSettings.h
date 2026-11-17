@@ -115,6 +115,12 @@ public:
 	TEnumAsByte<ELumenUserSetting::Type> GetLumenMode() const;
 
 	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetLumenRayLightingMode(ELumenRayLightingSetting Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	ELumenRayLightingSetting GetLumenRayLightingMode() const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
 	void SetImageFidelityMode(TEnumAsByte<EImageFidelityMode::Type> Value);
 
 	UFUNCTION(BlueprintPure, Category = Settings)
@@ -192,6 +198,9 @@ private:
 
 	UPROPERTY(Config)
 	TEnumAsByte<ELumenUserSetting::Type> LumenMode;
+
+	UPROPERTY(Config)
+	ELumenRayLightingSetting LumenRayLightingMode;
 
 	UPROPERTY(Config)
 	TEnumAsByte<EImageFidelityMode::Type> ImageFidelityMode;

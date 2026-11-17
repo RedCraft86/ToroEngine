@@ -27,6 +27,7 @@ namespace UserSettingsTags
 	UE_DEFINE_GAMEPLAY_TAG(Graphics_ResolutionScale, "UserSettings.Graphics.ResolutionScale");
 	UE_DEFINE_GAMEPLAY_TAG(Graphics_TSRScreenPercentage, "UserSettings.Graphics.TSRScreenPercentage");
 	UE_DEFINE_GAMEPLAY_TAG(Graphics_LumenMode, "UserSettings.Graphics.LumenMode");
+	UE_DEFINE_GAMEPLAY_TAG(Graphics_LumenRayLightingMode, "UserSettings.Graphics.LumenRayLightingMode");
 	UE_DEFINE_GAMEPLAY_TAG(Graphics_MotionBlurQuality, "UserSettings.Graphics.MotionBlurQuality");
 	UE_DEFINE_GAMEPLAY_TAG(Graphics_AutoDetect, "UserSettings.Graphics.AutoDetect");
 	UE_DEFINE_GAMEPLAY_TAG(Graphics_OverallQuality, "UserSettings.Graphics.OverallQuality");
