@@ -8,8 +8,8 @@
 
 /**
  * Exposes a mutable identity for the owning actor with a manually configured group.
- * Construction generates a random GUID only when missing, preserving existing valid
- * GUIDs and leaving the group unchanged. Callers can assign a deterministic identity
+ * Construction derives the GUID from a nonempty determinant, or generates a random
+ * GUID only when missing. The group is unchanged. Use the same group and determinant
  * when replacement actors must share the same persistent identity.
  */
 UCLASS(MinimalAPI, NotBlueprintable, ClassGroup = (Feature), meta = (BlueprintSpawnableComponent))
@@ -21,17 +21,25 @@ public:
 
 	/**
 	 * Caller-editable identity; consumers determine whether it meets their requirements.
-	 * Construction fills an invalid GUID with a random GUID without assigning a group.
+	 * Construction updates the GUID according to Determinant without assigning a group.
 	 * Assign distinct identities when actors of the same class require separate save records.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	FTaggedIdentity Identity;
+
+	/**
+	 * Stable string used to derive the GUID during construction, replacing any existing GUID.
+	 * Empty or whitespace-only values preserve valid GUIDs and generate random ones when missing.
+	 * Nonempty values are hashed exactly as supplied, including surrounding whitespace.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Settings)
+	FString Determinant;
 
 private:
 
 	virtual void OnConstruction() override
 	{
 		Super::OnConstruction();
-		Identity.RegenerateGuid();
+		Identity.RegenerateGuid(Determinant.TrimStartAndEnd().IsEmpty(), Determinant);
 	}
 };
