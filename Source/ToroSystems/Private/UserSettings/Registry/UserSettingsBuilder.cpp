@@ -35,16 +35,19 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 	using namespace UserSettingsTags;
 
 	auto& GeneralPage = Registry.EditPage(TEXT("General"), LOCTEXT("GeneralPage", "General"));
-	GeneralPage.GetMetadata().Description = LOCTEXT("GeneralPageDescription", "Configure camera and other preferences.");
+	GeneralPage.GetMetadata().Description = LOCTEXT("GeneralPageDescription",
+		"Configure camera and other preferences.");
 	GeneralPage.GetMetadata().Impact = EUserSettingImpact::None;
 	{
 		auto& CameraSection = GeneralPage.EditSection(TEXT("Camera"), LOCTEXT("CameraSection", "Camera"));
-		CameraSection.GetMetadata().Description = LOCTEXT("CameraSectionDescription", "Adjust camera sensitivity and input direction.");
+		CameraSection.GetMetadata().Description = LOCTEXT("CameraSectionDescription",
+			"Adjust camera sensitivity and input direction.");
 		CameraSection.GetMetadata().Impact = EUserSettingImpact::None;
 
 		CameraSection.AddSlider(Camera_SensitivityX)
 			.DisplayName(LOCTEXT("SensitivityX", "Horizontal Sensitivity"))
-			.Description(LOCTEXT("SensitivityXHelp", "Adjust how quickly the camera turns left and right. Higher values increase sensitivity."))
+			.Description(LOCTEXT("SensitivityXHelp",
+				"Adjust how quickly the camera turns left and right. Higher values increase sensitivity."))
 			.Default(1.0f)
 			.Range(0.2f, 2.0f)
 			.Delta(0.1f)
@@ -57,7 +60,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 
 		CameraSection.AddSlider(Camera_SensitivityY)
 			.DisplayName(LOCTEXT("SensitivityY", "Vertical Sensitivity"))
-			.Description(LOCTEXT("SensitivityYHelp", "Adjust how quickly the camera looks up and down. Higher values increase sensitivity."))
+			.Description(LOCTEXT("SensitivityYHelp",
+				"Adjust how quickly the camera looks up and down. Higher values increase sensitivity."))
 			.Default(1.0f)
 			.Range(0.2f, 2.0f)
 			.Delta(0.1f)
@@ -90,16 +94,20 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 	}
 
 	auto& VideoPage = Registry.EditPage(TEXT("Video"), LOCTEXT("VideoPage", "Video"));
-	VideoPage.GetMetadata().Description = LOCTEXT("VideoPageDescription", "Adjust screen resolution, window mode, brightness, and frame rate.");
+	VideoPage.GetMetadata().Description = LOCTEXT("VideoPageDescription",
+		"Adjust screen resolution, window mode, brightness, and frame rate.");
 	VideoPage.GetMetadata().Impact = EUserSettingImpact::Medium;
 	{
 		auto& DisplaySection = VideoPage.EditSection(TEXT("Display"), LOCTEXT("DisplaySection", "Display"));
-		DisplaySection.GetMetadata().Description = LOCTEXT("DisplaySectionDescription", "Adjust brightness, synchronization, and the frame rate limit.");
+		DisplaySection.GetMetadata().Description = LOCTEXT("DisplaySectionDescription",
+			"Adjust brightness, synchronization, and the frame rate limit.");
 		DisplaySection.GetMetadata().Impact = EUserSettingImpact::Medium;
 
 		DisplaySection.AddSelector<UToroGameUserSettings::FResolutionOption>(Display_Resolution)
 			.DisplayName(LOCTEXT("Resolution", "Resolution"))
-			.Description(LOCTEXT("ResolutionHelp", "Choose the display resolution and window mode. Higher resolutions provide a sharper image but may reduce performance."))
+			.Description(LOCTEXT("ResolutionHelp",
+				"Choose the display resolution and window mode. Higher resolutions provide a sharper image "
+				"but may reduce performance."))
 			.Impact(EUserSettingImpact::Medium)
 			.FromArray(
 				Settings.GenerateResolutionOptions(),
@@ -141,7 +149,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 
 		DisplaySection.AddToggle(Display_VSync)
 			.DisplayName(LOCTEXT("VSync", "V-Sync"))
-			.Description(LOCTEXT("VSyncHelp", "Match frame presentation to your display's refresh cycle to reduce screen tearing. May increase input delay."))
+			.Description(LOCTEXT("VSyncHelp",
+				"Match frame presentation to your display's refresh cycle to reduce screen tearing. May increase input delay."))
 			.Impact(EUserSettingImpact::Medium)
 			.Default(true)
 			.Bind(
@@ -152,7 +161,9 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 
 		DisplaySection.AddSelector<float>(Display_FrameRateLimit)
 			.DisplayName(LOCTEXT("FrameLimit", "Frame Rate Limit"))
-			.Description(LOCTEXT("FrameLimitHelp", "Set the maximum number of frames rendered per second. A lower limit can reduce power use and heat. V-Sync may limit the frame rate further."))
+			.Description(LOCTEXT("FrameLimitHelp",
+				"Set the maximum number of frames rendered per second. A lower limit can reduce power use and heat.\n\n"
+				"V-Sync may limit the frame rate further."))
 			.Impact(EUserSettingImpact::Medium)
 			.Option(30.0f, LOCTEXT("FPS30", "30"))
 			.Option(60.0f, LOCTEXT("FPS60", "60"))
@@ -184,7 +195,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 	}
 
 	auto& GraphicsPage = Registry.EditPage(TEXT("Graphics"), LOCTEXT("GraphicsPage", "Graphics"));
-	GraphicsPage.GetMetadata().Description = LOCTEXT("GraphicsPageDescription", "Balance rendering quality and performance.");
+	GraphicsPage.GetMetadata().Description = LOCTEXT("GraphicsPageDescription",
+		"Balance rendering quality and performance.");
 	GraphicsPage.GetMetadata().Impact = EUserSettingImpact::High;
 	{
 		const FScalabilityBaseline& Baseline = Settings.GetScalabilityBaseline();
@@ -192,12 +204,15 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		Baseline.Restore(BaselineQuality);
 
 		auto& ImageSection = GraphicsPage.EditSection(TEXT("Image"), LOCTEXT("ImageSection", "Image"));
-		ImageSection.GetMetadata().Description = LOCTEXT("ImageSectionDescription", "Configure anti-aliasing and internal rendering resolution.");
+		ImageSection.GetMetadata().Description = LOCTEXT("ImageSectionDescription",
+			"Configure anti-aliasing and internal rendering resolution.");
 		ImageSection.GetMetadata().Impact = EUserSettingImpact::High;
 
 		ImageSection.AddSelector<EImageFidelityMode::Type>(Graphics_ImageFidelityMode)
 			.DisplayName(LOCTEXT("Fidelity", "Image Fidelity"))
-			.Description(LOCTEXT("FidelityHelp", "Choose how jagged edges are smoothed. Temporal methods use previous frames to improve stability; TSR can also reconstruct the image from a lower rendering resolution."))
+			.Description(LOCTEXT("FidelityHelp",
+				"Choose how jagged edges are smoothed.\n\n"
+				"Temporal methods use previous frames to improve stability. TSR can also reconstruct the image from a lower rendering resolution."))
 			.Impact(EUserSettingImpact::Medium)
 			.Default(EImageFidelityMode::TAA)
 			.Option(EImageFidelityMode::None, LOCTEXT("AANone", "None"))
@@ -213,7 +228,10 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 
 		ImageSection.AddSlider(Graphics_TSRScreenPercentage)
 			.DisplayName(LOCTEXT("TSRPercentage", "TSR Screen Percentage"))
-			.Description(LOCTEXT("TSRPercentageHelp", "Set the rendering resolution used before TSR reconstructs the final image. Lower values can improve performance but may reduce detail and image stability. 100 uses the full output resolution."))
+			.Description(LOCTEXT("TSRPercentageHelp",
+				"Set the rendering resolution used before TSR reconstructs the final image. Lower values can "
+				"improve performance but may reduce detail and image stability.\n\n"
+				"100 uses the full output resolution."))
 			.Impact(EUserSettingImpact::High)
 			.Default(100.0f)
 			.Range(10.0f, 100.0f)
@@ -232,7 +250,9 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		Settings.GetResolutionScaleInformationEx(ScaleNormalized, ScaleCurrent, ScaleMin, ScaleMax);
 		ImageSection.AddSlider(Graphics_ResolutionScale)
 			.DisplayName(LOCTEXT("ResolutionScale", "Resolution Scale"))
-			.Description(LOCTEXT("ResolutionScaleHelp", "Set the rendering resolution relative to the output resolution. Lower values can improve performance but make the image softer. When using TSR, adjust TSR Screen Percentage instead."))
+			.Description(LOCTEXT("ResolutionScaleHelp",
+				"Set the rendering resolution relative to the output resolution. Lower values can improve performance but make the image softer.\n\n"
+				"When using TSR, adjust TSR Screen Percentage instead."))
 			.Impact(EUserSettingImpact::High)
 			.Default(FMath::Clamp(Baseline.ResolutionQuality, ScaleMin, ScaleMax))
 			.Range(ScaleMin, ScaleMax)
@@ -258,12 +278,14 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 			);
 
 		auto& EffectsSection = GraphicsPage.EditSection(TEXT("Effects"), LOCTEXT("EffectsSection", "Effects"));
-		EffectsSection.GetMetadata().Description = LOCTEXT("EffectsSectionDescription", "Configure lighting and visual effects.");
+		EffectsSection.GetMetadata().Description = LOCTEXT("EffectsSectionDescription",
+			"Configure lighting and visual effects.");
 		EffectsSection.GetMetadata().Impact = EUserSettingImpact::High;
 
 		EffectsSection.AddSelector<int32>(Graphics_MotionBlurQuality)
 			.DisplayName(LOCTEXT("MotionBlur", "Motion Blur Amount"))
-			.Description(LOCTEXT("MotionBlurHelp", "Choose how much moving objects and camera movement blur the image. Off removes motion blur."))
+			.Description(LOCTEXT("MotionBlurHelp",
+				"Choose how much moving objects and camera movement blur the image. Off removes motion blur."))
 			.Default(2)
 			.Option(0, LOCTEXT("BlurOff", "Off"))
 			.Option(1, LOCTEXT("BlurLow", "Low"))
@@ -277,7 +299,9 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 
 		EffectsSection.AddSelector<ELumenUserSetting::Type>(Graphics_LumenMode)
 			.DisplayName(LOCTEXT("Lumen", "Lumen Mode"))
-			.Description(LOCTEXT("LumenHelp", "Enable Lumen for light bouncing between surfaces, reflections, or both. These effects improve lighting realism but can significantly reduce performance."))
+			.Description(LOCTEXT("LumenHelp",
+				"Enable Lumen for light bouncing between surfaces, reflections, or both. These effects "
+				"improve lighting realism but can significantly reduce performance."))
 			.Impact(EUserSettingImpact::High)
 			.Default(ELumenUserSetting::Enabled)
 			.Option(ELumenUserSetting::Disabled, LOCTEXT("LumenDisabled", "Disabled"))
@@ -292,7 +316,13 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 
 		EffectsSection.AddSelector<ELumenRayLightingSetting>(Graphics_LumenRayLightingMode)
 			.DisplayName(LOCTEXT("LumenRayLighting", "Lumen Ray Lighting Mode"))
-			.Description(LOCTEXT("LumenRayLightingHelp", "Requires supported Lumen hardware ray tracing. Surface Cache favors performance. Hit Lighting for Reflections evaluates lighting at reflection hits; Hit Lighting also evaluates it for global illumination at a much higher GPU cost. Unsupported configurations may fall back, and reflections-only Lumen uses hit lighting for reflections."))
+			.Description(LOCTEXT("LumenRayLightingHelp",
+				"Requires supported Lumen hardware ray tracing.\n\n"
+				"Surface Cache: Best performance.\n"
+				"Hit Lighting for Reflections: Higher-quality reflections at increased GPU cost.\n"
+				"Hit Lighting: Higher-quality lighting and reflections at significantly increased GPU cost.\n\n"
+				"Unsupported configurations may fall back. Reflections-only Lumen always uses Hit Lighting "
+				"for Reflections."))
 			.Impact(EUserSettingImpact::High)
 			.Default(ELumenRayLightingSetting::SurfaceCache)
 			.Option(ELumenRayLightingSetting::SurfaceCache, LOCTEXT("RaySurfaceCache", "Surface Cache"))
@@ -306,12 +336,15 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				&UToroGameUserSettings::SetLumenRayLightingMode);
 
 		auto& QualitySection = GraphicsPage.EditSection(TEXT("Scalability"), LOCTEXT("ScalabilitySection", "Scalability"));
-		QualitySection.GetMetadata().Description = LOCTEXT("QualitySectionDescription", "Choose a graphics preset or adjust individual effects to balance visual detail and performance.");
+		QualitySection.GetMetadata().Description = LOCTEXT("QualitySectionDescription",
+			"Choose a graphics preset or adjust individual effects to balance visual detail and performance.");
 		QualitySection.GetMetadata().Impact = EUserSettingImpact::High;
 
 		QualitySection.AddAction(Graphics_AutoDetect)
 			.DisplayName(LOCTEXT("AutoDetect", "Auto Detect"))
-			.Description(LOCTEXT("AutoDetectHelp", "Test your hardware to select recommended graphics quality settings. Replaces your current quality choices and updates the settings used when resetting graphics quality."))
+			.Description(LOCTEXT("AutoDetectHelp",
+				"Test your hardware to select recommended graphics quality settings.\n\n"
+				"Replaces your current quality choices and updates the settings used when resetting graphics quality."))
 			.Impact(EUserSettingImpact::Medium)
 			.BindCallback(&Settings, [](UToroGameUserSettings& Target, const FUserSettingEntry&) {
 				Target.RunHardwareBenchmark(10, 0.7f, 0.7f);
@@ -319,7 +352,9 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 
 		QualitySection.AddSelector<int32>(Graphics_OverallQuality)
 			.DisplayName(LOCTEXT("Overall", "Overall Quality"))
-			.Description(LOCTEXT("OverallHelp", "Choose a preset for all graphics quality settings. Higher presets favor visual detail over performance. Custom means individual settings use different quality levels."))
+			.Description(LOCTEXT("OverallHelp",
+				"Choose a preset for all graphics quality settings. Higher presets favor visual detail over performance.\n\n"
+				"Custom means individual settings use different quality levels."))
 			.Impact(EUserSettingImpact::High)
 			.Default(BaselineQuality.GetSingleQualityLevel())
 			.BindReset(&Settings, [](UToroGameUserSettings& Target, const FUserSettingEntry&) {
@@ -401,7 +436,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		AddQuality(
 			Graphics_ViewDistanceQuality,
 			LOCTEXT("ViewDistance", "View Distance"),
-			LOCTEXT("ViewDistanceHelp", "Adjust how far away distance-limited objects remain visible. Higher settings show more distant detail but can reduce performance."),
+			LOCTEXT("ViewDistanceHelp",
+				"Adjust how far away distance-limited objects remain visible. Higher settings show more distant detail but can reduce performance."),
 			Baseline.ViewDistanceQuality,
 			&UToroGameUserSettings::GetViewDistanceQuality,
 			&UToroGameUserSettings::SetViewDistanceQuality,
@@ -411,7 +447,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		AddQuality(
 			Graphics_AntiAliasingQuality,
 			LOCTEXT("AAQuality", "Anti-Aliasing Quality"),
-			LOCTEXT("AAQualityHelp", "Adjust the quality of edge smoothing for the selected Image Fidelity method. The effect on appearance and performance depends on that method."),
+			LOCTEXT("AAQualityHelp",
+				"Adjust the quality of edge smoothing for the selected Image Fidelity method. The effect on appearance and performance depends on that method."),
 			Baseline.AntiAliasingQuality,
 			&UToroGameUserSettings::GetAntiAliasingQuality,
 			&UToroGameUserSettings::SetAntiAliasingQuality,
@@ -421,7 +458,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		AddQuality(
 			Graphics_ShadowQuality,
 			LOCTEXT("Shadows", "Shadow Quality"),
-			LOCTEXT("ShadowsHelp", "Adjust the detail and quality of shadows. Higher settings can significantly reduce performance."),
+			LOCTEXT("ShadowsHelp",
+				"Adjust the detail and quality of shadows. Higher settings can significantly reduce performance."),
 			Baseline.ShadowQuality,
 			&UToroGameUserSettings::GetShadowQuality,
 			&UToroGameUserSettings::SetShadowQuality,
@@ -431,7 +469,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		AddQuality(
 			Graphics_GlobalIlluminationQuality,
 			LOCTEXT("GI", "Global Illumination Quality"),
-			LOCTEXT("GIHelp", "Adjust the quality of indirect lighting from light bouncing between surfaces. Higher settings can improve lighting accuracy but reduce performance."),
+			LOCTEXT("GIHelp",
+				"Adjust the quality of indirect lighting from light bouncing between surfaces. Higher settings can improve lighting accuracy but reduce performance."),
 			Baseline.GlobalIlluminationQuality,
 			&UToroGameUserSettings::GetGlobalIlluminationQuality,
 			&UToroGameUserSettings::SetGlobalIlluminationQuality,
@@ -441,7 +480,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		AddQuality(
 			Graphics_ReflectionQuality,
 			LOCTEXT("Reflections", "Reflection Quality"),
-			LOCTEXT("ReflectionsHelp", "Adjust the quality of reflections on reflective surfaces. Higher settings can improve reflected detail but reduce performance."),
+			LOCTEXT("ReflectionsHelp",
+				"Adjust the quality of reflections on reflective surfaces. Higher settings can improve reflected detail but reduce performance."),
 			Baseline.ReflectionQuality,
 			&UToroGameUserSettings::GetReflectionQuality,
 			&UToroGameUserSettings::SetReflectionQuality,
@@ -451,7 +491,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		AddQuality(
 			Graphics_PostProcessQuality,
 			LOCTEXT("PostProcess", "Post-Processing Quality"),
-			LOCTEXT("PostProcessHelp", "Adjust the quality of image effects such as bloom, depth of field, and motion blur. Higher settings can reduce performance."),
+			LOCTEXT("PostProcessHelp",
+				"Adjust the quality of image effects such as bloom, depth of field, and motion blur. Higher settings can reduce performance."),
 			Baseline.PostProcessQuality,
 			&UToroGameUserSettings::GetPostProcessingQuality,
 			&UToroGameUserSettings::SetPostProcessingQuality,
@@ -461,7 +502,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		AddQuality(
 			Graphics_TextureQuality,
 			LOCTEXT("Textures", "Texture Quality"),
-			LOCTEXT("TexturesHelp", "Adjust the detail of surface textures. Higher settings use more video memory; exceeding available memory can cause blurry textures or stuttering."),
+			LOCTEXT("TexturesHelp",
+				"Adjust the detail of surface textures. Higher settings use more video memory; exceeding available memory can cause blurry textures or stuttering."),
 			Baseline.TextureQuality,
 			&UToroGameUserSettings::GetTextureQuality,
 			&UToroGameUserSettings::SetTextureQuality,
@@ -471,7 +513,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		AddQuality(
 			Graphics_EffectsQuality,
 			LOCTEXT("Effects", "Effects Quality"),
-			LOCTEXT("EffectsHelp", "Adjust the quality of visual effects such as particles. Higher settings can make effects more detailed but reduce performance during busy scenes."),
+			LOCTEXT("EffectsHelp",
+				"Adjust the quality of visual effects such as particles. Higher settings can make effects more detailed but reduce performance during busy scenes."),
 			Baseline.EffectsQuality,
 			&UToroGameUserSettings::GetVisualEffectQuality,
 			&UToroGameUserSettings::SetVisualEffectQuality,
@@ -481,7 +524,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		AddQuality(
 			Graphics_FoliageQuality,
 			LOCTEXT("Foliage", "Foliage Quality"),
-			LOCTEXT("FoliageHelp", "Adjust the density of grass and foliage affected by this setting. Higher settings make vegetation fuller but can reduce performance."),
+			LOCTEXT("FoliageHelp",
+				"Adjust the density of grass and foliage affected by this setting. Higher settings make vegetation fuller but can reduce performance."),
 			Baseline.FoliageQuality,
 			&UToroGameUserSettings::GetFoliageQuality,
 			&UToroGameUserSettings::SetFoliageQuality,
@@ -491,7 +535,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		AddQuality(
 			Graphics_ShadingQuality,
 			LOCTEXT("Shading", "Shading Quality"),
-			LOCTEXT("ShadingHelp", "Adjust the quality of supported material shading effects, such as how surfaces respond to light. Higher settings can reduce performance."),
+			LOCTEXT("ShadingHelp",
+				"Adjust the quality of supported material shading effects, such as how surfaces respond to light. Higher settings can reduce performance."),
 			Baseline.ShadingQuality,
 			&UToroGameUserSettings::GetShadingQuality,
 			&UToroGameUserSettings::SetShadingQuality,
@@ -501,7 +546,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 		AddQuality(
 			Graphics_LandscapeQuality,
 			LOCTEXT("Landscape", "Landscape Quality"),
-			LOCTEXT("LandscapeHelp", "Adjust terrain detail. Higher settings can preserve more detail at a distance but reduce performance."),
+			LOCTEXT("LandscapeHelp",
+				"Adjust terrain detail. Higher settings can preserve more detail at a distance but reduce performance."),
 			Baseline.LandscapeQuality,
 			&UToroGameUserSettings::GetLandscapeQuality,
 			&UToroGameUserSettings::SetLandscapeQuality,
@@ -514,7 +560,8 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 	AudioPage.GetMetadata().Impact = EUserSettingImpact::None;
 	{
 		auto& VolumeSection = AudioPage.EditSection(TEXT("Volumes"), LOCTEXT("VolumesSection", "Volume"));
-		VolumeSection.GetMetadata().Description = LOCTEXT("VolumeSectionDescription", "Adjust master volume and individual audio categories.");
+		VolumeSection.GetMetadata().Description = LOCTEXT("VolumeSectionDescription",
+			"Adjust master volume and individual audio categories.");
 		VolumeSection.GetMetadata().Impact = EUserSettingImpact::None;
 
 		const auto AddVolume = [&Settings, &VolumeSection](FGameplayTag Key, FText Name, FText Description)
