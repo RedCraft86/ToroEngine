@@ -404,7 +404,7 @@ void UToroGameUserSettings::ValidateSettings()
 		LumenRayLightingMode = ELumenRayLightingSetting::SurfaceCache;
 	}
 	ImageFidelityMode = EImageFidelityMode::FixupValue(ImageFidelityMode);
-	TSRScreenPercentage = FixupFloatValue(TSRScreenPercentage, 10.0f, 100.0f, 100.0f);
+	TSRScreenPercentage = FixupFloatValue(TSRScreenPercentage, 10.0f, 200.0f, 100.0f);
 
 	for (auto It = AudioVolumes.CreateIterator(); It; ++It)
 	{
