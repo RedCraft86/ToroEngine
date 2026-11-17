@@ -246,16 +246,19 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				&UToroGameUserSettings::SetTSRScreenPercentage
 			);
 
-		float ScaleNormalized, ScaleCurrent, ScaleMin, ScaleMax;
-		Settings.GetResolutionScaleInformationEx(ScaleNormalized, ScaleCurrent, ScaleMin, ScaleMax);
 		ImageSection.AddSlider(Graphics_ResolutionScale)
 			.DisplayName(LOCTEXT("ResolutionScale", "Resolution Scale"))
 			.Description(LOCTEXT("ResolutionScaleHelp",
-				"Set the rendering resolution relative to the output resolution. Lower values can improve performance but make the image softer.\n\n"
-				"When using TSR, adjust TSR Screen Percentage instead."))
+				"Adjust the internal rendering resolution as a percentage of the output resolution. "
+				"Lower values improve performance but make the image softer/blurrier.\n\n"
+				"100% uses the full output resolution. When using TSR, adjust TSR Screen Percentage instead."))
 			.Impact(EUserSettingImpact::High)
-			.Default(FMath::Clamp(Baseline.ResolutionQuality, ScaleMin, ScaleMax))
-			.Range(ScaleMin, ScaleMax)
+			.Default(FMath::GetMappedRangeValueClamped(
+				FVector2D(Scalability::MinResolutionScale, Scalability::MaxResolutionScale),
+				FVector2D(0.0f, 100.0f),
+				BaselineQuality.ResolutionQuality
+			))
+			.Range(1.0f, 100.0f)
 			.Delta(1.0f)
 			.NumDecimal(0)
 			.IsEnabled([WeakSettings](){
@@ -269,11 +272,11 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				{
 					float Normalized, Current, Min, Max;
 					Target.GetResolutionScaleInformationEx(Normalized, Current, Min, Max);
-					return Current;
+					return Normalized * 100.0f;
 				},
 				[](UToroGameUserSettings& Target, const FUserSettingEntry&, const float& Value)
 				{
-					Target.SetResolutionScaleValueEx(Value);
+					Target.SetResolutionScaleNormalized(Value * 0.01f);
 				}
 			);
 
