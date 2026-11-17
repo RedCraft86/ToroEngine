@@ -267,6 +267,11 @@ UToroGameUserSettings::FResolutionOption UToroGameUserSettings::GetResolutionOpt
 
 void UToroGameUserSettings::SetResolutionOption(const FResolutionOption& InOption)
 {
+	if (!OldResolution.IsSet())
+	{
+		OldResolution = GetResolutionOption();
+	}
+
 	SetScreenResolution(InOption.Key);
 	SetFullscreenMode(InOption.Value);
 	ApplyResolutionSettings(false);
@@ -564,13 +569,23 @@ void UToroGameUserSettings::ApplyAudioVolume(const FGameplayTag& Channel) const
 
 void UToroGameUserSettings::OnResolutionDialogClosed(int32 ButtonIndex)
 {
+	if (!OldResolution.IsSet())
+	{
+		return;
+	}
+
+	const FResolutionOption Previous = OldResolution.GetValue();
+	OldResolution.Reset();
 	if (ButtonIndex == 1)
 	{
 		ConfirmVideoMode();
 	}
 	else
 	{
-		RevertVideoMode();
+		SetScreenResolution(Previous.Key);
+		SetFullscreenMode(Previous.Value);
+
+		ConfirmVideoMode();
 		ApplyResolutionSettings(false);
 		RequestUIUpdate();
 	}

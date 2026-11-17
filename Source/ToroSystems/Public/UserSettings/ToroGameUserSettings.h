@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Misc/Optional.h"
 #include "UserSettingsTypes.h"
 #include "GameplayTagContainer.h"
 #include "GameFramework/GameUserSettings.h"
@@ -167,6 +168,7 @@ protected:
 private:
 
 	bool bIsFirstLoad = false;
+	TOptional<FResolutionOption> OldResolution;
 	TWeakObjectPtr<UGameInstance> GameInstance;
 	TWeakObjectPtr<AToroWorldSettings> WorldSettings;
 
