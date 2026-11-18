@@ -190,6 +190,9 @@ public:
 	 */
 	[[nodiscard]] FActorSaveRecord* GetActorRecord(const FTaggedIdentity& Identity);
 
+	/** Finds an existing record without creating one; nullptr for absent or invalid identities. Pointer lifetime matches GetActorRecord. */
+	[[nodiscard]] const FActorSaveRecord* FindActorRecord(const FTaggedIdentity& Identity) const;
+
 private:
 
 	FHeader SaveHeader;

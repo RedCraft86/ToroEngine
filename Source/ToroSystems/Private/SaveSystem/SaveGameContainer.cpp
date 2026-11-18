@@ -405,6 +405,11 @@ FActorSaveRecord* FSlottedSaveContainer::GetActorRecord(const FTaggedIdentity& I
 	return &ActorRecords.FindOrAdd(Identity);
 }
 
+const FActorSaveRecord* FSlottedSaveContainer::FindActorRecord(const FTaggedIdentity& Identity) const
+{
+	return Identity.IsValid() ? ActorRecords.Find(Identity) : nullptr;
+}
+
 void FSlottedSaveContainer::SerializeHeader(FArchive& Ar)
 {
 	SaveHeader.Serialize(Ar);

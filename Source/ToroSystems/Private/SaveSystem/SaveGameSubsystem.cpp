@@ -111,6 +111,19 @@ ESaveContainerResult USaveGameSubsystem::LoadSlot(TOptional<uint8> InSlot)
 ESaveContainerResult USaveGameSubsystem::SaveSlot(TOptional<uint8> InSlot, TFunctionRef<void(FJsonObject&)> JsonProc)
 {
 	const uint8 Slot = ResolveSlot(InSlot, true);
+
+	const auto Behaviors = SaveBehaviors.Array();
+	for (const TWeakObjectPtr<USaveGameBehavior>& WeakBehavior : Behaviors)
+	{
+		if (USaveGameBehavior* Behavior = WeakBehavior.Get())
+		{
+			if (!Behavior->SaveActor())
+			{
+				return ProcessSlottedSaveResult(ESaveContainerResult::SerializationFailed, Slot);
+			}
+		}
+	}
+
 	if (!SlottedContainer.IsValid())
 	{
 		return ProcessSlottedSaveResult(ESaveContainerResult::Unknown, Slot);
