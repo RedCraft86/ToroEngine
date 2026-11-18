@@ -35,6 +35,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Settings)
 	FString Determinant;
 
+	/**
+	 * Causes the identity to be rebuilt.
+	 * Used if the component is spawned and determinant is adjusted in cpp.
+	 */
+	void RebuildIdentity()
+	{
+		Identity.RegenerateGuid(false, Determinant);
+	}
+
 private:
 
 	virtual void OnConstruction() override
