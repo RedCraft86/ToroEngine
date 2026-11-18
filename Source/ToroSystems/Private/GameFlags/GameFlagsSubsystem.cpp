@@ -5,6 +5,7 @@
 #include "DataTypes/RequestSet.h"
 #include "Utilities/ToroLogging.h"
 #include "Utilities/ToroUtilities.h"
+#include "SaveSystem/SaveGameSubsystem.h"
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 
@@ -17,7 +18,16 @@ UGameFlagsSubsystem* UGameFlagsSubsystem::Get(const UObject* Context)
 
 bool UGameFlagsSubsystem::HasTransientFlag(FGameplayTag Flag) const
 {
-	return GameFlagTags::IsTransient(Flag) && ActiveTransientFlags.Contains(Flag);
+	if (!GameFlagTags::IsTransient(Flag))
+	{
+		TORO_REPORT_WARNING(
+			TEXT("Attempting to check non-transient flag '%s' using HasTransientFlag()"),
+			*Flag.ToString()
+		);
+		return false;
+	}
+
+	return ActiveTransientFlags.Contains(Flag);
 }
 
 void UGameFlagsSubsystem::AddTransientFlag(const UObject* Source, FGameplayTag Flag)
@@ -48,8 +58,17 @@ void UGameFlagsSubsystem::AddTransientFlag(const UObject* Source, FGameplayTag F
 
 void UGameFlagsSubsystem::ClearTransientFlag(const UObject* Source, FGameplayTag Flag)
 {
-	if (!IsValid(Source) || !GameFlagTags::IsTransient(Flag))
+	if (!IsValid(Source))
 	{
+		return;
+	}
+
+	if (!GameFlagTags::IsTransient(Flag))
+	{
+		TORO_REPORT_WARNING(
+			TEXT("Attempting to clear non-transient flag '%s' using ClearTransientFlag()"),
+			*Flag.ToString()
+		);
 		return;
 	}
 
@@ -76,14 +95,25 @@ bool UGameFlagsSubsystem::HasPersistentFlag(FGameplayTag Flag) const
 {
 	if (!GameFlagTags::IsPersistent(Flag))
 	{
+		TORO_REPORT_WARNING(
+			TEXT("Attempting to check non-persistent flag '%s' using HasPersistentFlag()"),
+			*Flag.ToString()
+		);
 		return false;
 	}
 
-	return false;
-	// TODO: Implement after save rework
+	if (!SaveSubsystem.IsValid())
+	{
+		TORO_REPORT_ERROR(TEXT("HasPersistentFlag requires a valid save game subsystem"));
+		return false;
+	}
+
+	const FGlobalSaveContainer* Global = SaveSubsystem->GetGlobal();
+	const FSlottedSaveContainer* Slotted = SaveSubsystem->GetSlotted();
+	return (Global && Global->HasFlag(Flag)) || (Slotted && Slotted->HasFlag(Flag));
 }
 
-void UGameFlagsSubsystem::AddPersistentFlag(EPersistentFlagScope Scope, FGameplayTag Flag)
+void UGameFlagsSubsystem::AddPersistentFlag(EPersistentFlagScope Scope, FGameplayTag Flag) const
 {
 	if (!GameFlagTags::IsPersistent(Flag))
 	{
@@ -94,17 +124,73 @@ void UGameFlagsSubsystem::AddPersistentFlag(EPersistentFlagScope Scope, FGamepla
 		return;
 	}
 
-	// TODO: Implement after save rework
-}
-
-void UGameFlagsSubsystem::ClearPersistentFlag(EPersistentFlagScope Scope, FGameplayTag Flag)
-{
-	if (!GameFlagTags::IsPersistent(Flag))
+	if (!SaveSubsystem.IsValid())
 	{
+		TORO_REPORT_ERROR(TEXT("AddPersistentFlag requires a valid save game subsystem"));
 		return;
 	}
 
-	// TODO: Implement after save rework
+	const bool bWasPresent = HasPersistentFlag(Flag);
+	switch (Scope)
+	{
+	case EPersistentFlagScope::Global:
+		if (FGlobalSaveContainer* Container = SaveSubsystem->GetGlobal())
+		{
+			Container->AddFlag(Flag);
+		}
+		break;
+	case EPersistentFlagScope::Slot:
+		if (FSlottedSaveContainer* Container = SaveSubsystem->GetSlotted())
+		{
+			Container->AddFlag(Flag);
+		}
+		break;
+	}
+
+	if (!bWasPresent && HasPersistentFlag(Flag))
+	{
+		PersistentAddedEvent.Broadcast(Flag);
+	}
+}
+
+void UGameFlagsSubsystem::ClearPersistentFlag(EPersistentFlagScope Scope, FGameplayTag Flag) const
+{
+	if (!GameFlagTags::IsPersistent(Flag))
+	{
+		TORO_REPORT_WARNING(
+			TEXT("Attempting to clear non-persistent flag '%s' using ClearPersistentFlag()"),
+			*Flag.ToString()
+		);
+		return;
+	}
+
+	if (!SaveSubsystem.IsValid())
+	{
+		TORO_REPORT_ERROR(TEXT("ClearPersistentFlag requires a valid save game subsystem"));
+		return;
+	}
+
+	const bool bWasPresent = HasPersistentFlag(Flag);
+	switch (Scope)
+	{
+	case EPersistentFlagScope::Global:
+		if (FGlobalSaveContainer* Container = SaveSubsystem->GetGlobal())
+		{
+			Container->RemoveFlag(Flag);
+		}
+		break;
+	case EPersistentFlagScope::Slot:
+		if (FSlottedSaveContainer* Container = SaveSubsystem->GetSlotted())
+		{
+			Container->RemoveFlag(Flag);
+		}
+		break;
+	}
+
+	if (bWasPresent && !HasPersistentFlag(Flag))
+	{
+		PersistentClearedEvent.Broadcast(Flag);
+	}
 }
 
 void UGameFlagsSubsystem::OnTransientChanged(FGameplayTag Flag)
@@ -126,4 +212,17 @@ void UGameFlagsSubsystem::OnTransientChanged(FGameplayTag Flag)
 		ActiveTransientFlags.Remove(Flag);
 		TransientClearedEvent.Broadcast(Flag);
 	}
+}
+
+void UGameFlagsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+	// Fix: Initialize persistence before caching it; game-instance initialization needs no world.
+	SaveSubsystem = Collection.InitializeDependency<USaveGameSubsystem>();
+}
+
+void UGameFlagsSubsystem::Deinitialize()
+{
+	SaveSubsystem.Reset();
+	Super::Deinitialize();
 }

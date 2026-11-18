@@ -99,6 +99,9 @@ public:
 	/** Adds a valid exact flag; invalid or existing flags have no effect. */
 	void AddFlag(const FGameplayTag& Flag);
 
+	/** Removes an exact flag in memory; missing flags have no effect. */
+	void RemoveFlag(const FGameplayTag& Flag);
+
 	/** Tests exact membership; invalid flags return false. */
 	[[nodiscard]] bool HasFlag(const FGameplayTag& Flag) const;
 
@@ -180,6 +183,9 @@ public:
 
 	/** Adds a valid exact flag; invalid or existing flags have no effect. */
 	void AddFlag(const FGameplayTag& Flag);
+
+	/** Removes an exact flag in memory; missing flags have no effect. */
+	void RemoveFlag(const FGameplayTag& Flag);
 
 	/** Tests exact membership; invalid flags return false. */
 	[[nodiscard]] bool HasFlag(const FGameplayTag& Flag) const;

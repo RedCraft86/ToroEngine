@@ -6,6 +6,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameFlagsSubsystem.generated.h"
 
+class USaveGameSubsystem;
 class FRequestSet;
 
 /** Selects the save container that owns a persistent flag. */
@@ -24,6 +25,7 @@ enum class EPersistentFlagScope : uint8
  * Transient flags use exact tag membership and remain enabled while at least one source requests them.
  * Sources are held weakly; release requests explicitly when they end, including on pooled widget deactivation.
  * Destroyed sources are pruned after garbage collection. Access and delegate callbacks occur on the game thread.
+ * Persistent mutations update container memory; explicit global/slot saves persist them to disk.
  */
 UCLASS(MinimalAPI, NotBlueprintable, BlueprintType)
 class UGameFlagsSubsystem final : public UGameInstanceSubsystem
@@ -86,18 +88,18 @@ public:
 	 * @param Scope Whether to store the flag globally or in the current save slot.
 	 * @param Flag Tag under Flag.Persistent to set. Tags outside that hierarchy are rejected.
 	 */
-	UFUNCTION(BlueprintCallable, Category = GameFlags)
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = GameFlags)
 	TOROSYSTEMS_API void AddPersistentFlag(EPersistentFlagScope Scope,
-		UPARAM(meta = (Categories = "Flag.Persistent")) FGameplayTag Flag);
+		UPARAM(meta = (Categories = "Flag.Persistent")) FGameplayTag Flag) const;
 
 	/**
 	 * Removes a persistent flag from the selected save container.
 	 * @param Scope Container to clear; a copy in the other scope is unaffected.
 	 * @param Flag Tag under Flag.Persistent to remove. Missing flags have no effect.
 	 */
-	UFUNCTION(BlueprintCallable, Category = GameFlags)
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = GameFlags)
 	TOROSYSTEMS_API void ClearPersistentFlag(EPersistentFlagScope Scope,
-		UPARAM(meta = (Categories = "Flag.Persistent")) FGameplayTag Flag);
+		UPARAM(meta = (Categories = "Flag.Persistent")) FGameplayTag Flag) const;
 
 	/**
 	 * Provides subscription access to transient flag transitions, passing the changed tag.
@@ -111,7 +113,8 @@ public:
 	}
 
 	/**
-	 * Provides subscription access to persistent flag changes, passing the changed tag.
+ * Provides subscription access to effective persistent flag changes made through this subsystem, passing the changed tag.
+ * A flag is enabled while present in either scope; loading containers directly does not broadcast these events.
 	 * Binding does not replay current state; query HasPersistentFlag when initializing a listener.
 	 * @param bCleared True selects cleared notifications; false selects added notifications.
 	 */
@@ -122,10 +125,13 @@ public:
 
 private:
 
+	TWeakObjectPtr<USaveGameSubsystem> SaveSubsystem;
 	FOnFlagChanged TransientAddedEvent, TransientClearedEvent;
 	FOnFlagChanged PersistentAddedEvent, PersistentClearedEvent;
 	TMap<FGameplayTag, TSharedRef<FRequestSet>> TransientFlags;
 	TSet<FGameplayTag> ActiveTransientFlags;
 
 	void OnTransientChanged(FGameplayTag Flag);
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
 };

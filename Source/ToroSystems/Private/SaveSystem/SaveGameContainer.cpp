@@ -199,6 +199,11 @@ void FGlobalSaveContainer::AddFlag(const FGameplayTag& Flag)
 	}
 }
 
+void FGlobalSaveContainer::RemoveFlag(const FGameplayTag& Flag)
+{
+	Flags.Remove(Flag);
+}
+
 bool FGlobalSaveContainer::HasFlag(const FGameplayTag& Flag) const
 {
 	return Flag.IsValid() && Flags.Contains(Flag);
@@ -388,6 +393,11 @@ void FSlottedSaveContainer::AddFlag(const FGameplayTag& Flag)
 	{
 		Flags.Add(Flag);
 	}
+}
+
+void FSlottedSaveContainer::RemoveFlag(const FGameplayTag& Flag)
+{
+	Flags.Remove(Flag);
 }
 
 bool FSlottedSaveContainer::HasFlag(const FGameplayTag& Flag) const
