@@ -38,6 +38,9 @@ private:
 	TSubclassOf<UToroInventoryArchiveEntry> ArchiveEntryClass;
 
 	UPROPERTY(Transient, meta = (BindWidget))
+	TObjectPtr<UCommonButtonBase> CloseButton;
+
+	UPROPERTY(Transient, meta = (BindWidget))
 	TObjectPtr<UCommonButtonBase> ItemsTab;
 
 	UPROPERTY(Transient, meta = (BindWidget))
@@ -86,10 +89,14 @@ private:
 	TArray<TWeakObjectPtr<UToroInventoryEntryWidget>> Entries;
 
 	bool bUpdatingSelection = false;
+	bool bArchivePanelOpen = false;
+
+	void SetArchivePanelOpen(bool bOpen);
 
 	void BuildEntries();
 	void UpdateContent(const UItemDefinition* Item) const;
 
+	void OnCloseClicked();
 	void OnItemTab(bool bSelected);
 	void OnArchiveTab(bool bSelected);
 	void OnEntrySelected(const UToroInventoryEntryWidget* Entry);

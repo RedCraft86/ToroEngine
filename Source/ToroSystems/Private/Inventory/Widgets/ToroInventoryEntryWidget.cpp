@@ -34,7 +34,14 @@ void UToroInventoryEntryWidget::SetIsSelected(bool bSelected) const
 		return;
 	}
 
-	SelectButton->SetIsSelected(bSelected, false);
+	if (bSelected)
+	{
+		SelectButton->SetIsSelected(true, false);
+	}
+	else
+	{
+		SelectButton->ClearSelection();
+	}
 	if (bSelected)
 	{
 		Inventory->MarkItemSeen(Item);

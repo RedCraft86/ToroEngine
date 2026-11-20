@@ -110,10 +110,6 @@ void UToroInventoryWidget::BuildEntries()
 
 void UToroInventoryWidget::UpdateContent(const UItemDefinition* Item) const
 {
-	TitleText->SetText(FText::GetEmpty());
-	ContentText->SetText(FText::GetEmpty());
-	ArchiveImage->SetBrushFromTexture(nullptr);
-	ArchiveImage->SetVisibility(ESlateVisibility::Collapsed);
 	if (!IsValid(Item))
 	{
 		NameText->SetText(FText::GetEmpty());
@@ -147,6 +143,7 @@ void UToroInventoryWidget::UpdateContent(const UItemDefinition* Item) const
 		}
 		else
 		{
+			ArchiveImage->SetBrushFromTexture(nullptr);
 			ArchiveImage->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
@@ -162,6 +159,28 @@ void UToroInventoryWidget::UpdateContent(const UItemDefinition* Item) const
 	}
 }
 
+void UToroInventoryWidget::OnCloseClicked()
+{
+	DeactivateWidget();
+}
+
+void UToroInventoryWidget::SetArchivePanelOpen(bool bOpen)
+{
+	if (bArchivePanelOpen == bOpen)
+	{
+		return;
+	}
+	bArchivePanelOpen = bOpen;
+	if (bOpen)
+	{
+		PlayAnimationForward(ArchiveAnimation);
+	}
+	else
+	{
+		PlayAnimationReverse(ArchiveAnimation);
+	}
+}
+
 void UToroInventoryWidget::OnItemTab(bool bSelected)
 {
 	if (bUpdatingSelection)
@@ -174,10 +193,10 @@ void UToroInventoryWidget::OnItemTab(bool bSelected)
 		{
 			TGuardValue<bool> SelectionGuard(bUpdatingSelection, true);
 			ItemsTab->SetIsSelected(true, false);
-			ArchivesTab->SetIsSelected(false, false);
+			ArchivesTab->ClearSelection();
 		}
 		EntrySwitcher->SetActiveWidgetIndex(0);
-		PlayAnimationReverse(ArchiveAnimation);
+		SetArchivePanelOpen(false);
 
 		for (const auto& Entry : Entries)
 		{
@@ -212,12 +231,12 @@ void UToroInventoryWidget::OnArchiveTab(bool bSelected)
 	{
 		{
 			TGuardValue<bool> SelectionGuard(bUpdatingSelection, true);
-			ItemsTab->SetIsSelected(false, false);
+			ItemsTab->ClearSelection();
 			ArchivesTab->SetIsSelected(true, false);
 		}
 
 		EntrySwitcher->SetActiveWidgetIndex(1);
-		PlayAnimationForward(ArchiveAnimation);
+		SetArchivePanelOpen(true);
 
 		for (const auto& Entry : Entries)
 		{
@@ -250,20 +269,18 @@ void UToroInventoryWidget::OnEntrySelected(const UToroInventoryEntryWidget* Entr
 
 	TGuardValue<bool> SelectionGuard(bUpdatingSelection, true);
 	const bool bArchive = Entry->IsA<UToroInventoryArchiveEntry>();
-	ItemsTab->SetIsSelected(!bArchive, false);
-	ArchivesTab->SetIsSelected(bArchive, false);
-	if (EntrySwitcher->GetActiveWidgetIndex() != (bArchive ? 1 : 0))
+	if (bArchive)
 	{
-		EntrySwitcher->SetActiveWidgetIndex(bArchive ? 1 : 0);
-		if (bArchive)
-		{
-			PlayAnimationForward(ArchiveAnimation);
-		}
-		else
-		{
-			PlayAnimationReverse(ArchiveAnimation);
-		}
+		ItemsTab->ClearSelection();
+		ArchivesTab->SetIsSelected(true, false);
 	}
+	else
+	{
+		ArchivesTab->ClearSelection();
+		ItemsTab->SetIsSelected(true, false);
+	}
+	EntrySwitcher->SetActiveWidgetIndex(bArchive ? 1 : 0);
+	SetArchivePanelOpen(bArchive);
 
 	for (const TWeakObjectPtr<UToroInventoryEntryWidget>& Inst : Entries)
 	{
@@ -310,6 +327,7 @@ void UToroInventoryWidget::NativeConstruct()
 	const APawn* Pawn = GetOwningPlayerPawn();
 	Inventory = IsValid(Pawn) ? Pawn->GetComponentByClass<UInventoryBehavior>() : nullptr;
 	if (!Inventory.IsValid()
+		|| !IsValid(CloseButton)
 		|| !IsValid(ItemsTab)
 		|| !IsValid(ArchivesTab)
 		|| !IsValid(EntrySwitcher)
@@ -335,7 +353,19 @@ void UToroInventoryWidget::NativeConstruct()
 	SelectedItem.Reset();
 	UpdateContent(nullptr);
 
+	TitleText->SetText(FText::GetEmpty());
+	ContentText->SetText(FText::GetEmpty());
+	ArchiveImage->SetBrushFromTexture(nullptr);
+	ArchiveImage->SetVisibility(ESlateVisibility::Collapsed);
+
 	UToroWidgetLibrary::InitWidgetAnimation(this, ArchiveAnimation);
+
+	bArchivePanelOpen = false;
+	SetAnimationCurrentTime(ArchiveAnimation, 0.0f);
+	EntrySwitcher->SetActiveWidgetIndex(0);
+
+	CloseButton->SetIsSelectable(false);
+	CloseButton->OnClicked().AddUObject(this, &UToroInventoryWidget::OnCloseClicked);
 
 	ItemsTab->SetIsSelectable(true);
 	ItemsTab->SetIsInteractableWhenSelected(false);
@@ -345,6 +375,7 @@ void UToroInventoryWidget::NativeConstruct()
 	ArchivesTab->SetIsInteractableWhenSelected(false);
 	ArchivesTab->OnIsSelectedChanged().AddUObject(this, &UToroInventoryWidget::OnArchiveTab);
 
+	EquipButton->SetIsSelectable(false);
 	EquipButton->OnClicked().AddUObject(this, &UToroInventoryWidget::OnEquipmentClicked);
 
 	BuildEntries();
