@@ -27,7 +27,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = UserInterface,
 		DisplayName = "Push Inventory", meta = (WorldContext = ContextObject))
-	static bool Push(const UObject* ContextObject, int32 PlayerIdx = 0);
+	static TOROSYSTEMS_API bool Push(const UObject* ContextObject, int32 PlayerIdx = 0);
 
 private:
 
