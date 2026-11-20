@@ -5,6 +5,8 @@
 #include "Actors/ToroCharacter.h"
 #include "ToroPlayerCharacter.generated.h"
 
+class UIdentityBehavior;
+class USaveGameBehavior;
 class UInventoryBehavior;
 
 UCLASS(Blueprintable, BlueprintType)
@@ -41,12 +43,23 @@ public:
 		return Cast<T>(Get(ContextObject, T::StaticClass(), PlayerIdx));
 	}
 
+	[[nodiscard]] FORCEINLINE UIdentityBehavior* GetIdentity()
+	{
+		return Identity;
+	}
+
 	[[nodiscard]] FORCEINLINE UInventoryBehavior* GetInventory()
 	{
 		return Inventory;
 	}
 
 protected:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Subobjects)
+	TObjectPtr<UIdentityBehavior> Identity;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Subobjects)
+	TObjectPtr<USaveGameBehavior> SaveGame;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Subobjects)
 	TObjectPtr<UInventoryBehavior> Inventory;

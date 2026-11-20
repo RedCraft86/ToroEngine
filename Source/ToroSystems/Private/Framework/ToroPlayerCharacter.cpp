@@ -1,7 +1,10 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Framework/ToroPlayerCharacter.h"
+#include "ActorBehaviors/Misc/IdentityBehavior.h"
+#include "Characters/ToroCharacterDatabase.h"
 #include "Inventory/InventoryBehavior.h"
+#include "SaveSystem/SaveGameBehavior.h"
 #include "Kismet/GameplayStatics.h"
 
 AToroPlayerCharacter::AToroPlayerCharacter()
@@ -10,6 +13,12 @@ AToroPlayerCharacter::AToroPlayerCharacter()
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.TickGroup = TG_PrePhysics;
 
+	Identity = CreateDefaultSubobject<UIdentityBehavior>(TEXT("Identity"));
+	Identity->Identity.Group = ToroCharacterTags::Player.GetTag();
+	Identity->Determinant = TEXT("MainPlayer");
+	Identity->RebuildIdentity();
+
+	SaveGame = CreateDefaultSubobject<USaveGameBehavior>(TEXT("SaveGame"));
 	Inventory = CreateDefaultSubobject<UInventoryBehavior>(TEXT("Inventory"));
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
