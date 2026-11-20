@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #if WITH_EDITOR
+#include "Inventory/EquipmentActor.h"
 #include "Misc/DataValidation.h"
 #endif
 #include "ItemFragment.generated.h"
