@@ -28,7 +28,7 @@ public:
 
 protected:
 
-	UPROPERTY(VisibleDefaultsOnly, Category = DefaultSubobjects)
+	UPROPERTY(VisibleDefaultsOnly, Category = Subobjects)
 	TObjectPtr<USplineComponent> RootSpline;
 
 	/** Zero-based segment indices to leave open; index i connects point i to the next point, wrapping on closed splines. */
