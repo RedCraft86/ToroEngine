@@ -5,8 +5,9 @@
 #include "CoreMinimal.h"
 #include "UserInterfaceConfig.generated.h"
 
-class UToroSettingsWidget;
 class UToroDialogWidget;
+class UToroSettingsWidget;
+class UToroInventoryWidget;
 class UToroAutoWidget;
 
 USTRUCT(BlueprintType)
@@ -23,10 +24,13 @@ struct TOROSYSTEMS_API FUserInterfaceConfig final
 	float TextCharactersPerSecond = 15.0f;
 
 	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
+	TSoftClassPtr<UToroDialogWidget> DialogWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
 	TSoftClassPtr<UToroSettingsWidget> SettingsWidgetClass;
 
 	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
-	TSoftClassPtr<UToroDialogWidget> DialogWidgetClass;
+	TSoftClassPtr<UToroInventoryWidget> InventoryWidgetclass;
 
 	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
 	TSet<TSoftClassPtr<UToroAutoWidget>> AutoWidgetClasses;

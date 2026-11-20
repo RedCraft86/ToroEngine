@@ -5,8 +5,9 @@
 
 FUserInterfaceConfig::FUserInterfaceConfig()
 {
-	SettingsWidgetClass = FSoftClassPath(TEXT("/ToroEngine/UserInterface/WBP_ToroSettings.WBP_ToroSettings_C"));
 	DialogWidgetClass = FSoftClassPath(TEXT("/ToroEngine/UserInterface/WBP_ToroDialog.WBP_ToroDialog_C"));
+	SettingsWidgetClass = FSoftClassPath(TEXT("/ToroEngine/UserInterface/WBP_ToroSettings.WBP_ToroSettings_C"));
+	InventoryWidgetclass = FSoftClassPath(TEXT("/ToroEngine/UserInterface/WBP_ToroInventory.WBP_ToroInventory_C"));
 
 	AutoWidgetClasses = {
 		TSoftClassPtr<UToroAutoWidget>(FSoftClassPath(

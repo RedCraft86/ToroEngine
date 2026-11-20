@@ -1,6 +1,7 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
 #include "Framework/ToroPlayerCharacter.h"
+#include "Inventory/InventoryBehavior.h"
 #include "Kismet/GameplayStatics.h"
 
 AToroPlayerCharacter::AToroPlayerCharacter()
@@ -8,6 +9,8 @@ AToroPlayerCharacter::AToroPlayerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.TickGroup = TG_PrePhysics;
+
+	Inventory = CreateDefaultSubobject<UInventoryBehavior>(TEXT("Inventory"));
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 	AutoReceiveInput = EAutoReceiveInput::Player0;

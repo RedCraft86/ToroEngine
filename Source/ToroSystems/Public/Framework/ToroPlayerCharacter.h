@@ -5,6 +5,8 @@
 #include "Actors/ToroCharacter.h"
 #include "ToroPlayerCharacter.generated.h"
 
+class UInventoryBehavior;
+
 UCLASS(Blueprintable, BlueprintType)
 class TOROSYSTEMS_API AToroPlayerCharacter : public AToroCharacter
 {
@@ -38,4 +40,14 @@ public:
 			"T must derive from ACharacter");
 		return Cast<T>(Get(ContextObject, T::StaticClass(), PlayerIdx));
 	}
+
+	[[nodiscard]] FORCEINLINE UInventoryBehavior* GetInventory()
+	{
+		return Inventory;
+	}
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Subobjects)
+	TObjectPtr<UInventoryBehavior> Inventory;
 };
