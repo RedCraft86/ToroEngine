@@ -104,12 +104,14 @@ void UToroPauseWidget::OnProcessMainMenu(int32 Option)
 	}
 }
 
-UE5Coro::TCoroutine<> UToroPauseWidget::ProcessMapChange(const TSoftObjectPtr<UWorld>& TargetMap)
+UE5Coro::TCoroutine<> UToroPauseWidget::ProcessMapChange(const TSoftObjectPtr<UWorld> TargetMap)
 {
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 
 	bool bSuccess;
-	co_await UToroCameraLibrary::StartCameraFade(ToroEngine::LatentInfo(), GetOwningPlayer(), bSuccess);
+	co_await UToroCameraLibrary::StartCameraFade(ToroEngine::LatentInfo(this), GetOwningPlayer(), bSuccess);
+
+	DeactivateWidget();
 	const APlayerController* PC = GetOwningPlayer();
 	if (TargetMap.IsNull())
 	{

@@ -46,7 +46,7 @@ private:
 
 	void OnProcessReload(int32 Option);
 	void OnProcessMainMenu(int32 Option);
-	UE5Coro::TCoroutine<> ProcessMapChange(const TSoftObjectPtr<UWorld>& TargetMap);
+	UE5Coro::TCoroutine<> ProcessMapChange(const TSoftObjectPtr<UWorld> TargetMap);
 
 	virtual void NativeConstruct() override;
 };
