@@ -212,7 +212,15 @@ FVoidCoroutine UToroCameraLibrary::StartCameraFade(FLatentActionInfo LatentInfo,
 		if (AdjustedDuration > 0.0f)
 		{
 			PCM->StartCameraFade(FromAlpha, ToAlpha, AdjustedDuration, Color, bFadeAudio, bHoldAtEnd);
-			co_await UE5Coro::Latent::Seconds(AdjustedDuration);
+			const APlayerController* PC = PCM->GetOwningPlayerController();
+			if (PC && PC->ShouldPerformFullTickWhenPaused())
+			{
+				co_await UE5Coro::Latent::UnpausedSeconds(AdjustedDuration);
+			}
+			else
+			{
+				co_await UE5Coro::Latent::Seconds(AdjustedDuration);
+			}
 		}
 		else
 		{
@@ -266,7 +274,14 @@ FVoidCoroutine UToroCameraLibrary::BlendPlayerViewTarget(FLatentActionInfo Laten
 		PC->SetViewTargetWithBlend(NewTarget, AdjustedDuration, BlendFunc, BlendExp, bLockOutgoing);
 		if (AdjustedDuration > 0.0f)
 		{
-			co_await UE5Coro::Latent::Seconds(AdjustedDuration);
+			if (PC->ShouldPerformFullTickWhenPaused())
+			{
+				co_await UE5Coro::Latent::UnpausedSeconds(AdjustedDuration);
+			}
+			else
+			{
+				co_await UE5Coro::Latent::Seconds(AdjustedDuration);
+			}
 		}
 
 		bSuccess = true;
