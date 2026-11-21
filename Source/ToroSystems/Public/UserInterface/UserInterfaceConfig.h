@@ -7,6 +7,7 @@
 
 class UToroDialogWidget;
 class UToroSettingsWidget;
+class UToroPauseWidget;
 class UToroInventoryWidget;
 class UToroAutoWidget;
 
@@ -30,7 +31,10 @@ struct TOROSYSTEMS_API FUserInterfaceConfig final
 	TSoftClassPtr<UToroSettingsWidget> SettingsWidgetClass;
 
 	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
-	TSoftClassPtr<UToroInventoryWidget> InventoryWidgetclass;
+	TSoftClassPtr<UToroPauseWidget> PauseWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
+	TSoftClassPtr<UToroInventoryWidget> InventoryWidgetClass;
 
 	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
 	TSet<TSoftClassPtr<UToroAutoWidget>> AutoWidgetClasses;

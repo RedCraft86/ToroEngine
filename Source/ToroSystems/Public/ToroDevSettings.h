@@ -28,6 +28,9 @@ public:
 	}
 
 	UPROPERTY(Config, EditAnywhere, Category = Framework)
+	FName DemoName;
+
+	UPROPERTY(Config, EditAnywhere, Category = Framework)
 	FUserInterfaceConfig UserInterface;
 
 	UPROPERTY(Config, EditAnywhere, Category = Framework)
@@ -38,4 +41,6 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category = Framework)
 	TMap<TSoftObjectPtr<UWorld>, FToroLevelInfo> Levels;
+
+	FString GetVersionInfo() const;
 };

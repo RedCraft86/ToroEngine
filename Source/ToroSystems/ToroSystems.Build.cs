@@ -17,6 +17,7 @@ public class ToroSystems : ModuleRules
 			"UMG",
 			"Json",
 			"RenderCore",
+			"EngineSettings",
 			"MetasoundEngine",
 			"AudioModulation",
 			"AsyncMessageSystem",
@@ -27,6 +28,7 @@ public class ToroSystems : ModuleRules
 			"CommonUI",
 			"CommonInput",
 			"ToroEngine",
+			"UE5Coro"
 		]);
 
 		if (Target.Type == TargetType.Editor)
