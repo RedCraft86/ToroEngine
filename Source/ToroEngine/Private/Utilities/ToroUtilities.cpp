@@ -31,7 +31,7 @@ namespace ToroEngine
 		return IsValid(World) ? World : nullptr;
 	}
 
-	FLatentActionInfo MakeInfo(UObject* Target, const FString& FuncName)
+	FLatentActionInfo LatentInfo(UObject* Target, const FString& FuncName)
 	{
 		checkf(IsInGameThread(), TEXT("ToroEngine::MakeInfo(...) should only be called from the GameThread."));
 
