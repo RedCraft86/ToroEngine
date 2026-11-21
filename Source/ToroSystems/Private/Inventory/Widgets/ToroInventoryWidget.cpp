@@ -34,7 +34,7 @@ bool UToroInventoryWidget::Push(const UObject* ContextObject, int32 PlayerIdx)
 	}
 
 	const FUserInterfaceConfig* Config = FUserInterfaceConfig::Get();
-	const TSubclassOf<UToroInventoryWidget> Class = Config ? Config->InventoryWidgetclass.LoadSynchronous() : nullptr;
+	const TSubclassOf<UToroInventoryWidget> Class = Config ? Config->InventoryWidgetClass.LoadSynchronous() : nullptr;
 	if (!IsValid(Class) || Class->HasAnyClassFlags(CLASS_Abstract))
 	{
 		TORO_REPORT_ERROR(TEXT("Failed to push Inventory Widget: Failed to obtain config or got an invalid class."));
