@@ -1,13 +1,18 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
+// ReSharper disable CppMemberFunctionMayBeConst
 #include "Framework/ToroPlayerController.h"
 #include "Framework/ToroPlayerCameraManager.h"
+#include "UserInterface/Widgets/ToroPauseWidget.h"
+#include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "DataTypes/ToroLevelInfo.h"
 #include "Kismet/GameplayStatics.h"
+#include "InputAction.h"
 #include "InputMappingContext.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
+#include "UObject/ConstructorHelpers.h"
 
 AToroPlayerController::AToroPlayerController()
 {
@@ -18,6 +23,13 @@ AToroPlayerController::AToroPlayerController()
 	bShouldPerformFullTickWhenPaused = true;
 
 	PlayerCameraManagerClass = AToroPlayerCameraManager::StaticClass();
+
+	// Inputs
+	{
+		static const ConstructorHelpers::FObjectFinder<UInputAction> PauseFinder(
+			TEXT("/ToroEngine/Inputs/IA_Pause.IA_Pause"));
+		if (PauseFinder.Succeeded()) PauseAction = PauseFinder.Object;
+	}
 
 	PauseRequests->OnChanged().AddUObject(this, &AToroPlayerController::OnPauseRequestsChanged);
 
@@ -51,6 +63,21 @@ void AToroPlayerController::OnPauseRequestsChanged()
 	SetPause(!PauseRequests->IsEmpty());
 }
 
+void AToroPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	if (UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(InputComponent); Input && PauseAction)
+	{
+		Input->BindAction(PauseAction, ETriggerEvent::Started, this, &AToroPlayerController::HandlePause);
+	}
+}
+
+void AToroPlayerController::HandlePause()
+{
+	UToroPauseWidget::Push(this);
+}
+
 void AToroPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -59,6 +86,7 @@ void AToroPlayerController::BeginPlay()
 	auto* InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	if (LevelInfo && InputSubsystem)
 	{
+		InputSubsystem->ClearAllMappings();
 		if (const UInputMappingContext* InputMappings = LevelInfo->InputMappings.LoadSynchronous())
 		{
 			InputSubsystem->AddMappingContext(InputMappings, 0);

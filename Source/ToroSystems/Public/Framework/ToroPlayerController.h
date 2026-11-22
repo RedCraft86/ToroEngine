@@ -6,6 +6,9 @@
 #include "GameFramework/PlayerController.h"
 #include "ToroPlayerController.generated.h"
 
+class UEnhancedInputComponent;
+class UInputAction;
+
 /**
  * Player controller with source-owned pause requests; CommonUI widgets own input configuration and focus.
  * Pause requests keep the game paused while any remain.
@@ -66,9 +69,15 @@ public:
 
 protected:
 
+	UPROPERTY(EditDefaultsOnly, Category = "Settings|Input")
+	TObjectPtr<UInputAction> PauseAction;
+
+	void HandlePause();
+
 	TSharedRef<FRequestSet> PauseRequests = FRequestSet::Make();
 
 	void OnPauseRequestsChanged();
 
 	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
 };
