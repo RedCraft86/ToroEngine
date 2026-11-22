@@ -555,21 +555,36 @@ void AToroPlayerCharacter::UpdateCameraLean(float DeltaSeconds)
 	}
 
 	CurrentLean = FMath::FInterpTo(CurrentLean, TargetLean, DeltaSeconds, 12.0f);
-	CurrentLean *= GetLeanClearance(CurrentLean);
+	const float VisibleLean = CurrentLean * GetLeanClearance(CurrentLean);
 	PlayerCamera->SetRelativeLocationAndRotation(
-		BaseCameraTransform.GetLocation() + FVector(0.0, LeanDistance * CurrentLean, 0.0),
-		BaseCameraTransform.Rotator() + FRotator(0.0, 0.0, LeanRoll * CurrentLean));
+		BaseCameraTransform.GetLocation() + FVector(0.0, LeanDistance * VisibleLean, 0.0),
+		BaseCameraTransform.Rotator() + FRotator(0.0, 0.0, LeanRoll * VisibleLean));
 }
 
 float AToroPlayerCharacter::GetLeanClearance(float Direction) const
 {
 	const FTransform Socket = CameraArm->GetSocketTransform(USpringArmComponent::SocketName);
-	const FVector Start = Socket.TransformPosition(BaseCameraTransform.GetLocation());
-	const FVector End = Start + Socket.TransformVectorNoScale(FVector(0.0, LeanDistance * Direction, 0.0));
+	const FVector CameraOrigin = BaseCameraTransform.GetLocation();
+	const FVector Start = Socket.TransformPosition(CameraOrigin);
+	const FVector End = Socket.TransformPosition(CameraOrigin + FVector(0.0, LeanDistance * Direction, 0.0));
+	const FVector Sweep = End - Start;
+	const double SweepDistance = Sweep.Size();
+	if (SweepDistance <= UE_SMALL_NUMBER)
+	{
+		return 1.0f;
+	}
+
+	constexpr double WallPadding = 10.0;
+	const FVector ProbeEnd = End + Sweep * (WallPadding / SweepDistance);
 	FHitResult Hit;
 	const FCollisionQueryParams Params(SCENE_QUERY_STAT(PlayerLean), false, this);
-	return GetWorld()->SweepSingleByChannel(Hit, Start, End, FQuat::Identity, ECC_Camera,
-		FCollisionShape::MakeSphere(8.0f), Params) ? Hit.Time : 1.0f;
+	if (!GetWorld()->SweepSingleByChannel(Hit, Start, ProbeEnd, FQuat::Identity, ECC_Camera,
+		FCollisionShape::MakeSphere(8.0f), Params))
+	{
+		return 1.0f;
+	}
+
+	return FMath::Clamp((Hit.Distance - WallPadding) / SweepDistance, 0.0, 1.0);
 }
 
 // Interaction
