@@ -3,8 +3,9 @@
 #pragma once
 
 #include "Misc/EnumClassFlags.h"
-#include "DataTypes/Accumulators.h"
 #include "Actors/ToroCharacter.h"
+#include "DataTypes/Accumulators.h"
+#include "DataTypes/ToroPlayerMovementSettings.h"
 #include "ToroPlayerCharacter.generated.h"
 
 class UInteractTriggerBehavior;
@@ -149,7 +150,20 @@ public:
 	/** Removes this source's movement modifier. */
 	void RemoveMovementModifier(const UObject* Source) const;
 
+	// Stamina
+	/** Returns sprint stamina as a fraction from zero to one. */
+	[[nodiscard]] float GetStamina() const { return Stamina; }
+
+	/** Returns whether sprinting is blocked while stamina recovers. */
+	[[nodiscard]] bool IsStaminaExhausted() const { return bStaminaExhausted; }
+
+	/** Returns whether sprint stamina is enabled for this character. */
+	[[nodiscard]] bool IsStaminaEnabled() const { return StaminaSettings.bEnabled; }
+
 	// Interaction
+	/** Returns the current interaction target, or nullptr when no valid target is selected. */
+	[[nodiscard]] const UInteractTriggerBehavior* GetInteractionTarget() const;
+
 	/** Subscribes to interaction target changes. The event receives nullptr when the target is cleared. */
 	[[nodiscard]] FORCEINLINE FOnInteractTargetChanged::RegistrationType& OnInteractTargetChanged()
 	{
@@ -255,6 +269,28 @@ protected:
 	void ResetMovementActions(EPlayerCapability LostCapabilities);
 	virtual void OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
 	virtual void OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
+
+	// Stamina
+	UPROPERTY(EditDefaultsOnly, Category = "Settings|Stamina")
+	FToroPlayerStaminaSettings StaminaSettings;
+
+	/** Current sprint stamina as a fraction from zero to one. */
+	UPROPERTY(BlueprintReadOnly, Transient, Category = "Player|Stamina")
+	float Stamina = 1.0f;
+
+	/** Whether sprinting is blocked until enough stamina has recovered. */
+	UPROPERTY(BlueprintReadOnly, Transient, Category = "Player|Stamina")
+	bool bStaminaExhausted = false;
+
+	void UpdateStamina(float DeltaSeconds, bool bMoving);
+
+	// Footsteps
+	UPROPERTY(EditDefaultsOnly, Category = "Settings|Footsteps")
+	FToroPlayerFootstepSettings FootstepSettings;
+
+	float FootstepProgress = 0.0f;
+	void UpdateFootsteps(float DeltaSeconds, bool bMoving);
+	void PlayFootstep(float VolumeMultiplier) const;
 
 	// Camera
 	/** Mounts the first-person camera and applies the player's turn smoothing. */

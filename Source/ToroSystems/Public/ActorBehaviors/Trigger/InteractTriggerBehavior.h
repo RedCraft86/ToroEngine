@@ -18,10 +18,10 @@ public:
 	UInteractTriggerBehavior() {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
-	bool bInteractable;
+	bool bInteractable = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
-	FText DisplayLabel;
+	FText DisplayLabel = INVTEXT("Interact");
 
 	[[nodiscard]] bool CanBeInteractedWith() const
 	{

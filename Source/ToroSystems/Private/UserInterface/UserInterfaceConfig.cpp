@@ -16,7 +16,11 @@ FUserInterfaceConfig::FUserInterfaceConfig()
 		TSoftClassPtr<UToroAutoWidget>(FSoftClassPath(
 			TEXT("/ToroEngine/UserInterface/WBP_ToroNotify.WBP_ToroNotify_C"))),
 		TSoftClassPtr<UToroAutoWidget>(FSoftClassPath(
-			TEXT("/ToroEngine/UserInterface/WBP_ToroFrameRate.WBP_ToroFrameRate_C")))
+			TEXT("/ToroEngine/UserInterface/WBP_ToroFrameRate.WBP_ToroFrameRate_C"))),
+		TSoftClassPtr<UToroAutoWidget>(FSoftClassPath(
+			TEXT("/ToroEngine/UserInterface/WBP_ToroStamina.WBP_ToroStamina_C"))),
+		TSoftClassPtr<UToroAutoWidget>(FSoftClassPath(
+			TEXT("/ToroEngine/UserInterface/WBP_ToroInteraction.WBP_ToroInteraction_C")))
 	};
 }
 

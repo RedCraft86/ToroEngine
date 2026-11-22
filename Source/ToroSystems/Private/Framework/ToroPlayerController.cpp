@@ -75,7 +75,11 @@ void AToroPlayerController::SetupInputComponent()
 
 void AToroPlayerController::HandlePause()
 {
-	UToroPauseWidget::Push(this);
+	const FToroLevelInfo* Level = FToroLevelInfo::Get(this);
+	if (!Level || Level->LevelType != LevelTypeTags::MainMenu)
+	{
+		UToroPauseWidget::Push(this);
+	}
 }
 
 void AToroPlayerController::BeginPlay()

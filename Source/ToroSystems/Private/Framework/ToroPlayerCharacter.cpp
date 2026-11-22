@@ -46,6 +46,7 @@ AToroPlayerCharacter::AToroPlayerCharacter()
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	PlayerCamera->SetupAttachment(CameraArm, USpringArmComponent::SocketName);
 	PlayerCamera->bUsePawnControlRotation = false;
+	PlayerCamera->bConstrainAspectRatio = false;
 
 	Identity = CreateDefaultSubobject<UIdentityBehavior>(TEXT("Identity"));
 	Identity->Identity.Group = ToroCharacterTags::Player.GetTag();
@@ -168,6 +169,13 @@ void AToroPlayerCharacter::RemoveMovementModifier(const UObject* Source) const
 	MovementModifiers->Remove(Source);
 }
 
+// Interaction
+
+const UInteractTriggerBehavior* AToroPlayerCharacter::GetInteractionTarget() const
+{
+	return InteractionTarget.Get();
+}
+
 // Camera
 
 bool AToroPlayerCharacter::TeleportTo(const FVector& DestLocation, const FRotator& DestRotation,
@@ -279,6 +287,7 @@ void AToroPlayerCharacter::HandleLook(const FInputActionValue& Value)
 void AToroPlayerCharacter::HandleRun(const FInputActionValue& Value)
 {
 	const bool bRunning = Value.Get<bool>() && Controller && HasCapability(EPlayerCapability::Run)
+		&& (!StaminaSettings.bEnabled || !bStaminaExhausted)
 		&& !bIsCrouched && !GetCharacterMovement()->bWantsToCrouch;
 	if (HasPlayerState(EPlayerStateFlags::Running) != bRunning)
 	{
@@ -477,6 +486,93 @@ void AToroPlayerCharacter::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfH
 
 	SetMovementState(EPlayerStateFlags::Crouching, false);
 	Super::OnEndCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+}
+
+// Stamina
+
+void AToroPlayerCharacter::UpdateStamina(float DeltaSeconds, bool bMoving)
+{
+	if (!StaminaSettings.bEnabled)
+	{
+		return;
+	}
+
+	if (bMoving && HasPlayerState(EPlayerStateFlags::Running))
+	{
+		Stamina = FMath::Max(0.0f, Stamina - StaminaSettings.DrainRate * DeltaSeconds);
+		if (Stamina == 0.0f)
+		{
+			bStaminaExhausted = true;
+			ResetMovementActions(EPlayerCapability::Run);
+		}
+		return;
+	}
+
+	Stamina = FMath::Min(1.0f, Stamina + StaminaSettings.RecoveryRate * DeltaSeconds);
+	if (Stamina >= StaminaSettings.SprintRecoveryThreshold)
+	{
+		bStaminaExhausted = false;
+	}
+}
+
+// Footsteps
+
+void AToroPlayerCharacter::UpdateFootsteps(float DeltaSeconds, bool bMoving)
+{
+	if (!bMoving || !GetCharacterMovement()->IsMovingOnGround()
+		|| (!FootstepSettings.DefaultSound && FootstepSettings.SurfaceSounds.IsEmpty()))
+	{
+		FootstepProgress = 0.0f;
+		return;
+	}
+
+	float Interval = FootstepSettings.WalkInterval;
+	float VolumeMultiplier = 1.0f;
+	if (HasPlayerState(EPlayerStateFlags::Running))
+	{
+		Interval = FootstepSettings.RunInterval;
+		VolumeMultiplier = FootstepSettings.RunVolumeMultiplier;
+	}
+	else if (HasPlayerState(EPlayerStateFlags::Crouching))
+	{
+		Interval = FootstepSettings.CrouchInterval;
+		VolumeMultiplier = FootstepSettings.CrouchVolumeMultiplier;
+	}
+
+	FootstepProgress += DeltaSeconds / FMath::Max(0.01f, Interval);
+	if (FootstepProgress >= 1.0f)
+	{
+		FootstepProgress = FMath::Fmod(FootstepProgress, 1.0f);
+		PlayFootstep(VolumeMultiplier);
+	}
+}
+
+void AToroPlayerCharacter::PlayFootstep(float VolumeMultiplier) const
+{
+	const UCharacterMovementComponent* Movement = GetCharacterMovement();
+	const FVector Start = GetActorLocation();
+	const FVector End = Start + Movement->GetGravityDirection()
+		* (GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + 20.0);
+
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(PlayerFootstep), true, this);
+	Params.bReturnPhysicalMaterial = true;
+	FHitResult Hit;
+	if (!GetWorld()->LineTraceSingleByChannel(Hit, Start, End, FootstepSettings.TraceChannel, Params))
+	{
+		Hit = Movement->CurrentFloor.HitResult;
+	}
+
+	const EPhysicalSurface Surface = UGameplayStatics::GetSurfaceType(Hit);
+	USoundBase* Sound = FootstepSettings.SurfaceSounds.FindRef(Surface);
+	if (!Sound)
+	{
+		Sound = FootstepSettings.DefaultSound;
+	}
+	if (Sound)
+	{
+		const FVector Location = Hit.IsValidBlockingHit() ? FVector(Hit.ImpactPoint) : End;
+		UGameplayStatics::PlaySoundAtLocation(this, Sound, Location, FootstepSettings.Volume * VolumeMultiplier);
+	}
 }
 
 // Camera updates
@@ -684,8 +780,16 @@ void AToroPlayerCharacter::BeginPlay()
 void AToroPlayerCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	const bool bLocalPlayer = IsLocallyControlled();
+	if (bLocalPlayer)
+	{
+		const bool bMoving = IsMoving();
+		UpdateStamina(DeltaSeconds, bMoving);
+		UpdateFootsteps(DeltaSeconds, bMoving);
+	}
+
 	UpdatePlayerCamera(DeltaSeconds);
-	if (IsLocallyControlled())
+	if (bLocalPlayer)
 	{
 		SearchInteractionTarget();
 	}
@@ -693,6 +797,7 @@ void AToroPlayerCharacter::Tick(float DeltaSeconds)
 
 void AToroPlayerCharacter::UnPossessed()
 {
+	FootstepProgress = 0.0f;
 	ResetMovementActions(EPlayerCapability::All);
 	Super::UnPossessed();
 	SearchInteractionTarget();
