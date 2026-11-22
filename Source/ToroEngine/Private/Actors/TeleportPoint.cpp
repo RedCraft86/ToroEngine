@@ -36,11 +36,11 @@ ATeleportPoint::ATeleportPoint() : bUseSupportPlane(true)
 
 	// Support plane mesh
 	{
-		const ConstructorHelpers::FObjectFinder<UStaticMesh> PlaneFinder(
+		static const ConstructorHelpers::FObjectFinder<UStaticMesh> PlaneFinder(
 		   TEXT("/Engine/BasicShapes/Plane.Plane"));
 		if (PlaneFinder.Succeeded()) SupportPlane->SetStaticMesh(PlaneFinder.Object);
 
-		const ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialFinder(
+		static const ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialFinder(
 			TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
 		if (MaterialFinder.Succeeded()) SupportPlane->SetMaterial(0, MaterialFinder.Object);
 	}
