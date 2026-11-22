@@ -5,7 +5,10 @@
 #include "Engine/TimerHandle.h"
 #include "ActorBehaviors/ActorBehaviorBase.h"
 #include "ActorBehaviors/ActorBehaviorRef.h"
+#include "UObject/WeakObjectPtrTemplates.h"
 #include "ActionBehaviorBase.generated.h"
+
+class UTriggerBehaviorBase;
 
 /** How an action changes a target's boolean state. */
 UENUM(BlueprintType)
@@ -30,6 +33,9 @@ class TOROSYSTEMS_API UActionBehaviorBase : public UActorBehaviorBase
 public:
 
 	UActionBehaviorBase();
+
+	/** Whether the supplied sibling trigger is bound and can activate this action now. */
+	[[nodiscard]] bool CanAcceptTrigger(const UTriggerBehaviorBase* Trigger) const;
 
 	/** Blueprint action hook, dispatched after OnTriggered(). */
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "On Triggered")
@@ -76,6 +82,7 @@ private:
 	bool bTriggered;
 
 	FTimerHandle DelayTimer;
+	TWeakObjectPtr<UTriggerBehaviorBase> BoundTrigger;
 
 	void DoTrigger();
 	void ExecuteAction();

@@ -16,6 +16,7 @@ void UActionBehaviorBase::BeginPlay()
 	Super::BeginPlay();
 	if (UTriggerBehaviorBase* Trigger = TriggerRef.Get<UTriggerBehaviorBase>())
 	{
+		BoundTrigger = Trigger;
 		Trigger->OnBeginTriggerNative().AddUObject(this, &UActionBehaviorBase::DoTrigger);
 	}
 }
@@ -31,16 +32,17 @@ void UActionBehaviorBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 }
 
-void UActionBehaviorBase::DoTrigger()
+bool UActionBehaviorBase::CanAcceptTrigger(const UTriggerBehaviorBase* Trigger) const
 {
 	const UWorld* World = GetWorld();
-	if (bTriggered || !World || !CanTrigger())
-	{
-		return;
-	}
+	return !bTriggered && Trigger && BoundTrigger.Get() == Trigger && World
+		&& (bRetriggerable || !World->GetTimerManager().TimerExists(DelayTimer))
+		&& CanTrigger();
+}
 
-	FTimerManager& Timers = World->GetTimerManager();
-	if (Timers.TimerExists(DelayTimer) && !bRetriggerable)
+void UActionBehaviorBase::DoTrigger()
+{
+	if (!CanAcceptTrigger(BoundTrigger.Get()))
 	{
 		return;
 	}
@@ -53,7 +55,7 @@ void UActionBehaviorBase::DoTrigger()
 
 	if (Delay >= 0.1f)
 	{
-		Timers.SetTimer(DelayTimer, this, &UActionBehaviorBase::ExecuteAction, Delay, false);
+		GetWorld()->GetTimerManager().SetTimer(DelayTimer, this, &UActionBehaviorBase::ExecuteAction, Delay, false);
 	}
 	else
 	{
@@ -74,8 +76,9 @@ void UActionBehaviorBase::ExecuteAction()
 
 void UActionBehaviorBase::UnbindTrigger()
 {
-	if (UTriggerBehaviorBase* Trigger = TriggerRef.Get<UTriggerBehaviorBase>())
+	if (UTriggerBehaviorBase* Trigger = BoundTrigger.Get())
 	{
 		Trigger->OnBeginTriggerNative().RemoveAll(this);
 	}
+	BoundTrigger.Reset();
 }

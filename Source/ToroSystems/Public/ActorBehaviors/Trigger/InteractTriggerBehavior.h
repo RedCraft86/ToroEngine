@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Interfaces/ActivatableObject.h"
 #include "ActorBehaviors/Trigger/TriggerBehaviorBase.h"
 #include "InteractTriggerBehavior.generated.h"
 
@@ -20,14 +19,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	bool bInteractable = true;
 
+	/** Require at least one action bound to this trigger that can accept an activation. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
+	bool bRequireCallableAction = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	FText DisplayLabel = INVTEXT("Interact");
 
-	[[nodiscard]] bool CanBeInteractedWith() const
-	{
-		return bInteractable
-			&& IsActive()
-			&& IActivatableObject::GetActiveState(GetOwner())
-			&& !GetOwner()->IsHidden();
-	}
+	/** Whether the player can interact with this trigger now. */
+	[[nodiscard]] TOROSYSTEMS_API bool CanBeInteractedWith() const;
 };
