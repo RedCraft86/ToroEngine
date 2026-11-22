@@ -5,7 +5,7 @@
 #include "Misc/EnumClassFlags.h"
 #include "Actors/ToroCharacter.h"
 #include "DataTypes/Accumulators.h"
-#include "DataTypes/ToroPlayerMovementSettings.h"
+#include "DataTypes/ToroPlayerSettings.h"
 #include "ToroPlayerCharacter.generated.h"
 
 class UInteractTriggerBehavior;

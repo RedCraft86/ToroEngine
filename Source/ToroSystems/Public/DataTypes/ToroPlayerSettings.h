@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Chaos/ChaosEngineInterface.h"
 #include "Engine/EngineTypes.h"
-#include "ToroPlayerMovementSettings.generated.h"
+#include "ToroPlayerSettings.generated.h"
 
 class USoundBase;
 
