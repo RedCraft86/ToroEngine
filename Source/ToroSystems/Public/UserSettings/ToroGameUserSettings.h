@@ -97,6 +97,12 @@ public:
 	bool GetInvertMouseY() const;
 
 	UFUNCTION(BlueprintCallable, Category = Settings)
+	void SetSmoothTurns(float Value);
+
+	UFUNCTION(BlueprintPure, Category = Settings)
+	float GetSmoothTurns() const;
+
+	UFUNCTION(BlueprintCallable, Category = Settings)
 	void SetBrightness(float Value);
 
 	UFUNCTION(BlueprintPure, Category = Settings)
@@ -189,6 +195,9 @@ private:
 
 	UPROPERTY(Config)
 	bool bInvertMouseY;
+
+	UPROPERTY(Config)
+	float SmoothTurns;
 
 	UPROPERTY(Config)
 	float Brightness;

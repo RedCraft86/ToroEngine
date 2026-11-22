@@ -123,6 +123,16 @@ bool UToroGameUserSettings::GetInvertMouseY() const
 	return bInvertMouseY;
 }
 
+void UToroGameUserSettings::SetSmoothTurns(float Value)
+{
+	SmoothTurns = FixupFloatValue(Value, 0.0f, 1.0f, 1.0f);
+}
+
+float UToroGameUserSettings::GetSmoothTurns() const
+{
+	return SmoothTurns;
+}
+
 void UToroGameUserSettings::SetBrightness(float Value)
 {
 	Brightness = FixupFloatValue(Value, 20.0f, 80.0f, 50.0f);
@@ -381,6 +391,7 @@ void UToroGameUserSettings::SetToDefaults()
 	bInvertMouseX = false;
 	SensitivityY = 1.0f;
 	bInvertMouseY = false;
+	SmoothTurns = 1.0f;
 	Brightness = 50.0f;
 	MotionBlurAmount = 2;
 	LumenMode = ELumenUserSetting::Enabled;
@@ -396,6 +407,7 @@ void UToroGameUserSettings::ValidateSettings()
 
 	SensitivityX = FixupFloatValue(SensitivityX, 0.2f, 2.0f, 1.0f);
 	SensitivityY = FixupFloatValue(SensitivityY, 0.2f, 2.0f, 1.0f);
+	SmoothTurns = FixupFloatValue(SmoothTurns, 0.0f, 1.0f, 1.0f);
 	Brightness = FixupFloatValue(Brightness, 20.0f, 80.0f, 50.0f);
 	MotionBlurAmount = FMath::Clamp(MotionBlurAmount, 0, 3);
 	LumenMode = ELumenUserSetting::FixupValue(LumenMode);

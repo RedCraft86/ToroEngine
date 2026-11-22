@@ -91,6 +91,19 @@ void UUserSettingsBuilder::BuildRegistry(FUserSettingsRegistry& Registry, UToroG
 				&UToroGameUserSettings::GetInvertMouseY,
 				&UToroGameUserSettings::SetInvertMouseY
 			);
+
+		CameraSection.AddSlider(Camera_Smoothing)
+			.DisplayName(LOCTEXT("SmoothTurns", "Smooth Turns"))
+			.Description(LOCTEXT("SmoothTurnsHelp", "Adjust how much the camera smooths turns. Set to 0 for an immediate response."))
+			.Default(1.0f)
+			.Range(0.0f, 1.0f)
+			.Delta(0.1f)
+			.NumDecimal(1)
+			.Bind(
+				&Settings,
+				&UToroGameUserSettings::GetSmoothTurns,
+				&UToroGameUserSettings::SetSmoothTurns
+			);
 	}
 
 	auto& VideoPage = Registry.EditPage(TEXT("Video"), LOCTEXT("VideoPage", "Video"));
