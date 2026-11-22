@@ -159,7 +159,8 @@ EPlayerStateFlags AToroPlayerCharacter::GetPlayerStateFlags() const
 
 bool AToroPlayerCharacter::IsMoving() const
 {
-	return HasPlayerState(EPlayerStateFlags::Moving) && GetVelocity().SizeSquared2D() > FMath::Square(1.0);
+	return HasPlayerState(EPlayerStateFlags::Moving)
+		&& GetVelocity().SizeSquared2D() > FMath::Square(WalkSpeed * 0.5f);
 }
 
 // Movement
