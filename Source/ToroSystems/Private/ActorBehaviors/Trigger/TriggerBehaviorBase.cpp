@@ -15,9 +15,9 @@ void UTriggerBehaviorBase::StartTrigger()
 	{
 		bTriggered = true;
 		ElapsedTime = 0.0f;
+		SetComponentTickEnabled(true);
 		OnBeginTriggerNativeEvent.Broadcast();
 		OnBeginTrigger.Broadcast();
-		SetComponentTickEnabled(true);
 	}
 }
 
@@ -26,10 +26,10 @@ void UTriggerBehaviorBase::EndTrigger()
 	if (bTriggered)
 	{
 		SetComponentTickEnabled(false);
-		OnEndTriggerNativeEvent.Broadcast();
-		OnEndTrigger.Broadcast();
 		ElapsedTime = 0.0f;
 		bTriggered = false;
+		OnEndTriggerNativeEvent.Broadcast();
+		OnEndTrigger.Broadcast();
 	}
 }
 

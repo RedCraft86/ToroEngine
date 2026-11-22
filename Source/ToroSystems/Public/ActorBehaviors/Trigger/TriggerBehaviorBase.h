@@ -26,6 +26,9 @@ public:
 
 	UTriggerBehaviorBase();
 
+	/** Returns whether the trigger is currently running. */
+	[[nodiscard]] bool IsTriggered() const { return bTriggered; }
+
 	/** Broadcasts after native begin listeners, with state and ticking already committed. */
 	UPROPERTY(BlueprintAssignable, Category = ActorBehaviors)
 	FTriggerBehaviorDelegate OnBeginTrigger;
