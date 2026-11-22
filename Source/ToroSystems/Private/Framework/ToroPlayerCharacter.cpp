@@ -10,6 +10,7 @@
 #include "Inventory/Widgets/ToroInventoryWidget.h"
 #include "Inventory/InventoryBehavior.h"
 #include "Characters/ToroCharacterDatabase.h"
+#include "DataTypes/ToroLevelInfo.h"
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/World.h"
@@ -672,6 +673,12 @@ void AToroPlayerCharacter::BeginPlay()
 	BaseCameraTransform = PlayerCamera->GetRelativeTransform();
 	CameraArm->AddTickPrerequisiteActor(this);
 	UpdateMovementSpeed();
+
+	if (const FToroLevelInfo* LevelInfo = FToroLevelInfo::Get(this);
+		LevelInfo && LevelInfo->LevelType == LevelTypeTags::MainMenu)
+	{
+		BlockCapabilities(this, EPlayerCapability::All);
+	}
 }
 
 void AToroPlayerCharacter::Tick(float DeltaSeconds)
