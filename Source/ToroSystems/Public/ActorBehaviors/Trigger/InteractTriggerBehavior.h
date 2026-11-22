@@ -25,6 +25,9 @@ public:
 
 	[[nodiscard]] bool CanBeInteractedWith() const
 	{
-		return bInteractable && IsActive() && IActivatableObject::GetActiveState(GetOwner());
+		return bInteractable
+			&& IsActive()
+			&& IActivatableObject::GetActiveState(GetOwner())
+			&& !GetOwner()->IsHidden();
 	}
 };
