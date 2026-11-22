@@ -24,6 +24,7 @@ public class ToroSystems : ModuleRules
 			"AsyncMessageSystem",
 			"DeveloperSettings",
 			"LevelSequence",
+			"MovieScene",
 			"EngineCameras",
 			"EnhancedInput",
 			"GameplayTags",
