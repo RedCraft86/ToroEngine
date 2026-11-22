@@ -241,7 +241,7 @@ protected:
 
 	// Capabilities
 	/** Capabilities available before temporary blocks are applied. */
-	UPROPERTY(EditDefaultsOnly, Category = Settings,
+	UPROPERTY(EditAnywhere, Category = Settings,
 		meta = (Bitmask, BitmaskEnum = "/Script/ToroSystems.EPlayerCapability"))
 	int32 DefaultCapabilities = static_cast<int32>(EPlayerCapability::All);
 
@@ -258,15 +258,15 @@ protected:
 	void SetLeanState(EPlayerLeanState Direction);
 
 	/** Base walking speed in cm/s before movement modifiers. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Movement", meta = (ClampMin = 0.0f))
+	UPROPERTY(EditAnywhere, Category = "Settings|Movement", meta = (ClampMin = 0.0f))
 	float WalkSpeed = 350.0f;
 
 	/** Base running speed in cm/s before movement modifiers. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Movement", meta = (ClampMin = 0.0f))
+	UPROPERTY(EditAnywhere, Category = "Settings|Movement", meta = (ClampMin = 0.0f))
 	float RunSpeed = 650.0f;
 
 	/** Base crouched movement speed in cm/s before movement modifiers. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Movement", meta = (ClampMin = 0.0f))
+	UPROPERTY(EditAnywhere, Category = "Settings|Movement", meta = (ClampMin = 0.0f))
 	float CrouchSpeed = 180.0f;
 
 	TSharedRef<TUnorderedAccumulator<FPlayerMovementModifier>> MovementModifiers
@@ -278,7 +278,7 @@ protected:
 	virtual void OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
 
 	// Stamina
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Stamina")
+	UPROPERTY(EditAnywhere, Category = "Settings|Stamina")
 	FToroPlayerStaminaSettings StaminaSettings;
 
 	/** Current sprint stamina as a fraction from zero to one. */
@@ -292,7 +292,7 @@ protected:
 	void UpdateStamina(float DeltaSeconds, bool bMoving);
 
 	// Footsteps
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Footsteps")
+	UPROPERTY(EditAnywhere, Category = "Settings|Footsteps")
 	FToroPlayerFootstepSettings FootstepSettings;
 
 	float FootstepProgress = 0.0f;
@@ -301,51 +301,51 @@ protected:
 
 	// Camera
 	/** Mounts the first-person camera and applies the player's turn smoothing. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Subobjects)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Subobjects)
 	TObjectPtr<USpringArmComponent> CameraArm;
 
 	/** Provides the first-person view and its authored base field of view. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Subobjects)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Subobjects)
 	TObjectPtr<UCameraComponent> PlayerCamera;
 
 	/** Follows the local camera manager so equipped items inherit camera shake. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Subobjects)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Subobjects)
 	TObjectPtr<USceneComponent> EquipmentRoot;
 
 	/** Additional field of view in degrees while running and moving. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera")
+	UPROPERTY(EditAnywhere, Category = "Settings|Camera")
 	float RunFOVOffset = 5.0f;
 
 	/** Shake used for walking and crouched movement. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera|Shake")
+	UPROPERTY(EditAnywhere, Category = "Settings|Camera|Shake")
 	TSubclassOf<UCameraShakeBase> WalkCameraShake;
 
 	/** Shake used for sprinting. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera|Shake")
+	UPROPERTY(EditAnywhere, Category = "Settings|Camera|Shake")
 	TSubclassOf<UCameraShakeBase> RunCameraShake;
 
 	/** Scale of the walking shake while crouched. Zero disables it while crouched. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera|Shake", meta = (ClampMin = "0.0"))
+	UPROPERTY(EditAnywhere, Category = "Settings|Camera|Shake", meta = (ClampMin = "0.0"))
 	float CrouchCameraShakeScale = 0.4f;
 
 	/** Rotation lag response at low turn rates. Lower values give more smoothing. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera", meta = (ClampMin = 0.1f))
+	UPROPERTY(EditAnywhere, Category = "Settings|Camera", meta = (ClampMin = 0.1f))
 	float CameraRotationLagSpeed = 12.0f;
 
 	/** Rotation lag response during fast turns. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera", meta = (ClampMin = 0.1f))
+	UPROPERTY(EditAnywhere, Category = "Settings|Camera", meta = (ClampMin = 0.1f))
 	float FastTurnRotationLagSpeed = 55.0f;
 
 	/** Maximum lateral camera offset in cm when leaning. Geometry can limit the offset. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera", meta = (ClampMin = 0.0f))
+	UPROPERTY(EditAnywhere, Category = "Settings|Camera", meta = (ClampMin = 0.0f))
 	float LeanDistance = 100.0f;
 
 	/** Camera roll in degrees at full lean. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera")
+	UPROPERTY(EditAnywhere, Category = "Settings|Camera")
 	float LeanRoll = 8.0f;
 
 	/** How quickly the camera settles after crouching or standing. Zero snaps to the new height. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera", meta = (ClampMin = 0.0f))
+	UPROPERTY(EditAnywhere, Category = "Settings|Camera", meta = (ClampMin = 0.0f))
 	float CrouchCameraInterpSpeed = 12.0f;
 
 	float BaseCameraFOV = 90.0f;
@@ -367,7 +367,7 @@ protected:
 
 	// Interaction
 	/** Maximum range of camera-trace interaction. */
-	UPROPERTY(EditDefaultsOnly, Category = "Settings|Interaction", meta = (ClampMin = 0.0f, Units = "cm"))
+	UPROPERTY(EditAnywhere, Category = "Settings|Interaction", meta = (ClampMin = 0.0f, Units = "cm"))
 	float InteractionReach = 250.0f;
 
 	FOnInteractTargetChanged OnInteractTargetChangedEvent;
