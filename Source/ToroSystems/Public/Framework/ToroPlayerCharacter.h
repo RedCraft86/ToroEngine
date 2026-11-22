@@ -256,7 +256,7 @@ protected:
 
 	/** Base running speed in cm/s before movement modifiers. */
 	UPROPERTY(EditDefaultsOnly, Category = "Settings|Movement", meta = (ClampMin = 0.0f))
-	float RunSpeed = 550.0f;
+	float RunSpeed = 650.0f;
 
 	/** Base crouched movement speed in cm/s before movement modifiers. */
 	UPROPERTY(EditDefaultsOnly, Category = "Settings|Movement", meta = (ClampMin = 0.0f))
