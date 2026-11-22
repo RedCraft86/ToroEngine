@@ -4,8 +4,8 @@
 #include "Inventory/Widgets/ToroInventoryWidget.h"
 #include "Inventory/EquipmentActor.h"
 #include "Inventory/ItemDefinition.h"
-#include "Engine/World.h"
 #include "UObject/SoftObjectPath.h"
+#include "Engine/World.h"
 
 UInventoryBehavior::UInventoryBehavior()
 {
@@ -54,7 +54,6 @@ bool UInventoryBehavior::AddArchive(const UItemDefinition* Item, bool bOpenUI)
 	{
 		if (bOpenUI)
 		{
-			// Fix: Construct the mutable soft reference from the const asset path.
 			OpenArchive = TSoftObjectPtr<UItemDefinition>(FSoftObjectPath(Item));
 			UToroInventoryWidget::Push(this);
 		}
@@ -91,7 +90,6 @@ bool UInventoryBehavior::RemoveItem(const UItemDefinition* Item, uint8 Quantity)
 		return false;
 	}
 
-	// Fix: Use a compatible soft-reference key for map access.
 	const TSoftObjectPtr<UItemDefinition> ItemKey{FSoftObjectPath(Item)};
 	const uint8 OldAmount = Items[ItemKey];
 	const uint8 NewAmount = static_cast<uint8>(FMath::Max(static_cast<int32>(OldAmount) - Quantity, 0));
@@ -119,7 +117,6 @@ uint8 UInventoryBehavior::GetQuantity(const UItemDefinition* Item) const
 		return 0;
 	}
 
-	// Fix: Query with a compatible soft-reference key.
 	return Items.FindRef(TSoftObjectPtr<UItemDefinition>(FSoftObjectPath(Item)), 0);
 }
 
@@ -166,7 +163,12 @@ bool UInventoryBehavior::EquipItem(const UItemDefinition* Item)
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	AEquipmentActor* SpawnedActor = GetWorld()->SpawnActor<AEquipmentActor>(
 		Fragment->EquipmentClass.LoadSynchronous(), GetOwner()->GetActorTransform(), Params);
-	if (!IsValid(SpawnedActor) || !SpawnedActor->PrepareEquipment(GetOwner()))
+	if (!IsValid(SpawnedActor))
+	{
+		return false;
+	}
+
+	if (!SpawnedActor->PrepareEquipment(GetOwner()) || !IsValid(SpawnedActor))
 	{
 		if (IsValid(SpawnedActor))
 		{
@@ -177,7 +179,6 @@ bool UInventoryBehavior::EquipItem(const UItemDefinition* Item)
 
 	UnequipItem();
 
-	// Fix: Persist asset identity without an incompatible pointer assignment.
 	EquipmentItem = TSoftObjectPtr<UItemDefinition>(FSoftObjectPath(Item));
 	EquipmentActor = SpawnedActor;
 	EquipmentActor->Equipped();
@@ -205,7 +206,6 @@ bool UInventoryBehavior::UnequipItem()
 
 bool UInventoryBehavior::IsNewItem(const UItemDefinition* Item) const
 {
-	// Fix: Avoid the deprecated const-pointer conversion in set lookup.
 	return IsValid(Item) && NewItems.Contains(TSoftObjectPtr<UItemDefinition>(FSoftObjectPath(Item)));
 }
 
@@ -213,7 +213,6 @@ void UInventoryBehavior::MarkItemSeen(const UItemDefinition* Item)
 {
 	if (!bRestoring && IsValid(Item))
 	{
-		// Fix: Remove by asset identity using a compatible soft reference.
 		NewItems.Remove(TSoftObjectPtr<UItemDefinition>(FSoftObjectPath(Item)));
 	}
 }

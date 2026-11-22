@@ -13,6 +13,7 @@ class UIdentityBehavior;
 class USaveGameBehavior;
 class UInventoryBehavior;
 class UCameraComponent;
+class USceneComponent;
 class USpringArmComponent;
 class UInputAction;
 class APlayerCameraManager;
@@ -121,6 +122,11 @@ public:
 	{
 		return Inventory;
 	}
+
+	/** Returns the player-owned mount for first-person equipment. */
+	[[nodiscard]] USceneComponent* GetEquipmentRoot() const { return EquipmentRoot; }
+
+	virtual void SetActorHiddenInGame(bool bNewHidden) override;
 
 	// Capabilities
 	/** Returns whether all requested capabilities are available after applying active blocks. */
@@ -302,6 +308,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Subobjects)
 	TObjectPtr<UCameraComponent> PlayerCamera;
 
+	/** Follows the local camera manager so equipped items inherit camera shake. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Subobjects)
+	TObjectPtr<USceneComponent> EquipmentRoot;
+
 	/** Additional field of view in degrees while running and moving. */
 	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera")
 	float RunFOVOffset = 5.0f;
@@ -347,6 +357,7 @@ protected:
 	float CrouchCameraOffset = 0.0f;
 	TWeakObjectPtr<UCameraShakeBase> MovementCameraShake;
 	void UpdatePlayerCamera(float DeltaSeconds);
+	void UpdateEquipmentRoot();
 	void UpdateMovementCameraShake(bool bMoving);
 	void StopMovementCameraShake(APlayerCameraManager* CameraManager);
 	void UpdateCameraRotationLag(float DeltaSeconds);

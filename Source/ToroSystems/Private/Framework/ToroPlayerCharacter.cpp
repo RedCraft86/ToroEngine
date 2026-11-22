@@ -12,6 +12,7 @@
 #include "Characters/ToroCharacterDatabase.h"
 #include "DataTypes/ToroLevelInfo.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SceneComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Camera/PlayerCameraManager.h"
 #include "DataTypes/ToroPlayerCameraShakes.h"
@@ -48,6 +49,9 @@ AToroPlayerCharacter::AToroPlayerCharacter()
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	PlayerCamera->SetupAttachment(CameraArm, USpringArmComponent::SocketName);
 	PlayerCamera->bUsePawnControlRotation = false;
+
+	EquipmentRoot = CreateDefaultSubobject<USceneComponent>(TEXT("EquipmentRoot"));
+	EquipmentRoot->SetupAttachment(PlayerCamera);
 
 	WalkCameraShake = UToroWalkCameraShake::StaticClass();
 	RunCameraShake = UToroRunCameraShake::StaticClass();
@@ -808,9 +812,37 @@ void AToroPlayerCharacter::StopInteraction() const
 
 // Lifecycle
 
+void AToroPlayerCharacter::SetActorHiddenInGame(bool bNewHidden)
+{
+	Super::SetActorHiddenInGame(bNewHidden);
+	if (EquipmentRoot && EquipmentRoot->IsRegistered())
+	{
+		UpdateEquipmentRoot();
+	}
+}
+
+void AToroPlayerCharacter::UpdateEquipmentRoot()
+{
+	const APlayerController* PC = GetController<APlayerController>();
+	const APlayerCameraManager* CameraManager = PC && PC->IsLocalController() ? PC->PlayerCameraManager.Get() : nullptr;
+	USceneComponent* CameraRoot = IsValid(CameraManager) ? CameraManager->GetRootComponent() : nullptr;
+	USceneComponent* Parent = CameraRoot ? CameraRoot : PlayerCamera.Get();
+	if (EquipmentRoot->GetAttachParent() != Parent)
+	{
+		EquipmentRoot->AttachToComponent(Parent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	}
+
+	const bool bHideEquipment = IsHidden() || !CameraRoot || CameraManager->GetViewTarget() != this;
+	if (EquipmentRoot->bHiddenInGame != bHideEquipment)
+	{
+		EquipmentRoot->SetHiddenInGame(bHideEquipment, true);
+	}
+}
+
 void AToroPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	UpdateEquipmentRoot();
 	BaseCameraFOV = PlayerCamera->FieldOfView;
 	BaseCameraTransform = PlayerCamera->GetRelativeTransform();
 	CameraArm->AddTickPrerequisiteActor(this);
@@ -835,6 +867,7 @@ void AToroPlayerCharacter::Tick(float DeltaSeconds)
 	}
 
 	UpdatePlayerCamera(DeltaSeconds);
+	UpdateEquipmentRoot();
 	UpdateMovementCameraShake(bMoving);
 	if (bLocalPlayer)
 	{
@@ -849,6 +882,7 @@ void AToroPlayerCharacter::UnPossessed()
 	FootstepProgress = 0.0f;
 	ResetMovementActions(EPlayerCapability::All);
 	Super::UnPossessed();
+	UpdateEquipmentRoot();
 	SearchInteractionTarget();
 }
 

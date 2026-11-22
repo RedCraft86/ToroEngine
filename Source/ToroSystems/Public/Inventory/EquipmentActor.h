@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Math/Transform.h"
 #include "GameFramework/Actor.h"
 #include "EquipmentActor.generated.h"
 
@@ -12,12 +13,18 @@ class TOROSYSTEMS_API AEquipmentActor : public AActor
 
 public:
 
+	/** Transform relative to the player's first-person equipment mount. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Equipment)
+	FTransform CameraOffset = FTransform::Identity;
+
+	/**
+	 * Prepares this actor for equipping. The default implementation attaches it to a Toro player's
+	 * equipment mount and applies CameraOffset. Call the parent implementation to retain that setup.
+	 * Returns false if preparation fails.
+	 */
 	UFUNCTION(BlueprintNativeEvent, Category = Equipment)
 	bool PrepareEquipment(AActor* InventoryOwner);
-	virtual bool PrepareEquipment_Implementation(AActor* InventoryOwner)
-	{
-		return IsValid(InventoryOwner);
-	}
+	virtual bool PrepareEquipment_Implementation(AActor* InventoryOwner);
 
 	UFUNCTION(BlueprintNativeEvent, Category = Equipment)
 	void Equipped();
