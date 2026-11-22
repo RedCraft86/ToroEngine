@@ -39,6 +39,10 @@
 	],
 	"Plugins": [
 		{
+			"Name": "EngineCameras",
+			"Enabled": true
+		},
+		{
 			"Name": "SlateIM",
 			"Enabled": true
 		},

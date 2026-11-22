@@ -13,6 +13,8 @@
 #include "DataTypes/ToroLevelInfo.h"
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Camera/PlayerCameraManager.h"
+#include "DataTypes/ToroPlayerCameraShakes.h"
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
@@ -46,6 +48,9 @@ AToroPlayerCharacter::AToroPlayerCharacter()
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	PlayerCamera->SetupAttachment(CameraArm, USpringArmComponent::SocketName);
 	PlayerCamera->bUsePawnControlRotation = false;
+
+	WalkCameraShake = UToroWalkCameraShake::StaticClass();
+	RunCameraShake = UToroRunCameraShake::StaticClass();
 	PlayerCamera->bConstrainAspectRatio = false;
 
 	Identity = CreateDefaultSubobject<UIdentityBehavior>(TEXT("Identity"));
@@ -594,6 +599,46 @@ void AToroPlayerCharacter::UpdatePlayerCamera(float DeltaSeconds)
 	UpdateCameraLean(DeltaSeconds);
 }
 
+void AToroPlayerCharacter::UpdateMovementCameraShake(bool bMoving)
+{
+	const APlayerController* PC = GetController<APlayerController>();
+	APlayerCameraManager* CM = PC ? PC->PlayerCameraManager.Get() : nullptr;
+	if (!PC || !PC->IsLocalController() || !bMoving || !GetCharacterMovement()->IsMovingOnGround() || !CM
+		|| CM->ViewTarget.Target != this || CM->PendingViewTarget.Target)
+	{
+		StopMovementCameraShake(CM);
+		return;
+	}
+
+	const bool bRunning = HasPlayerState(EPlayerStateFlags::Running);
+	const TSubclassOf<UCameraShakeBase> ShakeClass = bRunning ? RunCameraShake : WalkCameraShake;
+	const float Scale = bIsCrouched ? CrouchCameraShakeScale : 1.0f;
+	if (!ShakeClass || Scale <= 0.0f)
+	{
+		StopMovementCameraShake(CM);
+		return;
+	}
+
+	if (UCameraShakeBase* Shake = MovementCameraShake.Get();
+		Shake && Shake->IsActive() && Shake->GetClass() == ShakeClass.Get())
+	{
+		Shake->ShakeScale = Scale;
+		return;
+	}
+
+	StopMovementCameraShake(CM);
+	MovementCameraShake = CM->StartCameraShake(ShakeClass, Scale);
+}
+
+void AToroPlayerCharacter::StopMovementCameraShake(APlayerCameraManager* CameraManager)
+{
+	if (UCameraShakeBase* Shake = MovementCameraShake.Get(); CameraManager && Shake)
+	{
+		CameraManager->StopCameraShake(Shake, false);
+	}
+	MovementCameraShake.Reset();
+}
+
 void AToroPlayerCharacter::UpdateCameraRotationLag(float DeltaSeconds)
 {
 	const auto* Settings = UToroGameUserSettings::Get();
@@ -781,14 +826,15 @@ void AToroPlayerCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	const bool bLocalPlayer = IsLocallyControlled();
+	const bool bMoving = bLocalPlayer && IsMoving();
 	if (bLocalPlayer)
 	{
-		const bool bMoving = IsMoving();
 		UpdateStamina(DeltaSeconds, bMoving);
 		UpdateFootsteps(DeltaSeconds, bMoving);
 	}
 
 	UpdatePlayerCamera(DeltaSeconds);
+	UpdateMovementCameraShake(bMoving);
 	if (bLocalPlayer)
 	{
 		SearchInteractionTarget();
@@ -797,8 +843,23 @@ void AToroPlayerCharacter::Tick(float DeltaSeconds)
 
 void AToroPlayerCharacter::UnPossessed()
 {
+	const APlayerController* PC = GetController<APlayerController>();
+	StopMovementCameraShake(PC ? PC->PlayerCameraManager.Get() : nullptr);
 	FootstepProgress = 0.0f;
 	ResetMovementActions(EPlayerCapability::All);
 	Super::UnPossessed();
 	SearchInteractionTarget();
+}
+
+void AToroPlayerCharacter::EndViewTarget(APlayerController* PC)
+{
+	if (PC && PC->PlayerCameraManager)
+	{
+		PC->PlayerCameraManager->StopAllCameraShakes(true);
+	}
+	if (PC == GetController())
+	{
+		MovementCameraShake.Reset();
+	}
+	Super::EndViewTarget(PC);
 }

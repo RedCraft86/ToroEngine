@@ -15,6 +15,8 @@ class UInventoryBehavior;
 class UCameraComponent;
 class USpringArmComponent;
 class UInputAction;
+class APlayerCameraManager;
+class UCameraShakeBase;
 struct FInputActionValue;
 
 /** Player actions that can be individually restricted. */
@@ -170,7 +172,6 @@ public:
 		return OnInteractTargetChangedEvent;
 	}
 
-	// Camera
 	virtual bool TeleportTo(const FVector& DestLocation, const FRotator& DestRotation,
 		bool bIsATest = false, bool bNoCheck = false) override;
 
@@ -305,6 +306,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera")
 	float RunFOVOffset = 5.0f;
 
+	/** Shake used for walking and crouched movement. */
+	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera|Shake")
+	TSubclassOf<UCameraShakeBase> WalkCameraShake;
+
+	/** Shake used for sprinting. */
+	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera|Shake")
+	TSubclassOf<UCameraShakeBase> RunCameraShake;
+
+	/** Scale of the walking shake while crouched. Zero disables it while crouched. */
+	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera|Shake", meta = (ClampMin = "0.0"))
+	float CrouchCameraShakeScale = 0.4f;
+
 	/** Rotation lag response at low turn rates. Lower values give more smoothing. */
 	UPROPERTY(EditDefaultsOnly, Category = "Settings|Camera", meta = (ClampMin = 0.1f))
 	float CameraRotationLagSpeed = 12.0f;
@@ -332,7 +345,10 @@ protected:
 	float CurrentLean = 0.0f;
 	TOptional<double> BaseCameraArmZ;
 	float CrouchCameraOffset = 0.0f;
+	TWeakObjectPtr<UCameraShakeBase> MovementCameraShake;
 	void UpdatePlayerCamera(float DeltaSeconds);
+	void UpdateMovementCameraShake(bool bMoving);
+	void StopMovementCameraShake(APlayerCameraManager* CameraManager);
 	void UpdateCameraRotationLag(float DeltaSeconds);
 	void SetCrouchCameraOffset(float Offset);
 	void UpdateCameraLean(float DeltaSeconds);
@@ -353,4 +369,5 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void UnPossessed() override;
+	virtual void EndViewTarget(APlayerController* PC) override;
 };
