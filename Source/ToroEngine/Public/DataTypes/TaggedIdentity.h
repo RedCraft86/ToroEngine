@@ -42,10 +42,14 @@ struct TOROENGINE_API FTaggedIdentity final
 	/**
 	 * Constructs an identity with the supplied group and a newly generated GUID.
 	 * @param InGroup Group to assign; an empty tag leaves the identity invalid.
+	 * @param bDeterministic Whether the GUID should be determined from the Group converted to string.
 	 */
-	explicit FTaggedIdentity(const FGameplayTag& InGroup)
+	explicit FTaggedIdentity(const FGameplayTag& InGroup, bool bDeterministic = false)
 		: Group(InGroup)
-		, Guid(FGuid::NewGuid())
+		, Guid(bDeterministic
+			? FGuid::NewDeterministicGuid(InGroup.ToString())
+			: FGuid::NewGuid()
+		)
 	{}
 
 	/**
