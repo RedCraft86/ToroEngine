@@ -59,7 +59,7 @@ AToroPlayerCharacter::AToroPlayerCharacter()
 
 	Identity = CreateDefaultSubobject<UIdentityBehavior>(TEXT("Identity"));
 	Identity->Identity.Group = ToroCharacterTags::Player.GetTag();
-	Identity->Determinant = TEXT("MainPlayer");
+	Identity->Determinant = Identity->Identity.Group.ToString();
 	Identity->RebuildIdentity();
 
 	SaveGame = CreateDefaultSubobject<USaveGameBehavior>(TEXT("SaveGame"));
