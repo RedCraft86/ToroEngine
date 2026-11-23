@@ -191,6 +191,15 @@ public:
 	[[nodiscard]] bool HasFlag(const FGameplayTag& Flag) const;
 
 	/**
+	 * Finds or creates a mutable object record; returns nullptr for an invalid identity.
+	 * Returned pointers may be invalidated by record insertion or successful playthrough loading.
+	 */
+	[[nodiscard]] FObjectSaveData* GetObjectRecord(const FTaggedIdentity& Identity);
+
+	/** Finds an existing record without creating one; nullptr for absent or invalid identities. Pointer lifetime matches GetObjectRecord. */
+	[[nodiscard]] const FObjectSaveData* FindObjectRecord(const FTaggedIdentity& Identity) const;
+
+	/**
 	 * Finds or creates a mutable actor record; returns nullptr for an invalid identity.
 	 * Returned pointers may be invalidated by record insertion or successful playthrough loading.
 	 */
@@ -205,6 +214,7 @@ private:
 	TOptional<FDateTime> TimeTracker;
 
 	TSet<FGameplayTag> Flags;
+    TMap<FTaggedIdentity, FObjectSaveData> ObjectRecords;
     TMap<FTaggedIdentity, FActorSaveRecord> ActorRecords;
 
 	virtual void SerializeHeader(FArchive& Ar) override;

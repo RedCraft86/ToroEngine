@@ -405,6 +405,21 @@ bool FSlottedSaveContainer::HasFlag(const FGameplayTag& Flag) const
 	return Flag.IsValid() && Flags.Contains(Flag);
 }
 
+FObjectSaveData* FSlottedSaveContainer::GetObjectRecord(const FTaggedIdentity& Identity)
+{
+	if (!Identity.IsValid())
+	{
+		return nullptr;
+	}
+
+	return &ObjectRecords.FindOrAdd(Identity);
+}
+
+const FObjectSaveData* FSlottedSaveContainer::FindObjectRecord(const FTaggedIdentity& Identity) const
+{
+	return Identity.IsValid() ? ObjectRecords.Find(Identity) : nullptr;
+}
+
 FActorSaveRecord* FSlottedSaveContainer::GetActorRecord(const FTaggedIdentity& Identity)
 {
 	if (!Identity.IsValid())
@@ -427,5 +442,5 @@ void FSlottedSaveContainer::SerializeHeader(FArchive& Ar)
 
 void FSlottedSaveContainer::SerializePayload(FArchive& Ar)
 {
-	Ar << Flags << ActorRecords;
+	Ar << Flags << ObjectRecords << ActorRecords;
 }
