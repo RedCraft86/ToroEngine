@@ -4,7 +4,7 @@
 #include "Dialogues/DialogueGraph.h"
 #include "Dialogues/DialogueNodes.h"
 #include "Dialogues/DialogueTransitions.h"
-#include "Dialogues/Widgets/ToroDialogueWidget.h"
+#include "Dialogues/ToroDialogueWidget.h"
 #include "UserInterface/UserInterfaceConfig.h"
 #include "Framework/ToroPlayerHUD.h"
 #include "Utilities/ToroUtilities.h"

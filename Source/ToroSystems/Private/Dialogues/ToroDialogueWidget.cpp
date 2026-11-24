@@ -1,6 +1,6 @@
 // Copyright (C) 2026 RedCraft86. LGPL-3.0-only, see LICENSE file for details.
 
-#include "Dialogues/Widgets/ToroDialogueWidget.h"
+#include "Dialogues/ToroDialogueWidget.h"
 #include "Dialogues/DialogueSubsystem.h"
 #include "CommonButtonBase.h"
 #include "Blueprint/WidgetTree.h"
