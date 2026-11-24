@@ -330,11 +330,11 @@ protected:
 
 	/** Rotation lag response at low turn rates. Lower values give more smoothing. */
 	UPROPERTY(EditAnywhere, Category = "Settings|Camera", meta = (ClampMin = 0.1f))
-	float CameraRotationLagSpeed = 12.0f;
+	float CameraRotationLagSpeed = 14.0f;
 
 	/** Rotation lag response during fast turns. */
 	UPROPERTY(EditAnywhere, Category = "Settings|Camera", meta = (ClampMin = 0.1f))
-	float FastTurnRotationLagSpeed = 55.0f;
+	float FastTurnRotationLagSpeed = 35.0f;
 
 	/** Maximum lateral camera offset in cm when leaning. Geometry can limit the offset. */
 	UPROPERTY(EditAnywhere, Category = "Settings|Camera", meta = (ClampMin = 0.0f))
