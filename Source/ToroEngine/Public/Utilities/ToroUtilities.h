@@ -43,5 +43,6 @@ namespace ToroEngine
 	 * @param FuncName Name of the function to invoke on Target when the action completes.
 	 * @note The default arguments do not configure a usable completion callback.
 	 */
-	[[nodiscard]] TOROENGINE_API FLatentActionInfo LatentInfo(UObject* Target = nullptr, const FString& FuncName = FString());
+	[[nodiscard]] TOROENGINE_API FLatentActionInfo LatentInfo(UObject* Target = nullptr,
+		FName FuncName = NAME_None, int32 Linkage = 0);
 }

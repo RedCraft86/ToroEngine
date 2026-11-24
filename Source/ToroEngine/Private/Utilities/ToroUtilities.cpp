@@ -31,7 +31,7 @@ namespace ToroEngine
 		return IsValid(World) ? World : nullptr;
 	}
 
-	FLatentActionInfo LatentInfo(UObject* Target, const FString& FuncName)
+	FLatentActionInfo LatentInfo(UObject* Target, FName FuncName, int32 Linkage)
 	{
 		checkf(IsInGameThread(), TEXT("ToroEngine::MakeInfo(...) should only be called from the GameThread."));
 
@@ -41,6 +41,6 @@ namespace ToroEngine
 			LatentId = 1000;
 		}
 
-		return FLatentActionInfo(0, LatentId++, *FuncName, Target);
+		return FLatentActionInfo(FuncName.IsNone() ? INDEX_NONE : Linkage, LatentId++, *FuncName.ToString(), Target);
 	}
 }
