@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AsyncMessageId.h"
+#include "GameFlagManager.h"
 #include "SMStateInstance.h"
 #include "SMTextGraphProperty.h"
 #include "GameplayTagContainer.h"
@@ -11,7 +12,6 @@
 #include "DialogueNodes.generated.h"
 
 class USMCompilerLog;
-enum class EGameFlagScope : uint8;
 
 USTRUCT(BlueprintType)
 struct TOROSYSTEMS_API FDialogueFlagInfo
@@ -19,7 +19,7 @@ struct TOROSYSTEMS_API FDialogueFlagInfo
 	GENERATED_BODY();
 
 	UPROPERTY(EditAnywhere, Category = Flag)
-	EGameFlagScope Scope;
+	EGameFlagScope Scope = EGameFlagScope::Transient;
 
 	UPROPERTY(EditAnywhere, Category = Flag)
 	bool bState = true;
