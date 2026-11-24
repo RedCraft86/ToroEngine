@@ -73,10 +73,10 @@ private:
 
 	TWeakObjectPtr<UGameFlagManager> FlagManager;
 	TWeakObjectPtr<UDialogueTransitionBase> PendingTransition;
-	FDialoguePrompt CurrentPrompt;
 	TMap<FGuid, TWeakObjectPtr<UDialogueTransitionBase>> OfferedTransitions;
 	FOnDialoguePromptChanged DialoguePromptChanged;
 	FOnDialogueClosed DialogueClosed;
+	FDialoguePrompt CurrentPrompt;
 	bool bSubmittingInput = false;
 
 	UFUNCTION()
