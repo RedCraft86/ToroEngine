@@ -37,6 +37,7 @@ void UToroDialogueWidget::OnDialogueChanged(const FDialoguePrompt& Prompt)
 	PromptId = Prompt.Id;
 	ContinueId = Prompt.ContinueId;
 	NextLineButton->SetIsInteractionEnabled(false);
+	NextLineButton->SetVisibility(ESlateVisibility::Hidden);
 	ChoiceContainer->ClearChildren();
 
 	FTimerManager& Timers = GetWorld()->GetTimerManager();
@@ -77,6 +78,7 @@ void UToroDialogueWidget::AddChoiceButton(const FText& Label, const FGuid& Choic
 void UToroDialogueWidget::UnlockNextLine() const
 {
 	NextLineButton->SetIsInteractionEnabled(true);
+	NextLineButton->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UToroDialogueWidget::NativeOnActivated()
@@ -112,6 +114,7 @@ void UToroDialogueWidget::NativeOnDeactivated()
 	PromptId.Invalidate();
 	ContinueId.Invalidate();
 	NextLineButton->SetIsInteractionEnabled(false);
+	NextLineButton->SetVisibility(ESlateVisibility::Hidden);
 	ChoiceContainer->ClearChildren();
 	Super::NativeOnDeactivated();
 }
@@ -125,5 +128,6 @@ void UToroDialogueWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	NextLineButton->OnClicked().AddUObject(this, &UToroDialogueWidget::OnNextLine);
+	NextLineButton->SetVisibility(ESlateVisibility::Hidden);
 	NextLineButton->SetIsInteractionEnabled(false);
 }
