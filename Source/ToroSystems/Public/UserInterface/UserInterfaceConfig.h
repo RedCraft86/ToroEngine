@@ -10,6 +10,7 @@ class UToroDialogWidget;
 class UToroSettingsWidget;
 class UToroPauseWidget;
 class UToroInventoryWidget;
+class UToroCutsceneWidget;
 class UToroAutoWidget;
 
 USTRUCT(BlueprintType)
@@ -39,6 +40,9 @@ struct TOROSYSTEMS_API FUserInterfaceConfig final
 
 	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
 	TSoftClassPtr<UToroDialogueWidget> DialogueWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
+	TSoftClassPtr<UToroCutsceneWidget> CutsceneWidgetClass;
 
 	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
 	TSet<TSoftClassPtr<UToroAutoWidget>> AutoWidgetClasses;

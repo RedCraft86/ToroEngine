@@ -71,6 +71,10 @@
 			"Enabled": true
 		},
 		{
+			"Name": "CustomizableSequencerTracks",
+			"Enabled": true
+		},
+		{
 			"Name": "CommonUI",
 			"Enabled": true
 		},
