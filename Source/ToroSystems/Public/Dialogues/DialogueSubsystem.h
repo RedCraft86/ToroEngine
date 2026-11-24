@@ -35,7 +35,7 @@ enum class EDialogueResultType : uint8
 	InvalidContext,
 	InvalidDialogue,
 	StateMachineError,
-	DialogueExists
+	DialoguePlaying
 };
 
 UCLASS(MinimalAPI, NotBlueprintable, BlueprintType)

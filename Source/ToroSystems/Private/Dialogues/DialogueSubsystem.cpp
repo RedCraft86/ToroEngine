@@ -41,7 +41,7 @@ EDialogueResultType UDialogueSubsystem::Start(const UObject* ContextObject,
 
 	if (IsValid(Subsystem->StateMachine))
 	{
-		return EDialogueResultType::DialogueExists;
+		return EDialogueResultType::DialoguePlaying;
 	}
 	if (!IsValid(Dialogue) || Dialogue->HasAnyClassFlags(CLASS_Abstract))
 	{
@@ -203,7 +203,7 @@ EDialogueResultType UDialogueSubsystem::OpenDialogue(TSubclassOf<UDialogueGraph>
 {
 	if (IsValid(StateMachine))
 	{
-		return EDialogueResultType::DialogueExists;
+		return EDialogueResultType::DialoguePlaying;
 	}
 
 	StateMachine = NewObject<UDialogueGraph>(this, Dialogue);
