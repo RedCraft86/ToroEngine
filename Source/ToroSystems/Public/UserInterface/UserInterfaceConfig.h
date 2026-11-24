@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UserInterfaceConfig.generated.h"
 
+class UToroDialogueWidget;
 class UToroDialogWidget;
 class UToroSettingsWidget;
 class UToroPauseWidget;
@@ -35,6 +36,9 @@ struct TOROSYSTEMS_API FUserInterfaceConfig final
 
 	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
 	TSoftClassPtr<UToroInventoryWidget> InventoryWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
+	TSoftClassPtr<UToroDialogueWidget> DialogueWidgetClass;
 
 	UPROPERTY(EditAnywhere, Category = "UserInterface|Classes", NoClear, meta = (AllowAbstract = false))
 	TSet<TSoftClassPtr<UToroAutoWidget>> AutoWidgetClasses;

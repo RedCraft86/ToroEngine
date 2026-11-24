@@ -77,6 +77,14 @@
 		{
 			"Name": "UE5Coro",
 			"Enabled": true
+		},
+		{
+			"Name": "SMSystem",
+			"Enabled": true
+		},
+		{
+			"Name": "ExpressiveText",
+			"Enabled": true
 		}
 	]
 }

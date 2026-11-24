@@ -31,6 +31,9 @@ public class ToroSystems : ModuleRules
 			"CommonUI",
 			"CommonInput",
 			"ToroEngine",
+			"ExpressiveText",
+			"SMExtendedRuntime",
+			"SMSystem",
 			"UE5Coro"
 		]);
 
