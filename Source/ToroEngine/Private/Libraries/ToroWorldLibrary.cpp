@@ -2,10 +2,10 @@
 
 #include "Libraries/ToroWorldLibrary.h"
 #include "Engine/LevelScriptActor.h"
-#include "Engine/LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utilities/ToroUtilities.h"
-#include "Misc/PackageName.h"
+#include "WorldPartition/DataLayer/DataLayerAsset.h"
+#include "WorldPartition/DataLayer/DataLayerManager.h"
 #include "Engine/Level.h"
 #include "Engine/World.h"
 
@@ -46,42 +46,25 @@ bool UToroWorldLibrary::IsPersistentLevel(const ULevel* Target)
 		&& Target->OwningWorld->PersistentLevel == Target;
 }
 
-EToroStreamingState UToroWorldLibrary::GetLevelStreamState(const UObject* ContextObject, TSoftObjectPtr<UWorld> Level)
+EDataLayerRuntimeState UToroWorldLibrary::GetDataLayerState(const UObject* ContextObject,
+	const UDataLayerAsset* DataLayer, bool bEffective)
 {
-	const FName LevelName = FName(*FPackageName::ObjectPathToPackageName(Level.ToString()));
-	const ULevelStreaming* StreamedLevel = UGameplayStatics::GetStreamingLevel(ContextObject, LevelName);
-	if (!IsValid(StreamedLevel) || !StreamedLevel->ShouldBeLoaded())
+	const UWorld* World = ToroEngine::GetWorld(ContextObject);
+	const UDataLayerManager* Manager = World ? UDataLayerManager::GetDataLayerManager(World) : nullptr;
+	const UDataLayerInstance* Instance = Manager && IsValid(DataLayer)
+		? Manager->GetDataLayerInstanceFromAsset(DataLayer) : nullptr;
+	if (!Instance || !Instance->IsRuntime())
 	{
-		return EToroStreamingState::Unloaded;
+		return EDataLayerRuntimeState::Unloaded;
 	}
 
-	return StreamedLevel->ShouldBeVisible() ? EToroStreamingState::Activated : EToroStreamingState::Loaded;
+	return bEffective ? Instance->GetEffectiveRuntimeState() : Instance->GetRuntimeState();
 }
 
-FVoidCoroutine UToroWorldLibrary::SetLevelStreamState(FLatentActionInfo LatentInfo, const UObject* ContextObject,
-	ULevelStreaming*& StreamedLevel, TSoftObjectPtr<UWorld> Level, EToroStreamingState State)
+bool UToroWorldLibrary::SetDataLayerState(const UObject* ContextObject,
+	const UDataLayerAsset* DataLayer, EDataLayerRuntimeState State)
 {
-	const FName LevelName = FName(*FPackageName::ObjectPathToPackageName(Level.ToString()));
-	StreamedLevel = UGameplayStatics::GetStreamingLevel(ContextObject, LevelName);
-	if (!IsValid(StreamedLevel))
-	{
-		co_return;
-	}
-
-	if (State == EToroStreamingState::Unloaded)
-	{
-		co_await UE5Coro::Latent::ChainEx(&UGameplayStatics::UnloadStreamLevel,
-			ContextObject, LevelName, std::placeholders::_2, false);
-	}
-	else // State == Loaded or Visible
-	{
-		const TWeakObjectPtr<ULevelStreaming> WeakLevel(StreamedLevel);
-		if (State == EToroStreamingState::Loaded)
-		{
-			StreamedLevel->SetShouldBeVisible(false);
-		}
-
-		co_await UE5Coro::Latent::ChainEx(&UGameplayStatics::LoadStreamLevel, ContextObject,
-			LevelName, State == EToroStreamingState::Activated, false, std::placeholders::_2);
-	}
+	const UWorld* World = ToroEngine::GetWorld(ContextObject);
+	UDataLayerManager* Manager = World ? UDataLayerManager::GetDataLayerManager(World) : nullptr;
+	return Manager && IsValid(DataLayer) && Manager->SetDataLayerRuntimeState(DataLayer, State);
 }

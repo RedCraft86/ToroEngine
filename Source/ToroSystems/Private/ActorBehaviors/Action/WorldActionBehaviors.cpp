@@ -3,40 +3,18 @@
 #include "ActorBehaviors/Action/WorldActionBehaviors.h"
 #include "AsyncGameplayMessageSystem.h"
 #include "AsyncMessageWorldSubsystem.h"
-#include "Engine/LatentActionManager.h"
 #include "Engine/World.h"
-#include "Kismet/GameplayStatics.h"
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
 #include "Libraries/ToroWorldLibrary.h"
 #include "MovieSceneSequencePlayer.h"
 #include "StructUtils/StructView.h"
-#include "Utilities/ToroUtilities.h"
-#include "CoreTypes.h"
 
-void ULevelStreamingActionBehavior::OnTriggered()
+void UDataLayerActionBehavior::OnTriggered()
 {
-	const auto MakeStreamRequest = [this]
+	for (const auto& [DataLayer, State] : DataLayerStates)
 	{
-		FLatentActionInfo Info = ToroEngine::LatentInfo(this);
-		Info.Linkage = INDEX_NONE;
-		return Info;
-	};
-
-	for (const TPair<TSoftObjectPtr<UWorld>, bool>& Level : Load)
-	{
-		if (!Level.Key.IsNull())
-		{
-			UGameplayStatics::LoadStreamLevelBySoftObjectPtr(this,
-				Level.Key, Level.Value, false, MakeStreamRequest());
-		}
-	}
-	for (const TSoftObjectPtr<UWorld>& Level : Unload)
-	{
-		if (!Level.IsNull())
-		{
-			UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(this, Level, MakeStreamRequest(), false);
-		}
+		UToroWorldLibrary::SetDataLayerState(this, DataLayer.Get(), State);
 	}
 }
 

@@ -2,19 +2,17 @@
 
 #pragma once
 
-#include "UE5Coro.h"
 #include "CoreMinimal.h"
-#include "DataTypes/MiscEnums.h"
-#include "Engine/LatentActionManager.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "WorldPartition/DataLayer/DataLayerInstance.h"
 #include "ToroWorldLibrary.generated.h"
 
 class UWorld;
 class ULevel;
-class ULevelStreaming;
+class UDataLayerAsset;
 
 /**
- * Blueprint utilities for world resolution, map travel, level-script events, and level streaming.
+ * Blueprint utilities for world resolution, map travel, level-script events, and runtime Data Layers.
  */
 UCLASS(NotBlueprintable, NotBlueprintType)
 class TOROENGINE_API UToroWorldLibrary final : public UBlueprintFunctionLibrary
@@ -60,27 +58,19 @@ public:
 	[[nodiscard]] static bool IsPersistentLevel(const ULevel* Target);
 
 	/**
-	 * Reports requested loading and visibility flags for an existing streaming level.
-	 * This is not a completed-state query: loading, unloading, or visibility transitions may still be in progress.
-	 * @param Level Soft world reference identifying the streaming level by package name.
-	 * @return Unloaded for a missing streaming object or when loading is not requested;
-	 *         otherwise Visible when visibility is requested, or Loaded when it is not.
+	 * Returns the requested state of a runtime Data Layer in the current world.
+	 * Returns Unloaded if the layer is unavailable. Use bEffective to account for parent layers.
+	 * The state does not indicate whether cell streaming has finished.
 	 */
-	UFUNCTION(BlueprintCallable, Category = World, meta = (WorldContext = ContextObject))
-	[[nodiscard]] static EToroStreamingState GetLevelStreamState(const UObject* ContextObject, TSoftObjectPtr<UWorld> Level);
+	UFUNCTION(BlueprintPure, Category = World, meta = (WorldContext = ContextObject, AdvancedDisplay = "bEffective"))
+	[[nodiscard]] static EDataLayerRuntimeState GetDataLayerState(const UObject* ContextObject,
+		const UDataLayerAsset* DataLayer, bool bEffective = false);
 
 	/**
-	 * Requests a nonblocking streaming transition and waits for the native action to complete.
-	 * Loaded explicitly requests a loaded, hidden level and additionally waits for visibility to clear,
-	 * ending that visibility wait if the streaming object becomes invalid.
-	 * Uses an existing streaming object rather than creating a streaming instance.
-	 * Completion provides no separate success result or exclusive control over concurrent streaming requests.
-	 * @param StreamedLevel Receives the streaming object found before requesting the transition, or nullptr if none is found.
-	 *        A found object is also returned for unsupported states; it may become invalid while waiting.
-	 * @param Level Soft world reference identifying the existing streaming level by package name.
-	 * @param State Unloaded, Loaded (hidden), or Visible; unsupported values cause no streaming changes.
+	 * Requests a runtime state for a Data Layer in the current world.
+	 * Returns whether the engine accepted the request. Cell streaming completes asynchronously.
 	 */
-	UFUNCTION(BlueprintCallable, Category = World, meta = (Latent, LatentInfo = LatentInfo, WorldContext = ContextObject))
-	static FVoidCoroutine SetLevelStreamState(FLatentActionInfo LatentInfo, const UObject* ContextObject,
-		ULevelStreaming*& StreamedLevel, TSoftObjectPtr<UWorld> Level, EToroStreamingState State);
+	UFUNCTION(BlueprintCallable, Category = World, meta = (WorldContext = ContextObject))
+	static bool SetDataLayerState(const UObject* ContextObject,
+		const UDataLayerAsset* DataLayer, EDataLayerRuntimeState State);
 };

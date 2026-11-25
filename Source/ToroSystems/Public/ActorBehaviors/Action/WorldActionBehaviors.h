@@ -5,34 +5,26 @@
 #include "AsyncMessageId.h"
 #include "UObject/SoftObjectPtr.h"
 #include "StructUtils/InstancedStruct.h"
+#include "WorldPartition/DataLayer/DataLayerInstance.h"
 #include "ActorBehaviors/Action/ActionBehaviorBase.h"
 #include "WorldActionBehaviors.generated.h"
 
 class ALevelSequenceActor;
-class UWorld;
+class UDataLayerAsset;
 
 /**
- * Handles asynchronous level streaming.
- * Allows loading multiple levels into memory and unloading others in a single batch.
+ * Requests runtime states for World Partition Data Layers when triggered.
  */
-UCLASS(NotBlueprintable, ClassGroup = (Feature), meta = (BlueprintSpawnableComponent), DisplayName = "[Misc] Level Streaming")
-class TOROSYSTEMS_API ULevelStreamingActionBehavior final : public UActionBehaviorBase
+UCLASS(NotBlueprintable, ClassGroup = (Feature), meta = (BlueprintSpawnableComponent), DisplayName = "[Misc] Data Layer")
+class TOROSYSTEMS_API UDataLayerActionBehavior final : public UActionBehaviorBase
 {
 	GENERATED_BODY()
 
 private:
 
-	/**
-	 * Map of levels to load.
-	 * Key: The World asset.
-	 * Value: True if the level should be made visible immediately upon loading completion.
-	 */
+	/** Desired runtime state for each Data Layer asset assigned to this world. */
 	UPROPERTY(EditAnywhere, Category = Settings)
-	TMap<TSoftObjectPtr<UWorld>, bool> Load;
-
-	/** A collection of levels that should be removed from memory. */
-	UPROPERTY(EditAnywhere, Category = Settings)
-	TSet<TSoftObjectPtr<UWorld>> Unload;
+	TMap<TObjectPtr<UDataLayerAsset>, EDataLayerRuntimeState> DataLayerStates;
 
 	virtual void OnTriggered() override;
 };
