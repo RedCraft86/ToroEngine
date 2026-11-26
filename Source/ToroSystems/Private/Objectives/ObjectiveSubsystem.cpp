@@ -16,6 +16,7 @@
 #include "WorldPartition/WorldPartitionRuntimeCell.h"
 #include "WorldPartition/WorldPartitionStreamingSource.h"
 #include "WorldPartition/WorldPartitionSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 #include "DataTypes/ToroLevelInfo.h"
 #include "Utilities/ToroLogging.h"
 #include "Actors/TeleportPoint.h"
@@ -60,6 +61,12 @@ void UObjectiveSubsystem::StopStreamingWait()
 	if (bLoadingWidget)
 	{
 		bLoadingWidget = false;
+
+		if (APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(this, 0))
+		{
+			PCM->StartCameraFade(1.0f, 0.0f, 0.4f, FLinearColor::Black);
+		}
+
 		if (const AToroPlayerHUD* HUD = AToroPlayerHUD::Get(this))
 		{
 			HUD->RemoveWidgetByClass(EToroMasterWidgetType::Menu, GetLoadingWidgetClass());
@@ -233,12 +240,16 @@ void UObjectiveSubsystem::ArriveAtState(const UObjectiveNode* State)
 
 		if ((!OldState || !State->bContinuous) && !State->DataLayers.IsEmpty())
 		{
-			if (const AToroPlayerHUD* HUD = AToroPlayerHUD::Get(this); HUD && HUD->HasMasterWidget())
+			bLoadingWidget = true;
+
+			if (APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(this, 0))
 			{
-				if (const TSubclassOf<UToroLoadingWidget> Class = GetLoadingWidgetClass())
-				{
-					bLoadingWidget = IsValid(HUD->AddWidgetByClass(EToroMasterWidgetType::Menu, Class));
-				}
+				PCM->StartCameraFade(0.0f, 1.0f, 0.4f, FLinearColor::Black);
+			}
+
+			if (const AToroPlayerHUD* HUD = AToroPlayerHUD::Get(this))
+			{
+				HUD->AddWidgetByClass(EToroMasterWidgetType::Menu, GetLoadingWidgetClass());
 			}
 		}
 
@@ -311,7 +322,6 @@ void UObjectiveSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 	const TSubclassOf<UObjectiveGraph> GraphClass = Config->Objective.LoadSynchronous();
 	if (IsValid(GraphClass) && !GraphClass->HasAnyClassFlags(CLASS_Abstract))
 	{
-		
 		StateMachine = NewObject<UObjectiveGraph>(this, GraphClass);
 		if (!StateMachine)
 		{
@@ -324,9 +334,15 @@ void UObjectiveSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 		{
 			StateMachine->LoadFromState(ActiveStep);
 		}
+
 		// The HUD creates its master widget during actor BeginPlay.
 		PhaseSetupHandle = InWorld.GetTimerManager().SetTimerForNextTick(FTimerDelegate::CreateWeakLambda(this, [this]
 		{
+			if (APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(this, 0))
+			{
+				PCM->SetManualCameraFade(1.0f, FLinearColor::Black, false);
+			}
+
 			PhaseSetupHandle.Invalidate();
 			StateMachine->Start();
 		}));
