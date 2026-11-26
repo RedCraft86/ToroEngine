@@ -10,6 +10,8 @@
 class UCutsceneSubsystem;
 class UMovieSceneSequencePlayer;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCutsceneStopped, const ACutsceneActor*, StoppedCutscene);
+
 UCLASS(MinimalAPI, NotBlueprintable, BlueprintType)
 class ACutsceneActor final : public ALevelSequenceActor
 {
@@ -21,6 +23,9 @@ public:
 	DECLARE_DELEGATE_OneParam(FOnSubtitle, const FText&)
 
 	ACutsceneActor(const FObjectInitializer& ObjectInitializer);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCutsceneStopped OnCutsceneStopped;
 
 	UFUNCTION(BlueprintCallable, Category = Cutscene)
 	ECutscenePlayResult PlayCutscene();

@@ -60,6 +60,7 @@ void ACutsceneActor::OnSequenceStopped()
 	OnStoppedEvent.Broadcast(this);
 	ActiveSubtitle = FText::GetEmpty();
 	OnSubtitleEvent.ExecuteIfBound(ActiveSubtitle);
+	OnCutsceneStopped.Broadcast(this);
 
 	OnStoppedEvent.Clear();
 	OnSubtitleEvent.Unbind();
