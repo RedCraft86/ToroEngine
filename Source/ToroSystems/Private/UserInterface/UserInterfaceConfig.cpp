@@ -11,6 +11,7 @@ FUserInterfaceConfig::FUserInterfaceConfig()
 	InventoryWidgetClass = FSoftClassPath(TEXT("/ToroEngine/UserInterface/WBP_ToroInventory.WBP_ToroInventory_C"));
 	DialogueWidgetClass = FSoftClassPath(TEXT("/ToroEngine/UserInterface/WBP_ToroDialogue.WBP_ToroDialogue_C"));
 	CutsceneWidgetClass = FSoftClassPath(TEXT("/ToroEngine/UserInterface/WBP_ToroCutscene.WBP_ToroCutscene_C"));
+	LoadingWidgetClass = FSoftClassPath(TEXT("/ToroEngine/UserInterface/WBP_ToroLoading.WBP_ToroLoading_C"));
 
 	AutoWidgetClasses = {
 		TSoftClassPtr<UToroAutoWidget>(FSoftClassPath(
@@ -22,7 +23,9 @@ FUserInterfaceConfig::FUserInterfaceConfig()
 		TSoftClassPtr<UToroAutoWidget>(FSoftClassPath(
 			TEXT("/ToroEngine/UserInterface/WBP_ToroStamina.WBP_ToroStamina_C"))),
 		TSoftClassPtr<UToroAutoWidget>(FSoftClassPath(
-			TEXT("/ToroEngine/UserInterface/WBP_ToroInteraction.WBP_ToroInteraction_C")))
+			TEXT("/ToroEngine/UserInterface/WBP_ToroInteraction.WBP_ToroInteraction_C"))),
+		TSoftClassPtr<UToroAutoWidget>(FSoftClassPath(
+			TEXT("/ToroEngine/UserInterface/WBP_ToroObjective.WBP_ToroObjective_C")))
 	};
 }
 

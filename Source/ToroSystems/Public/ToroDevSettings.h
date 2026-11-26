@@ -4,6 +4,7 @@
 
 #include "DataTypes/ToroLevelInfo.h"
 #include "Engine/DeveloperSettings.h"
+#include "Objectives/ObjectiveSystemConfig.h"
 #include "UserInterface/UserInterfaceConfig.h"
 #include "UserSettings/UserSettingsConfig.h"
 #include "ToroDevSettings.generated.h"
@@ -35,6 +36,9 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category = Framework)
 	FUserSettingsConfig UserSettings;
+
+	UPROPERTY(Config, EditAnywhere, Category = Framework)
+	FObjectiveSystemConfig Objectives;
 
 	UPROPERTY(Config, EditAnywhere, Category = Data)
 	TSet<TSoftObjectPtr<UToroDatabase>> Databases;
