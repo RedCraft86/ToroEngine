@@ -34,6 +34,11 @@ FText UDialogueNodeBase::GetSpeakerName() const
 void UDialogueNodeBase::OnStateBegin_Implementation()
 {
 	Super::OnStateBegin_Implementation();
+	if (UDialogueSubsystem* Dialogue = Cast<UDialogueSubsystem>(GetContext()))
+	{
+		Dialogue->PresentNode(this);
+	}
+
 	if (UGameFlagManager* FlagManager = UGameFlagManager::Get(GetContext()))
 	{
 		for (const TPair<FGameplayTag, FDialogueFlagInfo>& Flag : Flags)
@@ -52,11 +57,6 @@ void UDialogueNodeBase::OnStateBegin_Implementation()
 				FlagManager->ClearGameFlag(Flag.Key, Flag.Value.Scope);
 			}
 		}
-	}
-
-	if (UDialogueSubsystem* Dialogue = Cast<UDialogueSubsystem>(GetContext()))
-	{
-		Dialogue->PresentNode(this);
 	}
 
 	const TSharedPtr<FAsyncGameplayMessageSystem> System = UAsyncMessageWorldSubsystem
