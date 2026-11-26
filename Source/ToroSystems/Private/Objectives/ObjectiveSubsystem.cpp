@@ -16,7 +16,6 @@
 #include "WorldPartition/WorldPartitionRuntimeCell.h"
 #include "WorldPartition/WorldPartitionStreamingSource.h"
 #include "WorldPartition/WorldPartitionSubsystem.h"
-#include "Kismet/GameplayStatics.h"
 #include "DataTypes/ToroLevelInfo.h"
 #include "Utilities/ToroLogging.h"
 #include "Actors/TeleportPoint.h"
@@ -61,11 +60,6 @@ void UObjectiveSubsystem::StopStreamingWait()
 	if (bLoadingWidget)
 	{
 		bLoadingWidget = false;
-
-		if (APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(this, 0))
-		{
-			PCM->StartCameraFade(1.0f, 0.0f, 0.4f, FLinearColor::Black);
-		}
 
 		if (const AToroPlayerHUD* HUD = AToroPlayerHUD::Get(this))
 		{
@@ -240,16 +234,9 @@ void UObjectiveSubsystem::ArriveAtState(const UObjectiveNode* State)
 
 		if ((!OldState || !State->bContinuous) && !State->DataLayers.IsEmpty())
 		{
-			bLoadingWidget = true;
-
-			if (APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(this, 0))
-			{
-				PCM->StartCameraFade(0.0f, 1.0f, 0.4f, FLinearColor::Black);
-			}
-
 			if (const AToroPlayerHUD* HUD = AToroPlayerHUD::Get(this))
 			{
-				HUD->AddWidgetByClass(EToroMasterWidgetType::Menu, GetLoadingWidgetClass());
+				bLoadingWidget = IsValid(HUD->AddWidgetByClass(EToroMasterWidgetType::Menu, GetLoadingWidgetClass()));
 			}
 		}
 
@@ -260,13 +247,12 @@ void UObjectiveSubsystem::ArriveAtState(const UObjectiveNode* State)
 				{
 					PhaseSetupHandle.Invalidate();
 					ApplyState(PreviousStep.Get());
-				}), 0.5f, false);
+				}), 1.0f, false);
 		}
 		else
 		{
 			ApplyState(OldState);
 		}
-
 	}
 }
 
@@ -338,11 +324,6 @@ void UObjectiveSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 		// The HUD creates its master widget during actor BeginPlay.
 		PhaseSetupHandle = InWorld.GetTimerManager().SetTimerForNextTick(FTimerDelegate::CreateWeakLambda(this, [this]
 		{
-			if (APlayerCameraManager* PCM = UGameplayStatics::GetPlayerCameraManager(this, 0))
-			{
-				PCM->SetManualCameraFade(1.0f, FLinearColor::Black, false);
-			}
-
 			PhaseSetupHandle.Invalidate();
 			StateMachine->Start();
 		}));
