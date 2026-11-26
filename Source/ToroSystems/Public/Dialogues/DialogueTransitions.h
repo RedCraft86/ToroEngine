@@ -21,7 +21,7 @@ protected:
 	FGameplayTag RequiredFlag;
 
 	UPROPERTY(EditDefaultsOnly, Category = Dialogue)
-	EGameFlagScope FlagScope = EGameFlagScope::Transient;
+	EGameFlagScope FlagScope = EGameFlagScope::SlotSave;
 
 	virtual bool CanEnterTransition_Implementation() const override;
 	virtual void OnTransitionEntered_Implementation() override;
