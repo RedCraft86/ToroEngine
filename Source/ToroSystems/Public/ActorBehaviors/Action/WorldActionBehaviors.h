@@ -3,6 +3,9 @@
 #pragma once
 
 #include "AsyncMessageId.h"
+#include "GameFlagManager.h"
+#include "GameplayTagContainer.h"
+#include "Templates/SubclassOf.h"
 #include "UObject/SoftObjectPtr.h"
 #include "StructUtils/InstancedStruct.h"
 #include "WorldPartition/DataLayer/DataLayerInstance.h"
@@ -11,6 +14,7 @@
 
 class ALevelSequenceActor;
 class UDataLayerAsset;
+class UDialogueGraph;
 
 /**
  * Requests runtime states for World Partition Data Layers when triggered.
@@ -103,5 +107,57 @@ private:
 	UPROPERTY(EditAnywhere, Category = Settings)
 	FInstancedStruct Payload;
 
+	virtual void OnTriggered() override;
+};
+
+/** Starts a dialogue for the local player when triggered. */
+UCLASS(NotBlueprintable, ClassGroup = (Feature), meta = (BlueprintSpawnableComponent), DisplayName = "[Misc] Start Dialogue")
+class TOROSYSTEMS_API UDialogueActionBehavior final : public UActionBehaviorBase
+{
+	GENERATED_BODY()
+
+private:
+
+	UPROPERTY(EditAnywhere, Category = Settings, meta = (AllowAbstract = false))
+	TSubclassOf<UDialogueGraph> Dialogue;
+
+	virtual bool CanTrigger() const override;
+	virtual void OnTriggered() override;
+};
+
+/** Adds progress to an objective count task. */
+UCLASS(NotBlueprintable, ClassGroup = (Feature), meta = (BlueprintSpawnableComponent), DisplayName = "[Misc] Advance Count Task")
+class TOROSYSTEMS_API UObjectiveTaskActionBehavior final : public UActionBehaviorBase
+{
+	GENERATED_BODY()
+
+private:
+
+	UPROPERTY(EditAnywhere, Category = Settings, meta = (Categories = "Objective"))
+	FGameplayTag Task;
+
+	/** Progress added per trigger for a count task. */
+	UPROPERTY(EditAnywhere, Category = Settings, meta = (ClampMin = 1, UIMin = 1))
+	uint8 Amount = 1;
+
+	virtual bool CanTrigger() const override;
+	virtual void OnTriggered() override;
+};
+
+/** Sets a game flag in its configured scope. */
+UCLASS(NotBlueprintable, ClassGroup = (Feature), meta = (BlueprintSpawnableComponent), DisplayName = "[Misc] Set Game Flag")
+class TOROSYSTEMS_API UGameFlagActionBehavior final : public UActionBehaviorBase
+{
+	GENERATED_BODY()
+
+private:
+
+	UPROPERTY(EditAnywhere, Category = Settings)
+	FGameplayTag Flag;
+
+	UPROPERTY(EditAnywhere, Category = Settings)
+	EGameFlagScope Scope = EGameFlagScope::SlotSave;
+
+	virtual bool CanTrigger() const override;
 	virtual void OnTriggered() override;
 };
