@@ -47,7 +47,7 @@ public:
 
 private:
 
-	static inline const FTaggedIdentity Identity = FTaggedIdentity(ObjectiveTags::Base, true);
+	static inline FTaggedIdentity Identity;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UObjectiveGraph> StateMachine;

@@ -348,6 +348,7 @@ bool UObjectiveSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType)
 void UObjectiveSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+	Identity = FTaggedIdentity(ObjectiveTags::Base, true);
 
 	const TGuardValue<bool> GuardRestore(bRestoring, true);
 
