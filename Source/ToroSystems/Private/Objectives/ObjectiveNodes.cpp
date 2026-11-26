@@ -8,6 +8,7 @@
 #include "Utilities/ToroUtilities.h"
 #if WITH_EDITOR
 #include "SMNodeInstance.h"
+#include "UObject/UnrealType.h"
 #endif
 
 UObjectiveNode::UObjectiveNode()
@@ -68,6 +69,50 @@ void UObjectiveNode::OnStateBegin_Implementation()
 }
 
 #if WITH_EDITOR
+void UObjectiveNode::SyncTaskDisplayOrder()
+{
+	TSet<FGameplayTag> Remaining;
+	for (const auto& Task : CountTasks)
+	{
+		Remaining.Add(Task.Key);
+	}
+	for (const auto& Task : FlagTasks)
+	{
+		Remaining.Add(Task.Key);
+	}
+	Remaining.Remove(FGameplayTag());
+
+	TaskDisplayOrder.RemoveAll([&Remaining](const FGameplayTag& Tag)
+	{
+		return Remaining.Remove(Tag) == 0;
+	});
+
+	TArray<FGameplayTag> NewTags = Remaining.Array();
+	NewTags.Sort([](const FGameplayTag& A, const FGameplayTag& B)
+	{
+		return A.GetTagName().LexicalLess(B.GetTagName());
+	});
+	TaskDisplayOrder.Append(NewTags);
+}
+
+void UObjectiveNode::PostLoad()
+{
+	Super::PostLoad();
+	SyncTaskDisplayOrder();
+}
+
+void UObjectiveNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	const FName Property = PropertyChangedEvent.GetMemberPropertyName();
+	if (Property == GET_MEMBER_NAME_CHECKED(UObjectiveNode, CountTasks)
+		|| Property == GET_MEMBER_NAME_CHECKED(UObjectiveNode, FlagTasks)
+		|| Property == GET_MEMBER_NAME_CHECKED(UObjectiveNode, TaskDisplayOrder))
+	{
+		SyncTaskDisplayOrder();
+	}
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+}
+
 void UObjectiveNode::OnPreCompileValidate_Implementation(USMCompilerLog* CompilerLog) const
 {
 	Super::OnPreCompileValidate_Implementation(CompilerLog);

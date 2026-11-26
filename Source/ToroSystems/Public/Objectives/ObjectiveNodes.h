@@ -59,7 +59,7 @@ public:
 
 	UObjectiveNode();
 
-	UPROPERTY(EditDefaultsOnly, Category = Objective)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Objective)
 	bool bSavable = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Objective)
@@ -70,6 +70,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Objective, meta = (ForceInlineRow = true))
 	TMap<FGameplayTag, FObjectiveFlagTaskInfo> FlagTasks;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Objective, EditFixedSize)
+	TArray<FGameplayTag> TaskDisplayOrder;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Objective|GamePhase",
 		meta = (Bitmask, BitmaskEnum = "/Script/ToroSystems.EPlayerCapability"))
@@ -94,6 +97,10 @@ private:
 
 	virtual void OnStateBegin_Implementation() override;
 #if WITH_EDITOR
+	void SyncTaskDisplayOrder();
+
+	virtual void PostLoad() override;
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 	virtual void OnPreCompileValidate_Implementation(USMCompilerLog* CompilerLog) const override;
 #endif
 };

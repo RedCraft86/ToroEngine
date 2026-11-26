@@ -110,20 +110,49 @@ void UToroObjectiveWidget::RefreshTasks() const
 	}
 
 	const bool bShowCompletion = Step->CountTasks.Num() + Step->FlagTasks.Num() > 1;
-	for (const auto& [Tag, Task] : Step->CountTasks)
+	const UGameFlagManager* Flags = FlagManager.Get();
+	const auto AddTasksForTag = [&](const FGameplayTag& Tag)
 	{
-		const uint8 Progress = FMath::Min(Subsystem->GetTaskProgress(Tag), Task.Amount);
-		const FText Label = Task.Amount > 1
-			? FText::Format(INVTEXT("{0} ({1}/{2})"), Task.Label,
-				static_cast<int32>(Progress), static_cast<int32>(Task.Amount))
-			: Task.Label;
-		AddTaskRow(Label, bShowCompletion && Progress >= Task.Amount);
+		if (const FObjectiveCountTaskInfo* Task = Step->CountTasks.Find(Tag))
+		{
+			const uint8 Progress = FMath::Min(Subsystem->GetTaskProgress(Tag), Task->Amount);
+			const FText Label = Task->Amount > 1
+				? FText::Format(INVTEXT("{0} ({1}/{2})"), Task->Label,
+					static_cast<int32>(Progress), static_cast<int32>(Task->Amount))
+				: Task->Label;
+			AddTaskRow(Label, bShowCompletion && Progress >= Task->Amount);
+		}
+		if (const FObjectiveFlagTaskInfo* Task = Step->FlagTasks.Find(Tag))
+		{
+			AddTaskRow(Task->Label, bShowCompletion && Flags && Flags->HasGameFlag(Tag, Task->Scope));
+		}
+	};
+
+	TSet<FGameplayTag> RemainingTags;
+	for (const auto& Task : Step->CountTasks)
+	{
+		RemainingTags.Add(Task.Key);
+	}
+	for (const auto& Task : Step->FlagTasks)
+	{
+		RemainingTags.Add(Task.Key);
+	}
+	for (const FGameplayTag& Tag : Step->TaskDisplayOrder)
+	{
+		if (RemainingTags.Remove(Tag))
+		{
+			AddTasksForTag(Tag);
+		}
 	}
 
-	const UGameFlagManager* Flags = FlagManager.Get();
-	for (const auto& [Tag, Task] : Step->FlagTasks)
+	TArray<FGameplayTag> SortedTags = RemainingTags.Array();
+	SortedTags.Sort([](const FGameplayTag& A, const FGameplayTag& B)
 	{
-		AddTaskRow(Task.Label, bShowCompletion && Flags && Flags->HasGameFlag(Tag, Task.Scope));
+		return A.GetTagName().LexicalLess(B.GetTagName());
+	});
+	for (const FGameplayTag& Tag : SortedTags)
+	{
+		AddTasksForTag(Tag);
 	}
 }
 
