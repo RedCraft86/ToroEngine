@@ -58,6 +58,7 @@ void UToroCutsceneWidget::OnUpdateSubtitle(const FText& NewText) const
 
 void UToroCutsceneWidget::NativeOnActivated()
 {
+	SetVisibility(ESlateVisibility::Visible);
 	Super::NativeOnActivated();
 	OnUpdateSubtitle(FText::GetEmpty());
 	ResetSkipHold();
@@ -114,6 +115,27 @@ FReply UToroCutsceneWidget::NativeOnKeyUp(const FGeometry& MyGeometry, const FKe
 		return FReply::Handled();
 	}
 	return Super::NativeOnKeyUp(MyGeometry, InKeyEvent);
+}
+
+FReply UToroCutsceneWidget::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& InMouseEvent)
+{
+	if (!IsActivated())
+	{
+		return Super::NativeOnMouseButtonDown(MyGeometry, InMouseEvent);
+	}
+
+	return FReply::Handled().SetUserFocus(TakeWidget(), EFocusCause::Mouse);
+}
+
+FReply UToroCutsceneWidget::NativeOnMouseButtonDoubleClick(const FGeometry& MyGeometry, const FPointerEvent& InMouseEvent)
+{
+	return IsActivated() ? NativeOnMouseButtonDown(MyGeometry, InMouseEvent)
+		: Super::NativeOnMouseButtonDoubleClick(MyGeometry, InMouseEvent);
+}
+
+FReply UToroCutsceneWidget::NativeOnMouseButtonUp(const FGeometry& MyGeometry, const FPointerEvent& InMouseEvent)
+{
+	return IsActivated() ? FReply::Handled() : Super::NativeOnMouseButtonUp(MyGeometry, InMouseEvent);
 }
 
 void UToroCutsceneWidget::NativeOnRemovedFromFocusPath(const FFocusEvent& InFocusEvent)
