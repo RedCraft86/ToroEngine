@@ -2,6 +2,7 @@
 
 #include "Actors/TeleportPoint.h"
 #include "Components/StaticMeshComponent.h"
+#include "GameFramework/PlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Materials/MaterialInterface.h"
 #include "GameFramework/Character.h"
@@ -101,7 +102,14 @@ void ATeleportPoint::Teleport(ACharacter* Target) const
 {
 	if (IsValid(Target))
 	{
-		Target->TeleportTo(GetActorLocation(), GetActorRotation(), false, true);
+		const FRotator DestinationRotation = GetActorRotation();
+		if (Target->TeleportTo(GetActorLocation(), DestinationRotation, false, true))
+		{
+			if (APlayerController* Controller = Cast<APlayerController>(Target->GetController()))
+			{
+				Controller->SetControlRotation(DestinationRotation);
+			}
+		}
 	}
 }
 

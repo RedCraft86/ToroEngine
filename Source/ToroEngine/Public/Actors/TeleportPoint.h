@@ -34,6 +34,7 @@ public:
 
 	/**
 	 * Teleports a character to this point's location and rotation without checking destination collision.
+	 * A successful teleport also aligns the view of a player-controlled character.
 	 * @param Target Character to move; invalid targets are ignored.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = TeleportPoint)
