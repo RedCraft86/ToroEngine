@@ -3,16 +3,11 @@
 #include "ActorBehaviors/Action/WorldActionBehaviors.h"
 #include "AsyncGameplayMessageSystem.h"
 #include "AsyncMessageWorldSubsystem.h"
-#include "Dialogues/DialogueGraph.h"
-#include "Dialogues/DialogueSubsystem.h"
 #include "Engine/World.h"
-#include "GameFlagManager.h"
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
 #include "Libraries/ToroWorldLibrary.h"
 #include "MovieSceneSequencePlayer.h"
-#include "Objectives/ObjectiveSubsystem.h"
-#include "Objectives/ObjectiveSystemConfig.h"
 #include "StructUtils/StructView.h"
 
 void UDataLayerActionBehavior::OnTriggered()
@@ -65,45 +60,5 @@ void UAsyncMessageActionBehavior::OnTriggered()
 		{
 			System->QueueMessageForBroadcast(MessageId, FConstStructView(Payload));
 		}
-	}
-}
-
-bool UDialogueActionBehavior::CanTrigger() const
-{
-	return Dialogue && !Dialogue->HasAnyClassFlags(CLASS_Abstract);
-}
-
-void UDialogueActionBehavior::OnTriggered()
-{
-	UDialogueSubsystem::Start(this, Dialogue);
-}
-
-bool UObjectiveTaskActionBehavior::CanTrigger() const
-{
-	const UWorld* World = GetWorld();
-	return Amount > 0 && ObjectiveTags::IsValid(Task) && World && World->GetSubsystem<UObjectiveSubsystem>();
-}
-
-void UObjectiveTaskActionBehavior::OnTriggered()
-{
-	if (const UWorld* World = GetWorld())
-	{
-		if (UObjectiveSubsystem* Objectives = World->GetSubsystem<UObjectiveSubsystem>())
-		{
-			Objectives->FinishTask(Task, Amount);
-		}
-	}
-}
-
-bool UGameFlagActionBehavior::CanTrigger() const
-{
-	return Flag.IsValid() && UGameFlagManager::Get(this);
-}
-
-void UGameFlagActionBehavior::OnTriggered()
-{
-	if (UGameFlagManager* Flags = UGameFlagManager::Get(this))
-	{
-		Flags->SetGameFlag(Flag, Scope);
 	}
 }

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "GameFlagManager.h"
+#include "GameFlags/GameFlagManager.h"
 #include "SMTransitionInstance.h"
 #include "DialogueTransitions.generated.h"
 

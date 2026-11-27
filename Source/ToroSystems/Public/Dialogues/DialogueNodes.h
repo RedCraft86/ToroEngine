@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AsyncMessageId.h"
-#include "GameFlagManager.h"
+#include "GameFlags/GameFlagManager.h"
 #include "SMStateInstance.h"
 #include "SMTextGraphProperty.h"
 #include "GameplayTagContainer.h"

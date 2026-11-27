@@ -19,7 +19,7 @@
 #include "DataTypes/ToroLevelInfo.h"
 #include "Utilities/ToroLogging.h"
 #include "Actors/TeleportPoint.h"
-#include "GameFlagManager.h"
+#include "GameFlags/GameFlagManager.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
 

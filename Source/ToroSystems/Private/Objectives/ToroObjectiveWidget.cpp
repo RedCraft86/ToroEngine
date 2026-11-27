@@ -8,7 +8,7 @@
 #include "Components/TextBlock.h"
 #include "CommonTextBlock.h"
 #include "Engine/World.h"
-#include "GameFlagManager.h"
+#include "GameFlags/GameFlagManager.h"
 #include "Styling/CoreStyle.h"
 
 UToroObjectiveWidget::UToroObjectiveWidget()

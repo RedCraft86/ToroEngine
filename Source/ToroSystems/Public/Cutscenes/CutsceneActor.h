@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CutsceneTypes.h"
-#include "GameFlagManager.h"
+#include "GameFlags/GameFlagManager.h"
 #include "LevelSequenceActor.h"
 #include "CutsceneActor.generated.h"
 

@@ -8,7 +8,7 @@
 #include "AsyncGameplayMessageSystem.h"
 #include "AsyncMessageWorldSubsystem.h"
 #include "Utilities/ToroUtilities.h"
-#include "GameFlagManager.h"
+#include "GameFlags/GameFlagManager.h"
 #if WITH_EDITOR
 #include "SMNodeInstance.h"
 #include "SMTransitionInstance.h"

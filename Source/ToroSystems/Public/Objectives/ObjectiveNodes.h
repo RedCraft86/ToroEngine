@@ -3,7 +3,7 @@
 #pragma once
 
 #include "AsyncMessageId.h"
-#include "GameFlagManager.h"
+#include "GameFlags/GameFlagManager.h"
 #include "SMStateInstance.h"
 #include "GameplayTagContainer.h"
 #include "SMTransitionInstance.h"
