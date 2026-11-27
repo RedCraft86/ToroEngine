@@ -12,24 +12,28 @@ public class ToroEngineEd : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
-			"Slate",
-			"SlateIM",
 			"SlateCore",
-			"PhysicsCore",
 			"UnrealEd",
-			"Projects",
 			"ClassViewer",
 			"ToolMenus",
-			"AssetTools",
 			"AssetRegistry",
 			"PropertyEditor",
-			"MeshDescription",
 			"AssetDefinition",
+			"ToroEngine"
+		]);
+
+		PrivateDependencyModuleNames.AddRange([
+			"Slate",
+			"SlateIM",
+			"PhysicsCore",
+			"Projects",
+			"AssetTools",
+			"MeshDescription",
 			"ProceduralMeshComponent",
 			"GameplayTagsEditor",
 			"StructUtilsEditor",
 			"AsyncMessageSystem",
-			"ToroEngine"
+			"MessageLog"
 		]);
 	}
 }

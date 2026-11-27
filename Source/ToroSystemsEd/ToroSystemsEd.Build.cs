@@ -12,14 +12,18 @@ public class ToroSystemsEd : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
+			"DeveloperSettings",
+			"ToroEngineEd"
+		]);
+
+		PrivateDependencyModuleNames.AddRange([
 			"UnrealEd",
 			"Slate",
 			"SlateCore",
 			"Projects",
 			"MessageLog",
-			"DeveloperSettings",
+			"PropertyEditor",
 			"ToroEngine",
-			"ToroEngineEd",
 			"ToroSystems"
 		]);
 	}

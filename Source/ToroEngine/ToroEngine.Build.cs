@@ -13,18 +13,19 @@ public class ToroEngine : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"UMG",
+			"GameplayTags",
+			"LevelSequence",
+			"UE5Coro"
+		]);
+
+		PrivateDependencyModuleNames.AddRange([
 			"Slate",
 			"SlateCore",
 			"RenderCore",
 			"ApplicationCore",
-			"EngineSettings",
 			"NavigationSystem",
-			"EnhancedInput",
-			"GameplayTags",
-			"LevelSequence",
 			"MovieScene",
-			"PakFile",
-			"UE5Coro"
+			"PakFile"
 		]);
 
 		if (Target.Type == TargetType.Editor)

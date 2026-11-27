@@ -18,25 +18,28 @@ public class ToroSystems : ModuleRules
 			"UMG",
 			"Json",
 			"InputCore",
-			"RenderCore",
-			"EngineSettings",
-			"MetasoundEngine",
-			"AudioModulation",
 			"AsyncMessageSystem",
 			"DeveloperSettings",
 			"LevelSequence",
-			"MovieScene",
-			"EngineCameras",
 			"EnhancedInput",
 			"CustomizableSequencerTracks",
 			"GameplayTags",
 			"CommonUI",
-			"CommonInput",
 			"ToroEngine",
 			"ExpressiveText",
 			"SMExtendedRuntime",
 			"SMSystem",
 			"UE5Coro"
+		]);
+
+		PrivateDependencyModuleNames.AddRange([
+			"RenderCore",
+			"EngineSettings",
+			"MetasoundEngine",
+			"AudioModulation",
+			"MovieScene",
+			"EngineCameras",
+			"CommonInput"
 		]);
 
 		if (Target.Type == TargetType.Editor)
